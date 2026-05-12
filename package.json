@@ -20,7 +20,10 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:migrate:deploy": "prisma migrate deploy"
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:drift": "prisma migrate diff --from-config-datasource --to-schema=prisma/schema.prisma",
+    "prisma:push": "prisma db push",
+    "prisma:repair-checksums": "node scripts/repair-migration-checksum.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.0",
