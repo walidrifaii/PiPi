@@ -13,6 +13,7 @@ import { MerchantTypeModule } from './merchant-type/merchant-type.module';
 import { AdminModule } from './admin/admin.module';
 import { DriversModule } from './drivers/drivers.module';
 import { UsersModule } from './users/users.module';
+import { ServiceAreaModule } from './service-area/service-area.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UsersModule } from './users/users.module';
     UsersModule,
     DriversModule,
     AdminModule,
+    ServiceAreaModule,
   ],
   controllers: [
     AppController,

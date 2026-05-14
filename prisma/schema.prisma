@@ -11,6 +11,20 @@ datasource db {
   provider = "postgresql"
 }
 
+/// Service area for polygon-based location checks (same `code` as `merchants.city_code`).
+model ServiceArea {
+  id               String   @id @default(uuid()) @db.Uuid
+  code             String   @unique @db.VarChar(64)
+  name             String?  @db.VarChar(255)
+  /// GeoJSON Polygon (or Feature / FeatureCollection containing a Polygon). When null, no polygon gate for this code.
+  boundaryGeoJson  Json?    @map("boundary_geo_json")
+  isActive         Boolean  @default(true) @map("is_active")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@map("service_areas")
+}
+
 model MerchantType {
   id          String     @id @default(uuid()) @db.Uuid
   code        String     @unique @db.VarChar(64)
@@ -65,13 +79,27 @@ model Merchant {
   passwordHash String?            @map("password_hash")
   imageUrl     String?            @map("image_url") @db.VarChar(500)
   coverImageUrl String?           @map("cover_image_url") @db.VarChar(500)
+  /// Service area for catalog filtering (e.g. TRIPOLI). Stored uppercase.
+  cityCode     String?            @map("city_code") @db.VarChar(64)
+  /// Store latitude (WGS84) for near-me ordering and optional radius.
+  latitude     Decimal?           @db.Decimal(10, 7)
+  /// Store longitude (WGS84).
+  longitude    Decimal?           @db.Decimal(10, 7)
+  /// Store OPEN (true) vs CLOSED (false); merchant sets via PATCH /merchants/me/status.
   isActive     Boolean            @default(true) @map("is_active")
+  /// IANA timezone for working hours (e.g. Africa/Tripoli). Required when useWorkingHours is true.
+  timezone     String?            @db.VarChar(64)
+  /// When true, customers only see the store as open during workingHoursJson (and isActive must be true).
+  useWorkingHours Boolean         @default(false) @map("use_working_hours")
+  /// Weekly schedule: { "days": [ { "weekday": 1-7 (Mon-Sun ISO), "intervals": [ { "open": "HH:mm", "close": "HH:mm" } ] } ] }
+  workingHoursJson Json?          @map("working_hours_json")
   createdAt    DateTime           @default(now()) @map("created_at")
   updatedAt    DateTime           @updatedAt @map("updated_at")
   orders       Order[]
   categories   MerchantCategory[]
 
   @@index([merchantTypeId])
+  @@index([cityCode])
   @@map("merchants")
 }
 

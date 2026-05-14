@@ -295,6 +295,24 @@ export class AuthService {
 
     const merchantTypeId = await this.resolveMerchantTypeIdForRegister(dto);
 
+    const cityCodeRaw: unknown = dto.cityCode;
+    let cityCodePersist: string | undefined;
+    if (typeof cityCodeRaw === 'string' && cityCodeRaw.trim().length > 0) {
+      cityCodePersist = cityCodeRaw.trim().toUpperCase();
+    }
+
+    const latVal: unknown = dto.latitude;
+    const lngVal: unknown = dto.longitude;
+    const latOk = typeof latVal === 'number' && Number.isFinite(latVal);
+    const lngOk = typeof lngVal === 'number' && Number.isFinite(lngVal);
+    if (latOk !== lngOk) {
+      throw new BadRequestException(
+        'latitude and longitude must both be provided together',
+      );
+    }
+    const coords: { latitude: number; longitude: number } | undefined =
+      latOk && lngOk ? { latitude: latVal, longitude: lngVal } : undefined;
+
     const passwordHash = await bcrypt.hash(dto.password, 10);
 
     const merchant = await this.prisma.merchant.create({
@@ -307,6 +325,8 @@ export class AuthService {
         imageUrl: logoUrl,
         coverImageUrl,
         isActive: true,
+        ...(cityCodePersist !== undefined ? { cityCode: cityCodePersist } : {}),
+        ...(coords !== undefined ? coords : {}),
       },
       select: {
         id: true,
@@ -317,28 +337,54 @@ export class AuthService {
         phone: true,
         imageUrl: true,
         coverImageUrl: true,
+        cityCode: true,
+        latitude: true,
+        longitude: true,
       },
     });
 
+    const m = merchant as {
+      id: string;
+      name: string;
+      merchantTypeId: string;
+      merchantType: { code: string };
+      email: string | null;
+      phone: string | null;
+      imageUrl: string | null;
+      coverImageUrl: string | null;
+      cityCode: string | null;
+      latitude: unknown;
+      longitude: unknown;
+    };
+
     const { accessToken, refreshToken } = await this.issueTokenPair({
-      sub: merchant.id,
-      email: merchant.email!,
+      sub: m.id,
+      email: m.email!,
       role: 'MERCHANT',
-      merchantId: merchant.id,
+      merchantId: m.id,
     });
 
     return {
       accessToken,
       refreshToken,
       merchant: {
-        id: merchant.id,
-        name: merchant.name,
-        merchantTypeId: merchant.merchantTypeId,
-        merchantType: merchant.merchantType.code,
-        email: merchant.email,
-        phone: merchant.phone,
-        logoUrl: merchant.imageUrl,
-        coverImageUrl: merchant.coverImageUrl,
+        id: m.id,
+        name: m.name,
+        merchantTypeId: m.merchantTypeId,
+        merchantType: m.merchantType.code,
+        email: m.email,
+        phone: m.phone,
+        logoUrl: m.imageUrl,
+        coverImageUrl: m.coverImageUrl,
+        cityCode: m.cityCode,
+        latitude:
+          m.latitude !== null && m.latitude !== undefined
+            ? Number(m.latitude)
+            : null,
+        longitude:
+          m.longitude !== null && m.longitude !== undefined
+            ? Number(m.longitude)
+            : null,
         role: MERCHANT_ACCOUNT_ROLE,
       },
     };

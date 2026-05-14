@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsBoolean } from 'class-validator';
 
+/** @deprecated Prefer PATCH /merchants/me/status with `{ "status": "OPEN" | "CLOSED" }`. */
 export class SetMerchantActiveDto {
   @ApiProperty({
     description: 'true = open store, false = close store',

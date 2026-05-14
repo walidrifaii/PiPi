@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { computeMerchantOpenNow } from '../common/merchant-open-status';
 import { UnifiedProduct } from '../merchant/catalog.types';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -35,6 +36,36 @@ export class MerchantCatalogService {
         totalPages: Math.max(1, Math.ceil(total / limit)),
       },
     };
+  }
+
+  /** Merchants that are manually OPEN and inside working hours (if configured). */
+  private async merchantIdsOpenForBusiness(): Promise<string[]> {
+    const rows = (await this.prisma.merchant.findMany({
+      where: { isActive: true },
+      select: {
+        id: true,
+        isActive: true,
+        useWorkingHours: true,
+        timezone: true,
+        workingHoursJson: true,
+      },
+    })) as Array<{
+      id: string;
+      isActive: boolean;
+      useWorkingHours: boolean;
+      timezone: string | null;
+      workingHoursJson: Prisma.JsonValue | null;
+    }>;
+    return rows
+      .filter((r) =>
+        computeMerchantOpenNow({
+          isActive: r.isActive,
+          useWorkingHours: r.useWorkingHours,
+          timezone: r.timezone,
+          workingHoursJson: r.workingHoursJson,
+        }),
+      )
+      .map((r) => r.id);
   }
 
   /** Sale is active only when discount is strictly below list price */
@@ -248,6 +279,16 @@ export class MerchantCatalogService {
   async listDiscountedProductsAcrossMerchants(page = 1, limit = 20) {
     const pg = this.normalizePagination(page, limit);
 
+    const openIds = await this.merchantIdsOpenForBusiness();
+    if (openIds.length === 0) {
+      return this.pagedResponse([], 0, pg.page, pg.limit);
+    }
+
+    const openIdList = Prisma.join(
+      openIds.map((id) => Prisma.sql`${id}::uuid`),
+      ', ',
+    );
+
     const countRows = await this.prisma.$queryRaw<{ count: bigint }[]>`
       SELECT COUNT(*)::bigint AS count
       FROM products p
@@ -256,6 +297,7 @@ export class MerchantCatalogService {
       WHERE p.discount_price IS NOT NULL
         AND p.discount_price < p.price
         AND m.is_active = true
+        AND m.id IN (${openIdList})
     `;
     const total = Number(countRows[0]?.count ?? 0);
 
@@ -267,6 +309,7 @@ export class MerchantCatalogService {
       WHERE p.discount_price IS NOT NULL
         AND p.discount_price < p.price
         AND m.is_active = true
+        AND m.id IN (${openIdList})
       ORDER BY p.updated_at DESC
       LIMIT ${pg.limit}
       OFFSET ${pg.skip}
@@ -486,11 +529,30 @@ export class MerchantCatalogService {
   }
 
   private async assertMerchantActive(merchantId: string): Promise<void> {
-    const merchant = await this.prisma.merchant.findUnique({
+    const merchant = (await this.prisma.merchant.findUnique({
       where: { id: merchantId },
-      select: { isActive: true },
-    });
+      select: {
+        isActive: true,
+        useWorkingHours: true,
+        timezone: true,
+        workingHoursJson: true,
+      },
+    })) as {
+      isActive: boolean;
+      useWorkingHours: boolean;
+      timezone: string | null;
+      workingHoursJson: Prisma.JsonValue | null;
+    } | null;
     if (!merchant?.isActive) {
+      throw new NotFoundException('Merchant not found or inactive');
+    }
+    const open = computeMerchantOpenNow({
+      isActive: merchant.isActive,
+      useWorkingHours: merchant.useWorkingHours,
+      timezone: merchant.timezone,
+      workingHoursJson: merchant.workingHoursJson,
+    });
+    if (!open) {
       throw new NotFoundException('Merchant not found or inactive');
     }
   }

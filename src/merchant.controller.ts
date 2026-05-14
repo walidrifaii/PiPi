@@ -25,7 +25,12 @@ import { MerchantAccountGuard } from './auth/merchant-account.guard';
 import { SuperAdminGuard } from './auth/super-admin.guard';
 import { JwtUserPayload } from './auth/jwt-user.payload';
 import { SetMerchantActiveDto } from './merchant/dto/set-merchant-active.dto';
+import {
+  merchantIsActiveFromStoreStatus,
+  SetMerchantStoreStatusDto,
+} from './merchant/dto/set-merchant-store-status.dto';
 import { UpdateMerchantDto } from './merchant/dto/update-merchant.dto';
+import { UpsertMerchantWorkingHoursDto } from './merchant/dto/upsert-merchant-working-hours.dto';
 import { MerchantCatalogService } from './merchant-catalog/merchant-catalog.service';
 import { MerchantIntegrationService } from './merchant.integration.service';
 
@@ -37,15 +42,44 @@ export class MerchantController {
     private readonly merchantCatalogService: MerchantCatalogService,
   ) {}
 
-  @ApiOperation({ summary: 'Get all merchants' })
+  @ApiOperation({
+    summary: 'List merchants',
+    description:
+      'Without cityCode: all merchants (any manual OPEN state; `isOpenNow` / `status` reflect working hours when enabled). With cityCode: only merchants in that city that are manually OPEN and, if they use working hours, currently inside their schedule. With lat+lng (optional cityCode): sorts by distance (near me); each item may include distanceKm. Optional radiusKm requires lat+lng and keeps merchants within that distance (excludes those without coordinates). Merchants without coordinates sort last when using lat+lng. If cityCode is set and an active service area has a GeoJSON boundary for that code, then with lat+lng the user must lie inside the polygon or the list is empty; all merchants for that cityCode are still returned (merchant GPS is not required to fall inside the polygon).',
+  })
   @ApiQuery({
     name: 'merchantType',
     required: false,
     description:
       'Optional filter by merchant type code (e.g. SUPERMARKET). See GET /merchant-types.',
   })
+  @ApiQuery({
+    name: 'cityCode',
+    required: false,
+    example: 'TRIPOLI',
+    description:
+      'Service area. When set, only merchants in that city that are manually OPEN and, if they use working hours, currently inside their schedule.',
+  })
+  @ApiQuery({
+    name: 'lat',
+    required: false,
+    description:
+      'User latitude (WGS84). Must be sent with lng. Optional cityCode filters the set before distance sort.',
+  })
+  @ApiQuery({
+    name: 'lng',
+    required: false,
+    description:
+      'User longitude (WGS84). Must be sent with lat. Optional cityCode filters the set before distance sort.',
+  })
+  @ApiQuery({
+    name: 'radiusKm',
+    required: false,
+    description:
+      'Optional max distance in km (requires lat and lng). Merchants without coordinates are excluded.',
+  })
   @ApiOkResponse({
-    description: 'List all merchants configured in database',
+    description: 'Merchant list',
     schema: {
       example: [
         {
@@ -53,9 +87,18 @@ export class MerchantController {
           name: 'Fresh Basket Market',
           merchantTypeId: 'a0000000-0000-4000-8000-000000000001',
           merchantType: 'SUPERMARKET',
+          cityCode: 'TRIPOLI',
+          latitude: 34.43,
+          longitude: 35.84,
           logoUrl: 'https://example.com/merchant-logo.jpg',
           coverImageUrl: 'https://example.com/merchant-cover.jpg',
           isActive: true,
+          isOpenNow: true,
+          status: 'OPEN',
+          useWorkingHours: false,
+          timezone: null,
+          workingHours: null,
+          distanceKm: 1.2,
           createdAt: '2026-04-07T11:00:00.000Z',
           updatedAt: '2026-04-07T11:00:00.000Z',
         },
@@ -63,8 +106,20 @@ export class MerchantController {
     },
   })
   @Get()
-  getMerchants(@Query('merchantType') merchantType?: string) {
-    return this.merchantIntegrationService.getMerchants(merchantType);
+  getMerchants(
+    @Query('merchantType') merchantType?: string,
+    @Query('cityCode') cityCode?: string,
+    @Query('lat') lat?: string,
+    @Query('lng') lng?: string,
+    @Query('radiusKm') radiusKm?: string,
+  ) {
+    return this.merchantIntegrationService.getMerchants({
+      merchantTypeCode: merchantType,
+      cityCode,
+      lat,
+      lng,
+      radiusKm,
+    });
   }
 
   @ApiOperation({
@@ -98,16 +153,34 @@ export class MerchantController {
     if (!user || user.role !== 'MERCHANT') {
       throw new BadRequestException('Merchant account required');
     }
-    return this.merchantIntegrationService.updateMerchant(
+    return this.merchantIntegrationService.updateMerchant(user.merchantId, dto);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, MerchantAccountGuard)
+  @ApiOperation({
+    summary: 'Set store OPEN or CLOSED (merchant login only)',
+  })
+  @Patch('me/status')
+  setMyMerchantStoreStatus(
+    @Req() req: { user?: JwtUserPayload },
+    @Body() dto: SetMerchantStoreStatusDto,
+  ) {
+    const user = req.user;
+    if (!user || user.role !== 'MERCHANT') {
+      throw new BadRequestException('Merchant account required');
+    }
+    return this.merchantIntegrationService.setMerchantStoreStatus(
       user.merchantId,
-      dto,
+      merchantIsActiveFromStoreStatus(dto.status),
     );
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, MerchantAccountGuard)
   @ApiOperation({
-    summary: 'Open/close your store (merchant login only)',
+    summary: 'Open/close store via boolean (merchant login; prefer PATCH me/status)',
+    deprecated: true,
   })
   @Patch('me/active')
   setMyMerchantActive(
@@ -118,9 +191,31 @@ export class MerchantController {
     if (!user || user.role !== 'MERCHANT') {
       throw new BadRequestException('Merchant account required');
     }
-    return this.merchantIntegrationService.setMerchantActive(
+    return this.merchantIntegrationService.setMerchantStoreStatus(
       user.merchantId,
       dto.isActive,
+    );
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, MerchantAccountGuard)
+  @ApiOperation({
+    summary: 'Set weekly working hours (merchant login only)',
+    description:
+      'When useWorkingHours is true, send IANA timezone and days (weekday 1=Mon…7=Sun) with intervals as HH:mm in that timezone. Customers only see the store as OPEN when isActive is true and the current local time falls inside one of the intervals. Set useWorkingHours to false to rely on manual OPEN/CLOSED only.',
+  })
+  @Patch('me/working-hours')
+  setMyMerchantWorkingHours(
+    @Req() req: { user?: JwtUserPayload },
+    @Body() dto: UpsertMerchantWorkingHoursDto,
+  ) {
+    const user = req.user;
+    if (!user || user.role !== 'MERCHANT') {
+      throw new BadRequestException('Merchant account required');
+    }
+    return this.merchantIntegrationService.setMerchantWorkingHours(
+      user.merchantId,
+      dto,
     );
   }
 

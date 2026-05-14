@@ -7,12 +7,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import {
-  ApiBody,
-  ApiConsumes,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CloudinaryService } from '../common/cloudinary.service';
 import { AuthService } from './auth.service';
 import { LoginMerchantDto } from './dto/login-merchant.dto';
@@ -36,14 +31,7 @@ export class AuthMerchantController {
       'Store credentials with logo (avatar) and cover (banner) images uploaded as files.',
     schema: {
       type: 'object',
-      required: [
-        'email',
-        'phone',
-        'password',
-        'merchantName',
-        'logo',
-        'cover',
-      ],
+      required: ['email', 'phone', 'password', 'merchantName', 'logo', 'cover'],
       properties: {
         email: { type: 'string', format: 'email' },
         phone: { type: 'string', minLength: 5, maxLength: 50 },
@@ -64,6 +52,24 @@ export class AuthMerchantController {
           example: 'SUPERMARKET',
           description:
             'Alternative to merchantTypeId (e.g. SUPERMARKET, RESTAURANT). Case-insensitive.',
+        },
+        cityCode: {
+          type: 'string',
+          example: 'TRIPOLI',
+          description:
+            'Optional. Service area for GET /merchants?cityCode=… (stored uppercase).',
+        },
+        latitude: {
+          type: 'number',
+          example: 34.4346,
+          description:
+            'Optional. Store WGS84 latitude; send longitude too if set.',
+        },
+        longitude: {
+          type: 'number',
+          example: 35.8362,
+          description:
+            'Optional. Store WGS84 longitude; send latitude too if set.',
         },
         logo: {
           type: 'string',

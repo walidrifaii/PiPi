@@ -3,11 +3,21 @@ import {
   ConflictException,
   Injectable,
 } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { haversineDistanceKm } from './common/haversine';
+import { pointInPolygonRings } from './common/geojson-polygon';
 import { hashPassword } from './common/hash-password';
+import {
+  computeMerchantOpenNow,
+  parseWorkingHoursJson,
+  validateWorkingHoursForEnabled,
+  type MerchantWorkingHoursWeek,
+} from './common/merchant-open-status';
+import { MerchantStoreStatus } from './merchant/dto/set-merchant-store-status.dto';
+import { UpsertMerchantWorkingHoursDto } from './merchant/dto/upsert-merchant-working-hours.dto';
 import { UpdateMerchantDto } from './merchant/dto/update-merchant.dto';
-import { MerchantCatalogService } from './merchant-catalog/merchant-catalog.service';
 import { PrismaService } from './prisma/prisma.service';
+import { ServiceAreaService } from './service-area/service-area.service';
 
 export type MerchantListItem = {
   id: string;
@@ -16,23 +26,126 @@ export type MerchantListItem = {
   merchantType: string;
   logoUrl: string | null;
   coverImageUrl: string | null;
+  cityCode: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  /** Manual OPEN/CLOSED from PATCH /merchants/me/status (stored as is_active). */
   isActive: boolean;
+  /** True when the store accepts customers now (manual OPEN and inside working hours if enabled). */
+  isOpenNow: boolean;
+  /** Customer-visible OPEN/CLOSED (same as isOpenNow). */
+  status: MerchantStoreStatus;
+  useWorkingHours: boolean;
+  timezone: string | null;
+  workingHours: MerchantWorkingHoursWeek | null;
   createdAt: Date;
   updatedAt: Date;
+  /** Set when listing with lat and lng (near me). */
+  distanceKm?: number | null;
+};
+
+export type GetMerchantsQuery = {
+  merchantTypeCode?: string;
+  cityCode?: string;
+  lat?: string;
+  lng?: string;
+  radiusKm?: string;
+};
+
+type MerchantRowForList = {
+  id: string;
+  name: string;
+  merchantTypeId: string;
+  imageUrl: string | null;
+  coverImageUrl: string | null;
+  isActive: boolean;
+  useWorkingHours: boolean;
+  timezone: string | null;
+  workingHoursJson: unknown;
+  createdAt: Date;
+  updatedAt: Date;
+  cityCode: string | null;
+  latitude: unknown;
+  longitude: unknown;
+  merchantType: { code: string };
 };
 
 @Injectable()
 export class MerchantIntegrationService {
-  private readonly db: PrismaClient;
-
   constructor(
     private readonly prisma: PrismaService,
-    private readonly catalog: MerchantCatalogService,
-  ) {
-    this.db = prisma as unknown as PrismaClient;
+    private readonly serviceArea: ServiceAreaService,
+  ) {}
+
+  private get db(): PrismaClient {
+    return this.prisma as unknown as PrismaClient;
   }
 
-  async getMerchants(merchantTypeCode?: string): Promise<MerchantListItem[]> {
+  private decimalToNumber(value: unknown): number | null {
+    if (value === null || value === undefined) {
+      return null;
+    }
+    const n = Number(value as string);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  private rowToListItem(
+    r: MerchantRowForList,
+    distanceKm?: number | null,
+  ): MerchantListItem {
+    const isOpenNow = computeMerchantOpenNow({
+      isActive: r.isActive,
+      useWorkingHours: r.useWorkingHours,
+      timezone: r.timezone,
+      workingHoursJson: r.workingHoursJson,
+    });
+    return {
+      id: r.id,
+      name: r.name,
+      merchantTypeId: r.merchantTypeId,
+      merchantType: r.merchantType.code,
+      logoUrl: r.imageUrl,
+      coverImageUrl: r.coverImageUrl,
+      cityCode: r.cityCode,
+      latitude: this.decimalToNumber(r.latitude),
+      longitude: this.decimalToNumber(r.longitude),
+      isActive: r.isActive,
+      isOpenNow,
+      status: isOpenNow ? MerchantStoreStatus.OPEN : MerchantStoreStatus.CLOSED,
+      useWorkingHours: r.useWorkingHours,
+      timezone: r.timezone,
+      workingHours: parseWorkingHoursJson(r.workingHoursJson),
+      createdAt: r.createdAt,
+      updatedAt: r.updatedAt,
+      ...(distanceKm !== undefined ? { distanceKm } : {}),
+    };
+  }
+
+  private listSelect = {
+    id: true,
+    name: true,
+    merchantTypeId: true,
+    imageUrl: true,
+    coverImageUrl: true,
+    isActive: true,
+    useWorkingHours: true,
+    timezone: true,
+    workingHoursJson: true,
+    createdAt: true,
+    updatedAt: true,
+    cityCode: true,
+    latitude: true,
+    longitude: true,
+    merchantType: { select: { code: true } },
+  } as const;
+
+  async getMerchants(q: GetMerchantsQuery = {}): Promise<MerchantListItem[]> {
+    const merchantTypeCode = q.merchantTypeCode;
+    const cityRaw = q.cityCode;
+    const latRaw = q.lat;
+    const lngRaw = q.lng;
+    const radiusRaw = q.radiusKm;
+
     if (merchantTypeCode) {
       const code = merchantTypeCode.trim().toUpperCase();
       const exists = await this.db.merchantType.findUnique({
@@ -43,39 +156,141 @@ export class MerchantIntegrationService {
         throw new BadRequestException('Invalid merchantType filter');
       }
     }
-    const whereClause = merchantTypeCode
-      ? {
-          merchantType: {
-            code: merchantTypeCode.trim().toUpperCase(),
-          },
-        }
-      : undefined;
+
+    const latStr = latRaw?.trim() ?? '';
+    const lngStr = lngRaw?.trim() ?? '';
+    const hasLat = latStr.length > 0;
+    const hasLng = lngStr.length > 0;
+    if (hasLat !== hasLng) {
+      throw new BadRequestException(
+        'lat and lng must both be provided together',
+      );
+    }
+
+    let userLat: number | undefined;
+    let userLng: number | undefined;
+    if (hasLat && hasLng) {
+      userLat = Number(latStr);
+      userLng = Number(lngStr);
+      if (!Number.isFinite(userLat) || !Number.isFinite(userLng)) {
+        throw new BadRequestException('lat and lng must be valid numbers');
+      }
+      if (userLat < -90 || userLat > 90 || userLng < -180 || userLng > 180) {
+        throw new BadRequestException('lat or lng out of valid range');
+      }
+    }
+
+    let radiusKm: number | undefined;
+    const radiusStr = radiusRaw?.trim() ?? '';
+    if (radiusStr.length > 0) {
+      radiusKm = Number(radiusStr);
+      if (!Number.isFinite(radiusKm) || radiusKm <= 0 || radiusKm > 500) {
+        throw new BadRequestException(
+          'radiusKm must be a number greater than 0 and at most 500',
+        );
+      }
+    }
+
+    if (radiusKm !== undefined && !hasLat) {
+      throw new BadRequestException('radiusKm requires lat and lng');
+    }
+
+    const normalizedCity =
+      cityRaw && cityRaw.trim().length > 0
+        ? cityRaw.trim().toUpperCase()
+        : undefined;
+
+    const where: Prisma.MerchantWhereInput = {};
+    if (merchantTypeCode) {
+      where.merchantType = {
+        code: merchantTypeCode.trim().toUpperCase(),
+      };
+    }
+    if (normalizedCity) {
+      where.cityCode = normalizedCity;
+      where.isActive = true;
+    }
+
     const rows = await this.db.merchant.findMany({
-      where: whereClause,
-      orderBy: { createdAt: 'desc' },
-      select: {
-        id: true,
-        name: true,
-        merchantTypeId: true,
-        imageUrl: true,
-        coverImageUrl: true,
-        isActive: true,
-        createdAt: true,
-        updatedAt: true,
-        merchantType: { select: { code: true } },
-      },
+      where,
+      orderBy: hasLat ? undefined : { createdAt: 'desc' },
+      select: this.listSelect,
     });
-    return rows.map((r) => ({
-      id: r.id,
-      name: r.name,
-      merchantTypeId: r.merchantTypeId,
-      merchantType: r.merchantType.code,
-      logoUrl: r.imageUrl,
-      coverImageUrl: r.coverImageUrl,
-      isActive: r.isActive,
-      createdAt: r.createdAt,
-      updatedAt: r.updatedAt,
-    }));
+
+    if (
+      hasLat &&
+      normalizedCity &&
+      userLat !== undefined &&
+      userLng !== undefined
+    ) {
+      const poly =
+        await this.serviceArea.getPolygonRingsForActiveCode(normalizedCity);
+      if (poly) {
+        if (!pointInPolygonRings(userLng, userLat, poly)) {
+          return [];
+        }
+        // User is inside service area: return all merchants for this cityCode
+        // (already filtered by DB). Do not require each merchant GPS to be inside
+        // the polygon so stores with missing or approximate coords still appear.
+      }
+    }
+
+    if (!hasLat || userLat === undefined || userLng === undefined) {
+      const items = rows.map((r) =>
+        this.rowToListItem(r as MerchantRowForList),
+      );
+      return this.filterByCityOpenNow(normalizedCity, items);
+    }
+
+    type WithDist = { row: MerchantRowForList; distanceKm: number | null };
+    let withDist: WithDist[] = rows.map((r) => {
+      const row = r as MerchantRowForList;
+      const lat = this.decimalToNumber(row.latitude);
+      const lng = this.decimalToNumber(row.longitude);
+      if (lat === null || lng === null) {
+        return { row, distanceKm: null };
+      }
+      return {
+        row,
+        distanceKm: haversineDistanceKm(userLat, userLng, lat, lng),
+      };
+    });
+
+    if (radiusKm !== undefined) {
+      withDist = withDist.filter(
+        (x) => x.distanceKm !== null && x.distanceKm <= radiusKm,
+      );
+    }
+
+    withDist.sort((a, b) => {
+      if (a.distanceKm === null && b.distanceKm === null) {
+        return b.row.createdAt.getTime() - a.row.createdAt.getTime();
+      }
+      if (a.distanceKm === null) {
+        return 1;
+      }
+      if (b.distanceKm === null) {
+        return -1;
+      }
+      if (a.distanceKm !== b.distanceKm) {
+        return a.distanceKm - b.distanceKm;
+      }
+      return b.row.createdAt.getTime() - a.row.createdAt.getTime();
+    });
+
+    const items = withDist.map((x) => this.rowToListItem(x.row, x.distanceKm));
+    return this.filterByCityOpenNow(normalizedCity, items);
+  }
+
+  /** When cityCode is set, only merchants that are open for customers right now. */
+  private filterByCityOpenNow(
+    normalizedCity: string | undefined,
+    items: MerchantListItem[],
+  ): MerchantListItem[] {
+    if (!normalizedCity) {
+      return items;
+    }
+    return items.filter((x) => x.isOpenNow);
   }
 
   private async assertUniqueMerchantCredentials(
@@ -143,6 +358,46 @@ export class MerchantIntegrationService {
       passwordHash = await hashPassword(newPassword);
     }
 
+    let cityCodeUpdate: string | null | undefined;
+    if (Object.hasOwn(dto, 'cityCode')) {
+      const raw = (dto as { cityCode?: unknown }).cityCode;
+      if (raw === undefined) {
+        cityCodeUpdate = undefined;
+      } else if (typeof raw !== 'string') {
+        throw new BadRequestException('cityCode must be a string');
+      } else {
+        cityCodeUpdate = raw.trim() === '' ? null : raw.trim().toUpperCase();
+      }
+    }
+
+    let latitudeUpdate: number | undefined;
+    if (Object.hasOwn(dto, 'latitude')) {
+      const raw = (dto as { latitude?: unknown }).latitude;
+      if (raw === undefined) {
+        latitudeUpdate = undefined;
+      } else if (typeof raw !== 'number' || !Number.isFinite(raw)) {
+        throw new BadRequestException('latitude must be a finite number');
+      } else if (raw < -90 || raw > 90) {
+        throw new BadRequestException('latitude must be between -90 and 90');
+      } else {
+        latitudeUpdate = raw;
+      }
+    }
+
+    let longitudeUpdate: number | undefined;
+    if (Object.hasOwn(dto, 'longitude')) {
+      const raw = (dto as { longitude?: unknown }).longitude;
+      if (raw === undefined) {
+        longitudeUpdate = undefined;
+      } else if (typeof raw !== 'number' || !Number.isFinite(raw)) {
+        throw new BadRequestException('longitude must be a finite number');
+      } else if (raw < -180 || raw > 180) {
+        throw new BadRequestException('longitude must be between -180 and 180');
+      } else {
+        longitudeUpdate = raw;
+      }
+    }
+
     const updated = await this.db.merchant.update({
       where: { id: merchantId },
       data: {
@@ -158,30 +413,15 @@ export class MerchantIntegrationService {
         ...(dto.email !== undefined ? { email: dto.email } : {}),
         ...(dto.phone !== undefined ? { phone: dto.phone } : {}),
         ...(passwordHash !== undefined ? { passwordHash } : {}),
+        ...(cityCodeUpdate !== undefined ? { cityCode: cityCodeUpdate } : {}),
+        ...(latitudeUpdate !== undefined ? { latitude: latitudeUpdate } : {}),
+        ...(longitudeUpdate !== undefined
+          ? { longitude: longitudeUpdate }
+          : {}),
       },
-      select: {
-        id: true,
-        name: true,
-        merchantTypeId: true,
-        imageUrl: true,
-        coverImageUrl: true,
-        isActive: true,
-        createdAt: true,
-        updatedAt: true,
-        merchantType: { select: { code: true } },
-      },
+      select: this.listSelect,
     });
-    return {
-      id: updated.id,
-      name: updated.name,
-      merchantTypeId: updated.merchantTypeId,
-      merchantType: updated.merchantType.code,
-      logoUrl: updated.imageUrl,
-      coverImageUrl: updated.coverImageUrl,
-      isActive: updated.isActive,
-      createdAt: updated.createdAt,
-      updatedAt: updated.updatedAt,
-    };
+    return this.rowToListItem(updated as MerchantRowForList);
   }
 
   async updateMerchantImage(
@@ -191,61 +431,58 @@ export class MerchantIntegrationService {
     const updated = await this.db.merchant.update({
       where: { id: merchantId },
       data: { imageUrl: logoUrl },
-      select: {
-        id: true,
-        name: true,
-        merchantTypeId: true,
-        imageUrl: true,
-        coverImageUrl: true,
-        isActive: true,
-        createdAt: true,
-        updatedAt: true,
-        merchantType: { select: { code: true } },
-      },
+      select: this.listSelect,
     });
-    return {
-      id: updated.id,
-      name: updated.name,
-      merchantTypeId: updated.merchantTypeId,
-      merchantType: updated.merchantType.code,
-      logoUrl: updated.imageUrl,
-      coverImageUrl: updated.coverImageUrl,
-      isActive: updated.isActive,
-      createdAt: updated.createdAt,
-      updatedAt: updated.updatedAt,
-    };
+    return this.rowToListItem(updated as MerchantRowForList);
   }
 
-  async setMerchantActive(
+  async setMerchantStoreStatus(
     merchantId: string,
     isActive: boolean,
   ): Promise<MerchantListItem> {
     const updated = await this.db.merchant.update({
       where: { id: merchantId },
       data: { isActive },
-      select: {
-        id: true,
-        name: true,
-        merchantTypeId: true,
-        imageUrl: true,
-        coverImageUrl: true,
-        isActive: true,
-        createdAt: true,
-        updatedAt: true,
-        merchantType: { select: { code: true } },
-      },
+      select: this.listSelect,
     });
-    return {
-      id: updated.id,
-      name: updated.name,
-      merchantTypeId: updated.merchantTypeId,
-      merchantType: updated.merchantType.code,
-      logoUrl: updated.imageUrl,
-      coverImageUrl: updated.coverImageUrl,
-      isActive: updated.isActive,
-      createdAt: updated.createdAt,
-      updatedAt: updated.updatedAt,
-    };
+    return this.rowToListItem(updated as MerchantRowForList);
+  }
+
+  async setMerchantWorkingHours(
+    merchantId: string,
+    dto: UpsertMerchantWorkingHoursDto,
+  ): Promise<MerchantListItem> {
+    if (!dto.useWorkingHours) {
+      const updated = await this.db.merchant.update({
+        where: { id: merchantId },
+        data: {
+          useWorkingHours: false,
+          workingHoursJson: Prisma.DbNull,
+        },
+        select: this.listSelect,
+      });
+      return this.rowToListItem(updated as unknown as MerchantRowForList);
+    }
+    if (!dto.days || dto.days.length === 0) {
+      throw new BadRequestException(
+        'days is required when useWorkingHours is true',
+      );
+    }
+    const week: MerchantWorkingHoursWeek = { days: dto.days };
+    const { timezone, workingHoursJson } = validateWorkingHoursForEnabled(
+      dto.timezone,
+      week,
+    );
+    const updated = await this.db.merchant.update({
+      where: { id: merchantId },
+      data: {
+        useWorkingHours: true,
+        timezone,
+        workingHoursJson,
+      },
+      select: this.listSelect,
+    });
+    return this.rowToListItem(updated as unknown as MerchantRowForList);
   }
 
   async deleteMerchant(merchantId: string): Promise<{ message: string }> {
