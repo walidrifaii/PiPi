@@ -21,17 +21,18 @@ import { CreateMerchantTypeDto } from './dto/create-merchant-type.dto';
 import { UpdateMerchantTypeDto } from './dto/update-merchant-type.dto';
 import { MerchantTypeService } from './merchant-type.service';
 
-@ApiTags('Merchant types')
 @Controller('merchant-types')
 export class MerchantTypeController {
   constructor(private readonly merchantTypeService: MerchantTypeService) {}
 
+  @ApiTags('Shared')
   @ApiOperation({ summary: 'List active merchant types (for dropdowns)' })
   @Get()
   findAllPublic() {
     return this.merchantTypeService.findAllPublic();
   }
 
+  @ApiTags('Super Admin')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiOperation({ summary: 'List all merchant types including inactive' })
@@ -40,6 +41,7 @@ export class MerchantTypeController {
     return this.merchantTypeService.findAllAdmin();
   }
 
+  @ApiTags('Shared')
   @ApiOperation({ summary: 'Get one merchant type by id' })
   @ApiParam({ name: 'id', type: String })
   @Get(':id')
@@ -47,6 +49,7 @@ export class MerchantTypeController {
     return this.merchantTypeService.findOne(id);
   }
 
+  @ApiTags('Super Admin')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiOperation({ summary: 'Create merchant type (super admin)' })
@@ -55,6 +58,7 @@ export class MerchantTypeController {
     return this.merchantTypeService.create(dto);
   }
 
+  @ApiTags('Super Admin')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiParam({ name: 'id', type: String })
@@ -67,6 +71,7 @@ export class MerchantTypeController {
     return this.merchantTypeService.update(id, dto);
   }
 
+  @ApiTags('Super Admin')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiParam({ name: 'id', type: String })

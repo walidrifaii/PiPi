@@ -13,7 +13,7 @@ import { AuthService } from './auth.service';
 import { LoginMerchantDto } from './dto/login-merchant.dto';
 import { RegisterMerchantDto } from './dto/register-merchant.dto';
 
-@ApiTags('Merchant auth')
+@ApiTags('Merchant')
 @Controller('auth')
 export class AuthMerchantController {
   constructor(

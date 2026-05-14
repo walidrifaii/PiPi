@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { computeMerchantOpenNow } from '../common/merchant-open-status';
+import { computeMerchantOpenNow, workingIntervalsToWeek } from '../common/merchant-open-status';
 import { UnifiedProduct } from '../merchant/catalog.types';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -40,31 +40,38 @@ export class MerchantCatalogService {
 
   /** Merchants that are manually OPEN and inside working hours (if configured). */
   private async merchantIdsOpenForBusiness(): Promise<string[]> {
-    const rows = (await this.prisma.merchant.findMany({
+    const rows = await this.prisma.merchant.findMany({
       where: { isActive: true },
       select: {
         id: true,
         isActive: true,
         useWorkingHours: true,
         timezone: true,
-        workingHoursJson: true,
+        workingIntervals: {
+          orderBy: [
+            { weekday: Prisma.SortOrder.asc },
+            { sortOrder: Prisma.SortOrder.asc },
+          ],
+          select: {
+            weekday: true,
+            openLocal: true,
+            closeLocal: true,
+            sortOrder: true,
+          },
+        },
       },
-    })) as Array<{
-      id: string;
-      isActive: boolean;
-      useWorkingHours: boolean;
-      timezone: string | null;
-      workingHoursJson: Prisma.JsonValue | null;
-    }>;
+    });
     return rows
-      .filter((r) =>
-        computeMerchantOpenNow({
+      .filter((r) => {
+        const week = workingIntervalsToWeek(r.workingIntervals);
+        const weekOrNull = week.days.length > 0 ? week : null;
+        return computeMerchantOpenNow({
           isActive: r.isActive,
           useWorkingHours: r.useWorkingHours,
           timezone: r.timezone,
-          workingHoursJson: r.workingHoursJson,
-        }),
-      )
+          week: weekOrNull,
+        });
+      })
       .map((r) => r.id);
   }
 
@@ -529,28 +536,36 @@ export class MerchantCatalogService {
   }
 
   private async assertMerchantActive(merchantId: string): Promise<void> {
-    const merchant = (await this.prisma.merchant.findUnique({
+    const merchant = await this.prisma.merchant.findUnique({
       where: { id: merchantId },
       select: {
         isActive: true,
         useWorkingHours: true,
         timezone: true,
-        workingHoursJson: true,
+        workingIntervals: {
+          orderBy: [
+            { weekday: Prisma.SortOrder.asc },
+            { sortOrder: Prisma.SortOrder.asc },
+          ],
+          select: {
+            weekday: true,
+            openLocal: true,
+            closeLocal: true,
+            sortOrder: true,
+          },
+        },
       },
-    })) as {
-      isActive: boolean;
-      useWorkingHours: boolean;
-      timezone: string | null;
-      workingHoursJson: Prisma.JsonValue | null;
-    } | null;
+    });
     if (!merchant?.isActive) {
       throw new NotFoundException('Merchant not found or inactive');
     }
+    const week = workingIntervalsToWeek(merchant.workingIntervals);
+    const weekOrNull = week.days.length > 0 ? week : null;
     const open = computeMerchantOpenNow({
       isActive: merchant.isActive,
       useWorkingHours: merchant.useWorkingHours,
       timezone: merchant.timezone,
-      workingHoursJson: merchant.workingHoursJson,
+      week: weekOrNull,
     });
     if (!open) {
       throw new NotFoundException('Merchant not found or inactive');

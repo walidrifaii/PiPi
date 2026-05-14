@@ -4,14 +4,20 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
+import { randomUUID } from 'node:crypto';
 import { haversineDistanceKm } from './common/haversine';
 import { pointInPolygonRings } from './common/geojson-polygon';
 import { hashPassword } from './common/hash-password';
 import {
+  buildFullWeekSchedule,
+  coerceWeekFromPartialDays,
   computeMerchantOpenNow,
-  parseWorkingHoursJson,
+  parseIsoWeekdayFromInput,
   validateWorkingHoursForEnabled,
+  workingIntervalsToWeek,
+  type MerchantWorkingHoursDay,
   type MerchantWorkingHoursWeek,
+  type WorkingDayScheduleEntry,
 } from './common/merchant-open-status';
 import { MerchantStoreStatus } from './merchant/dto/set-merchant-store-status.dto';
 import { UpsertMerchantWorkingHoursDto } from './merchant/dto/upsert-merchant-working-hours.dto';
@@ -37,7 +43,8 @@ export type MerchantListItem = {
   status: MerchantStoreStatus;
   useWorkingHours: boolean;
   timezone: string | null;
-  workingHours: MerchantWorkingHoursWeek | null;
+  /** Monday–Sunday with English `weekday` and `intervals` (`h:mm AM/PM`, empty = closed); null if `useWorkingHours` is false. */
+  workingHoursSchedule: WorkingDayScheduleEntry[] | null;
   createdAt: Date;
   updatedAt: Date;
   /** Set when listing with lat and lng (near me). */
@@ -61,7 +68,12 @@ type MerchantRowForList = {
   isActive: boolean;
   useWorkingHours: boolean;
   timezone: string | null;
-  workingHoursJson: unknown;
+  workingIntervals: Array<{
+    weekday: number;
+    openLocal: string;
+    closeLocal: string;
+    sortOrder: number;
+  }>;
   createdAt: Date;
   updatedAt: Date;
   cityCode: string | null;
@@ -93,11 +105,13 @@ export class MerchantIntegrationService {
     r: MerchantRowForList,
     distanceKm?: number | null,
   ): MerchantListItem {
+    const week = workingIntervalsToWeek(r.workingIntervals);
+    const weekOrNull = week.days.length > 0 ? week : null;
     const isOpenNow = computeMerchantOpenNow({
       isActive: r.isActive,
       useWorkingHours: r.useWorkingHours,
       timezone: r.timezone,
-      workingHoursJson: r.workingHoursJson,
+      week: weekOrNull,
     });
     return {
       id: r.id,
@@ -114,7 +128,9 @@ export class MerchantIntegrationService {
       status: isOpenNow ? MerchantStoreStatus.OPEN : MerchantStoreStatus.CLOSED,
       useWorkingHours: r.useWorkingHours,
       timezone: r.timezone,
-      workingHours: parseWorkingHoursJson(r.workingHoursJson),
+      workingHoursSchedule: r.useWorkingHours
+        ? buildFullWeekSchedule(weekOrNull)
+        : null,
       createdAt: r.createdAt,
       updatedAt: r.updatedAt,
       ...(distanceKm !== undefined ? { distanceKm } : {}),
@@ -130,14 +146,25 @@ export class MerchantIntegrationService {
     isActive: true,
     useWorkingHours: true,
     timezone: true,
-    workingHoursJson: true,
+    workingIntervals: {
+      orderBy: [
+        { weekday: Prisma.SortOrder.asc },
+        { sortOrder: Prisma.SortOrder.asc },
+      ],
+      select: {
+        weekday: true,
+        openLocal: true,
+        closeLocal: true,
+        sortOrder: true,
+      },
+    },
     createdAt: true,
     updatedAt: true,
     cityCode: true,
     latitude: true,
     longitude: true,
     merchantType: { select: { code: true } },
-  } as const;
+  };
 
   async getMerchants(q: GetMerchantsQuery = {}): Promise<MerchantListItem[]> {
     const merchantTypeCode = q.merchantTypeCode;
@@ -237,7 +264,7 @@ export class MerchantIntegrationService {
 
     if (!hasLat || userLat === undefined || userLng === undefined) {
       const items = rows.map((r) =>
-        this.rowToListItem(r as MerchantRowForList),
+        this.rowToListItem(r as unknown as MerchantRowForList),
       );
       return this.filterByCityOpenNow(normalizedCity, items);
     }
@@ -278,7 +305,9 @@ export class MerchantIntegrationService {
       return b.row.createdAt.getTime() - a.row.createdAt.getTime();
     });
 
-    const items = withDist.map((x) => this.rowToListItem(x.row, x.distanceKm));
+    const items = withDist.map((x) =>
+      this.rowToListItem(x.row as unknown as MerchantRowForList, x.distanceKm),
+    );
     return this.filterByCityOpenNow(normalizedCity, items);
   }
 
@@ -421,7 +450,7 @@ export class MerchantIntegrationService {
       },
       select: this.listSelect,
     });
-    return this.rowToListItem(updated as MerchantRowForList);
+    return this.rowToListItem(updated as unknown as MerchantRowForList);
   }
 
   async updateMerchantImage(
@@ -433,7 +462,7 @@ export class MerchantIntegrationService {
       data: { imageUrl: logoUrl },
       select: this.listSelect,
     });
-    return this.rowToListItem(updated as MerchantRowForList);
+    return this.rowToListItem(updated as unknown as MerchantRowForList);
   }
 
   async setMerchantStoreStatus(
@@ -445,7 +474,27 @@ export class MerchantIntegrationService {
       data: { isActive },
       select: this.listSelect,
     });
-    return this.rowToListItem(updated as MerchantRowForList);
+    return this.rowToListItem(updated as unknown as MerchantRowForList);
+  }
+
+  private buildWorkingIntervalCreates(
+    merchantId: string,
+    week: MerchantWorkingHoursWeek,
+  ): Prisma.MerchantWorkingIntervalCreateManyInput[] {
+    const out: Prisma.MerchantWorkingIntervalCreateManyInput[] = [];
+    for (const day of week.days) {
+      day.intervals.forEach((intv, idx) => {
+        out.push({
+          id: randomUUID(),
+          merchantId,
+          weekday: day.weekday,
+          openLocal: intv.open,
+          closeLocal: intv.close,
+          sortOrder: idx,
+        });
+      });
+    }
+    return out;
   }
 
   async setMerchantWorkingHours(
@@ -453,33 +502,56 @@ export class MerchantIntegrationService {
     dto: UpsertMerchantWorkingHoursDto,
   ): Promise<MerchantListItem> {
     if (!dto.useWorkingHours) {
-      const updated = await this.db.merchant.update({
+      await this.db.$transaction(async (tx) => {
+        await tx.merchantWorkingInterval.deleteMany({
+          where: { merchantId },
+        });
+        await tx.merchant.update({
+          where: { id: merchantId },
+          data: { useWorkingHours: false },
+        });
+      });
+      const updated = await this.db.merchant.findUniqueOrThrow({
         where: { id: merchantId },
-        data: {
-          useWorkingHours: false,
-          workingHoursJson: Prisma.DbNull,
-        },
         select: this.listSelect,
       });
       return this.rowToListItem(updated as unknown as MerchantRowForList);
     }
-    if (!dto.days || dto.days.length === 0) {
+    if (dto.days == null) {
       throw new BadRequestException(
         'days is required when useWorkingHours is true',
       );
     }
-    const week: MerchantWorkingHoursWeek = { days: dto.days };
-    const { timezone, workingHoursJson } = validateWorkingHoursForEnabled(
+    const internalDays: MerchantWorkingHoursDay[] = dto.days.map((d) => {
+      const iso = parseIsoWeekdayFromInput(d.weekday);
+      if (iso === null) {
+        throw new BadRequestException(`Invalid weekday: ${String(d.weekday)}`);
+      }
+      return { weekday: iso, intervals: d.intervals };
+    });
+    const coerced = coerceWeekFromPartialDays(internalDays);
+    const { timezone, week: normWeek } = validateWorkingHoursForEnabled(
       dto.timezone,
-      week,
+      coerced,
     );
-    const updated = await this.db.merchant.update({
+    const intervalRows = this.buildWorkingIntervalCreates(merchantId, normWeek);
+    await this.db.$transaction(async (tx) => {
+      await tx.merchantWorkingInterval.deleteMany({
+        where: { merchantId },
+      });
+      if (intervalRows.length > 0) {
+        await tx.merchantWorkingInterval.createMany({ data: intervalRows });
+      }
+      await tx.merchant.update({
+        where: { id: merchantId },
+        data: {
+          useWorkingHours: true,
+          timezone,
+        },
+      });
+    });
+    const updated = await this.db.merchant.findUniqueOrThrow({
       where: { id: merchantId },
-      data: {
-        useWorkingHours: true,
-        timezone,
-        workingHoursJson,
-      },
       select: this.listSelect,
     });
     return this.rowToListItem(updated as unknown as MerchantRowForList);

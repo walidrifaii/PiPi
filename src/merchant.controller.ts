@@ -34,7 +34,6 @@ import { UpsertMerchantWorkingHoursDto } from './merchant/dto/upsert-merchant-wo
 import { MerchantCatalogService } from './merchant-catalog/merchant-catalog.service';
 import { MerchantIntegrationService } from './merchant.integration.service';
 
-@ApiTags('Merchants')
 @Controller('merchants')
 export class MerchantController {
   constructor(
@@ -42,10 +41,11 @@ export class MerchantController {
     private readonly merchantCatalogService: MerchantCatalogService,
   ) {}
 
+  @ApiTags('Storefront')
   @ApiOperation({
     summary: 'List merchants',
     description:
-      'Without cityCode: all merchants (any manual OPEN state; `isOpenNow` / `status` reflect working hours when enabled). With cityCode: only merchants in that city that are manually OPEN and, if they use working hours, currently inside their schedule. With lat+lng (optional cityCode): sorts by distance (near me); each item may include distanceKm. Optional radiusKm requires lat+lng and keeps merchants within that distance (excludes those without coordinates). Merchants without coordinates sort last when using lat+lng. If cityCode is set and an active service area has a GeoJSON boundary for that code, then with lat+lng the user must lie inside the polygon or the list is empty; all merchants for that cityCode are still returned (merchant GPS is not required to fall inside the polygon).',
+      'Without cityCode: all merchants (any manual OPEN state; `isOpenNow` / `status` reflect working hours when enabled). Each item can include `workingHoursSchedule` (Mon–Sun with English `weekday` and `intervals` using `h:mm AM/PM`, empty when closed that day; null when `useWorkingHours` is false). With cityCode: only merchants in that city that are manually OPEN and, if they use working hours, currently inside their schedule. With lat+lng (optional cityCode): sorts by distance (near me); each item may include distanceKm. Optional radiusKm requires lat+lng and keeps merchants within that distance (excludes those without coordinates). Merchants without coordinates sort last when using lat+lng. If cityCode is set and an active service area has a GeoJSON boundary for that code, then with lat+lng the user must lie inside the polygon or the list is empty; all merchants for that cityCode are still returned (merchant GPS is not required to fall inside the polygon).',
   })
   @ApiQuery({
     name: 'merchantType',
@@ -95,10 +95,40 @@ export class MerchantController {
           isActive: true,
           isOpenNow: true,
           status: 'OPEN',
+          useWorkingHours: true,
+          timezone: 'Asia/Beirut',
+          workingHoursSchedule: [
+            {
+              weekday: 'Monday',
+              intervals: [{ open: '9:00 AM', close: '10:00 PM' }],
+            },
+            { weekday: 'Tuesday', intervals: [] },
+            { weekday: 'Wednesday', intervals: [] },
+            { weekday: 'Thursday', intervals: [] },
+            { weekday: 'Friday', intervals: [] },
+            { weekday: 'Saturday', intervals: [] },
+            { weekday: 'Sunday', intervals: [] },
+          ],
+          distanceKm: 1.2,
+          createdAt: '2026-04-07T11:00:00.000Z',
+          updatedAt: '2026-04-07T11:00:00.000Z',
+        },
+        {
+          id: '22222222-2222-2222-2222-222222222222',
+          name: 'Always-on store',
+          merchantTypeId: 'a0000000-0000-4000-8000-000000000001',
+          merchantType: 'SUPERMARKET',
+          cityCode: 'TRIPOLI',
+          latitude: 34.5,
+          longitude: 35.9,
+          logoUrl: null,
+          coverImageUrl: null,
+          isActive: true,
+          isOpenNow: true,
+          status: 'OPEN',
           useWorkingHours: false,
           timezone: null,
-          workingHours: null,
-          distanceKm: 1.2,
+          workingHoursSchedule: null,
           createdAt: '2026-04-07T11:00:00.000Z',
           updatedAt: '2026-04-07T11:00:00.000Z',
         },
@@ -122,6 +152,7 @@ export class MerchantController {
     });
   }
 
+  @ApiTags('Storefront')
   @ApiOperation({
     summary:
       'List discounted products across all active merchants (on sale: discount price below list price)',
@@ -139,6 +170,7 @@ export class MerchantController {
     );
   }
 
+  @ApiTags('Merchant')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, MerchantAccountGuard)
   @ApiOperation({
@@ -156,6 +188,7 @@ export class MerchantController {
     return this.merchantIntegrationService.updateMerchant(user.merchantId, dto);
   }
 
+  @ApiTags('Merchant')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, MerchantAccountGuard)
   @ApiOperation({
@@ -176,10 +209,12 @@ export class MerchantController {
     );
   }
 
+  @ApiTags('Merchant')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, MerchantAccountGuard)
   @ApiOperation({
-    summary: 'Open/close store via boolean (merchant login; prefer PATCH me/status)',
+    summary:
+      'Open/close store via boolean (merchant login; prefer PATCH me/status)',
     deprecated: true,
   })
   @Patch('me/active')
@@ -197,12 +232,18 @@ export class MerchantController {
     );
   }
 
+  @ApiTags('Merchant')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, MerchantAccountGuard)
   @ApiOperation({
     summary: 'Set weekly working hours (merchant login only)',
     description:
-      'When useWorkingHours is true, send IANA timezone and days (weekday 1=Mon…7=Sun) with intervals as HH:mm in that timezone. Customers only see the store as OPEN when isActive is true and the current local time falls inside one of the intervals. Set useWorkingHours to false to rely on manual OPEN/CLOSED only.',
+      'When useWorkingHours is true, send IANA timezone (e.g. `Asia/Beirut` for Lebanon) and `days`: each `weekday` is an English day name (e.g. Monday, Mon) with `open`/`close` as 24h HH:mm or 12h h:mm AM/PM in that timezone. ' +
+      'Use `intervals: []` for a closed day, or omit that weekday (treated as closed). You may send all 7 days for a full grid. ' +
+      'Only open intervals are persisted (sparse rows) for fast reads. ' +
+      'Customers only see the store as OPEN when isActive is true and the current local time falls inside one of the intervals. ' +
+      'Set useWorkingHours to false to rely on manual OPEN/CLOSED only. ' +
+      'Response includes `workingHoursSchedule`: all 7 days with English `weekday` and `intervals` using `h:mm AM/PM` (empty when closed that day), or null when useWorkingHours is false.',
   })
   @Patch('me/working-hours')
   setMyMerchantWorkingHours(
@@ -219,6 +260,7 @@ export class MerchantController {
     );
   }
 
+  @ApiTags('Super Admin')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiParam({ name: 'merchantId', type: String })
@@ -234,6 +276,7 @@ export class MerchantController {
     return this.merchantIntegrationService.updateMerchant(merchantId, dto);
   }
 
+  @ApiTags('Super Admin')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiParam({ name: 'merchantId', type: String })

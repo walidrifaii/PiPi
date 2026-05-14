@@ -34,7 +34,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { MerchantCatalogService } from './merchant-catalog.service';
 
 /** Super admin manages any store by merchant id in the URL (not for merchant app tokens). */
-@ApiTags('Merchant catalog (super admin)')
+@ApiTags('Super Admin')
 @ApiBearerAuth()
 @Controller('merchants/admin')
 @UseGuards(JwtAuthGuard, SuperAdminGuard)

@@ -19,7 +19,7 @@ import { parsePolygonRingsFromGeoJson } from '../common/geojson-polygon';
 import { UpsertServiceAreaDto } from './dto/upsert-service-area.dto';
 import { ServiceAreaService } from './service-area.service';
 
-@ApiTags('Service areas')
+@ApiTags('Super Admin')
 @Controller('service-areas')
 export class ServiceAreaController {
   constructor(private readonly serviceAreaService: ServiceAreaService) {}

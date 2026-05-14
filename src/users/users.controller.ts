@@ -21,11 +21,11 @@ import { UpdateUserAdminDto } from './dto/update-user-admin.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
-@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiTags('Customer')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, UserAccountGuard)
   @ApiOperation({ summary: 'Current user profile (customer JWT)' })
@@ -35,6 +35,7 @@ export class UsersController {
     return this.usersService.getProfile(user.sub);
   }
 
+  @ApiTags('Customer')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, UserAccountGuard)
   @ApiOperation({ summary: 'Update your profile (customer JWT)' })
@@ -47,6 +48,7 @@ export class UsersController {
     return this.usersService.updateProfile(user.sub, dto);
   }
 
+  @ApiTags('Super Admin')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiOperation({ summary: 'List all users (super admin only)' })
@@ -55,6 +57,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @ApiTags('Super Admin')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiOperation({ summary: 'Update a user by id (super admin only)' })

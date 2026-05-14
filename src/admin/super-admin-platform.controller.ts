@@ -5,7 +5,7 @@ import { SuperAdminGuard } from '../auth/super-admin.guard';
 import { DriversService } from '../drivers/drivers.service';
 import { UsersService } from '../users/users.service';
 
-@ApiTags('Super admin (platform)')
+@ApiTags('Super Admin')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, SuperAdminGuard)
 @Controller('admin')

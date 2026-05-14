@@ -3,6 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { SWAGGER_X_TAG_GROUPS } from './swagger/swagger-tag-groups';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -22,14 +23,22 @@ async function bootstrap() {
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Athar API')
-    .setDescription('API documentation')
+    .setDescription(
+      'Endpoints are grouped for **Super Admin**, **Merchant**, **Storefront** (public browse), **Customer**, **Delivery**, and **Shared** (auth refresh, app login, health). Use the sections in the Swagger UI sidebar on `/api`.',
+    )
     .setVersion('1.0')
     .addBearerAuth()
     .build();
 
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('api', app, swaggerDocument);
+  Object.assign(swaggerDocument, { 'x-tagGroups': SWAGGER_X_TAG_GROUPS });
+  SwaggerModule.setup('api', app, swaggerDocument, {
+    swaggerOptions: {
+      persistAuthorization: true,
+      tagsSorter: 'alpha',
+    },
+  });
 
   await app.listen(process.env.PORT ?? 3000);
 }
-bootstrap();
+void bootstrap();

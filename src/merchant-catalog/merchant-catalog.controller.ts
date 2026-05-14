@@ -35,7 +35,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { MerchantCatalogService } from './merchant-catalog.service';
 
 /** Store catalog for logged-in merchants only (Bearer merchant JWT; store id from token). */
-@ApiTags('Merchant catalog')
+@ApiTags('Merchant')
 @ApiBearerAuth()
 @Controller('merchants/me')
 @UseGuards(JwtAuthGuard, MerchantJwtScopeGuard)

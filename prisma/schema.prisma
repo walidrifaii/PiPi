@@ -87,20 +87,35 @@ model Merchant {
   longitude    Decimal?           @db.Decimal(10, 7)
   /// Store OPEN (true) vs CLOSED (false); merchant sets via PATCH /merchants/me/status.
   isActive     Boolean            @default(true) @map("is_active")
-  /// IANA timezone for working hours (e.g. Africa/Tripoli). Required when useWorkingHours is true.
+  /// IANA timezone for working hours (e.g. Asia/Beirut for Lebanon). Required when useWorkingHours is true.
   timezone     String?            @db.VarChar(64)
-  /// When true, customers only see the store as open during workingHoursJson (and isActive must be true).
+  /// When true, customers only see the store open during merchant_working_intervals (and isActive must be true).
   useWorkingHours Boolean         @default(false) @map("use_working_hours")
-  /// Weekly schedule: { "days": [ { "weekday": 1-7 (Mon-Sun ISO), "intervals": [ { "open": "HH:mm", "close": "HH:mm" } ] } ] }
-  workingHoursJson Json?          @map("working_hours_json")
   createdAt    DateTime           @default(now()) @map("created_at")
   updatedAt    DateTime           @updatedAt @map("updated_at")
   orders       Order[]
   categories   MerchantCategory[]
+  workingIntervals MerchantWorkingInterval[]
 
   @@index([merchantTypeId])
   @@index([cityCode])
   @@map("merchants")
+}
+
+/// One open/close interval in the merchant's local timezone (see merchants.timezone). Weekday 1=Mon … 7=Sun.
+model MerchantWorkingInterval {
+  id         String   @id @default(uuid()) @db.Uuid
+  merchantId String   @map("merchant_id") @db.Uuid
+  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  weekday    Int      @map("weekday")
+  openLocal  String   @map("open_local") @db.VarChar(5)
+  closeLocal String   @map("close_local") @db.VarChar(5)
+  sortOrder  Int      @default(0) @map("sort_order")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([merchantId])
+  @@index([merchantId, weekday])
+  @@map("merchant_working_intervals")
 }
 
 model MerchantCategory {

@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { LoginSuperAdminDto } from './dto/login-super-admin.dto';
 import { RegisterSuperAdminDto } from './dto/register-super-admin.dto';
 
-@ApiTags('Super admin auth')
+@ApiTags('Super Admin')
 @Controller('auth')
 export class AuthSuperAdminController {
   constructor(private readonly authService: AuthService) {}

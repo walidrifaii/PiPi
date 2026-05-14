@@ -23,11 +23,11 @@ import { UpdateDriverAdminDto } from './dto/update-driver-admin.dto';
 import { UpdateDriverDto } from './dto/update-driver.dto';
 import { DriversService } from './drivers.service';
 
-@ApiTags('Delivery (drivers)')
 @Controller('drivers')
 export class DriversController {
   constructor(private readonly driversService: DriversService) {}
 
+  @ApiTags('Delivery')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, DriverAccountGuard)
   @ApiOperation({ summary: 'Current driver profile (driver JWT)' })
@@ -37,6 +37,7 @@ export class DriversController {
     return this.driversService.getProfile(user.sub);
   }
 
+  @ApiTags('Delivery')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, DriverAccountGuard)
   @ApiOperation({
@@ -52,6 +53,7 @@ export class DriversController {
     return this.driversService.updateProfile(user.sub, dto);
   }
 
+  @ApiTags('Super Admin')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiOperation({
@@ -64,6 +66,7 @@ export class DriversController {
     return this.driversService.createByAdmin(dto);
   }
 
+  @ApiTags('Super Admin')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiOperation({ summary: 'List all drivers (super admin only)' })
@@ -72,6 +75,7 @@ export class DriversController {
     return this.driversService.findAll();
   }
 
+  @ApiTags('Super Admin')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiOperation({ summary: 'Update a driver by id (super admin only)' })

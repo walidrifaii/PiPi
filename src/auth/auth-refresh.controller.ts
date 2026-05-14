@@ -3,7 +3,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 
-@ApiTags('Auth')
+@ApiTags('Shared')
 @Controller('auth')
 export class AuthRefreshController {
   constructor(private readonly authService: AuthService) {}

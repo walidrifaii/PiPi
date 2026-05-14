@@ -3,7 +3,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDriverDto } from './dto/login-driver.dto';
 
-@ApiTags('Delivery (driver auth)')
+@ApiTags('Delivery')
 @Controller('auth')
 export class AuthDriverController {
   constructor(private readonly authService: AuthService) {}
