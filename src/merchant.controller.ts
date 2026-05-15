@@ -236,6 +236,46 @@ export class MerchantController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, MerchantAccountGuard)
   @ApiOperation({
+    summary: 'Get weekly working hours (merchant login only)',
+    description:
+      'Returns `useWorkingHours`, `timezone`, and `workingHoursSchedule` (7 days, `h:mm AM/PM`, empty intervals = closed). `workingHoursSchedule` is null when scheduled hours are disabled.',
+  })
+  @ApiOkResponse({
+    description: 'Current working hours for the logged-in merchant',
+    schema: {
+      example: {
+        useWorkingHours: true,
+        timezone: 'Asia/Beirut',
+        workingHoursSchedule: [
+          {
+            weekday: 'Monday',
+            intervals: [{ open: '9:00 AM', close: '10:00 PM' }],
+          },
+          { weekday: 'Tuesday', intervals: [] },
+          { weekday: 'Wednesday', intervals: [] },
+          { weekday: 'Thursday', intervals: [] },
+          { weekday: 'Friday', intervals: [] },
+          { weekday: 'Saturday', intervals: [] },
+          { weekday: 'Sunday', intervals: [] },
+        ],
+      },
+    },
+  })
+  @Get('me/working-hours')
+  getMyMerchantWorkingHours(@Req() req: { user?: JwtUserPayload }) {
+    const user = req.user;
+    if (!user || user.role !== 'MERCHANT') {
+      throw new BadRequestException('Merchant account required');
+    }
+    return this.merchantIntegrationService.getMerchantWorkingHours(
+      user.merchantId,
+    );
+  }
+
+  @ApiTags('Merchant')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, MerchantAccountGuard)
+  @ApiOperation({
     summary: 'Set weekly working hours (merchant login only)',
     description:
       'When useWorkingHours is true, send IANA timezone (e.g. `Asia/Beirut` for Lebanon) and `days`: each `weekday` is an English day name (e.g. Monday, Mon) with `open`/`close` as 24h HH:mm or 12h h:mm AM/PM in that timezone. ' +

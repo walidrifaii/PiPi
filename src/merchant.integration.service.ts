@@ -51,6 +51,14 @@ export type MerchantListItem = {
   distanceKm?: number | null;
 };
 
+/** Response for GET /merchants/me/working-hours (merchant app edit screen). */
+export type MerchantWorkingHoursResponse = {
+  useWorkingHours: boolean;
+  timezone: string | null;
+  /** Mon–Sun with English `weekday` and `h:mm AM/PM` intervals; null when `useWorkingHours` is false. */
+  workingHoursSchedule: WorkingDayScheduleEntry[] | null;
+};
+
 export type GetMerchantsQuery = {
   merchantTypeCode?: string;
   cityCode?: string;
@@ -165,6 +173,41 @@ export class MerchantIntegrationService {
     longitude: true,
     merchantType: { select: { code: true } },
   };
+
+  private workingHoursSelect = {
+    useWorkingHours: true,
+    timezone: true,
+    workingIntervals: {
+      orderBy: [
+        { weekday: Prisma.SortOrder.asc },
+        { sortOrder: Prisma.SortOrder.asc },
+      ],
+      select: {
+        weekday: true,
+        openLocal: true,
+        closeLocal: true,
+        sortOrder: true,
+      },
+    },
+  };
+
+  async getMerchantWorkingHours(
+    merchantId: string,
+  ): Promise<MerchantWorkingHoursResponse> {
+    const row = await this.db.merchant.findUniqueOrThrow({
+      where: { id: merchantId },
+      select: this.workingHoursSelect,
+    });
+    const week = workingIntervalsToWeek(row.workingIntervals);
+    const weekOrNull = week.days.length > 0 ? week : null;
+    return {
+      useWorkingHours: row.useWorkingHours,
+      timezone: row.timezone,
+      workingHoursSchedule: row.useWorkingHours
+        ? buildFullWeekSchedule(weekOrNull)
+        : null,
+    };
+  }
 
   async getMerchants(q: GetMerchantsQuery = {}): Promise<MerchantListItem[]> {
     const merchantTypeCode = q.merchantTypeCode;
