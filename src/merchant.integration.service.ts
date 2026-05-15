@@ -6,7 +6,12 @@ import {
 import { Prisma, PrismaClient } from '@prisma/client';
 import { randomUUID } from 'node:crypto';
 import { haversineDistanceKm } from './common/haversine';
-import { pointInPolygonRings } from './common/geojson-polygon';
+import {
+  exteriorRingBoundingBox,
+  pointInPolygonRings,
+  pointOutsideExteriorBBox,
+  type PolygonRings,
+} from './common/geojson-polygon';
 import { hashPassword } from './common/hash-password';
 import {
   buildFullWeekSchedule,
@@ -270,26 +275,28 @@ export class MerchantIntegrationService {
         ? cityRaw.trim().toUpperCase()
         : undefined;
 
-    const where: Prisma.MerchantWhereInput = {};
-    if (merchantTypeCode) {
-      where.merchantType = {
-        code: merchantTypeCode.trim().toUpperCase(),
-      };
-    }
-    if (normalizedCity) {
-      where.cityCode = normalizedCity;
-      where.isActive = true;
-    }
-
-    const rows = await this.db.merchant.findMany({
-      where,
-      orderBy: hasLat ? undefined : { createdAt: 'desc' },
-      select: this.listSelect,
-    });
+    let effectiveCity = normalizedCity;
+    /** When set, both user (already checked) and each merchant GPS must lie inside here. */
+    let serviceBoundaryPoly: PolygonRings | undefined;
 
     if (
+      !normalizedCity &&
       hasLat &&
+      userLat !== undefined &&
+      userLng !== undefined
+    ) {
+      const resolved = await this.serviceArea.findActiveAreaContainingPoint(
+        userLng,
+        userLat,
+      );
+      if (!resolved) {
+        return [];
+      }
+      effectiveCity = resolved.code;
+      serviceBoundaryPoly = resolved.polygon;
+    } else if (
       normalizedCity &&
+      hasLat &&
       userLat !== undefined &&
       userLng !== undefined
     ) {
@@ -299,17 +306,54 @@ export class MerchantIntegrationService {
         if (!pointInPolygonRings(userLng, userLat, poly)) {
           return [];
         }
-        // User is inside service area: return all merchants for this cityCode
-        // (already filtered by DB). Do not require each merchant GPS to be inside
-        // the polygon so stores with missing or approximate coords still appear.
+        serviceBoundaryPoly = poly;
       }
     }
 
+    const where: Prisma.MerchantWhereInput = {};
+    if (merchantTypeCode) {
+      where.merchantType = {
+        code: merchantTypeCode.trim().toUpperCase(),
+      };
+    }
+    if (effectiveCity) {
+      where.cityCode = effectiveCity;
+    }
+
+    let rows = await this.db.merchant.findMany({
+      where,
+      orderBy: hasLat ? undefined : { createdAt: 'desc' },
+      select: this.listSelect,
+    });
+
+    if (serviceBoundaryPoly !== undefined && hasLat) {
+      const boundary = serviceBoundaryPoly;
+      /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
+      const bbox = exteriorRingBoundingBox(boundary.exterior);
+      const kept: typeof rows = [];
+      for (const r of rows) {
+        const row = r as MerchantRowForList;
+        const mLat = this.decimalToNumber(row.latitude);
+        const mLng = this.decimalToNumber(row.longitude);
+        if (mLat === null || mLng === null) {
+          continue;
+        }
+        if (bbox !== null && pointOutsideExteriorBBox(mLng, mLat, bbox)) {
+          continue;
+        }
+        if (!pointInPolygonRings(mLng, mLat, boundary)) {
+          continue;
+        }
+        kept.push(r);
+      }
+      /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
+      rows = kept;
+    }
+
     if (!hasLat || userLat === undefined || userLng === undefined) {
-      const items = rows.map((r) =>
+      return rows.map((r) =>
         this.rowToListItem(r as unknown as MerchantRowForList),
       );
-      return this.filterByCityOpenNow(normalizedCity, items);
     }
 
     type WithDist = { row: MerchantRowForList; distanceKm: number | null };
@@ -348,21 +392,9 @@ export class MerchantIntegrationService {
       return b.row.createdAt.getTime() - a.row.createdAt.getTime();
     });
 
-    const items = withDist.map((x) =>
+    return withDist.map((x) =>
       this.rowToListItem(x.row as unknown as MerchantRowForList, x.distanceKm),
     );
-    return this.filterByCityOpenNow(normalizedCity, items);
-  }
-
-  /** When cityCode is set, only merchants that are open for customers right now. */
-  private filterByCityOpenNow(
-    normalizedCity: string | undefined,
-    items: MerchantListItem[],
-  ): MerchantListItem[] {
-    if (!normalizedCity) {
-      return items;
-    }
-    return items.filter((x) => x.isOpenNow);
   }
 
   private async assertUniqueMerchantCredentials(

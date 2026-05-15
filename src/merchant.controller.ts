@@ -45,7 +45,7 @@ export class MerchantController {
   @ApiOperation({
     summary: 'List merchants',
     description:
-      'Without cityCode: all merchants (any manual OPEN state; `isOpenNow` / `status` reflect working hours when enabled). Each item can include `workingHoursSchedule` (Mon–Sun with English `weekday` and `intervals` using `h:mm AM/PM`, empty when closed that day; null when `useWorkingHours` is false). With cityCode: only merchants in that city that are manually OPEN and, if they use working hours, currently inside their schedule. With lat+lng (optional cityCode): sorts by distance (near me); each item may include distanceKm. Optional radiusKm requires lat+lng and keeps merchants within that distance (excludes those without coordinates). Merchants without coordinates sort last when using lat+lng. If cityCode is set and an active service area has a GeoJSON boundary for that code, then with lat+lng the user must lie inside the polygon or the list is empty; all merchants for that cityCode are still returned (merchant GPS is not required to fall inside the polygon).',
+      'Without cityCode and without lat+lng: all merchants (`isOpenNow` / `status` reflect manual OPEN and working hours). With cityCode or lat+lng: merchants in that service area (including closed), with `isOpenNow` / `status` for display. With lat+lng only: picks the **smallest** active polygon that contains the user (overlaps), then filters merchants whose GPS is inside that same boundary. Optional radiusKm caps distance.',
   })
   @ApiQuery({
     name: 'merchantType',
@@ -58,19 +58,19 @@ export class MerchantController {
     required: false,
     example: 'TRIPOLI',
     description:
-      'Service area. When set, only merchants in that city that are manually OPEN and, if they use working hours, currently inside their schedule.',
+      'Service area filter. Returns merchants in that city **including** closed ones; `isOpenNow` / `status` show customer-visible OPEN/CLOSED.',
   })
   @ApiQuery({
     name: 'lat',
     required: false,
     description:
-      'User latitude (WGS84). Must be sent with lng. Optional cityCode filters the set before distance sort.',
+      'User latitude (WGS84). Must be sent with lng. Without cityCode, the backend picks the service area whose polygon contains this point.',
   })
   @ApiQuery({
     name: 'lng',
     required: false,
     description:
-      'User longitude (WGS84). Must be sent with lat. Optional cityCode filters the set before distance sort.',
+      'User longitude (WGS84). Must be sent with lat. Without cityCode, used with lat to resolve the service area polygon.',
   })
   @ApiQuery({
     name: 'radiusKm',

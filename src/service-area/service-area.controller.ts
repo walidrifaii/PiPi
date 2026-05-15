@@ -38,7 +38,7 @@ export class ServiceAreaController {
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiOperation({
     summary:
-      'Create or update a service area by code (matches merchants.cityCode). boundaryGeoJson: GeoJSON Polygon or Feature containing Polygon.',
+      'Create or update a service area by code (matches merchants.cityCode). boundaryGeoJson: GeoJSON Polygon or Feature containing Polygon. Overlapping areas: listing by lat/lng picks the smallest polygon covering the user.',
   })
   @ApiParam({ name: 'code', example: 'TRIPOLI' })
   @Put('admin/:code')
