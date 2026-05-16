@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsInt,
@@ -36,6 +36,9 @@ export class CreateMerchantTypeDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @Transform(({ value }) =>
+    typeof value === 'string' && value.trim() === '' ? undefined : value,
+  )
   @IsString()
   @MaxLength(2000)
   description?: string;
@@ -61,6 +64,13 @@ export class CreateMerchantTypeDto {
 
   @ApiPropertyOptional({ description: 'Lower sorts first' })
   @IsOptional()
+  @Transform(({ value }) => {
+    if (value === '' || value === null || value === undefined) {
+      return undefined;
+    }
+    return value;
+  })
+  @Type(() => Number)
   @IsInt()
   @Min(0)
   sortOrder?: number;

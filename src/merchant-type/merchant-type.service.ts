@@ -4,25 +4,32 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { CloudinaryService } from '../common/cloudinary.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMerchantTypeDto } from './dto/create-merchant-type.dto';
 import { UpdateMerchantTypeDto } from './dto/update-merchant-type.dto';
 
+const publicSelect = {
+  id: true,
+  code: true,
+  name: true,
+  description: true,
+  imageUrl: true,
+  sortOrder: true,
+} as const;
+
 @Injectable()
 export class MerchantTypeService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly cloudinary: CloudinaryService,
+  ) {}
 
   findAllPublic() {
     return this.prisma.merchantType.findMany({
       where: { isActive: true },
       orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
-      select: {
-        id: true,
-        code: true,
-        name: true,
-        description: true,
-        sortOrder: true,
-      },
+      select: publicSelect,
     });
   }
 
@@ -42,13 +49,14 @@ export class MerchantTypeService {
     return row;
   }
 
-  async create(dto: CreateMerchantTypeDto) {
+  async create(dto: CreateMerchantTypeDto, imageUrl?: string) {
     try {
       return await this.prisma.merchantType.create({
         data: {
           code: dto.code,
           name: dto.name,
           description: dto.description,
+          imageUrl,
           isActive: dto.isActive ?? true,
           sortOrder: dto.sortOrder ?? 0,
         },
@@ -66,10 +74,10 @@ export class MerchantTypeService {
     }
   }
 
-  async update(id: string, dto: UpdateMerchantTypeDto) {
-    await this.findOne(id);
+  async update(id: string, dto: UpdateMerchantTypeDto, imageUrl?: string) {
+    const existing = await this.findOne(id);
     try {
-      return await this.prisma.merchantType.update({
+      const updated = await this.prisma.merchantType.update({
         where: { id },
         data: {
           ...(dto.code !== undefined ? { code: dto.code } : {}),
@@ -79,8 +87,17 @@ export class MerchantTypeService {
             : {}),
           ...(dto.isActive !== undefined ? { isActive: dto.isActive } : {}),
           ...(dto.sortOrder !== undefined ? { sortOrder: dto.sortOrder } : {}),
+          ...(imageUrl !== undefined ? { imageUrl } : {}),
         },
       });
+      if (
+        imageUrl !== undefined &&
+        existing.imageUrl &&
+        existing.imageUrl !== imageUrl
+      ) {
+        await this.cloudinary.deleteImageByUrl(existing.imageUrl);
+      }
+      return updated;
     } catch (e) {
       if (
         e instanceof Prisma.PrismaClientKnownRequestError &&
@@ -95,9 +112,10 @@ export class MerchantTypeService {
   }
 
   async remove(id: string) {
-    await this.findOne(id);
+    const existing = await this.findOne(id);
     try {
       await this.prisma.merchantType.delete({ where: { id } });
+      await this.cloudinary.deleteImageByUrl(existing.imageUrl);
       return { message: 'Merchant type deleted' };
     } catch (e) {
       if (

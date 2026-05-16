@@ -7,6 +7,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  ParseUUIDPipe,
   Patch,
   Query,
   Req,
@@ -98,20 +99,6 @@ export class MerchantController {
             isActive: true,
             isOpenNow: true,
             status: 'OPEN',
-            useWorkingHours: true,
-            timezone: 'Asia/Beirut',
-            workingHoursSchedule: [
-              {
-                weekday: 'Monday',
-                intervals: [{ open: '9:00 AM', close: '10:00 PM' }],
-              },
-              { weekday: 'Tuesday', intervals: [] },
-              { weekday: 'Wednesday', intervals: [] },
-              { weekday: 'Thursday', intervals: [] },
-              { weekday: 'Friday', intervals: [] },
-              { weekday: 'Saturday', intervals: [] },
-              { weekday: 'Sunday', intervals: [] },
-            ],
             distanceKm: 1.2,
             createdAt: '2026-04-07T11:00:00.000Z',
             updatedAt: '2026-04-07T11:00:00.000Z',
@@ -129,9 +116,6 @@ export class MerchantController {
             isActive: true,
             isOpenNow: true,
             status: 'OPEN',
-            useWorkingHours: false,
-            timezone: null,
-            workingHoursSchedule: null,
             createdAt: '2026-04-07T11:00:00.000Z',
             updatedAt: '2026-04-07T11:00:00.000Z',
           },
@@ -183,6 +167,54 @@ export class MerchantController {
       page,
       limit,
     );
+  }
+
+  @ApiTags('Storefront')
+  @ApiTags('Customer')
+  @ApiOperation({
+    summary: 'Get merchant store profile (public)',
+    description:
+      'No auth required (guest or logged-in customer). Returns store branding, location, OPEN/CLOSED status, and weekly hours. Does not expose email or phone.',
+  })
+  @ApiParam({ name: 'merchantId', type: String, format: 'uuid' })
+  @ApiOkResponse({
+    description: 'Merchant public profile',
+    schema: {
+      example: {
+        id: '11111111-1111-1111-1111-111111111111',
+        name: 'Fresh Basket Market',
+        merchantTypeId: 'a0000000-0000-4000-8000-000000000001',
+        merchantType: 'SUPERMARKET',
+        cityCode: 'TRIPOLI',
+        latitude: 34.43,
+        longitude: 35.84,
+        logoUrl: 'https://example.com/merchant-logo.jpg',
+        coverImageUrl: 'https://example.com/merchant-cover.jpg',
+        isActive: true,
+        isOpenNow: true,
+        status: 'OPEN',
+        useWorkingHours: true,
+        timezone: 'Asia/Beirut',
+        workingHoursSchedule: [
+          {
+            weekday: 'Monday',
+            intervals: [{ open: '9:00 AM', close: '10:00 PM' }],
+          },
+          { weekday: 'Tuesday', intervals: [] },
+          { weekday: 'Wednesday', intervals: [] },
+          { weekday: 'Thursday', intervals: [] },
+          { weekday: 'Friday', intervals: [] },
+          { weekday: 'Saturday', intervals: [] },
+          { weekday: 'Sunday', intervals: [] },
+        ],
+        createdAt: '2026-04-07T11:00:00.000Z',
+        updatedAt: '2026-04-07T11:00:00.000Z',
+      },
+    },
+  })
+  @Get(':merchantId')
+  getMerchantProfile(@Param('merchantId', ParseUUIDPipe) merchantId: string) {
+    return this.merchantIntegrationService.getMerchantPublicProfile(merchantId);
   }
 
   @ApiTags('Merchant')
@@ -298,7 +330,7 @@ export class MerchantController {
       'Only open intervals are persisted (sparse rows) for fast reads. ' +
       'Customers only see the store as OPEN when isActive is true and the current local time falls inside one of the intervals. ' +
       'Set useWorkingHours to false to rely on manual OPEN/CLOSED only. ' +
-      'Response includes `workingHoursSchedule`: all 7 days with English `weekday` and `intervals` using `h:mm AM/PM` (empty when closed that day), or null when useWorkingHours is false.',
+      'Response matches GET /merchants/me/working-hours (`useWorkingHours`, `timezone`, `workingHoursSchedule`).',
   })
   @Patch('me/working-hours')
   setMyMerchantWorkingHours(

@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { randomUUID } from 'node:crypto';
@@ -46,14 +47,17 @@ export type MerchantListItem = {
   isOpenNow: boolean;
   /** Customer-visible OPEN/CLOSED (same as isOpenNow). */
   status: MerchantStoreStatus;
-  useWorkingHours: boolean;
-  timezone: string | null;
-  /** Monday–Sunday with English `weekday` and `intervals` (`h:mm AM/PM`, empty = closed); null if `useWorkingHours` is false. */
-  workingHoursSchedule: WorkingDayScheduleEntry[] | null;
   createdAt: Date;
   updatedAt: Date;
   /** Set when listing with lat and lng (near me). */
   distanceKm?: number | null;
+};
+
+/** Store profile for guests and customers (GET /merchants/:merchantId). */
+export type MerchantPublicProfile = MerchantListItem & {
+  useWorkingHours: boolean;
+  timezone: string | null;
+  workingHoursSchedule: WorkingDayScheduleEntry[] | null;
 };
 
 /** Response for GET /merchants/me/working-hours (merchant app edit screen). */
@@ -183,11 +187,6 @@ export class MerchantIntegrationService {
       isActive: r.isActive,
       isOpenNow,
       status: isOpenNow ? MerchantStoreStatus.OPEN : MerchantStoreStatus.CLOSED,
-      useWorkingHours: r.useWorkingHours,
-      timezone: r.timezone,
-      workingHoursSchedule: r.useWorkingHours
-        ? buildFullWeekSchedule(weekOrNull)
-        : null,
       createdAt: r.createdAt,
       updatedAt: r.updatedAt,
       ...(distanceKm !== undefined ? { distanceKm } : {}),
@@ -239,6 +238,31 @@ export class MerchantIntegrationService {
       },
     },
   };
+
+  async getMerchantPublicProfile(
+    merchantId: string,
+  ): Promise<MerchantPublicProfile> {
+    const row = await this.db.merchant.findUnique({
+      where: { id: merchantId },
+      select: this.listSelect,
+    });
+    if (!row) {
+      throw new NotFoundException('Merchant not found');
+    }
+
+    const typed = row as unknown as MerchantRowForList;
+    const week = workingIntervalsToWeek(typed.workingIntervals);
+    const weekOrNull = week.days.length > 0 ? week : null;
+
+    return {
+      ...this.rowToListItem(typed),
+      useWorkingHours: typed.useWorkingHours,
+      timezone: typed.timezone,
+      workingHoursSchedule: typed.useWorkingHours
+        ? buildFullWeekSchedule(weekOrNull)
+        : null,
+    };
+  }
 
   async getMerchantWorkingHours(
     merchantId: string,
@@ -631,7 +655,7 @@ export class MerchantIntegrationService {
   async setMerchantWorkingHours(
     merchantId: string,
     dto: UpsertMerchantWorkingHoursDto,
-  ): Promise<MerchantListItem> {
+  ): Promise<MerchantWorkingHoursResponse> {
     if (!dto.useWorkingHours) {
       await this.db.$transaction(async (tx) => {
         await tx.merchantWorkingInterval.deleteMany({
@@ -642,11 +666,7 @@ export class MerchantIntegrationService {
           data: { useWorkingHours: false },
         });
       });
-      const updated = await this.db.merchant.findUniqueOrThrow({
-        where: { id: merchantId },
-        select: this.listSelect,
-      });
-      return this.rowToListItem(updated as unknown as MerchantRowForList);
+      return this.getMerchantWorkingHours(merchantId);
     }
     if (dto.days == null) {
       throw new BadRequestException(
@@ -681,11 +701,7 @@ export class MerchantIntegrationService {
         },
       });
     });
-    const updated = await this.db.merchant.findUniqueOrThrow({
-      where: { id: merchantId },
-      select: this.listSelect,
-    });
-    return this.rowToListItem(updated as unknown as MerchantRowForList);
+    return this.getMerchantWorkingHours(merchantId);
   }
 
   async deleteMerchant(merchantId: string): Promise<{ message: string }> {
