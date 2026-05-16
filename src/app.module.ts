@@ -14,6 +14,7 @@ import { AdminModule } from './admin/admin.module';
 import { DriversModule } from './drivers/drivers.module';
 import { UsersModule } from './users/users.module';
 import { ServiceAreaModule } from './service-area/service-area.module';
+import { BannerModule } from './banner/banner.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ServiceAreaModule } from './service-area/service-area.module';
     DriversModule,
     AdminModule,
     ServiceAreaModule,
+    BannerModule,
   ],
   controllers: [
     AppController,

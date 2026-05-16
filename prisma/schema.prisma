@@ -166,6 +166,19 @@ model ProductImage {
   @@map("product_images")
 }
 
+/// Home / promo carousel image managed by super admin.
+model Banner {
+  id        String   @id @default(uuid()) @db.Uuid
+  imageUrl  String   @map("image_url") @db.VarChar(500)
+  isActive  Boolean  @default(true) @map("is_active")
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive, sortOrder])
+  @@map("banners")
+}
+
 model SuperAdmin {
   id           String   @id @default(uuid()) @db.Uuid
   fullName     String   @map("full_name") @db.VarChar(255)
