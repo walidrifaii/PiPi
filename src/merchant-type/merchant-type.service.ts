@@ -58,7 +58,9 @@ export class MerchantTypeService {
         e instanceof Prisma.PrismaClientKnownRequestError &&
         e.code === 'P2002'
       ) {
-        throw new ConflictException('A merchant type with this code already exists');
+        throw new ConflictException(
+          'A merchant type with this code already exists',
+        );
       }
       throw e;
     }
@@ -72,7 +74,9 @@ export class MerchantTypeService {
         data: {
           ...(dto.code !== undefined ? { code: dto.code } : {}),
           ...(dto.name !== undefined ? { name: dto.name } : {}),
-          ...(dto.description !== undefined ? { description: dto.description } : {}),
+          ...(dto.description !== undefined
+            ? { description: dto.description }
+            : {}),
           ...(dto.isActive !== undefined ? { isActive: dto.isActive } : {}),
           ...(dto.sortOrder !== undefined ? { sortOrder: dto.sortOrder } : {}),
         },
@@ -82,7 +86,9 @@ export class MerchantTypeService {
         e instanceof Prisma.PrismaClientKnownRequestError &&
         e.code === 'P2002'
       ) {
-        throw new ConflictException('A merchant type with this code already exists');
+        throw new ConflictException(
+          'A merchant type with this code already exists',
+        );
       }
       throw e;
     }

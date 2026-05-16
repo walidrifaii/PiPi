@@ -14,7 +14,10 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+} from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -129,7 +132,9 @@ export class MerchantCatalogSuperAdminController {
     return this.catalog.listProducts(merchantId, categoryId, page, limit);
   }
 
-  @ApiOperation({ summary: 'Create product with main image and optional gallery' })
+  @ApiOperation({
+    summary: 'Create product with main image and optional gallery',
+  })
   @ApiParam({ name: 'merchantId', type: String })
   @ApiParam({ name: 'categoryId', type: String })
   @ApiConsumes('multipart/form-data')
@@ -173,16 +178,16 @@ export class MerchantCatalogSuperAdminController {
     const gallery = files?.gallery ?? [];
     let mainUrl: string | undefined;
     if (main?.buffer) {
-      mainUrl = await this.cloudinary.uploadImage(main.buffer, 'athar/products');
+      mainUrl = await this.cloudinary.uploadImage(
+        main.buffer,
+        'athar/products',
+      );
     }
     const galleryUrls: string[] = [];
     for (const g of gallery) {
       if (g.buffer) {
         galleryUrls.push(
-          await this.cloudinary.uploadImage(
-            g.buffer,
-            'athar/products/gallery',
-          ),
+          await this.cloudinary.uploadImage(g.buffer, 'athar/products/gallery'),
         );
       }
     }
@@ -196,8 +201,7 @@ export class MerchantCatalogSuperAdminController {
   }
 
   @ApiOperation({
-    summary:
-      'Update product (JSON). Use imageUrl / extraImageUrls for images.',
+    summary: 'Update product (JSON). Use imageUrl / extraImageUrls for images.',
   })
   @ApiParam({ name: 'merchantId', type: String })
   @ApiParam({ name: 'productId', type: String })

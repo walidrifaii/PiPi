@@ -13,23 +13,27 @@ export class CloudinaryService {
 
   async uploadImage(buffer: Buffer, folder: string): Promise<string> {
     try {
-      const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder, resource_type: 'image' },
-          (error, uploaded) => {
-            if (error || !uploaded) {
-              reject(error);
-              return;
-            }
-            resolve(uploaded as { secure_url: string });
-          },
-        );
-        stream.end(buffer);
-      });
+      const result = await new Promise<{ secure_url: string }>(
+        (resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder, resource_type: 'image' },
+            (error, uploaded) => {
+              if (error || !uploaded) {
+                reject(error);
+                return;
+              }
+              resolve(uploaded as { secure_url: string });
+            },
+          );
+          stream.end(buffer);
+        },
+      );
 
       return result.secure_url;
     } catch {
-      throw new InternalServerErrorException('Failed to upload image to Cloudinary');
+      throw new InternalServerErrorException(
+        'Failed to upload image to Cloudinary',
+      );
     }
   }
 }

@@ -31,9 +31,7 @@ export class CreateMerchantTypeDto {
   @IsString()
   @MinLength(1)
   @MaxLength(255)
-  @Transform(({ value }) =>
-    typeof value === 'string' ? value.trim() : value,
-  )
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   name: string;
 
   @ApiPropertyOptional()

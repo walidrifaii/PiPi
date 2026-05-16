@@ -70,6 +70,19 @@ export type GetMerchantsQuery = {
   lat?: string;
   lng?: string;
   radiusKm?: string;
+  page?: number;
+  limit?: number;
+};
+
+export type PagedMerchantsResponse = {
+  items: MerchantListItem[];
+  pagination: {
+    page: number;
+    limit: number;
+    pageTotal: number;
+    total: number;
+    totalPages: number;
+  };
 };
 
 type MerchantRowForList = {
@@ -112,6 +125,37 @@ export class MerchantIntegrationService {
     }
     const n = Number(value as string);
     return Number.isFinite(n) ? n : null;
+  }
+
+  private normalizePagination(page: number, limit: number) {
+    const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
+    const safeLimit =
+      Number.isFinite(limit) && limit > 0
+        ? Math.min(Math.floor(limit), 100)
+        : 20;
+    return {
+      page: safePage,
+      limit: safeLimit,
+      skip: (safePage - 1) * safeLimit,
+    };
+  }
+
+  private pagedResponse(
+    items: MerchantListItem[],
+    total: number,
+    page: number,
+    limit: number,
+  ): PagedMerchantsResponse {
+    return {
+      items,
+      pagination: {
+        page,
+        limit,
+        pageTotal: items.length,
+        total,
+        totalPages: Math.max(1, Math.ceil(total / limit)),
+      },
+    };
   }
 
   private rowToListItem(
@@ -214,7 +258,10 @@ export class MerchantIntegrationService {
     };
   }
 
-  async getMerchants(q: GetMerchantsQuery = {}): Promise<MerchantListItem[]> {
+  async getMerchants(
+    q: GetMerchantsQuery = {},
+  ): Promise<PagedMerchantsResponse> {
+    const pg = this.normalizePagination(q.page ?? 1, q.limit ?? 20);
     const merchantTypeCode = q.merchantTypeCode;
     const cityRaw = q.cityCode;
     const latRaw = q.lat;
@@ -290,7 +337,7 @@ export class MerchantIntegrationService {
         userLat,
       );
       if (!resolved) {
-        return [];
+        return this.pagedResponse([], 0, pg.page, pg.limit);
       }
       effectiveCity = resolved.code;
       serviceBoundaryPoly = resolved.polygon;
@@ -304,7 +351,7 @@ export class MerchantIntegrationService {
         await this.serviceArea.getPolygonRingsForActiveCode(normalizedCity);
       if (poly) {
         if (!pointInPolygonRings(userLng, userLat, poly)) {
-          return [];
+          return this.pagedResponse([], 0, pg.page, pg.limit);
         }
         serviceBoundaryPoly = poly;
       }
@@ -328,7 +375,7 @@ export class MerchantIntegrationService {
 
     if (serviceBoundaryPoly !== undefined && hasLat) {
       const boundary = serviceBoundaryPoly;
-      /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
+
       const bbox = exteriorRingBoundingBox(boundary.exterior);
       const kept: typeof rows = [];
       for (const r of rows) {
@@ -346,55 +393,64 @@ export class MerchantIntegrationService {
         }
         kept.push(r);
       }
-      /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
+
       rows = kept;
     }
 
+    let items: MerchantListItem[];
+
     if (!hasLat || userLat === undefined || userLng === undefined) {
-      return rows.map((r) =>
+      items = rows.map((r) =>
         this.rowToListItem(r as unknown as MerchantRowForList),
       );
-    }
+    } else {
+      type WithDist = { row: MerchantRowForList; distanceKm: number | null };
+      let withDist: WithDist[] = rows.map((r) => {
+        const row = r as MerchantRowForList;
+        const lat = this.decimalToNumber(row.latitude);
+        const lng = this.decimalToNumber(row.longitude);
+        if (lat === null || lng === null) {
+          return { row, distanceKm: null };
+        }
+        return {
+          row,
+          distanceKm: haversineDistanceKm(userLat, userLng, lat, lng),
+        };
+      });
 
-    type WithDist = { row: MerchantRowForList; distanceKm: number | null };
-    let withDist: WithDist[] = rows.map((r) => {
-      const row = r as MerchantRowForList;
-      const lat = this.decimalToNumber(row.latitude);
-      const lng = this.decimalToNumber(row.longitude);
-      if (lat === null || lng === null) {
-        return { row, distanceKm: null };
+      if (radiusKm !== undefined) {
+        withDist = withDist.filter(
+          (x) => x.distanceKm !== null && x.distanceKm <= radiusKm,
+        );
       }
-      return {
-        row,
-        distanceKm: haversineDistanceKm(userLat, userLng, lat, lng),
-      };
-    });
 
-    if (radiusKm !== undefined) {
-      withDist = withDist.filter(
-        (x) => x.distanceKm !== null && x.distanceKm <= radiusKm,
+      withDist.sort((a, b) => {
+        if (a.distanceKm === null && b.distanceKm === null) {
+          return b.row.createdAt.getTime() - a.row.createdAt.getTime();
+        }
+        if (a.distanceKm === null) {
+          return 1;
+        }
+        if (b.distanceKm === null) {
+          return -1;
+        }
+        if (a.distanceKm !== b.distanceKm) {
+          return a.distanceKm - b.distanceKm;
+        }
+        return b.row.createdAt.getTime() - a.row.createdAt.getTime();
+      });
+
+      items = withDist.map((x) =>
+        this.rowToListItem(
+          x.row as unknown as MerchantRowForList,
+          x.distanceKm,
+        ),
       );
     }
 
-    withDist.sort((a, b) => {
-      if (a.distanceKm === null && b.distanceKm === null) {
-        return b.row.createdAt.getTime() - a.row.createdAt.getTime();
-      }
-      if (a.distanceKm === null) {
-        return 1;
-      }
-      if (b.distanceKm === null) {
-        return -1;
-      }
-      if (a.distanceKm !== b.distanceKm) {
-        return a.distanceKm - b.distanceKm;
-      }
-      return b.row.createdAt.getTime() - a.row.createdAt.getTime();
-    });
-
-    return withDist.map((x) =>
-      this.rowToListItem(x.row as unknown as MerchantRowForList, x.distanceKm),
-    );
+    const total = items.length;
+    const pageItems = items.slice(pg.skip, pg.skip + pg.limit);
+    return this.pagedResponse(pageItems, total, pg.page, pg.limit);
   }
 
   private async assertUniqueMerchantCredentials(

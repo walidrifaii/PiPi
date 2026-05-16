@@ -31,7 +31,10 @@ class IsWeekdayInputConstraint implements ValidatorConstraintInterface {
 @ValidatorConstraint({ name: 'isMerchantLocalTime', async: false })
 class IsMerchantLocalTimeConstraint implements ValidatorConstraintInterface {
   validate(value: unknown): boolean {
-    return typeof value === 'string' && parseLocalTimeToMinutes(value.trim()) !== null;
+    return (
+      typeof value === 'string' &&
+      parseLocalTimeToMinutes(value.trim()) !== null
+    );
   }
 
   defaultMessage(): string {

@@ -18,7 +18,10 @@ export class CreateMerchantDto {
   @IsString()
   name: string;
 
-  @ApiProperty({ format: 'uuid', description: 'Merchant type id (see GET /merchant-types)' })
+  @ApiProperty({
+    format: 'uuid',
+    description: 'Merchant type id (see GET /merchant-types)',
+  })
   @IsUUID('4')
   merchantTypeId: string;
 
@@ -32,7 +35,9 @@ export class CreateMerchantDto {
   @IsString()
   coverImageUrl?: string;
 
-  @ApiPropertyOptional({ description: 'Required if password is set (merchant portal login)' })
+  @ApiPropertyOptional({
+    description: 'Required if password is set (merchant portal login)',
+  })
   @IsOptional()
   @IsEmail()
   email?: string;
@@ -44,7 +49,10 @@ export class CreateMerchantDto {
   @MaxLength(50)
   phone?: string;
 
-  @ApiPropertyOptional({ minLength: 8, description: 'If set, email and phone are required' })
+  @ApiPropertyOptional({
+    minLength: 8,
+    description: 'If set, email and phone are required',
+  })
   @IsOptional()
   @IsString()
   @MinLength(8)

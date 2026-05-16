@@ -14,7 +14,11 @@ function parseJwtPayload(payload: unknown): JwtUserPayload {
   const sub = p.sub;
   const email = p.email;
   const role = p.role;
-  if (typeof sub !== 'string' || typeof email !== 'string' || typeof role !== 'string') {
+  if (
+    typeof sub !== 'string' ||
+    typeof email !== 'string' ||
+    typeof role !== 'string'
+  ) {
     throw new UnauthorizedException('Invalid token');
   }
   if (role === 'SUPER_ADMIN') {

@@ -40,10 +40,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, UserAccountGuard)
   @ApiOperation({ summary: 'Update your profile (customer JWT)' })
   @Patch('me')
-  patchMe(
-    @Req() req: { user?: JwtUserPayload },
-    @Body() dto: UpdateUserDto,
-  ) {
+  patchMe(@Req() req: { user?: JwtUserPayload }, @Body() dto: UpdateUserDto) {
     const user = req.user!;
     return this.usersService.updateProfile(user.sub, dto);
   }
@@ -63,10 +60,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Update a user by id (super admin only)' })
   @ApiParam({ name: 'userId', type: String })
   @Patch(':userId')
-  patchUser(
-    @Param('userId') userId: string,
-    @Body() dto: UpdateUserAdminDto,
-  ) {
+  patchUser(@Param('userId') userId: string, @Body() dto: UpdateUserAdminDto) {
     return this.usersService.updateByAdmin(userId, dto);
   }
 }

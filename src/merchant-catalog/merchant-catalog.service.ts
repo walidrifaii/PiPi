@@ -4,7 +4,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { computeMerchantOpenNow, workingIntervalsToWeek } from '../common/merchant-open-status';
+import {
+  computeMerchantOpenNow,
+  workingIntervalsToWeek,
+} from '../common/merchant-open-status';
 import { UnifiedProduct } from '../merchant/catalog.types';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -22,10 +25,19 @@ export class MerchantCatalogService {
       Number.isFinite(limit) && limit > 0
         ? Math.min(Math.floor(limit), 100)
         : 20;
-    return { page: safePage, limit: safeLimit, skip: (safePage - 1) * safeLimit };
+    return {
+      page: safePage,
+      limit: safeLimit,
+      skip: (safePage - 1) * safeLimit,
+    };
   }
 
-  private pagedResponse<T>(items: T[], total: number, page: number, limit: number) {
+  private pagedResponse<T>(
+    items: T[],
+    total: number,
+    page: number,
+    limit: number,
+  ) {
     return {
       items,
       pagination: {
@@ -195,7 +207,12 @@ export class MerchantCatalogService {
     return { message: 'Category deleted' };
   }
 
-  async listProducts(merchantId: string, categoryId: string, page = 1, limit = 20) {
+  async listProducts(
+    merchantId: string,
+    categoryId: string,
+    page = 1,
+    limit = 20,
+  ) {
     await this.assertMerchantActive(merchantId);
     const category = await this.prisma.merchantCategory.findFirst({
       where: { id: categoryId, merchantId },

@@ -1,4 +1,10 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import {
   exteriorRingAreaSqDegrees,
@@ -68,7 +74,7 @@ export class ServiceAreaService {
         );
         continue;
       }
-      /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
+
       const bbox = exteriorRingBoundingBox(parsed.exterior);
       if (bbox !== null && pointOutsideExteriorBBox(lng, lat, bbox)) {
         continue;
@@ -78,7 +84,6 @@ export class ServiceAreaService {
       }
       const areaSq = exteriorRingAreaSqDegrees(parsed.exterior);
       hits.push({ code: row.code, polygon: parsed, areaSq });
-      /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
     }
     if (hits.length === 0) {
       return null;
@@ -159,5 +164,32 @@ export class ServiceAreaService {
         updatedAt: true,
       },
     });
+  }
+
+  async deleteByCode(code: string): Promise<{ message: string }> {
+    const normalized = this.normalizeCode(code);
+    if (!normalized) {
+      throw new BadRequestException('code is required');
+    }
+
+    const existing = await this.prisma.serviceArea.findUnique({
+      where: { code: normalized },
+      select: { code: true },
+    });
+    if (!existing) {
+      throw new NotFoundException('Service area not found');
+    }
+
+    const merchantsUsingCode = await this.prisma.merchant.count({
+      where: { cityCode: normalized },
+    });
+    if (merchantsUsingCode > 0) {
+      throw new ConflictException(
+        'Cannot delete this service area while merchants are assigned to it',
+      );
+    }
+
+    await this.prisma.serviceArea.delete({ where: { code: normalized } });
+    return { message: 'Service area deleted' };
   }
 }

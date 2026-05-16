@@ -10,8 +10,9 @@ import { JwtUserPayload } from './jwt-user.payload';
 @Injectable()
 export class UserAccountGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
-    const user = context.switchToHttp().getRequest<{ user?: JwtUserPayload }>()
-      .user;
+    const user = context
+      .switchToHttp()
+      .getRequest<{ user?: JwtUserPayload }>().user;
     if (user?.role === 'USER') {
       return true;
     }

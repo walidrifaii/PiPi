@@ -63,8 +63,7 @@ function poolSslOption():
     mode === 'verify-full'
   ) {
     return {
-      rejectUnauthorized:
-        process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== '0',
+      rejectUnauthorized: process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== '0',
     };
   }
   return undefined;
@@ -123,8 +122,7 @@ export class PrismaService extends PrismaClient {
           max: envInt('DATABASE_NEON_POOL_MAX', 10),
         },
         {
-          onPoolError: (err) =>
-            log.warn(`Neon pool error: ${err.message}`),
+          onPoolError: (err) => log.warn(`Neon pool error: ${err.message}`),
         },
       );
     } else {
@@ -148,8 +146,7 @@ export class PrismaService extends PrismaClient {
 
       adapter = new PrismaPg(pool, {
         disposeExternalPool: true,
-        onPoolError: (err) =>
-          log.warn(`PostgreSQL pool error: ${err.message}`),
+        onPoolError: (err) => log.warn(`PostgreSQL pool error: ${err.message}`),
       });
     }
 

@@ -16,7 +16,8 @@ export class SetMerchantStoreStatusDto {
   @ApiProperty({
     enum: MerchantStoreStatus,
     example: MerchantStoreStatus.OPEN,
-    description: 'OPEN = store visible and accepting catalog/orders rules; CLOSED = off',
+    description:
+      'OPEN = store visible and accepting catalog/orders rules; CLOSED = off',
   })
   @IsEnum(MerchantStoreStatus)
   status: MerchantStoreStatus;

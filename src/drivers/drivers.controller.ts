@@ -45,10 +45,7 @@ export class DriversController {
       'Update your profile or status (driver JWT); use status for availability',
   })
   @Patch('me')
-  patchMe(
-    @Req() req: { user?: JwtUserPayload },
-    @Body() dto: UpdateDriverDto,
-  ) {
+  patchMe(@Req() req: { user?: JwtUserPayload }, @Body() dto: UpdateDriverDto) {
     const user = req.user!;
     return this.driversService.updateProfile(user.sub, dto);
   }

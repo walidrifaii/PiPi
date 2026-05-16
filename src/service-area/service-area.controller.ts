@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Put,
@@ -42,10 +43,7 @@ export class ServiceAreaController {
   })
   @ApiParam({ name: 'code', example: 'TRIPOLI' })
   @Put('admin/:code')
-  upsert(
-    @Param('code') code: string,
-    @Body() dto: UpsertServiceAreaDto,
-  ) {
+  upsert(@Param('code') code: string, @Body() dto: UpsertServiceAreaDto) {
     const trimmed = code?.trim() ?? '';
     if (!trimmed) {
       throw new BadRequestException('code is required');
@@ -59,5 +57,21 @@ export class ServiceAreaController {
       }
     }
     return this.serviceAreaService.upsertByCode(trimmed, dto);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, SuperAdminGuard)
+  @ApiOperation({
+    summary:
+      'Delete a service area by code (super admin). Fails if any merchant still uses this cityCode.',
+  })
+  @ApiParam({ name: 'code', example: 'TRIPOLI' })
+  @Delete('admin/:code')
+  remove(@Param('code') code: string) {
+    const trimmed = code?.trim() ?? '';
+    if (!trimmed) {
+      throw new BadRequestException('code is required');
+    }
+    return this.serviceAreaService.deleteByCode(trimmed);
   }
 }
