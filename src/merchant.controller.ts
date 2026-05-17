@@ -32,6 +32,7 @@ import {
 } from './merchant/dto/set-merchant-store-status.dto';
 import { UpdateMerchantDto } from './merchant/dto/update-merchant.dto';
 import { UpsertMerchantWorkingHoursDto } from './merchant/dto/upsert-merchant-working-hours.dto';
+import { ParseUuidMerchantIdPipe } from './common/parse-uuid-merchant-id.pipe';
 import { MerchantCatalogService } from './merchant-catalog/merchant-catalog.service';
 import { MerchantIntegrationService } from './merchant.integration.service';
 
@@ -169,8 +170,123 @@ export class MerchantController {
     );
   }
 
-  @ApiTags('Storefront')
-  @ApiTags('Customer')
+  @ApiTags('Storefront · Menu')
+  @ApiOperation({
+    operationId: 'storefrontListMerchantCategories',
+    summary: 'List menu categories for a store (public)',
+    description:
+      'No auth required. Paginated categories for the given merchant, ordered by sortOrder. Available when the store is CLOSED (browse menu); returns 404 if the merchant does not exist or is deactivated.',
+  })
+  @ApiParam({ name: 'merchantId', type: String, format: 'uuid' })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @ApiOkResponse({
+    description: 'Paginated category list',
+    schema: {
+      example: {
+        items: [
+          {
+            id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+            merchantId: '11111111-1111-1111-1111-111111111111',
+            name: 'Burgers',
+            nameAr: 'برغر',
+            description: null,
+            descriptionAr: null,
+            imageUrl: 'https://example.com/category.jpg',
+            sortOrder: 0,
+            createdAt: '2026-04-07T11:00:00.000Z',
+            updatedAt: '2026-04-07T11:00:00.000Z',
+            _count: { products: 12 },
+          },
+        ],
+        pagination: {
+          page: 1,
+          limit: 20,
+          pageTotal: 1,
+          total: 1,
+          totalPages: 1,
+        },
+      },
+    },
+  })
+  @Get(':merchantId/categories')
+  listStorefrontCategories(
+    @Param('merchantId', ParseUuidMerchantIdPipe) merchantId: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+  ) {
+    return this.merchantCatalogService.listCategoriesForStorefront(
+      merchantId,
+      page,
+      limit,
+    );
+  }
+
+  @ApiTags('Storefront · Menu')
+  @ApiOperation({
+    operationId: 'storefrontListCategoryProducts',
+    summary: 'List products in a category (public)',
+    description:
+      'No auth required. Paginated products for the given merchant and category. Category must belong to that merchant. Store may be CLOSED; returns 404 if merchant is deactivated or category not found.',
+  })
+  @ApiParam({ name: 'merchantId', type: String, format: 'uuid' })
+  @ApiParam({ name: 'categoryId', type: String, format: 'uuid' })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @ApiOkResponse({
+    description: 'Paginated product list',
+    schema: {
+      example: {
+        items: [
+          {
+            id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+            categoryId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+            name: 'Cheese Burger',
+            nameAr: 'برغر جبنة',
+            description: null,
+            descriptionAr: null,
+            price: 12.5,
+            discountPrice: 10,
+            imageUrl: 'https://example.com/product.jpg',
+            hasDiscount: true,
+            effectivePrice: 10,
+            images: [
+              {
+                id: '...',
+                url: 'https://example.com/gallery.jpg',
+                sortOrder: 0,
+              },
+            ],
+            createdAt: '2026-04-07T11:00:00.000Z',
+            updatedAt: '2026-04-07T11:00:00.000Z',
+          },
+        ],
+        pagination: {
+          page: 1,
+          limit: 20,
+          pageTotal: 1,
+          total: 1,
+          totalPages: 1,
+        },
+      },
+    },
+  })
+  @Get(':merchantId/categories/:categoryId/products')
+  listStorefrontCategoryProducts(
+    @Param('merchantId', ParseUuidMerchantIdPipe) merchantId: string,
+    @Param('categoryId', ParseUUIDPipe) categoryId: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+  ) {
+    return this.merchantCatalogService.listProductsForStorefront(
+      merchantId,
+      categoryId,
+      page,
+      limit,
+    );
+  }
+
+  @ApiTags('Storefront', 'Customer')
   @ApiOperation({
     summary: 'Get merchant store profile (public)',
     description:
@@ -213,7 +329,9 @@ export class MerchantController {
     },
   })
   @Get(':merchantId')
-  getMerchantProfile(@Param('merchantId', ParseUUIDPipe) merchantId: string) {
+  getMerchantProfile(
+    @Param('merchantId', ParseUuidMerchantIdPipe) merchantId: string,
+  ) {
     return this.merchantIntegrationService.getMerchantPublicProfile(merchantId);
   }
 

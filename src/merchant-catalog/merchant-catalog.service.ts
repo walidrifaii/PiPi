@@ -134,8 +134,22 @@ export class MerchantCatalogService {
     });
   }
 
+  /** Public storefront: guest or customer; store may be CLOSED but must exist and be active. */
+  async listCategoriesForStorefront(merchantId: string, page = 1, limit = 20) {
+    await this.assertMerchantBrowsable(merchantId);
+    return this.fetchCategoriesPaged(merchantId, page, limit);
+  }
+
   async listCategories(merchantId: string, page = 1, limit = 20) {
-    await this.assertMerchantActive(merchantId);
+    await this.assertMerchantExists(merchantId);
+    return this.fetchCategoriesPaged(merchantId, page, limit);
+  }
+
+  private async fetchCategoriesPaged(
+    merchantId: string,
+    page: number,
+    limit: number,
+  ) {
     const pg = this.normalizePagination(page, limit);
     const where = { merchantId };
     const [total, items] = await this.prisma.$transaction([
@@ -207,13 +221,32 @@ export class MerchantCatalogService {
     return { message: 'Category deleted' };
   }
 
+  async listProductsForStorefront(
+    merchantId: string,
+    categoryId: string,
+    page = 1,
+    limit = 20,
+  ) {
+    await this.assertMerchantBrowsable(merchantId);
+    return this.fetchProductsPaged(merchantId, categoryId, page, limit);
+  }
+
   async listProducts(
     merchantId: string,
     categoryId: string,
     page = 1,
     limit = 20,
   ) {
-    await this.assertMerchantActive(merchantId);
+    await this.assertMerchantExists(merchantId);
+    return this.fetchProductsPaged(merchantId, categoryId, page, limit);
+  }
+
+  private async fetchProductsPaged(
+    merchantId: string,
+    categoryId: string,
+    page: number,
+    limit: number,
+  ) {
     const category = await this.prisma.merchantCategory.findFirst({
       where: { id: categoryId, merchantId },
     });
@@ -252,7 +285,7 @@ export class MerchantCatalogService {
     page = 1,
     limit = 20,
   ) {
-    await this.assertMerchantActive(merchantId);
+    await this.assertMerchantExists(merchantId);
 
     if (categoryId !== undefined && categoryId !== '') {
       const category = await this.prisma.merchantCategory.findFirst({
@@ -596,6 +629,17 @@ export class MerchantCatalogService {
     });
     if (!merchant) {
       throw new NotFoundException('Merchant not found');
+    }
+  }
+
+  /** Store exists and is not permanently deactivated (hours may still show CLOSED). */
+  private async assertMerchantBrowsable(merchantId: string): Promise<void> {
+    const merchant = await this.prisma.merchant.findUnique({
+      where: { id: merchantId },
+      select: { isActive: true },
+    });
+    if (!merchant?.isActive) {
+      throw new NotFoundException('Merchant not found or inactive');
     }
   }
 }

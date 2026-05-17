@@ -29,8 +29,9 @@ import { BannerModule } from './banner/banner.module';
   ],
   controllers: [
     AppController,
-    MerchantController,
+    // Before MerchantController so `/merchants/me/*` is not captured by `:merchantId/*`.
     MerchantCatalogController,
+    MerchantController,
     MerchantCatalogSuperAdminController,
   ],
   providers: [
