@@ -279,6 +279,16 @@ export class MerchantCatalogService {
     return this.pagedResponse(items, total, pg.page, pg.limit);
   }
 
+  async listAllProductsForStorefront(
+    merchantId: string,
+    categoryId?: string,
+    page = 1,
+    limit = 20,
+  ) {
+    await this.assertMerchantBrowsable(merchantId);
+    return this.fetchAllProductsPaged(merchantId, categoryId, page, limit);
+  }
+
   async listAllProducts(
     merchantId: string,
     categoryId?: string,
@@ -286,7 +296,15 @@ export class MerchantCatalogService {
     limit = 20,
   ) {
     await this.assertMerchantExists(merchantId);
+    return this.fetchAllProductsPaged(merchantId, categoryId, page, limit);
+  }
 
+  private async fetchAllProductsPaged(
+    merchantId: string,
+    categoryId: string | undefined,
+    page: number,
+    limit: number,
+  ) {
     if (categoryId !== undefined && categoryId !== '') {
       const category = await this.prisma.merchantCategory.findFirst({
         where: { id: categoryId, merchantId },

@@ -209,6 +209,70 @@ export class MerchantController {
       },
     },
   })
+  @ApiTags('Storefront · Menu')
+  @ApiOperation({
+    operationId: 'storefrontListMerchantProducts',
+    summary: 'List products for a store (public)',
+    description:
+      'No auth required. Paginated products for the merchant. Optional `categoryId` filters to one category. Omit `categoryId` for all products. Store may be CLOSED; returns 404 if merchant is deactivated or category not found.',
+  })
+  @ApiParam({ name: 'merchantId', type: String, format: 'uuid' })
+  @ApiQuery({
+    name: 'categoryId',
+    required: false,
+    type: String,
+    format: 'uuid',
+    description: 'Optional filter by category UUID',
+  })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @ApiOkResponse({
+    description: 'Paginated product list',
+    schema: {
+      example: {
+        items: [
+          {
+            id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+            categoryId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+            name: 'Cheese Burger',
+            nameAr: 'برغر جبنة',
+            price: 12.5,
+            discountPrice: 10,
+            hasDiscount: true,
+            effectivePrice: 10,
+            category: {
+              id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+              name: 'Burgers',
+              nameAr: 'برغر',
+            },
+          },
+        ],
+        pagination: {
+          page: 1,
+          limit: 20,
+          pageTotal: 1,
+          total: 1,
+          totalPages: 1,
+        },
+      },
+    },
+  })
+  @Get(':merchantId/products')
+  listStorefrontProducts(
+    @Param('merchantId', ParseUuidMerchantIdPipe) merchantId: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query('categoryId', new ParseUUIDPipe({ optional: true }))
+    categoryId?: string,
+  ) {
+    return this.merchantCatalogService.listAllProductsForStorefront(
+      merchantId,
+      categoryId,
+      page,
+      limit,
+    );
+  }
+
   @Get(':merchantId/categories')
   listStorefrontCategories(
     @Param('merchantId', ParseUuidMerchantIdPipe) merchantId: string,

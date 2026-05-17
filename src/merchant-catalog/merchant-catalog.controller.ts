@@ -112,15 +112,17 @@ export class MerchantCatalogController {
   }
 
   @ApiOperation({
-    summary: 'List all products for your store',
+    operationId: 'merchantListProducts',
+    summary: 'List products for your store',
     description:
-      'Optional query `categoryId` filters to products in that category (must belong to your store).',
+      'Paginated. Optional `categoryId` query filters to one category (must belong to your store). Omit `categoryId` to list all products.',
   })
   @ApiQuery({
     name: 'categoryId',
     required: false,
     type: String,
-    description: 'Filter by category UUID',
+    format: 'uuid',
+    description: 'Optional filter by category UUID',
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
