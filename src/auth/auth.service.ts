@@ -14,7 +14,10 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterMerchantDto } from './dto/register-merchant.dto';
 import { RegisterSuperAdminDto } from './dto/register-super-admin.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { SendRegisterOtpDto } from './dto/send-register-otp.dto';
+import { VerifyRegisterOtpDto } from './dto/verify-register-otp.dto';
 import { JwtUserPayload } from './jwt-user.payload';
+import { OtpService } from '../otp/otp.service';
 
 /** Account role returned on merchant auth (store operator). */
 export const MERCHANT_ACCOUNT_ROLE = 'admin' as const;
@@ -36,6 +39,7 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
+    private readonly otpService: OtpService,
   ) {}
 
   private async signAccessToken(payload: JwtUserPayload): Promise<string> {
@@ -485,31 +489,46 @@ export class AuthService {
     };
   }
 
-  async registerUser(dto: RegisterUserDto) {
-    const orConditions: { email?: string; phone?: string }[] = [
-      { phone: dto.phone },
-    ];
-    if (dto.email) {
-      orConditions.push({ email: dto.email });
+  async resendRegisterOtp(dto: SendRegisterOtpDto) {
+    if (!this.otpService.hasPendingRegistration(dto.phone)) {
+      throw new BadRequestException(
+        'No pending registration for this phone. Call POST /auth/user/register first.',
+      );
     }
-    const existing = await this.prisma.user.findFirst({
-      where: { OR: orConditions },
-      select: { id: true },
+    return this.otpService.sendRegisterOtp(dto.phone);
+  }
+
+  async registerUser(dto: RegisterUserDto) {
+    await this.assertUserRegistrationAvailable(dto.phone, dto.email);
+
+    const passwordHash = await bcrypt.hash(dto.password, 10);
+    this.otpService.setPendingRegistration(dto.phone, {
+      fullName: dto.fullName,
+      email: dto.email,
+      passwordHash,
     });
 
-    if (existing) {
+    return this.otpService.sendRegisterOtp(dto.phone);
+  }
+
+  async verifyRegisterOtp(dto: VerifyRegisterOtpDto) {
+    this.otpService.verifyRegisterOtp(dto.phone, dto.code);
+
+    const pending = this.otpService.consumePendingRegistration(dto.phone);
+    if (!pending) {
       throw new BadRequestException(
-        'A user with this phone or email already exists',
+        'Registration session expired. Submit POST /auth/user/register again.',
       );
     }
 
-    const passwordHash = await bcrypt.hash(dto.password, 10);
+    await this.assertUserRegistrationAvailable(dto.phone, pending.email);
+
     const user = await this.prisma.user.create({
       data: {
-        fullName: dto.fullName,
+        fullName: pending.fullName,
         phone: dto.phone,
-        email: dto.email,
-        passwordHash,
+        email: pending.email,
+        passwordHash: pending.passwordHash,
       },
       select: {
         id: true,
@@ -536,6 +555,26 @@ export class AuthService {
         role: USER_ACCOUNT_ROLE,
       },
     };
+  }
+
+  private async assertUserRegistrationAvailable(
+    phone: string,
+    email?: string,
+  ): Promise<void> {
+    const orConditions: { email?: string; phone?: string }[] = [{ phone }];
+    if (email) {
+      orConditions.push({ email });
+    }
+    const existing = await this.prisma.user.findFirst({
+      where: { OR: orConditions },
+      select: { id: true },
+    });
+
+    if (existing) {
+      throw new BadRequestException(
+        'A user with this phone or email already exists',
+      );
+    }
   }
 
   async loginUser(dto: LoginUserDto) {
