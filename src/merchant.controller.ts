@@ -154,6 +154,93 @@ export class MerchantController {
 
   @ApiTags('Storefront')
   @ApiOperation({
+    operationId: 'storefrontSearch',
+    summary: 'Search merchants and products by name (public)',
+    description:
+      'No auth required (guest or logged-in customer). One request returns both matching stores and matching products. Names must **start with** the search term (case-insensitive), e.g. `walid` matches `Walid` and `Walidruf` but not names that only contain those letters in the middle. Minimum 2 characters. Optional `merchantType` filters both lists.',
+  })
+  @ApiQuery({
+    name: 'name',
+    required: true,
+    example: 'walid',
+    description:
+      'Search term (at least 2 characters; store/product name must start with this)',
+  })
+  @ApiQuery({
+    name: 'merchantType',
+    required: false,
+    description: 'Optional filter by merchant type code (e.g. SUPERMARKET)',
+  })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @ApiOkResponse({
+    description: 'Merchants and products matching the search term',
+    schema: {
+      example: {
+        merchants: {
+          items: [
+            {
+              id: '11111111-1111-1111-1111-111111111111',
+              name: 'Fresh Basket Market',
+              merchantType: 'SUPERMARKET',
+              isOpenNow: true,
+              status: 'OPEN',
+            },
+          ],
+          pagination: {
+            page: 1,
+            limit: 20,
+            pageTotal: 1,
+            total: 1,
+            totalPages: 1,
+          },
+        },
+        products: {
+          items: [
+            {
+              id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+              name: 'Fresh Salad',
+              price: 8.5,
+              merchant: {
+                id: '11111111-1111-1111-1111-111111111111',
+                name: 'Fresh Basket Market',
+              },
+            },
+          ],
+          pagination: {
+            page: 1,
+            limit: 20,
+            pageTotal: 1,
+            total: 1,
+            totalPages: 1,
+          },
+        },
+      },
+    },
+  })
+  @Get('search')
+  async searchStorefront(
+    @Query('name') name: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query('merchantType') merchantType?: string,
+  ) {
+    const [merchants, products] = await Promise.all([
+      this.merchantIntegrationService.searchMerchantsByName(
+        name,
+        page,
+        limit,
+        { merchantTypeCode: merchantType },
+      ),
+      this.merchantCatalogService.searchProductsByName(name, page, limit, {
+        merchantTypeCode: merchantType,
+      }),
+    ]);
+    return { merchants, products };
+  }
+
+  @ApiTags('Storefront')
+  @ApiOperation({
     summary:
       'List discounted products across all active merchants (on sale: discount price below list price)',
   })
@@ -168,6 +255,53 @@ export class MerchantController {
       page,
       limit,
     );
+  }
+
+  @ApiTags('Storefront · Menu')
+  @ApiOperation({
+    operationId: 'storefrontGetProduct',
+    summary: 'Get product details by id (public)',
+    description:
+      'No auth required (guest or logged-in customer). Product info, gallery images, and category only (no merchant data). Returns 404 if the product does not exist or the store is deactivated.',
+  })
+  @ApiParam({ name: 'productId', type: String, format: 'uuid' })
+  @ApiOkResponse({
+    description: 'Product details',
+    schema: {
+      example: {
+        id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+        categoryId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+        name: 'Cheese Burger',
+        nameAr: 'برغر جبنة',
+        description: 'Beef patty with cheese',
+        descriptionAr: null,
+        price: 12.5,
+        discountPrice: 10,
+        imageUrl: 'https://example.com/product.jpg',
+        hasDiscount: true,
+        effectivePrice: 10,
+        images: [
+          {
+            id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
+            url: 'https://example.com/gallery.jpg',
+            sortOrder: 0,
+          },
+        ],
+        createdAt: '2026-04-07T11:00:00.000Z',
+        updatedAt: '2026-04-07T11:00:00.000Z',
+        category: {
+          id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+          name: 'Burgers',
+          nameAr: 'برغر',
+          description: null,
+          descriptionAr: null,
+        },
+      },
+    },
+  })
+  @Get('products/:productId')
+  getStorefrontProduct(@Param('productId', ParseUUIDPipe) productId: string) {
+    return this.merchantCatalogService.getProductForStorefront(productId);
   }
 
   @ApiTags('Storefront · Menu')

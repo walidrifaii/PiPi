@@ -9,6 +9,10 @@ import {
   workingIntervalsToWeek,
 } from '../common/merchant-open-status';
 import { UnifiedProduct } from '../merchant/catalog.types';
+import {
+  nameStartsWithFilter,
+  normalizeNameSearchTerm,
+} from '../common/name-search';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -132,6 +136,57 @@ export class MerchantCatalogService {
         ),
       };
     });
+  }
+
+  /** Public storefront: product details by id (guest or logged-in customer). */
+  async getProductForStorefront(productId: string) {
+    const row = await this.prisma.product.findUnique({
+      where: { id: productId },
+      include: {
+        images: { orderBy: { sortOrder: 'asc' } },
+        category: {
+          select: {
+            id: true,
+            name: true,
+            nameAr: true,
+            description: true,
+            descriptionAr: true,
+            merchant: { select: { isActive: true } },
+          },
+        },
+      },
+    });
+
+    if (!row || !row.category.merchant.isActive) {
+      throw new NotFoundException('Product not found');
+    }
+
+    const price = Number(row.price);
+    const discountPrice =
+      row.discountPrice !== null ? Number(row.discountPrice) : null;
+
+    return {
+      id: row.id,
+      categoryId: row.categoryId,
+      name: row.name,
+      nameAr: row.nameAr,
+      description: row.description,
+      descriptionAr: row.descriptionAr,
+      price,
+      discountPrice,
+      imageUrl: row.imageUrl,
+      ...this.discountPresentation(price, discountPrice),
+      images: row.images,
+      createdAt: row.createdAt,
+      updatedAt: row.updatedAt,
+      category: {
+        id: row.category.id,
+        name: row.category.name,
+        nameAr: row.category.nameAr,
+        description: row.category.description,
+        descriptionAr: row.category.descriptionAr,
+      },
+    };
   }
 
   /** Public storefront: guest or customer; store may be CLOSED but must exist and be active. */
@@ -416,6 +471,97 @@ export class MerchantCatalogService {
       .filter((row): row is (typeof rows)[number] => row !== undefined);
 
     const items = ordered.map((p) => {
+      const price = Number(p.price);
+      const discountPrice =
+        p.discountPrice !== null ? Number(p.discountPrice) : null;
+      return {
+        ...p,
+        price,
+        discountPrice,
+        ...this.discountPresentation(price, discountPrice),
+        category: {
+          id: p.category.id,
+          name: p.category.name,
+          nameAr: p.category.nameAr,
+        },
+        merchant: {
+          id: p.category.merchant.id,
+          name: p.category.merchant.name,
+        },
+      };
+    });
+
+    return this.pagedResponse(items, total, pg.page, pg.limit);
+  }
+
+  /**
+   * Public storefront: search products by name (English or Arabic) across active
+   * merchants. Guest or logged-in customer; no auth required.
+   */
+  async searchProductsByName(
+    name: string,
+    page = 1,
+    limit = 20,
+    filters: { merchantTypeCode?: string } = {},
+  ) {
+    const term = normalizeNameSearchTerm(name);
+
+    const merchantTypeCode = filters.merchantTypeCode;
+    if (merchantTypeCode) {
+      const code = merchantTypeCode.trim().toUpperCase();
+      const exists = await this.prisma.merchantType.findUnique({
+        where: { code },
+        select: { id: true },
+      });
+      if (!exists) {
+        throw new BadRequestException('Invalid merchantType filter');
+      }
+    }
+
+    const pg = this.normalizePagination(page, limit);
+
+    const where: Prisma.ProductWhereInput = {
+      OR: [
+        { name: nameStartsWithFilter(term) },
+        { nameAr: nameStartsWithFilter(term) },
+      ],
+      category: {
+        merchant: {
+          isActive: true,
+          ...(merchantTypeCode
+            ? {
+                merchantType: {
+                  code: merchantTypeCode.trim().toUpperCase(),
+                },
+              }
+            : {}),
+        },
+      },
+    };
+
+    const [total, rows] = await this.prisma.$transaction([
+      this.prisma.product.count({ where }),
+      this.prisma.product.findMany({
+        where,
+        include: {
+          category: {
+            select: {
+              id: true,
+              name: true,
+              nameAr: true,
+              merchantId: true,
+              merchant: { select: { id: true, name: true } },
+            },
+          },
+          images: { orderBy: { sortOrder: 'asc' } },
+        },
+        orderBy: [{ name: 'asc' }],
+        skip: pg.skip,
+        take: pg.limit,
+      }),
+    ]);
+
+    const items = rows.map((p) => {
       const price = Number(p.price);
       const discountPrice =
         p.discountPrice !== null ? Number(p.discountPrice) : null;

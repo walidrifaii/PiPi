@@ -28,6 +28,10 @@ import {
 import { MerchantStoreStatus } from './merchant/dto/set-merchant-store-status.dto';
 import { UpsertMerchantWorkingHoursDto } from './merchant/dto/upsert-merchant-working-hours.dto';
 import { UpdateMerchantDto } from './merchant/dto/update-merchant.dto';
+import {
+  nameStartsWithFilter,
+  normalizeNameSearchTerm,
+} from './common/name-search';
 import { PrismaService } from './prisma/prisma.service';
 import { ServiceAreaService } from './service-area/service-area.service';
 
@@ -475,6 +479,54 @@ export class MerchantIntegrationService {
     const total = items.length;
     const pageItems = items.slice(pg.skip, pg.skip + pg.limit);
     return this.pagedResponse(pageItems, total, pg.page, pg.limit);
+  }
+
+  /** Public storefront: search merchants by store name (guest or logged-in customer). */
+  async searchMerchantsByName(
+    name: string,
+    page = 1,
+    limit = 20,
+    filters: { merchantTypeCode?: string } = {},
+  ): Promise<PagedMerchantsResponse> {
+    const term = normalizeNameSearchTerm(name);
+
+    const merchantTypeCode = filters.merchantTypeCode;
+    if (merchantTypeCode) {
+      const code = merchantTypeCode.trim().toUpperCase();
+      const exists = await this.db.merchantType.findUnique({
+        where: { code },
+        select: { id: true },
+      });
+      if (!exists) {
+        throw new BadRequestException('Invalid merchantType filter');
+      }
+    }
+
+    const pg = this.normalizePagination(page, limit);
+    const where: Prisma.MerchantWhereInput = {
+      name: nameStartsWithFilter(term),
+    };
+    if (merchantTypeCode) {
+      where.merchantType = {
+        code: merchantTypeCode.trim().toUpperCase(),
+      };
+    }
+
+    const [total, rows] = await this.db.$transaction([
+      this.db.merchant.count({ where }),
+      this.db.merchant.findMany({
+        where,
+        select: this.listSelect,
+        orderBy: [{ name: 'asc' }, { createdAt: 'desc' }],
+        skip: pg.skip,
+        take: pg.limit,
+      }),
+    ]);
+
+    const items = rows.map((r) =>
+      this.rowToListItem(r as unknown as MerchantRowForList),
+    );
+    return this.pagedResponse(items, total, pg.page, pg.limit);
   }
 
   private async assertUniqueMerchantCredentials(
