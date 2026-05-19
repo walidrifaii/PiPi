@@ -496,13 +496,17 @@ export class MerchantCatalogService {
 
   /**
    * Public storefront: search products by name (English or Arabic) across active
-   * merchants. Guest or logged-in customer; no auth required.
+   * merchants in the user's service area. Guest or logged-in customer; no auth required.
    */
   async searchProductsByName(
     name: string,
     page = 1,
     limit = 20,
-    filters: { merchantTypeCode?: string } = {},
+    filters: {
+      merchantTypeCode?: string;
+      /** Merchants whose GPS lies inside the polygon that contains the user. */
+      scopeMerchantIds: string[];
+    },
   ) {
     const term = normalizeNameSearchTerm(name);
 
@@ -520,6 +524,10 @@ export class MerchantCatalogService {
 
     const pg = this.normalizePagination(page, limit);
 
+    if (filters.scopeMerchantIds.length === 0) {
+      return this.pagedResponse([], 0, pg.page, pg.limit);
+    }
+
     const where: Prisma.ProductWhereInput = {
       OR: [
         { name: nameStartsWithFilter(term) },
@@ -527,6 +535,7 @@ export class MerchantCatalogService {
       ],
       category: {
         merchant: {
+          id: { in: filters.scopeMerchantIds },
           isActive: true,
           ...(merchantTypeCode
             ? {

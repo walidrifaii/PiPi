@@ -35,6 +35,10 @@ import { UpsertMerchantWorkingHoursDto } from './merchant/dto/upsert-merchant-wo
 import { ParseUuidMerchantIdPipe } from './common/parse-uuid-merchant-id.pipe';
 import { MerchantCatalogService } from './merchant-catalog/merchant-catalog.service';
 import { MerchantIntegrationService } from './merchant.integration.service';
+import {
+  parseRequiredLatLng,
+  parseStorefrontSearchType,
+} from './common/storefront-location';
 
 @Controller('merchants')
 export class MerchantController {
@@ -155,9 +159,9 @@ export class MerchantController {
   @ApiTags('Storefront')
   @ApiOperation({
     operationId: 'storefrontSearch',
-    summary: 'Search merchants and products by name (public)',
+    summary: 'Search merchants or products by name (public)',
     description:
-      'No auth required (guest or logged-in customer). One request returns both matching stores and matching products. Names must **start with** the search term (case-insensitive), e.g. `walid` matches `Walid` and `Walidruf` but not names that only contain those letters in the middle. Minimum 2 characters. Optional `merchantType` filters both lists.',
+      'No auth required. **Required:** `lat`, `lng`, and `type` (`merchant` or `product`). If the user coordinates are outside every active service-area polygon, returns an empty list. Otherwise only stores whose GPS is inside that same polygon are included. Names must **start with** the search term (case-insensitive). Minimum 2 characters. Optional `merchantType` filters results.',
   })
   @ApiQuery({
     name: 'name',
@@ -167,6 +171,22 @@ export class MerchantController {
       'Search term (at least 2 characters; store/product name must start with this)',
   })
   @ApiQuery({
+    name: 'type',
+    required: true,
+    enum: ['merchant', 'product'],
+    description: 'Search merchants or products (required)',
+  })
+  @ApiQuery({
+    name: 'lat',
+    required: true,
+    description: 'User latitude (WGS84)',
+  })
+  @ApiQuery({
+    name: 'lng',
+    required: true,
+    description: 'User longitude (WGS84)',
+  })
+  @ApiQuery({
     name: 'merchantType',
     required: false,
     description: 'Optional filter by merchant type code (e.g. SUPERMARKET)',
@@ -174,46 +194,25 @@ export class MerchantController {
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
   @ApiOkResponse({
-    description: 'Merchants and products matching the search term',
+    description: 'Paginated merchants or products matching the search term',
     schema: {
       example: {
-        merchants: {
-          items: [
-            {
-              id: '11111111-1111-1111-1111-111111111111',
-              name: 'Fresh Basket Market',
-              merchantType: 'SUPERMARKET',
-              isOpenNow: true,
-              status: 'OPEN',
-            },
-          ],
-          pagination: {
-            page: 1,
-            limit: 20,
-            pageTotal: 1,
-            total: 1,
-            totalPages: 1,
+        type: 'merchant',
+        items: [
+          {
+            id: '11111111-1111-1111-1111-111111111111',
+            name: 'Fresh Basket Market',
+            merchantType: 'SUPERMARKET',
+            isOpenNow: true,
+            status: 'OPEN',
           },
-        },
-        products: {
-          items: [
-            {
-              id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-              name: 'Fresh Salad',
-              price: 8.5,
-              merchant: {
-                id: '11111111-1111-1111-1111-111111111111',
-                name: 'Fresh Basket Market',
-              },
-            },
-          ],
-          pagination: {
-            page: 1,
-            limit: 20,
-            pageTotal: 1,
-            total: 1,
-            totalPages: 1,
-          },
+        ],
+        pagination: {
+          page: 1,
+          limit: 20,
+          pageTotal: 1,
+          total: 1,
+          totalPages: 1,
         },
       },
     },
@@ -221,22 +220,39 @@ export class MerchantController {
   @Get('search')
   async searchStorefront(
     @Query('name') name: string,
+    @Query('type') type: string,
+    @Query('lat') lat: string,
+    @Query('lng') lng: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
     @Query('merchantType') merchantType?: string,
   ) {
-    const [merchants, products] = await Promise.all([
-      this.merchantIntegrationService.searchMerchantsByName(
-        name,
-        page,
-        limit,
-        { merchantTypeCode: merchantType },
-      ),
-      this.merchantCatalogService.searchProductsByName(name, page, limit, {
-        merchantTypeCode: merchantType,
-      }),
-    ]);
-    return { merchants, products };
+    const searchType = parseStorefrontSearchType(type);
+    const { lat: userLat, lng: userLng } = parseRequiredLatLng(lat, lng);
+
+    if (searchType === 'merchant') {
+      const result =
+        await this.merchantIntegrationService.searchMerchantsByName(
+          name,
+          page,
+          limit,
+          { merchantTypeCode: merchantType, userLat, userLng },
+        );
+      return { type: searchType, ...result };
+    }
+
+    const scopeMerchantIds =
+      await this.merchantIntegrationService.getMerchantIdsInUserServiceArea(
+        userLat,
+        userLng,
+      );
+    const result = await this.merchantCatalogService.searchProductsByName(
+      name,
+      page,
+      limit,
+      { merchantTypeCode: merchantType, scopeMerchantIds },
+    );
+    return { type: searchType, ...result };
   }
 
   @ApiTags('Storefront')

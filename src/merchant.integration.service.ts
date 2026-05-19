@@ -8,11 +8,10 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import { randomUUID } from 'node:crypto';
 import { haversineDistanceKm } from './common/haversine';
 import {
-  exteriorRingBoundingBox,
   pointInPolygonRings,
-  pointOutsideExteriorBBox,
   type PolygonRings,
 } from './common/geojson-polygon';
+import { filterRowsWithCoordinatesInBoundary } from './common/storefront-location';
 import { hashPassword } from './common/hash-password';
 import {
   buildFullWeekSchedule,
@@ -402,27 +401,11 @@ export class MerchantIntegrationService {
     });
 
     if (serviceBoundaryPoly !== undefined && hasLat) {
-      const boundary = serviceBoundaryPoly;
-
-      const bbox = exteriorRingBoundingBox(boundary.exterior);
-      const kept: typeof rows = [];
-      for (const r of rows) {
-        const row = r as MerchantRowForList;
-        const mLat = this.decimalToNumber(row.latitude);
-        const mLng = this.decimalToNumber(row.longitude);
-        if (mLat === null || mLng === null) {
-          continue;
-        }
-        if (bbox !== null && pointOutsideExteriorBBox(mLng, mLat, bbox)) {
-          continue;
-        }
-        if (!pointInPolygonRings(mLng, mLat, boundary)) {
-          continue;
-        }
-        kept.push(r);
-      }
-
-      rows = kept;
+      rows = filterRowsWithCoordinatesInBoundary(
+        rows,
+        serviceBoundaryPoly,
+        (v) => this.decimalToNumber(v),
+      );
     }
 
     let items: MerchantListItem[];
@@ -481,12 +464,42 @@ export class MerchantIntegrationService {
     return this.pagedResponse(pageItems, total, pg.page, pg.limit);
   }
 
-  /** Public storefront: search merchants by store name (guest or logged-in customer). */
+  /**
+   * Merchant ids in the service area whose polygon contains (lat, lng), with store
+   * GPS inside the same boundary. Empty when the user is outside all polygons.
+   */
+  async getMerchantIdsInUserServiceArea(
+    userLat: number,
+    userLng: number,
+  ): Promise<string[]> {
+    const resolved = await this.serviceArea.findActiveAreaContainingPoint(
+      userLng,
+      userLat,
+    );
+    if (!resolved) {
+      return [];
+    }
+
+    const rows = await this.db.merchant.findMany({
+      where: { cityCode: resolved.code },
+      select: { id: true, latitude: true, longitude: true },
+    });
+
+    return filterRowsWithCoordinatesInBoundary(rows, resolved.polygon, (v) =>
+      this.decimalToNumber(v),
+    ).map((r) => r.id);
+  }
+
+  /** Public storefront: search merchants by store name within the user's service area. */
   async searchMerchantsByName(
     name: string,
     page = 1,
     limit = 20,
-    filters: { merchantTypeCode?: string } = {},
+    filters: {
+      merchantTypeCode?: string;
+      userLat: number;
+      userLng: number;
+    },
   ): Promise<PagedMerchantsResponse> {
     const term = normalizeNameSearchTerm(name);
 
@@ -502,8 +515,18 @@ export class MerchantIntegrationService {
       }
     }
 
+    const scopedIds = await this.getMerchantIdsInUserServiceArea(
+      filters.userLat,
+      filters.userLng,
+    );
+    if (scopedIds.length === 0) {
+      const pg = this.normalizePagination(page, limit);
+      return this.pagedResponse([], 0, pg.page, pg.limit);
+    }
+
     const pg = this.normalizePagination(page, limit);
     const where: Prisma.MerchantWhereInput = {
+      id: { in: scopedIds },
       name: nameStartsWithFilter(term),
     };
     if (merchantTypeCode) {
@@ -512,21 +535,18 @@ export class MerchantIntegrationService {
       };
     }
 
-    const [total, rows] = await this.db.$transaction([
-      this.db.merchant.count({ where }),
-      this.db.merchant.findMany({
-        where,
-        select: this.listSelect,
-        orderBy: [{ name: 'asc' }, { createdAt: 'desc' }],
-        skip: pg.skip,
-        take: pg.limit,
-      }),
-    ]);
+    const rows = await this.db.merchant.findMany({
+      where,
+      select: this.listSelect,
+      orderBy: [{ name: 'asc' }, { createdAt: 'desc' }],
+    });
 
     const items = rows.map((r) =>
       this.rowToListItem(r as unknown as MerchantRowForList),
     );
-    return this.pagedResponse(items, total, pg.page, pg.limit);
+    const total = items.length;
+    const pageItems = items.slice(pg.skip, pg.skip + pg.limit);
+    return this.pagedResponse(pageItems, total, pg.page, pg.limit);
   }
 
   private async assertUniqueMerchantCredentials(
