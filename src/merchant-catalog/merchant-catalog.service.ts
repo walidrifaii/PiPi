@@ -151,7 +151,17 @@ export class MerchantCatalogService {
             nameAr: true,
             description: true,
             descriptionAr: true,
-            merchant: { select: { isActive: true } },
+            merchant: {
+              select: {
+                id: true,
+                name: true,
+                imageUrl: true,
+                isActive: true,
+                deliveryTime: {
+                  select: { minMinutes: true, maxMinutes: true },
+                },
+              },
+            },
           },
         },
       },
@@ -164,6 +174,8 @@ export class MerchantCatalogService {
     const price = Number(row.price);
     const discountPrice =
       row.discountPrice !== null ? Number(row.discountPrice) : null;
+
+    const merchant = row.category.merchant;
 
     return {
       id: row.id,
@@ -185,6 +197,17 @@ export class MerchantCatalogService {
         nameAr: row.category.nameAr,
         description: row.category.description,
         descriptionAr: row.category.descriptionAr,
+      },
+      merchant: {
+        id: merchant.id,
+        name: merchant.name,
+        logoUrl: merchant.imageUrl,
+        deliveryTime: merchant.deliveryTime
+          ? {
+              minMinutes: merchant.deliveryTime.minMinutes,
+              maxMinutes: merchant.deliveryTime.maxMinutes,
+            }
+          : null,
       },
     };
   }

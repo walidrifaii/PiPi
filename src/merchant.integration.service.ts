@@ -61,6 +61,7 @@ export type MerchantPublicProfile = MerchantListItem & {
   useWorkingHours: boolean;
   timezone: string | null;
   workingHoursSchedule: WorkingDayScheduleEntry[] | null;
+  deliveryTime: { minMinutes: number; maxMinutes: number } | null;
 };
 
 /** Response for GET /merchants/me/working-hours (merchant app edit screen). */
@@ -223,6 +224,9 @@ export class MerchantIntegrationService {
     latitude: true,
     longitude: true,
     merchantType: { select: { code: true } },
+    deliveryTime: {
+      select: { minMinutes: true, maxMinutes: true },
+    },
   };
 
   private workingHoursSelect = {
@@ -257,12 +261,22 @@ export class MerchantIntegrationService {
     const week = workingIntervalsToWeek(typed.workingIntervals);
     const weekOrNull = week.days.length > 0 ? week : null;
 
+    const deliveryTimeRow = (
+      typed as { deliveryTime?: { minMinutes: number; maxMinutes: number } | null }
+    ).deliveryTime;
+
     return {
       ...this.rowToListItem(typed),
       useWorkingHours: typed.useWorkingHours,
       timezone: typed.timezone,
       workingHoursSchedule: typed.useWorkingHours
         ? buildFullWeekSchedule(weekOrNull)
+        : null,
+      deliveryTime: deliveryTimeRow
+        ? {
+            minMinutes: deliveryTimeRow.minMinutes,
+            maxMinutes: deliveryTimeRow.maxMinutes,
+          }
         : null,
     };
   }

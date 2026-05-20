@@ -41,17 +41,36 @@ model MerchantType {
 }
 
 model User {
-  id           String   @id @default(uuid()) @db.Uuid
-  fullName     String?  @map("full_name") @db.VarChar(255)
-  phone        String   @db.VarChar(50)
-  email        String?  @unique @db.VarChar(255)
-  passwordHash String   @map("password_hash")
-  isActive     Boolean  @default(true) @map("is_active")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  id           String        @id @default(uuid()) @db.Uuid
+  fullName     String?       @map("full_name") @db.VarChar(255)
+  phone        String        @db.VarChar(50)
+  email        String?       @unique @db.VarChar(255)
+  passwordHash String        @map("password_hash")
+  isActive     Boolean       @default(true) @map("is_active")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
   orders       Order[]
+  addresses    UserAddress[]
 
   @@map("users")
+}
+
+/// Saved delivery location for a customer (referenced at checkout by id).
+model UserAddress {
+  id                  String   @id @default(uuid()) @db.Uuid
+  userId              String   @map("user_id") @db.Uuid
+  label               String?  @db.VarChar(100)
+  addressLine         String   @map("address_line") @db.VarChar(500)
+  latitude            Decimal  @db.Decimal(10, 7)
+  longitude           Decimal  @db.Decimal(10, 7)
+  isDefault           Boolean  @default(false) @map("is_default")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders              Order[]
+
+  @@index([userId])
+  @@map("user_addresses")
 }
 
 model Driver {
@@ -97,6 +116,7 @@ model Merchant {
   orders       Order[]
   categories   MerchantCategory[]
   workingIntervals MerchantWorkingInterval[]
+  deliveryTime MerchantDeliveryTime?
 
   @@index([merchantTypeId])
   @@index([cityCode])
@@ -117,6 +137,19 @@ model MerchantWorkingInterval {
   @@index([merchantId])
   @@index([merchantId, weekday])
   @@map("merchant_working_intervals")
+}
+
+/// Estimated delivery window for a store (minutes). One row per merchant.
+model MerchantDeliveryTime {
+  id         String   @id @default(uuid()) @db.Uuid
+  merchantId String   @unique @map("merchant_id") @db.Uuid
+  minMinutes Int      @map("min_minutes")
+  maxMinutes Int      @map("max_minutes")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@map("merchant_delivery_times")
 }
 
 model MerchantCategory {
@@ -194,27 +227,30 @@ model SuperAdmin {
 }
 
 model Order {
-  id              String      @id @default(uuid()) @db.Uuid
-  userId          String      @map("user_id") @db.Uuid
-  merchantId      String      @map("merchant_id") @db.Uuid
-  driverId        String?     @map("driver_id") @db.Uuid
-  status          String?     @db.VarChar(50)
-  subtotal        Decimal?    @db.Decimal(10, 2)
-  deliveryFee     Decimal?    @map("delivery_fee") @db.Decimal(10, 2)
-  total           Decimal?    @db.Decimal(10, 2)
-  deliveryAddress String?     @map("delivery_address")
+  id              String       @id @default(uuid()) @db.Uuid
+  userId          String       @map("user_id") @db.Uuid
+  merchantId      String       @map("merchant_id") @db.Uuid
+  addressId       String?      @map("address_id") @db.Uuid
+  driverId        String?      @map("driver_id") @db.Uuid
+  status          String?      @db.VarChar(50)
+  subtotal        Decimal?     @db.Decimal(10, 2)
+  deliveryFee     Decimal?     @map("delivery_fee") @db.Decimal(10, 2)
+  total           Decimal?     @db.Decimal(10, 2)
+  deliveryAddress String?      @map("delivery_address")
   notes           String?
-  checkoutRef     String?     @map("checkout_ref") @db.VarChar(191)
-  itemsSnapshot   Json?       @map("items_snapshot")
-  createdAt       DateTime    @default(now()) @map("created_at")
-  user            User        @relation(fields: [userId], references: [id], onDelete: Restrict)
-  merchant        Merchant    @relation(fields: [merchantId], references: [id], onDelete: Restrict)
-  driver          Driver?     @relation(fields: [driverId], references: [id], onDelete: SetNull)
+  checkoutRef     String?      @map("checkout_ref") @db.VarChar(191)
+  itemsSnapshot   Json?        @map("items_snapshot")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  user            User         @relation(fields: [userId], references: [id], onDelete: Restrict)
+  merchant        Merchant     @relation(fields: [merchantId], references: [id], onDelete: Restrict)
+  address         UserAddress? @relation(fields: [addressId], references: [id], onDelete: SetNull)
+  driver          Driver?      @relation(fields: [driverId], references: [id], onDelete: SetNull)
   orderItems      OrderItem[]
 
   @@index([userId])
   @@index([merchantId])
   @@index([driverId])
+  @@index([addressId])
   @@map("orders")
 }
 

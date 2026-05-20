@@ -15,6 +15,9 @@ import { DriversModule } from './drivers/drivers.module';
 import { UsersModule } from './users/users.module';
 import { ServiceAreaModule } from './service-area/service-area.module';
 import { BannerModule } from './banner/banner.module';
+import { CheckoutModule } from './checkout/checkout.module';
+import { OrdersModule } from './orders/orders.module';
+import { MerchantDeliveryTimeModule } from './merchant-delivery-time/merchant-delivery-time.module';
 
 @Module({
   imports: [
@@ -26,6 +29,9 @@ import { BannerModule } from './banner/banner.module';
     AdminModule,
     ServiceAreaModule,
     BannerModule,
+    CheckoutModule,
+    OrdersModule,
+    MerchantDeliveryTimeModule,
   ],
   controllers: [
     AppController,

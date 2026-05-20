@@ -278,7 +278,7 @@ export class MerchantController {
     operationId: 'storefrontGetProduct',
     summary: 'Get product details by id (public)',
     description:
-      'No auth required (guest or logged-in customer). Product info, gallery images, and category only (no merchant data). Returns 404 if the product does not exist or the store is deactivated.',
+      'No auth required (guest or logged-in customer). Product info, gallery images, category, and merchant summary (name, logo, delivery time). Returns 404 if the product does not exist or the store is deactivated.',
   })
   @ApiParam({ name: 'productId', type: String, format: 'uuid' })
   @ApiOkResponse({
@@ -311,6 +311,12 @@ export class MerchantController {
           nameAr: 'برغر',
           description: null,
           descriptionAr: null,
+        },
+        merchant: {
+          id: 'dddddddd-dddd-dddd-dddd-dddddddddddd',
+          name: 'Pizza House',
+          logoUrl: 'https://example.com/merchant-logo.jpg',
+          deliveryTime: { minMinutes: 25, maxMinutes: 45 },
         },
       },
     },
