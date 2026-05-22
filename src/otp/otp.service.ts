@@ -16,9 +16,7 @@ interface StoredOtp {
 }
 
 export interface PendingUserRegistration {
-  fullName?: string;
-  email?: string;
-  passwordHash: string;
+  phoneVerified: boolean;
   expiresAt: number;
 }
 
@@ -58,14 +56,36 @@ export class OtpService {
     return randomInt(100_000, 1_000_000);
   }
 
-  setPendingRegistration(
-    phone: string,
-    data: Omit<PendingUserRegistration, 'expiresAt'>,
-  ): string {
+  setPendingRegistration(phone: string): string {
     const phoneE164 = this.normalizePhoneE164(phone);
     const expiresAt = Date.now() + this.ttlSeconds() * 1000;
-    this.pendingRegister.set(phoneE164, { ...data, expiresAt });
+    this.pendingRegister.set(phoneE164, { phoneVerified: false, expiresAt });
     return phoneE164;
+  }
+
+  markPhoneVerifiedForRegistration(phone: string): void {
+    const phoneE164 = this.normalizePhoneE164(phone);
+    const pending = this.pendingRegister.get(phoneE164);
+    if (!pending || Date.now() > pending.expiresAt) {
+      throw new BadRequestException(
+        'Registration session expired. Submit POST /auth/user/register again.',
+      );
+    }
+    this.pendingRegister.set(phoneE164, {
+      ...pending,
+      phoneVerified: true,
+      expiresAt: Date.now() + this.ttlSeconds() * 1000,
+    });
+  }
+
+  isPhoneVerifiedForRegistration(phone: string): boolean {
+    const phoneE164 = this.normalizePhoneE164(phone);
+    const pending = this.pendingRegister.get(phoneE164);
+    if (!pending || Date.now() > pending.expiresAt) {
+      this.pendingRegister.delete(phoneE164);
+      return false;
+    }
+    return pending.phoneVerified;
   }
 
   hasPendingRegistration(phone: string): boolean {

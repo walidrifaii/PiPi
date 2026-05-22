@@ -12,6 +12,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 const userPublicSelect = {
   id: true,
   fullName: true,
+  dateOfBirth: true,
   phone: true,
   email: true,
   isActive: true,
@@ -22,6 +23,7 @@ const userPublicSelect = {
 type UserPublic = {
   id: string;
   fullName: string | null;
+  dateOfBirth: Date | null;
   phone: string;
   email: string | null;
   isActive: boolean;

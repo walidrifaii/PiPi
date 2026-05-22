@@ -13,6 +13,7 @@ import { LoginDriverDto } from './dto/login-driver.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterMerchantDto } from './dto/register-merchant.dto';
 import { RegisterSuperAdminDto } from './dto/register-super-admin.dto';
+import { CompleteRegisterUserDto } from './dto/complete-register-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { SendRegisterOtpDto } from './dto/send-register-otp.dto';
 import { VerifyRegisterOtpDto } from './dto/verify-register-otp.dto';
@@ -498,41 +499,58 @@ export class AuthService {
     return this.otpService.sendRegisterOtp(dto.phone);
   }
 
+  /** Step 1: phone only — stores pending session and sends OTP. */
   async registerUser(dto: RegisterUserDto) {
-    await this.assertUserRegistrationAvailable(dto.phone, dto.email);
-
-    const passwordHash = await bcrypt.hash(dto.password, 10);
-    this.otpService.setPendingRegistration(dto.phone, {
-      fullName: dto.fullName,
-      email: dto.email,
-      passwordHash,
-    });
-
+    await this.assertUserRegistrationAvailable(dto.phone);
+    this.otpService.setPendingRegistration(dto.phone);
     return this.otpService.sendRegisterOtp(dto.phone);
   }
 
+  /** Step 2: verify OTP; phone must complete step 3 before account exists. */
   async verifyRegisterOtp(dto: VerifyRegisterOtpDto) {
-    this.otpService.verifyRegisterOtp(dto.phone, dto.code);
-
-    const pending = this.otpService.consumePendingRegistration(dto.phone);
-    if (!pending) {
+    if (!this.otpService.hasPendingRegistration(dto.phone)) {
       throw new BadRequestException(
-        'Registration session expired. Submit POST /auth/user/register again.',
+        'No pending registration for this phone. Call POST /auth/user/register first.',
       );
     }
 
-    await this.assertUserRegistrationAvailable(dto.phone, pending.email);
+    this.otpService.verifyRegisterOtp(dto.phone, dto.code);
+    this.otpService.markPhoneVerifiedForRegistration(dto.phone);
+
+    return {
+      ok: true as const,
+      phoneVerified: true,
+      message: 'Phone verified. Complete registration with your profile details.',
+    };
+  }
+
+  /** Step 3: profile details — creates user and returns JWT. */
+  async completeRegisterUser(dto: CompleteRegisterUserDto) {
+    if (!this.otpService.isPhoneVerifiedForRegistration(dto.phone)) {
+      throw new BadRequestException(
+        'Phone is not verified. Complete POST /auth/user/register and POST /auth/user/register/verify-otp first.',
+      );
+    }
+
+    const pending = this.otpService.consumePendingRegistration(dto.phone);
+    if (!pending?.phoneVerified) {
+      throw new BadRequestException(
+        'Registration session expired. Start again from POST /auth/user/register.',
+      );
+    }
+
+    await this.assertUserRegistrationAvailable(dto.phone);
 
     const user = await this.prisma.user.create({
       data: {
-        fullName: pending.fullName,
+        fullName: dto.fullName,
+        dateOfBirth: new Date(`${dto.dateOfBirth}T00:00:00.000Z`),
         phone: dto.phone,
-        email: pending.email,
-        passwordHash: pending.passwordHash,
       },
       select: {
         id: true,
         fullName: true,
+        dateOfBirth: true,
         phone: true,
         email: true,
         isActive: true,
@@ -557,23 +575,14 @@ export class AuthService {
     };
   }
 
-  private async assertUserRegistrationAvailable(
-    phone: string,
-    email?: string,
-  ): Promise<void> {
-    const orConditions: { email?: string; phone?: string }[] = [{ phone }];
-    if (email) {
-      orConditions.push({ email });
-    }
+  private async assertUserRegistrationAvailable(phone: string): Promise<void> {
     const existing = await this.prisma.user.findFirst({
-      where: { OR: orConditions },
+      where: { phone },
       select: { id: true },
     });
 
     if (existing) {
-      throw new BadRequestException(
-        'A user with this phone or email already exists',
-      );
+      throw new BadRequestException('A user with this phone already exists');
     }
   }
 
@@ -586,6 +595,10 @@ export class AuthService {
     });
 
     if (!appUser) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    if (!appUser.passwordHash) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -651,7 +664,7 @@ export class AuthService {
       }),
     ]);
 
-    if (appUser) {
+    if (appUser?.passwordHash) {
       const ok = await bcrypt.compare(dto.password, appUser.passwordHash);
       if (ok) {
         const { accessToken, refreshToken } = await this.issueTokenPair({
