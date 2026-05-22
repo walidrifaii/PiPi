@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Req,
   UseGuards,
@@ -62,5 +64,18 @@ export class UsersController {
   @Patch(':userId')
   patchUser(@Param('userId') userId: string, @Body() dto: UpdateUserAdminDto) {
     return this.usersService.updateByAdmin(userId, dto);
+  }
+
+  @ApiTags('Super Admin')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, SuperAdminGuard)
+  @ApiOperation({
+    summary:
+      'Delete a user by id (super admin only). Removes their orders and saved addresses.',
+  })
+  @ApiParam({ name: 'userId', type: String, format: 'uuid' })
+  @Delete(':userId')
+  deleteUser(@Param('userId', ParseUUIDPipe) userId: string) {
+    return this.usersService.deleteByAdmin(userId);
   }
 }

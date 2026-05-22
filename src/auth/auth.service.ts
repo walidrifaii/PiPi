@@ -16,7 +16,9 @@ import { RegisterSuperAdminDto } from './dto/register-super-admin.dto';
 import { CompleteRegisterUserDto } from './dto/complete-register-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { SendRegisterOtpDto } from './dto/send-register-otp.dto';
+import { SendLoginOtpDto } from './dto/send-login-otp.dto';
 import { VerifyRegisterOtpDto } from './dto/verify-register-otp.dto';
+import { VerifyLoginOtpDto } from './dto/verify-login-otp.dto';
 import { JwtUserPayload } from './jwt-user.payload';
 import { OtpService } from '../otp/otp.service';
 
@@ -584,6 +586,62 @@ export class AuthService {
     if (existing) {
       throw new BadRequestException('A user with this phone already exists');
     }
+  }
+
+  /** Step 1: send OTP to an existing customer phone (WhatsApp). */
+  async sendLoginOtp(dto: SendLoginOtpDto) {
+    const user = await this.prisma.user.findFirst({
+      where: { phone: dto.phone, isActive: true },
+      select: { id: true },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('No account found for this phone');
+    }
+
+    return this.otpService.sendLoginOtp(dto.phone);
+  }
+
+  /** Step 2: verify OTP and return user profile with access + refresh tokens. */
+  async verifyLoginOtp(dto: VerifyLoginOtpDto) {
+    this.otpService.verifyLoginOtp(dto.phone, dto.code);
+
+    const appUser = await this.prisma.user.findFirst({
+      where: { phone: dto.phone, isActive: true },
+      select: {
+        id: true,
+        fullName: true,
+        dateOfBirth: true,
+        phone: true,
+        email: true,
+        isActive: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!appUser) {
+      throw new UnauthorizedException('No account found for this phone');
+    }
+
+    const { accessToken, refreshToken } = await this.issueTokenPair({
+      sub: appUser.id,
+      email: appUser.email ?? appUser.phone,
+      role: 'USER',
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+      user: {
+        ...appUser,
+        role: USER_ACCOUNT_ROLE,
+      },
+    };
+  }
+
+  async resendLoginOtp(dto: SendLoginOtpDto) {
+    return this.sendLoginOtp(dto);
   }
 
   async loginUser(dto: LoginUserDto) {

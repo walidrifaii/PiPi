@@ -5,7 +5,9 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { CompleteRegisterUserDto } from './dto/complete-register-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { SendRegisterOtpDto } from './dto/send-register-otp.dto';
+import { SendLoginOtpDto } from './dto/send-login-otp.dto';
 import { VerifyRegisterOtpDto } from './dto/verify-register-otp.dto';
+import { VerifyLoginOtpDto } from './dto/verify-login-otp.dto';
 
 @ApiTags('Customer')
 @Controller('auth')
@@ -45,9 +47,34 @@ export class AuthUserController {
   }
 
   @ApiOperation({
-    summary: 'User login: email or phone as identifier, plus password',
+    summary: 'Login step 1 — submit phone; OTP sent via WhatsApp',
   })
   @Post('user/login')
+  sendLoginOtp(@Body() dto: SendLoginOtpDto) {
+    return this.authService.sendLoginOtp(dto);
+  }
+
+  @ApiOperation({
+    summary:
+      'Login step 2 — verify code; returns user, accessToken, and refreshToken',
+  })
+  @Post('user/login/verify')
+  verifyLoginOtp(@Body() dto: VerifyLoginOtpDto) {
+    return this.authService.verifyLoginOtp(dto);
+  }
+
+  @ApiOperation({
+    summary: 'Resend login code (same body as POST /auth/user/login)',
+  })
+  @Post('user/login/resend')
+  resendLoginOtp(@Body() dto: SendLoginOtpDto) {
+    return this.authService.resendLoginOtp(dto);
+  }
+
+  @ApiOperation({
+    summary: 'User login with email or phone and password',
+  })
+  @Post('user/login/password')
   loginUser(@Body() dto: LoginUserDto) {
     return this.authService.loginUser(dto);
   }

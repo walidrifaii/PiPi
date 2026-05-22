@@ -8,7 +8,7 @@ import {
 import { createHmac, randomInt, timingSafeEqual } from 'crypto';
 import { WhatsAppNodeService } from './whatsapp-node.service';
 
-type OtpPurpose = 'register';
+type OtpPurpose = 'register' | 'login';
 
 interface StoredOtp {
   hash: string;
@@ -112,8 +112,16 @@ export class OtpService {
   }
 
   verifyRegisterOtp(phone: string, code: string): void {
+    this.verifyOtp('register', phone, code);
+  }
+
+  verifyLoginOtp(phone: string, code: string): void {
+    this.verifyOtp('login', phone, code);
+  }
+
+  private verifyOtp(purpose: OtpPurpose, phone: string, code: string): void {
     const phoneE164 = this.normalizePhoneE164(phone);
-    const stored = this.store.get(this.storeKey('register', phoneE164));
+    const stored = this.store.get(this.storeKey(purpose, phoneE164));
     if (!stored || Date.now() > stored.expiresAt) {
       throw new BadRequestException('OTP expired or not found. Request a new code.');
     }
@@ -135,7 +143,7 @@ export class OtpService {
       throw new BadRequestException('Invalid OTP code');
     }
 
-    this.store.delete(this.storeKey('register', phoneE164));
+    this.store.delete(this.storeKey(purpose, phoneE164));
   }
 
   /** Send registration OTP via WhatsApp Node campaign. */
@@ -143,18 +151,36 @@ export class OtpService {
     ok: true;
     expiresInSeconds: number;
   }> {
+    return this.sendOtp('register', phone);
+  }
+
+  /** Send login OTP via WhatsApp Node campaign. */
+  async sendLoginOtp(phone: string): Promise<{
+    ok: true;
+    expiresInSeconds: number;
+  }> {
+    return this.sendOtp('login', phone);
+  }
+
+  private async sendOtp(
+    purpose: OtpPurpose,
+    phone: string,
+  ): Promise<{
+    ok: true;
+    expiresInSeconds: number;
+  }> {
     const phoneE164 = this.normalizePhoneE164(phone);
     const code = this.generateCode();
     const ttl = this.ttlSeconds();
 
-    this.store.set(this.storeKey('register', phoneE164), {
+    this.store.set(this.storeKey(purpose, phoneE164), {
       hash: this.hashCode(phoneE164, code),
       expiresAt: Date.now() + ttl * 1000,
     });
 
     const sent = await this.whatsAppNode.sendOtpViaNodeCampaign(phoneE164, code);
     if (!sent.ok) {
-      this.store.delete(this.storeKey('register', phoneE164));
+      this.store.delete(this.storeKey(purpose, phoneE164));
       if (sent.error === 'node_not_configured') {
         throw new ServiceUnavailableException(
           'WhatsApp OTP sender is not configured',

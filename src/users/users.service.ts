@@ -171,4 +171,32 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
   }
+
+  /** Hard-delete customer and related orders/addresses (super admin only). */
+  async deleteByAdmin(userId: string): Promise<{ message: string }> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      const orders = await tx.order.findMany({
+        where: { userId },
+        select: { id: true },
+      });
+      const orderIds = orders.map((o) => o.id);
+      if (orderIds.length > 0) {
+        await tx.orderItem.deleteMany({
+          where: { orderId: { in: orderIds } },
+        });
+        await tx.order.deleteMany({ where: { userId } });
+      }
+      await tx.user.delete({ where: { id: userId } });
+    });
+
+    return { message: 'User deleted' };
+  }
 }
