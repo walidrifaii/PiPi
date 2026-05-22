@@ -31,6 +31,10 @@ function isTransientConnectionError(err: unknown): boolean {
   const msg = err.message.toLowerCase();
   if (
     msg.includes('connection terminated unexpectedly') ||
+    msg.includes('connection terminated due to connection timeout') ||
+    msg.includes('connection timeout') ||
+    msg.includes('timeout expired') ||
+    msg.includes('timed out') ||
     msg.includes('server closed the connection') ||
     msg.includes('connection closed') ||
     msg.includes('econnreset') ||
@@ -130,10 +134,10 @@ export class PrismaService extends PrismaClient {
       const pool = new pg.Pool({
         connectionString,
         max: envInt('DATABASE_POOL_MAX', 10),
-        idleTimeoutMillis: envInt('DATABASE_POOL_IDLE_MS', 3000),
+        idleTimeoutMillis: envInt('DATABASE_POOL_IDLE_MS', 60_000),
         connectionTimeoutMillis: envInt(
           'DATABASE_POOL_CONN_TIMEOUT_MS',
-          20_000,
+          30_000,
         ),
         keepAlive: true,
         keepAliveInitialDelayMillis: 3000,

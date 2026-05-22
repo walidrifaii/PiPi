@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { ListOrdersAdminQueryDto } from './dto/list-orders-admin-query.dto';
 import { mapOrderDetail, mapOrderSummary } from './order.mapper';
 import { OrderWithRelations } from './order.types';
 
@@ -130,5 +131,75 @@ export class OrdersService {
     return mapOrderDetail(order as OrderWithRelations, {
       includeCustomer: true,
     });
+  }
+
+  private buildSuperAdminOrdersWhere(
+    query: ListOrdersAdminQueryDto,
+  ): Prisma.OrderWhereInput {
+    const where: Prisma.OrderWhereInput = {};
+
+    if (query.merchantId) {
+      where.merchantId = query.merchantId;
+    }
+    if (query.orderId) {
+      where.id = query.orderId;
+    }
+
+    const userName = query.userName?.trim();
+    const phone = query.number?.trim();
+    if (userName || phone) {
+      const userWhere: Prisma.UserWhereInput = {};
+      if (userName) {
+        userWhere.fullName = { contains: userName, mode: 'insensitive' };
+      }
+      if (phone) {
+        userWhere.phone = { contains: phone };
+      }
+      where.user = userWhere;
+    }
+
+    return where;
+  }
+
+  private mapAdminOrderRow(o: OrderWithRelations) {
+    const summary = mapOrderSummary(o);
+    return {
+      ...summary,
+      userId: o.userId,
+      customer: o.user
+        ? {
+            id: o.user.id,
+            fullName: o.user.fullName,
+            phone: o.user.phone,
+          }
+        : null,
+      merchant: {
+        id: o.merchant.id,
+        name: o.merchant.name,
+      },
+    };
+  }
+
+  async listForSuperAdmin(query: ListOrdersAdminQueryDto) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 20;
+    const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
+    const where = this.buildSuperAdminOrdersWhere(query);
+
+    const rows = await this.prisma.order.findMany({
+      where,
+      include: orderInclude,
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: l,
+    });
+    const total = await this.prisma.order.count({ where });
+
+    return this.pagedResponse(
+      rows.map((o) => this.mapAdminOrderRow(o as OrderWithRelations)),
+      total,
+      p,
+      l,
+    );
   }
 }
