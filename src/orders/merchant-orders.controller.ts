@@ -1,10 +1,12 @@
 import {
+  Body,
   Controller,
   DefaultValuePipe,
   Get,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
+  Patch,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -18,6 +20,7 @@ import {
 import { EffectiveMerchantId } from '../auth/effective-merchant-id.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { MerchantJwtScopeGuard } from '../auth/merchant-jwt-scope.guard';
+import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { OrdersService } from './orders.service';
 
 @ApiTags('Merchant')
@@ -47,5 +50,19 @@ export class MerchantOrdersController {
     @Param('orderId', ParseUUIDPipe) orderId: string,
   ) {
     return this.ordersService.getForMerchant(merchantId, orderId);
+  }
+
+  @ApiOperation({
+    summary:
+      'Update order status (e.g. ACCEPTED). Sends a push notification to the customer.',
+  })
+  @ApiParam({ name: 'orderId', type: String })
+  @Patch(':orderId/status')
+  updateStatus(
+    @EffectiveMerchantId() merchantId: string,
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+    @Body() dto: UpdateOrderStatusDto,
+  ) {
+    return this.ordersService.updateStatusForMerchant(merchantId, orderId, dto);
   }
 }

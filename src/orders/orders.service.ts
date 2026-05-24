@@ -1,9 +1,22 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { NotificationsService } from '../notifications/notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { ListOrdersAdminQueryDto } from './dto/list-orders-admin-query.dto';
+import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { mapOrderDetail, mapOrderSummary } from './order.mapper';
-import { OrderWithRelations } from './order.types';
+import {
+  canMerchantTransition,
+  canSuperAdminTransition,
+  isTerminalOrderStatus,
+  normalizeOrderStatus,
+} from './order-status.constants';
+import { OrderItemsSnapshot, OrderWithRelations } from './order.types';
 
 const orderInclude = {
   orderItems: { orderBy: { id: Prisma.SortOrder.asc } },
@@ -21,7 +34,12 @@ const orderInclude = {
 
 @Injectable()
 export class OrdersService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly log = new Logger(OrdersService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notifications: NotificationsService,
+  ) {}
 
   private normalizePagination(page: number, limit: number) {
     const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
@@ -178,6 +196,115 @@ export class OrdersService {
         name: o.merchant.name,
       },
     };
+  }
+
+  private parseSnapshot(raw: unknown): OrderItemsSnapshot | null {
+    if (!raw || typeof raw !== 'object') {
+      return null;
+    }
+    const s = raw as OrderItemsSnapshot;
+    if (!Array.isArray(s.items)) {
+      return null;
+    }
+    return s;
+  }
+
+  private async notifyCustomerOrderStatus(
+    order: OrderWithRelations,
+    status: string,
+  ) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: order.userId },
+      select: { fcmToken: true },
+    });
+    if (!user?.fcmToken?.trim()) {
+      return;
+    }
+
+    const snapshot = this.parseSnapshot(order.itemsSnapshot);
+    const merchantName = snapshot?.merchantName ?? order.merchant.name;
+
+    const result = await this.notifications.sendOrderStatusUpdate({
+      fcmToken: user.fcmToken.trim(),
+      orderId: order.id,
+      status,
+      merchantName,
+    });
+
+    if (!result.sent) {
+      this.log.debug(
+        `Order ${order.id} status push not sent: ${result.reason ?? 'unknown'}`,
+      );
+    }
+  }
+
+  async updateStatusForMerchant(
+    merchantId: string,
+    orderId: string,
+    dto: UpdateOrderStatusDto,
+  ) {
+    return this.updateOrderStatus(orderId, dto.status, {
+      merchantId,
+      superAdmin: false,
+    });
+  }
+
+  async updateStatusForSuperAdmin(orderId: string, dto: UpdateOrderStatusDto) {
+    return this.updateOrderStatus(orderId, dto.status, {
+      superAdmin: true,
+    });
+  }
+
+  private async updateOrderStatus(
+    orderId: string,
+    newStatusRaw: string,
+    scope: { merchantId?: string; superAdmin: boolean },
+  ) {
+    const newStatus = normalizeOrderStatus(newStatusRaw);
+
+    const order = await this.prisma.order.findFirst({
+      where: scope.merchantId
+        ? { id: orderId, merchantId: scope.merchantId }
+        : { id: orderId },
+      include: orderInclude,
+    });
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    const current = normalizeOrderStatus(order.status);
+    if (current === newStatus) {
+      return mapOrderDetail(order as OrderWithRelations, {
+        includeCustomer: scope.superAdmin || !!scope.merchantId,
+      });
+    }
+
+    const canTransition = scope.superAdmin
+      ? canSuperAdminTransition(current, newStatus)
+      : canMerchantTransition(current, newStatus);
+
+    if (!canTransition) {
+      throw new BadRequestException(
+        `Cannot change order status from ${current} to ${newStatus}`,
+      );
+    }
+
+    if (!scope.superAdmin && isTerminalOrderStatus(current)) {
+      throw new BadRequestException(`Order is already ${current}`);
+    }
+
+    const updated = await this.prisma.order.update({
+      where: { id: orderId },
+      data: { status: newStatus },
+      include: orderInclude,
+    });
+
+    const row = updated as OrderWithRelations;
+    await this.notifyCustomerOrderStatus(row, newStatus);
+
+    return mapOrderDetail(row, {
+      includeCustomer: scope.superAdmin || !!scope.merchantId,
+    });
   }
 
   async listForSuperAdmin(query: ListOrdersAdminQueryDto) {

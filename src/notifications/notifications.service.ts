@@ -1,14 +1,24 @@
 import {
   Injectable,
+  Logger,
   OnModuleInit,
   ServiceUnavailableException,
 } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { readFileSync } from 'node:fs';
+import { orderStatusNotificationCopy } from '../orders/order-status.constants';
 import { SendTestNotificationDto } from './dto/send-test-notification.dto';
+import { buildOrderStatusFcmData } from './order-status-payload';
+
+export type SendOrderStatusResult = {
+  sent: boolean;
+  messageId?: string;
+  reason?: string;
+};
 
 @Injectable()
 export class NotificationsService implements OnModuleInit {
+  private readonly log = new Logger(NotificationsService.name);
   private messaging: admin.messaging.Messaging | null = null;
 
   onModuleInit() {
@@ -136,5 +146,50 @@ export class NotificationsService implements OnModuleInit {
       messageId,
       message: 'Notification sent',
     };
+  }
+
+  /**
+   * Push order status to the customer's device. Does not throw when Firebase is
+   * missing or the token is invalid — the order update should still succeed.
+   */
+  async sendOrderStatusUpdate(params: {
+    fcmToken: string;
+    orderId: string;
+    status: string;
+    merchantName?: string;
+  }): Promise<SendOrderStatusResult> {
+    if (!this.messaging) {
+      return { sent: false, reason: 'not_configured' };
+    }
+
+    const copy = orderStatusNotificationCopy(
+      params.status,
+      params.merchantName,
+    );
+    const data = buildOrderStatusFcmData(params.orderId, params.status);
+
+    try {
+      const messageId = await this.messaging.send({
+        token: params.fcmToken,
+        notification: {
+          title: copy.title,
+          body: copy.body,
+        },
+        data,
+        android: {
+          priority: 'high',
+          notification: {
+            channelId: 'pip_pip_default',
+          },
+        },
+      });
+      return { sent: true, messageId };
+    } catch (err) {
+      const reason = err instanceof Error ? err.message : String(err);
+      this.log.warn(
+        `Order status push failed for order ${params.orderId}: ${reason}`,
+      );
+      return { sent: false, reason };
+    }
   }
 }
