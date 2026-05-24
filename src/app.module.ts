@@ -18,6 +18,7 @@ import { BannerModule } from './banner/banner.module';
 import { CheckoutModule } from './checkout/checkout.module';
 import { OrdersModule } from './orders/orders.module';
 import { MerchantDeliveryTimeModule } from './merchant-delivery-time/merchant-delivery-time.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { MerchantDeliveryTimeModule } from './merchant-delivery-time/merchant-de
     CheckoutModule,
     OrdersModule,
     MerchantDeliveryTimeModule,
+    NotificationsModule,
   ],
   controllers: [
     AppController,

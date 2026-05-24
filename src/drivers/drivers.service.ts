@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { DRIVER_ACCOUNT_ROLE } from '../auth/auth.service';
+import { DRIVER_ACCOUNT_ROLE } from '../auth/account-roles';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDriverDto } from '../auth/dto/register-driver.dto';
 import { UpdateDriverAdminDto } from './dto/update-driver-admin.dto';

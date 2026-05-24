@@ -47,6 +47,19 @@ export class UsersController {
     return this.usersService.updateProfile(user.sub, dto);
   }
 
+  @ApiTags('Customer')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, UserAccountGuard)
+  @ApiOperation({
+    summary:
+      'Delete your account (customer JWT). Account is deactivated for 30 days; sign in again to restore, or it is permanently removed.',
+  })
+  @Delete('me')
+  deleteMe(@Req() req: { user?: JwtUserPayload }) {
+    const user = req.user!;
+    return this.usersService.requestAccountDeletion(user.sub);
+  }
+
   @ApiTags('Super Admin')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)

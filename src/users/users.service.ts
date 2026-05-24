@@ -1,13 +1,20 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
+  OnModuleInit,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { USER_ACCOUNT_ROLE } from '../auth/auth.service';
+import { USER_ACCOUNT_ROLE } from '../auth/account-roles';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateUserAdminDto } from './dto/update-user-admin.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  deletionGraceCutoffDate,
+  permanentDeletionAt,
+  USER_ACCOUNT_DELETION_GRACE_DAYS,
+} from './user-account-deletion';
 
 const userPublicSelect = {
   id: true,
@@ -32,8 +39,12 @@ type UserPublic = {
 };
 
 @Injectable()
-export class UsersService {
+export class UsersService implements OnModuleInit {
   constructor(private readonly prisma: PrismaService) {}
+
+  onModuleInit() {
+    void this.purgeExpiredAccountDeletions();
+  }
 
   private withUserRole(user: UserPublic) {
     return { ...user, role: USER_ACCOUNT_ROLE };
@@ -55,7 +66,95 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
+    if (!user.isActive) {
+      throw new ForbiddenException('Account is inactive');
+    }
     return this.withUserRole(user);
+  }
+
+  /**
+   * Soft-delete: deactivate account and start the grace period.
+   * Sign in again within {@link USER_ACCOUNT_DELETION_GRACE_DAYS} days to restore.
+   */
+  async requestAccountDeletion(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, isActive: true, deletionRequestedAt: true },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    if (!user.isActive && !user.deletionRequestedAt) {
+      throw new ForbiddenException('Account is inactive');
+    }
+
+    if (user.deletionRequestedAt) {
+      const permanentAt = permanentDeletionAt(user.deletionRequestedAt);
+      return {
+        message:
+          'Account is already scheduled for deletion. Sign in before the grace period ends to restore it.',
+        deletionRequestedAt: user.deletionRequestedAt,
+        permanentDeletionAt: permanentAt,
+        gracePeriodDays: USER_ACCOUNT_DELETION_GRACE_DAYS,
+      };
+    }
+
+    const deletionRequestedAt = new Date();
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        isActive: false,
+        deletionRequestedAt,
+        fcmToken: null,
+      },
+    });
+
+    return {
+      message: `Account deactivated. Sign in within ${USER_ACCOUNT_DELETION_GRACE_DAYS} days to restore it, or it will be permanently deleted.`,
+      deletionRequestedAt,
+      permanentDeletionAt: permanentDeletionAt(deletionRequestedAt),
+      gracePeriodDays: USER_ACCOUNT_DELETION_GRACE_DAYS,
+    };
+  }
+
+  /** Restore account after the customer signs in during the grace period. */
+  async cancelAccountDeletion(userId: string): Promise<void> {
+    await this.prisma.user.updateMany({
+      where: { id: userId, deletionRequestedAt: { not: null } },
+      data: { isActive: true, deletionRequestedAt: null },
+    });
+  }
+
+  /** Permanently remove users whose deletion grace period has ended. */
+  async purgeExpiredAccountDeletions(): Promise<number> {
+    const cutoff = deletionGraceCutoffDate();
+    const expired = await this.prisma.user.findMany({
+      where: {
+        deletionRequestedAt: { not: null, lte: cutoff },
+      },
+      select: { id: true },
+    });
+    for (const { id } of expired) {
+      await this.hardDeleteUser(id);
+    }
+    return expired.length;
+  }
+
+  private async hardDeleteUser(userId: string): Promise<void> {
+    await this.prisma.$transaction(async (tx) => {
+      const orders = await tx.order.findMany({
+        where: { userId },
+        select: { id: true },
+      });
+      const orderIds = orders.map((o) => o.id);
+      if (orderIds.length > 0) {
+        await tx.orderItem.deleteMany({
+          where: { orderId: { in: orderIds } },
+        });
+        await tx.order.deleteMany({ where: { userId } });
+      }
+      await tx.user.delete({ where: { id: userId } });
+    });
   }
 
   private async assertUniquePhoneEmail(
@@ -91,6 +190,17 @@ export class UsersService {
   }
 
   async updateProfile(userId: string, dto: UpdateUserDto) {
+    const current = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { isActive: true },
+    });
+    if (!current) {
+      throw new NotFoundException('User not found');
+    }
+    if (!current.isActive) {
+      throw new ForbiddenException('Account is inactive');
+    }
+
     await this.assertUniquePhoneEmail(dto.phone, dto.email, userId);
 
     const data: {
@@ -182,21 +292,7 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    await this.prisma.$transaction(async (tx) => {
-      const orders = await tx.order.findMany({
-        where: { userId },
-        select: { id: true },
-      });
-      const orderIds = orders.map((o) => o.id);
-      if (orderIds.length > 0) {
-        await tx.orderItem.deleteMany({
-          where: { orderId: { in: orderIds } },
-        });
-        await tx.order.deleteMany({ where: { userId } });
-      }
-      await tx.user.delete({ where: { id: userId } });
-    });
-
+    await this.hardDeleteUser(userId);
     return { message: 'User deleted' };
   }
 }

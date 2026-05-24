@@ -21,15 +21,22 @@ import { VerifyRegisterOtpDto } from './dto/verify-register-otp.dto';
 import { VerifyLoginOtpDto } from './dto/verify-login-otp.dto';
 import { JwtUserPayload } from './jwt-user.payload';
 import { OtpService } from '../otp/otp.service';
+import { UsersService } from '../users/users.service';
+import { loginEligibleUserFilter } from '../users/user-account-deletion';
+import { normalizeFcmToken } from './fcm-token.util';
+import {
+  DRIVER_ACCOUNT_ROLE,
+  MERCHANT_ACCOUNT_ROLE,
+  SUPER_ADMIN_ACCOUNT_ROLE,
+  USER_ACCOUNT_ROLE,
+} from './account-roles';
 
-/** Account role returned on merchant auth (store operator). */
-export const MERCHANT_ACCOUNT_ROLE = 'admin' as const;
-/** Account role returned on super-admin auth (API body; JWT still uses role SUPER_ADMIN). */
-export const SUPER_ADMIN_ACCOUNT_ROLE = 'super_admin' as const;
-/** Account role returned on customer (app user) auth. */
-export const USER_ACCOUNT_ROLE = 'user' as const;
-/** Account role returned on delivery driver auth. */
-export const DRIVER_ACCOUNT_ROLE = 'driver' as const;
+export {
+  DRIVER_ACCOUNT_ROLE,
+  MERCHANT_ACCOUNT_ROLE,
+  SUPER_ADMIN_ACCOUNT_ROLE,
+  USER_ACCOUNT_ROLE,
+} from './account-roles';
 
 @Injectable()
 export class AuthService {
@@ -43,6 +50,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly otpService: OtpService,
+    private readonly usersService: UsersService,
   ) {}
 
   private async signAccessToken(payload: JwtUserPayload): Promise<string> {
@@ -543,11 +551,14 @@ export class AuthService {
 
     await this.assertUserRegistrationAvailable(dto.phone);
 
+    const fcmToken = normalizeFcmToken(dto.fcmToken);
+
     const user = await this.prisma.user.create({
       data: {
         fullName: dto.fullName,
         dateOfBirth: new Date(`${dto.dateOfBirth}T00:00:00.000Z`),
         phone: dto.phone,
+        ...(fcmToken ? { fcmToken } : {}),
       },
       select: {
         id: true,
@@ -590,8 +601,10 @@ export class AuthService {
 
   /** Step 1: send OTP to an existing customer phone (WhatsApp). */
   async sendLoginOtp(dto: SendLoginOtpDto) {
+    await this.usersService.purgeExpiredAccountDeletions();
+
     const user = await this.prisma.user.findFirst({
-      where: { phone: dto.phone, isActive: true },
+      where: { phone: dto.phone, ...loginEligibleUserFilter() },
       select: { id: true },
     });
 
@@ -606,8 +619,10 @@ export class AuthService {
   async verifyLoginOtp(dto: VerifyLoginOtpDto) {
     this.otpService.verifyLoginOtp(dto.phone, dto.code);
 
+    await this.usersService.purgeExpiredAccountDeletions();
+
     const appUser = await this.prisma.user.findFirst({
-      where: { phone: dto.phone, isActive: true },
+      where: { phone: dto.phone, ...loginEligibleUserFilter() },
       select: {
         id: true,
         fullName: true,
@@ -615,6 +630,7 @@ export class AuthService {
         phone: true,
         email: true,
         isActive: true,
+        deletionRequestedAt: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -624,17 +640,32 @@ export class AuthService {
       throw new UnauthorizedException('No account found for this phone');
     }
 
+    if (appUser.deletionRequestedAt) {
+      await this.usersService.cancelAccountDeletion(appUser.id);
+      appUser.isActive = true;
+    }
+
+    const fcmToken = normalizeFcmToken(dto.fcmToken);
+    if (fcmToken) {
+      await this.prisma.user.update({
+        where: { id: appUser.id },
+        data: { fcmToken },
+      });
+    }
+
     const { accessToken, refreshToken } = await this.issueTokenPair({
       sub: appUser.id,
       email: appUser.email ?? appUser.phone,
       role: 'USER',
     });
 
+    const { deletionRequestedAt: _removed, ...userPublic } = appUser;
+
     return {
       accessToken,
       refreshToken,
       user: {
-        ...appUser,
+        ...userPublic,
         role: USER_ACCOUNT_ROLE,
       },
     };
@@ -645,10 +676,14 @@ export class AuthService {
   }
 
   async loginUser(dto: LoginUserDto) {
+    await this.usersService.purgeExpiredAccountDeletions();
+
     const appUser = await this.prisma.user.findFirst({
       where: {
-        OR: [{ email: dto.identifier }, { phone: dto.identifier }],
-        isActive: true,
+        AND: [
+          { OR: [{ email: dto.identifier }, { phone: dto.identifier }] },
+          loginEligibleUserFilter(),
+        ],
       },
     });
 
@@ -663,6 +698,19 @@ export class AuthService {
     const isValid = await bcrypt.compare(dto.password, appUser.passwordHash);
     if (!isValid) {
       throw new UnauthorizedException('Invalid credentials');
+    }
+
+    if (appUser.deletionRequestedAt) {
+      await this.usersService.cancelAccountDeletion(appUser.id);
+      appUser.isActive = true;
+    }
+
+    const fcmToken = normalizeFcmToken(dto.fcmToken);
+    if (fcmToken) {
+      await this.prisma.user.update({
+        where: { id: appUser.id },
+        data: { fcmToken },
+      });
     }
 
     const { accessToken, refreshToken } = await this.issueTokenPair({
@@ -683,6 +731,15 @@ export class AuthService {
         role: USER_ACCOUNT_ROLE,
       },
     };
+  }
+
+  /** Clears stored FCM token so pushes are not sent to this device after logout. */
+  async logoutUser(userId: string) {
+    await this.prisma.user.updateMany({
+      where: { id: userId },
+      data: { fcmToken: null },
+    });
+    return { ok: true as const, message: 'Logged out' };
   }
 
   async loginUserOrDriver(dto: LoginUserDto) {

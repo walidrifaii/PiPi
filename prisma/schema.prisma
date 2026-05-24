@@ -48,6 +48,10 @@ model User {
   email        String?       @unique @db.VarChar(255)
   passwordHash String?       @map("password_hash")
   isActive     Boolean       @default(true) @map("is_active")
+  /// Set when the customer requests account deletion; account is inactive until grace ends or they sign in again.
+  deletionRequestedAt DateTime? @map("deletion_requested_at")
+  /// FCM device token for push notifications (cleared on logout).
+  fcmToken     String?       @map("fcm_token") @db.VarChar(512)
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @updatedAt @map("updated_at")
   orders       Order[]

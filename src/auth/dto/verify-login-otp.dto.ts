@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, Length, Matches } from 'class-validator';
+import { OptionalFcmTokenDto } from './optional-fcm-token.dto';
 
-export class VerifyLoginOtpDto {
+export class VerifyLoginOtpDto extends OptionalFcmTokenDto {
   @ApiProperty({
     description: 'Phone in E.164 format (same as send-otp)',
     example: '+96170123456',

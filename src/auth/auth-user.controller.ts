@@ -1,5 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { UserAccountGuard } from './user-account.guard';
+import { JwtUserPayload } from './jwt-user.payload';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CompleteRegisterUserDto } from './dto/complete-register-user.dto';
@@ -77,5 +80,15 @@ export class AuthUserController {
   @Post('user/login/password')
   loginUser(@Body() dto: LoginUserDto) {
     return this.authService.loginUser(dto);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, UserAccountGuard)
+  @ApiOperation({
+    summary: 'Logout — clears FCM token for this user (customer JWT)',
+  })
+  @Post('user/logout')
+  logoutUser(@Req() req: { user?: JwtUserPayload }) {
+    return this.authService.logoutUser(req.user!.sub);
   }
 }

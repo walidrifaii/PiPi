@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsString, Matches, MinLength } from 'class-validator';
+import { OptionalFcmTokenDto } from './optional-fcm-token.dto';
 
 /** Step 3: profile details after phone OTP was verified. */
-export class CompleteRegisterUserDto {
+export class CompleteRegisterUserDto extends OptionalFcmTokenDto {
   @ApiProperty({
     description: 'Phone in E.164 format (same as steps 1–2)',
     example: '+96170123456',
