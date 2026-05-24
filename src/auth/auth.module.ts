@@ -11,6 +11,7 @@ import { AuthAppController } from './auth-app.controller';
 import { AuthDriverController } from './auth-driver.controller';
 import { AuthUserController } from './auth-user.controller';
 import { AuthRefreshController } from './auth-refresh.controller';
+import { FcmTokenController } from './fcm-token.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { MerchantJwtScopeGuard } from './merchant-jwt-scope.guard';
@@ -40,6 +41,7 @@ import { UserAccountGuard } from './user-account.guard';
     AuthUserController,
     AuthDriverController,
     AuthRefreshController,
+    FcmTokenController,
   ],
   providers: [
     AuthService,
