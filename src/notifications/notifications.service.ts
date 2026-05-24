@@ -15,6 +15,27 @@ export class NotificationsService implements OnModuleInit {
     this.messaging = this.tryInitFirebaseAdmin();
   }
 
+  private isGoogleServicesJson(value: unknown): boolean {
+    return (
+      typeof value === 'object' &&
+      value !== null &&
+      'project_info' in value &&
+      'client' in value
+    );
+  }
+
+  private isServiceAccountJson(
+    value: admin.ServiceAccount,
+  ): value is admin.ServiceAccount {
+    const v = value as Record<string, unknown>;
+    return (
+      v.type === 'service_account' &&
+      typeof v.project_id === 'string' &&
+      typeof v.private_key === 'string' &&
+      typeof v.client_email === 'string'
+    );
+  }
+
   private tryInitFirebaseAdmin(): admin.messaging.Messaging | null {
     if (admin.apps.length > 0) {
       return admin.messaging();
@@ -27,7 +48,20 @@ export class NotificationsService implements OnModuleInit {
 
     if (jsonEnv) {
       try {
-        serviceAccount = JSON.parse(jsonEnv) as admin.ServiceAccount;
+        const parsed: unknown = JSON.parse(jsonEnv);
+        if (this.isGoogleServicesJson(parsed)) {
+          console.warn(
+            '[Notifications] FIREBASE_SERVICE_ACCOUNT_JSON looks like google-services.json (mobile app config). Download a service account key instead: Firebase Console → Project settings → Service accounts → Generate new private key.',
+          );
+          return null;
+        }
+        serviceAccount = parsed as admin.ServiceAccount;
+        if (!this.isServiceAccountJson(serviceAccount)) {
+          console.warn(
+            '[Notifications] FIREBASE_SERVICE_ACCOUNT_JSON must be a Firebase service account key (fields: type, project_id, private_key, client_email).',
+          );
+          return null;
+        }
       } catch {
         console.warn(
           '[Notifications] FIREBASE_SERVICE_ACCOUNT_JSON is not valid JSON.',
@@ -37,7 +71,20 @@ export class NotificationsService implements OnModuleInit {
     } else if (pathEnv) {
       try {
         const raw = readFileSync(pathEnv, 'utf8');
-        serviceAccount = JSON.parse(raw) as admin.ServiceAccount;
+        const parsed: unknown = JSON.parse(raw);
+        if (this.isGoogleServicesJson(parsed)) {
+          console.warn(
+            '[Notifications] FIREBASE_SERVICE_ACCOUNT_PATH points to google-services.json. Use a service account JSON from Firebase Console → Service accounts.',
+          );
+          return null;
+        }
+        serviceAccount = parsed as admin.ServiceAccount;
+        if (!this.isServiceAccountJson(serviceAccount)) {
+          console.warn(
+            '[Notifications] FIREBASE_SERVICE_ACCOUNT_PATH must be a service account key file.',
+          );
+          return null;
+        }
       } catch (err) {
         console.warn(
           `[Notifications] Could not read FIREBASE_SERVICE_ACCOUNT_PATH: ${String(err)}`,
@@ -60,7 +107,7 @@ export class NotificationsService implements OnModuleInit {
   private assertMessaging(): admin.messaging.Messaging {
     if (!this.messaging) {
       throw new ServiceUnavailableException(
-        'Push notifications are not configured on the server. Add FIREBASE_SERVICE_ACCOUNT_JSON (service account JSON from Firebase Console) to your .env file.',
+        'Push notifications are not configured. Add FIREBASE_SERVICE_ACCOUNT_JSON with a service account key (not google-services.json). Firebase Console → Project settings → Service accounts → Generate new private key.',
       );
     }
     return this.messaging;
