@@ -5,7 +5,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { NotificationsService } from '../notifications/notifications.service';
+import {
+  OrderNotificationsPort,
+  type SendOrderStatusResult,
+} from '../notifications/notifications.port';
 import { PrismaService } from '../prisma/prisma.service';
 import { ListOrdersAdminQueryDto } from './dto/list-orders-admin-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
@@ -38,7 +41,7 @@ export class OrdersService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly notifications: NotificationsService,
+    private readonly notifications: OrderNotificationsPort,
   ) {}
 
   private normalizePagination(page: number, limit: number) {
@@ -224,12 +227,13 @@ export class OrdersService {
     const snapshot = this.parseSnapshot(order.itemsSnapshot);
     const merchantName = snapshot?.merchantName ?? order.merchant.name;
 
-    const result = await this.notifications.sendOrderStatusUpdate({
-      fcmToken: user.fcmToken.trim(),
-      orderId: order.id,
-      status,
-      merchantName,
-    });
+    const result: SendOrderStatusResult =
+      await this.notifications.sendOrderStatusUpdate({
+        fcmToken: user.fcmToken.trim(),
+        orderId: order.id,
+        status,
+        merchantName,
+      });
 
     if (!result.sent) {
       this.log.debug(

@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { resolveEffectiveUnitPrice } from '../common/product-pricing';
+import { OrderNotificationsPort } from '../notifications/notifications.port';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCheckoutDto } from './dto/create-checkout.dto';
 
@@ -39,7 +40,10 @@ export type CheckoutItemsSnapshot = {
 
 @Injectable()
 export class CheckoutService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly orderNotifications: OrderNotificationsPort,
+  ) {}
 
   async createOrder(userId: string, dto: CreateCheckoutDto) {
     if (dto.total < dto.subtotal) {
@@ -163,6 +167,14 @@ export class CheckoutService {
 
     const snapshot = order.itemsSnapshot as CheckoutItemsSnapshot;
 
+    void this.notifyMerchantAndAdminsNewOrder({
+      orderId: order.id,
+      merchantId: order.merchant.id,
+      merchantName: snapshot.merchantName,
+      userId,
+      total: Number(order.total),
+    });
+
     return {
       id: order.id,
       checkoutRef: order.checkoutRef,
@@ -204,5 +216,53 @@ export class CheckoutService {
       }),
       createdAt: order.createdAt,
     };
+  }
+
+  private async notifyMerchantAndAdminsNewOrder(params: {
+    orderId: string;
+    merchantId: string;
+    merchantName: string;
+    userId: string;
+    total: number;
+  }) {
+    try {
+      const [merchant, admins, customer] = await Promise.all([
+        this.prisma.merchant.findUnique({
+          where: { id: params.merchantId },
+          select: { fcmToken: true },
+        }),
+        this.prisma.superAdmin.findMany({
+          where: { isActive: true, fcmToken: { not: null } },
+          select: { fcmToken: true },
+        }),
+        this.prisma.user.findUnique({
+          where: { id: params.userId },
+          select: { fullName: true },
+        }),
+      ]);
+
+      const tokens: string[] = [];
+      const merchantToken = merchant?.fcmToken?.trim();
+      if (merchantToken) {
+        tokens.push(merchantToken);
+      }
+      for (const admin of admins) {
+        const t = admin.fcmToken?.trim();
+        if (t) {
+          tokens.push(t);
+        }
+      }
+
+      await this.orderNotifications.sendNewOrderAlert({
+        tokens,
+        orderId: params.orderId,
+        merchantId: params.merchantId,
+        merchantName: params.merchantName,
+        customerName: customer?.fullName ?? undefined,
+        total: params.total,
+      });
+    } catch {
+      // Checkout must succeed even if push fails.
+    }
   }
 }

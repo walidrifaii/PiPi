@@ -6,18 +6,26 @@ import {
 } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { readFileSync } from 'node:fs';
-import { orderStatusNotificationCopy } from '../orders/order-status.constants';
+import { orderStatusNotificationCopy } from './order-status-notification.copy';
 import { SendTestNotificationDto } from './dto/send-test-notification.dto';
+import { buildNewOrderFcmData } from './new-order-payload';
+import { newOrderNotificationCopy } from './new-order-notification.copy';
 import { buildOrderStatusFcmData } from './order-status-payload';
+import {
+  OrderNotificationsPort,
+  type SendNewOrderAlertParams,
+  type SendNewOrderAlertResult,
+  type SendOrderStatusParams,
+  type SendOrderStatusResult,
+} from './notifications.port';
 
-export type SendOrderStatusResult = {
-  sent: boolean;
-  messageId?: string;
-  reason?: string;
-};
+export type { SendOrderStatusResult } from './notifications.port';
 
 @Injectable()
-export class NotificationsService implements OnModuleInit {
+export class NotificationsService
+  extends OrderNotificationsPort
+  implements OnModuleInit
+{
   private readonly log = new Logger(NotificationsService.name);
   private messaging: admin.messaging.Messaging | null = null;
 
@@ -152,12 +160,9 @@ export class NotificationsService implements OnModuleInit {
    * Push order status to the customer's device. Does not throw when Firebase is
    * missing or the token is invalid — the order update should still succeed.
    */
-  async sendOrderStatusUpdate(params: {
-    fcmToken: string;
-    orderId: string;
-    status: string;
-    merchantName?: string;
-  }): Promise<SendOrderStatusResult> {
+  async sendOrderStatusUpdate(
+    params: SendOrderStatusParams,
+  ): Promise<SendOrderStatusResult> {
     if (!this.messaging) {
       return { sent: false, reason: 'not_configured' };
     }
@@ -188,6 +193,67 @@ export class NotificationsService implements OnModuleInit {
       const reason = err instanceof Error ? err.message : String(err);
       this.log.warn(
         `Order status push failed for order ${params.orderId}: ${reason}`,
+      );
+      return { sent: false, reason };
+    }
+  }
+
+  /**
+   * Notify merchant and super-admin devices about a new PENDING order.
+   * Does not throw when Firebase is missing or tokens are invalid.
+   */
+  async sendNewOrderAlert(
+    params: SendNewOrderAlertParams,
+  ): Promise<SendNewOrderAlertResult> {
+    const tokens = [
+      ...new Set(
+        params.tokens.map((t) => t.trim()).filter((t) => t.length > 0),
+      ),
+    ];
+    if (tokens.length === 0) {
+      return { sent: false, reason: 'no_tokens' };
+    }
+    if (!this.messaging) {
+      return { sent: false, reason: 'not_configured' };
+    }
+
+    const copy = newOrderNotificationCopy({
+      merchantName: params.merchantName,
+      customerName: params.customerName,
+      total: params.total,
+    });
+    const data = buildNewOrderFcmData(params.orderId, params.merchantId);
+
+    try {
+      const response = await this.messaging.sendEachForMulticast({
+        tokens,
+        notification: {
+          title: copy.title,
+          body: copy.body,
+        },
+        data,
+        android: {
+          priority: 'high',
+          notification: {
+            channelId: 'pip_pip_default',
+          },
+        },
+      });
+      const successCount = response.successCount;
+      const failureCount = response.failureCount;
+      if (successCount === 0) {
+        return {
+          sent: false,
+          successCount,
+          failureCount,
+          reason: 'all_failed',
+        };
+      }
+      return { sent: true, successCount, failureCount };
+    } catch (err) {
+      const reason = err instanceof Error ? err.message : String(err);
+      this.log.warn(
+        `New order push failed for order ${params.orderId}: ${reason}`,
       );
       return { sent: false, reason };
     }

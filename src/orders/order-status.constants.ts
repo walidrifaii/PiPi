@@ -25,7 +25,9 @@ const MERCHANT_TRANSITIONS: Record<string, readonly string[]> = {
   CANCELLED: [],
 };
 
-export function normalizeOrderStatus(value: string | null | undefined): OrderStatus {
+export function normalizeOrderStatus(
+  value: string | null | undefined,
+): OrderStatus {
   const raw = (value ?? 'PENDING').trim().toUpperCase();
   if ((ORDER_STATUSES as readonly string[]).includes(raw)) {
     return raw as OrderStatus;
@@ -54,49 +56,4 @@ export function canSuperAdminTransition(from: string, to: string): boolean {
     return false;
   }
   return (ORDER_STATUSES as readonly string[]).includes(next);
-}
-
-export function orderStatusNotificationCopy(
-  status: string,
-  merchantName?: string,
-): { title: string; body: string } {
-  const store = merchantName?.trim() || 'your order';
-  switch (normalizeOrderStatus(status)) {
-    case 'ACCEPTED':
-      return {
-        title: 'Order accepted',
-        body: `${store} accepted your order.`,
-      };
-    case 'PREPARING':
-      return {
-        title: 'Order preparing',
-        body: `${store} is preparing your order.`,
-      };
-    case 'READY':
-      return {
-        title: 'Order ready',
-        body: `Your order from ${store} is ready.`,
-      };
-    case 'DISPATCHED':
-    case 'DELIVERING':
-      return {
-        title: 'On the way',
-        body: `Your order from ${store} is on the way.`,
-      };
-    case 'DELIVERED':
-      return {
-        title: 'Delivered',
-        body: `Your order from ${store} was delivered.`,
-      };
-    case 'CANCELLED':
-      return {
-        title: 'Order cancelled',
-        body: `Your order from ${store} was cancelled.`,
-      };
-    default:
-      return {
-        title: 'Order update',
-        body: `Status updated for your order from ${store}.`,
-      };
-  }
 }

@@ -116,6 +116,8 @@ model Merchant {
   timezone     String?            @db.VarChar(64)
   /// When true, customers only see the store open during merchant_working_intervals (and isActive must be true).
   useWorkingHours Boolean         @default(false) @map("use_working_hours")
+  /// FCM device token for new-order push (dashboard / mobile).
+  fcmToken     String?            @map("fcm_token") @db.VarChar(512)
   createdAt    DateTime           @default(now()) @map("created_at")
   updatedAt    DateTime           @updatedAt @map("updated_at")
   orders       Order[]
@@ -225,6 +227,8 @@ model SuperAdmin {
   phone        String   @unique @db.VarChar(50)
   passwordHash String   @map("password_hash")
   isActive     Boolean  @default(true) @map("is_active")
+  /// FCM device token for new-order push (admin dashboard).
+  fcmToken     String?  @map("fcm_token") @db.VarChar(512)
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 

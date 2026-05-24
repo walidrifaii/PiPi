@@ -271,6 +271,14 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    const fcmToken = normalizeFcmToken(dto.fcmToken);
+    if (fcmToken) {
+      await this.prisma.superAdmin.update({
+        where: { id: admin.id },
+        data: { fcmToken },
+      });
+    }
+
     const { accessToken, refreshToken } = await this.issueTokenPair({
       sub: admin.id,
       email: admin.email,
@@ -474,6 +482,14 @@ export class AuthService {
     const isValid = await bcrypt.compare(dto.password, merchant.passwordHash);
     if (!isValid) {
       throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const fcmToken = normalizeFcmToken(dto.fcmToken);
+    if (fcmToken) {
+      await this.prisma.merchant.update({
+        where: { id: merchant.id },
+        data: { fcmToken },
+      });
     }
 
     const { accessToken, refreshToken } = await this.issueTokenPair({

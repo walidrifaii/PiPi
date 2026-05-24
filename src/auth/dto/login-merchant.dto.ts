@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, MinLength } from 'class-validator';
+import { OptionalFcmTokenDto } from './optional-fcm-token.dto';
 
-export class LoginMerchantDto {
+export class LoginMerchantDto extends OptionalFcmTokenDto {
   @ApiProperty({ description: 'Account email or phone number' })
   @IsString()
   identifier: string;
