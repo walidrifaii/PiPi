@@ -4,6 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { randomBytes } from 'crypto';
 import { JwtService, type JwtSignOptions } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
@@ -13,6 +14,7 @@ import { LoginDriverDto } from './dto/login-driver.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterMerchantDto } from './dto/register-merchant.dto';
 import { RegisterSuperAdminDto } from './dto/register-super-admin.dto';
+import { CompleteRegisterDriverDto } from './dto/complete-register-driver.dto';
 import { CompleteRegisterUserDto } from './dto/complete-register-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { SendRegisterOtpDto } from './dto/send-register-otp.dto';
@@ -23,6 +25,7 @@ import { JwtUserPayload } from './jwt-user.payload';
 import { OtpService } from '../otp/otp.service';
 import { UsersService } from '../users/users.service';
 import { loginEligibleUserFilter } from '../users/user-account-deletion';
+import { assertPhoneAvailableAcrossUserAndDriver } from '../common/phone-account-uniqueness';
 import { normalizeFcmToken } from './fcm-token.util';
 import {
   DRIVER_ACCOUNT_ROLE,
@@ -605,35 +608,177 @@ export class AuthService {
   }
 
   private async assertUserRegistrationAvailable(phone: string): Promise<void> {
-    const existing = await this.prisma.user.findFirst({
-      where: { phone },
-      select: { id: true },
+    await assertPhoneAvailableAcrossUserAndDriver(this.prisma, phone);
+  }
+
+  async resendRegisterDriverOtp(dto: SendRegisterOtpDto) {
+    if (!this.otpService.hasPendingDriverRegistration(dto.phone)) {
+      throw new BadRequestException(
+        'No pending registration for this phone. Call POST /auth/driver/register first.',
+      );
+    }
+    return this.otpService.sendDriverRegisterOtp(dto.phone);
+  }
+
+  /** Driver register step 1: phone only — pending session + OTP via WhatsApp. */
+  async registerDriver(dto: RegisterUserDto) {
+    await this.assertDriverRegistrationAvailable(dto.phone);
+    this.otpService.setPendingDriverRegistration(dto.phone);
+    return this.otpService.sendDriverRegisterOtp(dto.phone);
+  }
+
+  /** Driver register step 2: verify OTP (account not created yet). */
+  async verifyRegisterDriverOtp(dto: VerifyRegisterOtpDto) {
+    if (!this.otpService.hasPendingDriverRegistration(dto.phone)) {
+      throw new BadRequestException(
+        'No pending registration for this phone. Call POST /auth/driver/register first.',
+      );
+    }
+
+    this.otpService.verifyDriverRegisterOtp(dto.phone, dto.code);
+    this.otpService.markPhoneVerifiedForDriverRegistration(dto.phone);
+
+    return {
+      ok: true as const,
+      phoneVerified: true,
+      message:
+        'Phone verified. Complete registration with your driver profile details.',
+    };
+  }
+
+  /** Driver register step 3: profile — creates driver and returns JWT. */
+  async completeRegisterDriver(dto: CompleteRegisterDriverDto) {
+    if (!this.otpService.isPhoneVerifiedForDriverRegistration(dto.phone)) {
+      throw new BadRequestException(
+        'Phone is not verified. Complete POST /auth/driver/register and POST /auth/driver/register/verify-otp first.',
+      );
+    }
+
+    const pending = this.otpService.consumePendingDriverRegistration(dto.phone);
+    if (!pending?.phoneVerified) {
+      throw new BadRequestException(
+        'Registration session expired. Start again from POST /auth/driver/register.',
+      );
+    }
+
+    await this.assertDriverRegistrationAvailable(dto.phone, dto.email);
+
+    const passwordHash = await bcrypt.hash(randomBytes(32).toString('hex'), 10);
+
+    const driver = await this.prisma.driver.create({
+      data: {
+        fullName: dto.fullName,
+        phone: dto.phone,
+        email: dto.email,
+        vehicleType: dto.vehicleType,
+        passwordHash,
+        status: 'offline',
+        isActive: true,
+      },
+      select: {
+        id: true,
+        fullName: true,
+        phone: true,
+        email: true,
+        vehicleType: true,
+        status: true,
+        isActive: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
-    if (existing) {
-      throw new BadRequestException('A user with this phone already exists');
+    return this.buildDriverLoginResponse(driver);
+  }
+
+  private async assertDriverRegistrationAvailable(
+    phone: string,
+    email?: string,
+  ): Promise<void> {
+    await assertPhoneAvailableAcrossUserAndDriver(this.prisma, phone);
+
+    if (email) {
+      const existingEmail = await this.prisma.driver.findFirst({
+        where: { email },
+        select: { id: true },
+      });
+      if (existingEmail) {
+        throw new BadRequestException(
+          'A driver with this email already exists',
+        );
+      }
     }
   }
 
-  /** Step 1: send OTP to an existing customer phone (WhatsApp). */
-  async sendLoginOtp(dto: SendLoginOtpDto) {
+  /** Resolve customer vs driver for a phone (customer wins if both exist). */
+  private async resolveLoginAccountByPhone(
+    phone: string,
+  ): Promise<'user' | 'driver' | null> {
     await this.usersService.purgeExpiredAccountDeletions();
 
-    const user = await this.prisma.user.findFirst({
-      where: { phone: dto.phone, ...loginEligibleUserFilter() },
-      select: { id: true },
-    });
+    const [user, driver] = await Promise.all([
+      this.prisma.user.findFirst({
+        where: { phone, ...loginEligibleUserFilter() },
+        select: { id: true },
+      }),
+      this.prisma.driver.findFirst({
+        where: { phone, isActive: true },
+        select: { id: true },
+      }),
+    ]);
 
-    if (!user) {
+    if (user) {
+      return 'user';
+    }
+    if (driver) {
+      return 'driver';
+    }
+    return null;
+  }
+
+  /** Step 1: send OTP — works for customer or driver (POST /auth/user/login). */
+  async sendLoginOtp(dto: SendLoginOtpDto) {
+    const accountType = await this.resolveLoginAccountByPhone(dto.phone);
+    if (!accountType) {
       throw new UnauthorizedException('No account found for this phone');
     }
 
-    return this.otpService.sendLoginOtp(dto.phone);
+    this.otpService.setPendingAppLogin(dto.phone, accountType);
+    return this.otpService.sendAppLoginOtp(dto.phone);
   }
 
-  /** Step 2: verify OTP and return user profile with access + refresh tokens. */
+  /** Step 2: verify OTP — returns user or driver based on account type. */
   async verifyLoginOtp(dto: VerifyLoginOtpDto) {
-    this.otpService.verifyLoginOtp(dto.phone, dto.code);
+    const pending = this.otpService.consumePendingAppLogin(dto.phone);
+    if (!pending) {
+      throw new BadRequestException(
+        'Login session expired or not found. Call POST /auth/user/login first.',
+      );
+    }
+
+    this.otpService.verifyAppLoginOtp(dto.phone, dto.code);
+
+    if (pending.accountType === 'driver') {
+      const driver = await this.prisma.driver.findFirst({
+        where: { phone: dto.phone, isActive: true },
+        select: {
+          id: true,
+          fullName: true,
+          phone: true,
+          email: true,
+          vehicleType: true,
+          status: true,
+          isActive: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+      if (!driver) {
+        throw new UnauthorizedException('No account found for this phone');
+      }
+      const tokens = await this.buildDriverLoginResponse(driver);
+      return { accountType: 'driver' as const, ...tokens };
+    }
 
     await this.usersService.purgeExpiredAccountDeletions();
 
@@ -678,6 +823,7 @@ export class AuthService {
     const { deletionRequestedAt: _removed, ...userPublic } = appUser;
 
     return {
+      accountType: 'user' as const,
       accessToken,
       refreshToken,
       user: {
@@ -688,7 +834,15 @@ export class AuthService {
   }
 
   async resendLoginOtp(dto: SendLoginOtpDto) {
-    return this.sendLoginOtp(dto);
+    if (!this.otpService.hasPendingAppLogin(dto.phone)) {
+      return this.sendLoginOtp(dto);
+    }
+    const accountType = await this.resolveLoginAccountByPhone(dto.phone);
+    if (!accountType) {
+      throw new UnauthorizedException('No account found for this phone');
+    }
+    this.otpService.setPendingAppLogin(dto.phone, accountType);
+    return this.otpService.sendAppLoginOtp(dto.phone);
   }
 
   async loginUser(dto: LoginUserDto) {
@@ -870,6 +1024,21 @@ export class AuthService {
     throw new UnauthorizedException('Invalid credentials');
   }
 
+  /** @deprecated Use POST /auth/user/login (same unified flow). */
+  sendDriverLoginOtp(dto: SendLoginOtpDto) {
+    return this.sendLoginOtp(dto);
+  }
+
+  /** @deprecated Use POST /auth/user/login/verify */
+  verifyDriverLoginOtp(dto: VerifyLoginOtpDto) {
+    return this.verifyLoginOtp(dto);
+  }
+
+  /** @deprecated Use POST /auth/user/login/resend */
+  resendDriverLoginOtp(dto: SendLoginOtpDto) {
+    return this.resendLoginOtp(dto);
+  }
+
   async loginDriver(dto: LoginDriverDto) {
     const driver = await this.prisma.driver.findFirst({
       where: {
@@ -887,6 +1056,20 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    return this.buildDriverLoginResponse(driver);
+  }
+
+  private async buildDriverLoginResponse(driver: {
+    id: string;
+    fullName: string | null;
+    phone: string;
+    email: string | null;
+    vehicleType: string | null;
+    status: string | null;
+    isActive: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
+  }) {
     const { accessToken, refreshToken } = await this.issueTokenPair({
       sub: driver.id,
       email: driver.email ?? driver.phone,
@@ -904,6 +1087,8 @@ export class AuthService {
         vehicleType: driver.vehicleType,
         status: driver.status,
         isActive: driver.isActive,
+        ...(driver.createdAt ? { createdAt: driver.createdAt } : {}),
+        ...(driver.updatedAt ? { updatedAt: driver.updatedAt } : {}),
         role: DRIVER_ACCOUNT_ROLE,
       },
     };

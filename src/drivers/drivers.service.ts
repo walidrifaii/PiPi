@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { DRIVER_ACCOUNT_ROLE } from '../auth/account-roles';
+import { assertPhoneAvailableAcrossUserAndDriver } from '../common/phone-account-uniqueness';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDriverDto } from '../auth/dto/register-driver.dto';
 import { UpdateDriverAdminDto } from './dto/update-driver-admin.dto';
@@ -62,20 +63,18 @@ export class DriversService {
       );
     }
 
-    const orConditions: { email?: string; phone?: string }[] = [
-      { phone: dto.phone },
-    ];
+    await assertPhoneAvailableAcrossUserAndDriver(this.prisma, dto.phone);
+
     if (dto.email) {
-      orConditions.push({ email: dto.email });
-    }
-    const existing = await this.prisma.driver.findFirst({
-      where: { OR: orConditions },
-      select: { id: true },
-    });
-    if (existing) {
-      throw new BadRequestException(
-        'A driver with this phone or email already exists',
-      );
+      const existingEmail = await this.prisma.driver.findFirst({
+        where: { email: dto.email },
+        select: { id: true },
+      });
+      if (existingEmail) {
+        throw new BadRequestException(
+          'A driver with this email already exists',
+        );
+      }
     }
 
     const passwordHash = await bcrypt.hash(dto.password, 10);
@@ -122,6 +121,19 @@ export class DriversService {
     if (or.length === 0) {
       return;
     }
+
+    if (phone !== undefined) {
+      const userWithPhone = await this.prisma.user.findFirst({
+        where: { phone },
+        select: { id: true },
+      });
+      if (userWithPhone) {
+        throw new BadRequestException(
+          'This phone number is already registered. Sign in or use a different number.',
+        );
+      }
+    }
+
     const existing = await this.prisma.driver.findFirst({
       where: {
         AND: [

@@ -50,7 +50,8 @@ export class AuthUserController {
   }
 
   @ApiOperation({
-    summary: 'Login step 1 — submit phone; OTP sent via WhatsApp',
+    summary:
+      'Login step 1 — customer or driver phone; OTP sent via WhatsApp',
   })
   @Post('user/login')
   sendLoginOtp(@Body() dto: SendLoginOtpDto) {
@@ -59,7 +60,7 @@ export class AuthUserController {
 
   @ApiOperation({
     summary:
-      'Login step 2 — verify code; returns user, accessToken, and refreshToken',
+      'Login step 2 — verify code; returns accountType (user|driver), profile, accessToken, refreshToken',
   })
   @Post('user/login/verify')
   verifyLoginOtp(@Body() dto: VerifyLoginOtpDto) {
@@ -67,7 +68,8 @@ export class AuthUserController {
   }
 
   @ApiOperation({
-    summary: 'Resend login code (same body as POST /auth/user/login)',
+    summary:
+      'Resend login code for customer or driver (same body as POST /auth/user/login)',
   })
   @Post('user/login/resend')
   resendLoginOtp(@Body() dto: SendLoginOtpDto) {

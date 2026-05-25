@@ -175,6 +175,19 @@ export class UsersService implements OnModuleInit {
     if (or.length === 0) {
       return;
     }
+
+    if (phone !== undefined) {
+      const driverWithPhone = await this.prisma.driver.findFirst({
+        where: { phone },
+        select: { id: true },
+      });
+      if (driverWithPhone) {
+        throw new BadRequestException(
+          'This phone number is already registered. Sign in or use a different number.',
+        );
+      }
+    }
+
     const existing = await this.prisma.user.findFirst({
       where: {
         AND: [

@@ -8,7 +8,19 @@ import {
 import { createHmac, randomInt, timingSafeEqual } from 'crypto';
 import { WhatsAppNodeService } from './whatsapp-node.service';
 
-type OtpPurpose = 'register' | 'login';
+type OtpPurpose =
+  | 'register'
+  | 'login'
+  | 'driver_login'
+  | 'driver_register'
+  | 'app_login';
+
+export type AppLoginAccountType = 'user' | 'driver';
+
+interface PendingAppLogin {
+  accountType: AppLoginAccountType;
+  expiresAt: number;
+}
 
 interface StoredOtp {
   hash: string;
@@ -25,6 +37,11 @@ export class OtpService {
   /** In-process store keyed by purpose:phone (sufficient until verify step uses Redis). */
   private readonly store = new Map<string, StoredOtp>();
   private readonly pendingRegister = new Map<string, PendingUserRegistration>();
+  private readonly pendingDriverRegister = new Map<
+    string,
+    PendingUserRegistration
+  >();
+  private readonly pendingAppLogin = new Map<string, PendingAppLogin>();
 
   constructor(private readonly whatsAppNode: WhatsAppNodeService) {}
 
@@ -111,12 +128,114 @@ export class OtpService {
     return pending;
   }
 
+  setPendingDriverRegistration(phone: string): string {
+    const phoneE164 = this.normalizePhoneE164(phone);
+    const expiresAt = Date.now() + this.ttlSeconds() * 1000;
+    this.pendingDriverRegister.set(phoneE164, {
+      phoneVerified: false,
+      expiresAt,
+    });
+    return phoneE164;
+  }
+
+  markPhoneVerifiedForDriverRegistration(phone: string): void {
+    const phoneE164 = this.normalizePhoneE164(phone);
+    const pending = this.pendingDriverRegister.get(phoneE164);
+    if (!pending || Date.now() > pending.expiresAt) {
+      throw new BadRequestException(
+        'Registration session expired. Submit POST /auth/driver/register again.',
+      );
+    }
+    this.pendingDriverRegister.set(phoneE164, {
+      ...pending,
+      phoneVerified: true,
+      expiresAt: Date.now() + this.ttlSeconds() * 1000,
+    });
+  }
+
+  isPhoneVerifiedForDriverRegistration(phone: string): boolean {
+    const phoneE164 = this.normalizePhoneE164(phone);
+    const pending = this.pendingDriverRegister.get(phoneE164);
+    if (!pending || Date.now() > pending.expiresAt) {
+      this.pendingDriverRegister.delete(phoneE164);
+      return false;
+    }
+    return pending.phoneVerified;
+  }
+
+  hasPendingDriverRegistration(phone: string): boolean {
+    const phoneE164 = this.normalizePhoneE164(phone);
+    const pending = this.pendingDriverRegister.get(phoneE164);
+    if (!pending) {
+      return false;
+    }
+    if (Date.now() > pending.expiresAt) {
+      this.pendingDriverRegister.delete(phoneE164);
+      return false;
+    }
+    return true;
+  }
+
+  consumePendingDriverRegistration(
+    phone: string,
+  ): PendingUserRegistration | null {
+    const phoneE164 = this.normalizePhoneE164(phone);
+    const pending = this.pendingDriverRegister.get(phoneE164);
+    this.pendingDriverRegister.delete(phoneE164);
+    if (!pending || Date.now() > pending.expiresAt) {
+      return null;
+    }
+    return pending;
+  }
+
   verifyRegisterOtp(phone: string, code: string): void {
     this.verifyOtp('register', phone, code);
   }
 
+  verifyDriverRegisterOtp(phone: string, code: string): void {
+    this.verifyOtp('driver_register', phone, code);
+  }
+
   verifyLoginOtp(phone: string, code: string): void {
     this.verifyOtp('login', phone, code);
+  }
+
+  verifyDriverLoginOtp(phone: string, code: string): void {
+    this.verifyOtp('driver_login', phone, code);
+  }
+
+  verifyAppLoginOtp(phone: string, code: string): void {
+    this.verifyOtp('app_login', phone, code);
+  }
+
+  setPendingAppLogin(phone: string, accountType: AppLoginAccountType): string {
+    const phoneE164 = this.normalizePhoneE164(phone);
+    const expiresAt = Date.now() + this.ttlSeconds() * 1000;
+    this.pendingAppLogin.set(phoneE164, { accountType, expiresAt });
+    return phoneE164;
+  }
+
+  consumePendingAppLogin(phone: string): PendingAppLogin | null {
+    const phoneE164 = this.normalizePhoneE164(phone);
+    const pending = this.pendingAppLogin.get(phoneE164);
+    this.pendingAppLogin.delete(phoneE164);
+    if (!pending || Date.now() > pending.expiresAt) {
+      return null;
+    }
+    return pending;
+  }
+
+  hasPendingAppLogin(phone: string): boolean {
+    const phoneE164 = this.normalizePhoneE164(phone);
+    const pending = this.pendingAppLogin.get(phoneE164);
+    if (!pending) {
+      return false;
+    }
+    if (Date.now() > pending.expiresAt) {
+      this.pendingAppLogin.delete(phoneE164);
+      return false;
+    }
+    return true;
   }
 
   private verifyOtp(purpose: OtpPurpose, phone: string, code: string): void {
@@ -160,6 +279,30 @@ export class OtpService {
     expiresInSeconds: number;
   }> {
     return this.sendOtp('login', phone);
+  }
+
+  /** Send driver login OTP via WhatsApp Node campaign. */
+  async sendDriverLoginOtp(phone: string): Promise<{
+    ok: true;
+    expiresInSeconds: number;
+  }> {
+    return this.sendOtp('driver_login', phone);
+  }
+
+  /** Unified customer + driver login OTP via WhatsApp. */
+  async sendAppLoginOtp(phone: string): Promise<{
+    ok: true;
+    expiresInSeconds: number;
+  }> {
+    return this.sendOtp('app_login', phone);
+  }
+
+  /** Send driver registration OTP via WhatsApp Node campaign. */
+  async sendDriverRegisterOtp(phone: string): Promise<{
+    ok: true;
+    expiresInSeconds: number;
+  }> {
+    return this.sendOtp('driver_register', phone);
   }
 
   private async sendOtp(
