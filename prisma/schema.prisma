@@ -189,11 +189,47 @@ model Product {
   imageUrl    String?        @map("image_url") @db.VarChar(500)
   createdAt   DateTime       @default(now()) @map("created_at")
   updatedAt   DateTime       @updatedAt @map("updated_at")
-  category    MerchantCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  images      ProductImage[]
+  category     MerchantCategory      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  images       ProductImage[]
+  optionGroups ProductOptionGroup[]
 
   @@index([categoryId])
   @@map("products")
+}
+
+/// Per-product option set (e.g. Size). Choices add `priceModifier` on top of base effective price.
+model ProductOptionGroup {
+  id         String                @id @default(uuid()) @db.Uuid
+  productId  String                @map("product_id") @db.Uuid
+  name       String                @db.VarChar(255)
+  nameAr     String?               @map("name_ar") @db.VarChar(255)
+  isRequired Boolean               @default(true) @map("is_required")
+  minSelect  Int                   @default(1) @map("min_select")
+  maxSelect  Int                   @default(1) @map("max_select")
+  sortOrder  Int                   @default(0) @map("sort_order")
+  createdAt  DateTime              @default(now()) @map("created_at")
+  updatedAt  DateTime              @updatedAt @map("updated_at")
+  product    Product               @relation(fields: [productId], references: [id], onDelete: Cascade)
+  choices    ProductOptionChoice[]
+
+  @@index([productId])
+  @@map("product_option_groups")
+}
+
+model ProductOptionChoice {
+  id            String             @id @default(uuid()) @db.Uuid
+  groupId       String             @map("group_id") @db.Uuid
+  name          String             @db.VarChar(255)
+  nameAr        String?            @map("name_ar") @db.VarChar(255)
+  priceModifier Decimal            @default(0) @map("price_modifier") @db.Decimal(10, 2)
+  sortOrder     Int                @default(0) @map("sort_order")
+  isActive      Boolean            @default(true) @map("is_active")
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @updatedAt @map("updated_at")
+  group         ProductOptionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@index([groupId])
+  @@map("product_option_choices")
 }
 
 model ProductImage {

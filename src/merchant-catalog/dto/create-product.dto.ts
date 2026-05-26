@@ -1,13 +1,16 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsNumber,
   IsOptional,
   IsString,
   IsUrl,
   MaxLength,
   Min,
+  ValidateNested,
 } from 'class-validator';
+import { ProductOptionGroupDto } from './product-option.dto';
 import { ValidateDiscountNotAbovePrice } from '../validators/discount-not-greater-than-price.constraint';
 
 export class CreateProductDto {
@@ -56,4 +59,15 @@ export class CreateProductDto {
   @IsUrl()
   @MaxLength(500)
   imageUrl?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'Option groups (e.g. Size with Small/Medium/Large and price modifiers)',
+    type: [ProductOptionGroupDto],
+  })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProductOptionGroupDto)
+  optionGroups?: ProductOptionGroupDto[];
 }

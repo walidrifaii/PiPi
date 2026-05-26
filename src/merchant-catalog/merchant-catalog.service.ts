@@ -9,6 +9,8 @@ import {
   workingIntervalsToWeek,
 } from '../common/merchant-open-status';
 import { UnifiedProduct } from '../merchant/catalog.types';
+import type { ProductOptionGroupView } from '../merchant/product-option.types';
+import { ProductOptionGroupDto } from './dto/product-option.dto';
 import {
   nameStartsWithFilter,
   normalizeNameSearchTerm,
@@ -18,6 +20,15 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+
+const OPTION_GROUPS_INCLUDE = {
+  optionGroups: {
+    orderBy: { sortOrder: 'asc' as const },
+    include: {
+      choices: { orderBy: { sortOrder: 'asc' as const } },
+    },
+  },
+} as const;
 
 @Injectable()
 export class MerchantCatalogService {
@@ -101,6 +112,127 @@ export class MerchantCatalogService {
     };
   }
 
+  private mapOptionGroups(
+    groups: Array<{
+      id: string;
+      name: string;
+      nameAr: string | null;
+      isRequired: boolean;
+      minSelect: number;
+      maxSelect: number;
+      sortOrder: number;
+      choices: Array<{
+        id: string;
+        name: string;
+        nameAr: string | null;
+        priceModifier: { toString(): string };
+        sortOrder: number;
+        isActive: boolean;
+      }>;
+    }>,
+    activeOnly = false,
+  ): ProductOptionGroupView[] {
+    return groups.map((g) => ({
+      id: g.id,
+      name: g.name,
+      nameAr: g.nameAr,
+      isRequired: g.isRequired,
+      minSelect: g.minSelect,
+      maxSelect: g.maxSelect,
+      sortOrder: g.sortOrder,
+      choices: g.choices
+        .filter((c) => !activeOnly || c.isActive)
+        .map((c) => ({
+          id: c.id,
+          name: c.name,
+          nameAr: c.nameAr,
+          priceModifier: Number(c.priceModifier),
+          sortOrder: c.sortOrder,
+          isActive: c.isActive,
+        })),
+    }));
+  }
+
+  private assertOptionGroupsValid(groups?: ProductOptionGroupDto[]): void {
+    if (!groups?.length) {
+      return;
+    }
+    for (const g of groups) {
+      const minSelect = g.minSelect ?? 1;
+      const maxSelect = g.maxSelect ?? 1;
+      if (maxSelect < minSelect) {
+        throw new BadRequestException(
+          `Option group "${g.name}": maxSelect cannot be less than minSelect`,
+        );
+      }
+      if ((g.isRequired ?? true) && minSelect < 1) {
+        throw new BadRequestException(
+          `Option group "${g.name}": required groups need minSelect >= 1`,
+        );
+      }
+      if (!g.choices?.length) {
+        throw new BadRequestException(
+          `Option group "${g.name}" must have at least one choice`,
+        );
+      }
+    }
+  }
+
+  private buildOptionGroupsCreate(groups: ProductOptionGroupDto[]) {
+    return groups.map((g, gi) => ({
+      name: g.name,
+      nameAr: g.nameAr,
+      isRequired: g.isRequired ?? true,
+      minSelect: g.minSelect ?? 1,
+      maxSelect: g.maxSelect ?? 1,
+      sortOrder: g.sortOrder ?? gi,
+      choices: {
+        create: g.choices.map((c, ci) => ({
+          name: c.name,
+          nameAr: c.nameAr,
+          priceModifier: new Prisma.Decimal(c.priceModifier ?? 0),
+          sortOrder: c.sortOrder ?? ci,
+          isActive: c.isActive ?? true,
+        })),
+      },
+    }));
+  }
+
+  private async replaceProductOptionGroups(
+    tx: Prisma.TransactionClient,
+    productId: string,
+    groups: ProductOptionGroupDto[],
+  ): Promise<void> {
+    await tx.productOptionGroup.deleteMany({ where: { productId } });
+    if (groups.length === 0) {
+      return;
+    }
+    for (const data of this.buildOptionGroupsCreate(groups)) {
+      await tx.productOptionGroup.create({
+        data: { productId, ...data },
+      });
+    }
+  }
+
+  private attachProductPricing<T extends { price: unknown; discountPrice: unknown }>(
+    row: T & { optionGroups?: Parameters<MerchantCatalogService['mapOptionGroups']>[0] },
+    activeOnly = false,
+  ) {
+    const price = Number(row.price);
+    const discountPrice =
+      row.discountPrice !== null ? Number(row.discountPrice) : null;
+    const optionGroups = row.optionGroups
+      ? this.mapOptionGroups(row.optionGroups, activeOnly)
+      : [];
+    return {
+      ...row,
+      price,
+      discountPrice,
+      ...this.discountPresentation(price, discountPrice),
+      optionGroups,
+    };
+  }
+
   async getUnifiedProductsForMerchant(
     merchantId: string,
   ): Promise<UnifiedProduct[]> {
@@ -111,29 +243,30 @@ export class MerchantCatalogService {
       include: {
         category: { select: { name: true, nameAr: true } },
         images: { orderBy: { sortOrder: 'asc' } },
+        ...OPTION_GROUPS_INCLUDE,
       },
       orderBy: [{ updatedAt: 'desc' }],
     });
 
     return rows.map((p) => {
-      const price = Number(p.price);
-      const discountPrice =
-        p.discountPrice !== null ? Number(p.discountPrice) : null;
+      const priced = this.attachProductPricing(p, true);
       return {
         id: p.id,
         name: p.name,
         nameAr: p.nameAr,
         description: p.description,
         descriptionAr: p.descriptionAr,
-        price,
-        discountPrice,
-        ...this.discountPresentation(price, discountPrice),
+        price: priced.price,
+        discountPrice: priced.discountPrice,
+        hasDiscount: priced.hasDiscount,
+        effectivePrice: priced.effectivePrice,
         category: p.category.name,
         categoryAr: p.category.nameAr,
         images: this.collectImageUrls(
           p.imageUrl,
           p.images.map((i) => i.url),
         ),
+        optionGroups: priced.optionGroups,
       };
     });
   }
@@ -144,6 +277,7 @@ export class MerchantCatalogService {
       where: { id: productId },
       include: {
         images: { orderBy: { sortOrder: 'asc' } },
+        ...OPTION_GROUPS_INCLUDE,
         category: {
           select: {
             id: true,
@@ -171,10 +305,7 @@ export class MerchantCatalogService {
       throw new NotFoundException('Product not found');
     }
 
-    const price = Number(row.price);
-    const discountPrice =
-      row.discountPrice !== null ? Number(row.discountPrice) : null;
-
+    const priced = this.attachProductPricing(row, true);
     const merchant = row.category.merchant;
 
     return {
@@ -184,10 +315,12 @@ export class MerchantCatalogService {
       nameAr: row.nameAr,
       description: row.description,
       descriptionAr: row.descriptionAr,
-      price,
-      discountPrice,
+      price: priced.price,
+      discountPrice: priced.discountPrice,
       imageUrl: row.imageUrl,
-      ...this.discountPresentation(price, discountPrice),
+      hasDiscount: priced.hasDiscount,
+      effectivePrice: priced.effectivePrice,
+      optionGroups: priced.optionGroups,
       images: row.images,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
@@ -306,7 +439,7 @@ export class MerchantCatalogService {
     limit = 20,
   ) {
     await this.assertMerchantBrowsable(merchantId);
-    return this.fetchProductsPaged(merchantId, categoryId, page, limit);
+    return this.fetchProductsPaged(merchantId, categoryId, page, limit, true);
   }
 
   async listProducts(
@@ -316,7 +449,7 @@ export class MerchantCatalogService {
     limit = 20,
   ) {
     await this.assertMerchantExists(merchantId);
-    return this.fetchProductsPaged(merchantId, categoryId, page, limit);
+    return this.fetchProductsPaged(merchantId, categoryId, page, limit, false);
   }
 
   private async fetchProductsPaged(
@@ -324,6 +457,7 @@ export class MerchantCatalogService {
     categoryId: string,
     page: number,
     limit: number,
+    activeOptionsOnly: boolean,
   ) {
     const category = await this.prisma.merchantCategory.findFirst({
       where: { id: categoryId, merchantId },
@@ -337,23 +471,18 @@ export class MerchantCatalogService {
       this.prisma.product.count({ where }),
       this.prisma.product.findMany({
         where,
-        include: { images: { orderBy: { sortOrder: 'asc' } } },
+        include: {
+          images: { orderBy: { sortOrder: 'asc' } },
+          ...OPTION_GROUPS_INCLUDE,
+        },
         orderBy: [{ name: 'asc' }],
         skip: pg.skip,
         take: pg.limit,
       }),
     ]);
-    const items = rows.map((p) => {
-      const price = Number(p.price);
-      const discountPrice =
-        p.discountPrice !== null ? Number(p.discountPrice) : null;
-      return {
-        ...p,
-        price,
-        discountPrice,
-        ...this.discountPresentation(price, discountPrice),
-      };
-    });
+    const items = rows.map((p) =>
+      this.attachProductPricing(p, activeOptionsOnly),
+    );
     return this.pagedResponse(items, total, pg.page, pg.limit);
   }
 
@@ -364,7 +493,13 @@ export class MerchantCatalogService {
     limit = 20,
   ) {
     await this.assertMerchantBrowsable(merchantId);
-    return this.fetchAllProductsPaged(merchantId, categoryId, page, limit);
+    return this.fetchAllProductsPaged(
+      merchantId,
+      categoryId,
+      page,
+      limit,
+      true,
+    );
   }
 
   async listAllProducts(
@@ -374,7 +509,13 @@ export class MerchantCatalogService {
     limit = 20,
   ) {
     await this.assertMerchantExists(merchantId);
-    return this.fetchAllProductsPaged(merchantId, categoryId, page, limit);
+    return this.fetchAllProductsPaged(
+      merchantId,
+      categoryId,
+      page,
+      limit,
+      false,
+    );
   }
 
   private async fetchAllProductsPaged(
@@ -382,6 +523,7 @@ export class MerchantCatalogService {
     categoryId: string | undefined,
     page: number,
     limit: number,
+    activeOptionsOnly: boolean,
   ) {
     if (categoryId !== undefined && categoryId !== '') {
       const category = await this.prisma.merchantCategory.findFirst({
@@ -404,24 +546,17 @@ export class MerchantCatalogService {
         include: {
           category: { select: { id: true, name: true, nameAr: true } },
           images: { orderBy: { sortOrder: 'asc' } },
+          ...OPTION_GROUPS_INCLUDE,
         },
         orderBy: [{ updatedAt: 'desc' }],
         skip: pg.skip,
         take: pg.limit,
       }),
     ]);
-    const items = rows.map((p) => {
-      const price = Number(p.price);
-      const discountPrice =
-        p.discountPrice !== null ? Number(p.discountPrice) : null;
-      return {
-        ...p,
-        price,
-        discountPrice,
-        ...this.discountPresentation(price, discountPrice),
-        category: p.category,
-      };
-    });
+    const items = rows.map((p) => ({
+      ...this.attachProductPricing(p, activeOptionsOnly),
+      category: p.category,
+    }));
     return this.pagedResponse(items, total, pg.page, pg.limit);
   }
 
@@ -486,6 +621,7 @@ export class MerchantCatalogService {
           },
         },
         images: { orderBy: { sortOrder: 'asc' } },
+        ...OPTION_GROUPS_INCLUDE,
       },
     });
     const byId = new Map(rows.map((p) => [p.id, p]));
@@ -493,26 +629,18 @@ export class MerchantCatalogService {
       .map((id) => byId.get(id))
       .filter((row): row is (typeof rows)[number] => row !== undefined);
 
-    const items = ordered.map((p) => {
-      const price = Number(p.price);
-      const discountPrice =
-        p.discountPrice !== null ? Number(p.discountPrice) : null;
-      return {
-        ...p,
-        price,
-        discountPrice,
-        ...this.discountPresentation(price, discountPrice),
-        category: {
-          id: p.category.id,
-          name: p.category.name,
-          nameAr: p.category.nameAr,
-        },
-        merchant: {
-          id: p.category.merchant.id,
-          name: p.category.merchant.name,
-        },
-      };
-    });
+    const items = ordered.map((p) => ({
+      ...this.attachProductPricing(p, true),
+      category: {
+        id: p.category.id,
+        name: p.category.name,
+        nameAr: p.category.nameAr,
+      },
+      merchant: {
+        id: p.category.merchant.id,
+        name: p.category.merchant.name,
+      },
+    }));
 
     return this.pagedResponse(items, total, pg.page, pg.limit);
   }
@@ -586,6 +714,7 @@ export class MerchantCatalogService {
             },
           },
           images: { orderBy: { sortOrder: 'asc' } },
+          ...OPTION_GROUPS_INCLUDE,
         },
         orderBy: [{ name: 'asc' }],
         skip: pg.skip,
@@ -593,26 +722,18 @@ export class MerchantCatalogService {
       }),
     ]);
 
-    const items = rows.map((p) => {
-      const price = Number(p.price);
-      const discountPrice =
-        p.discountPrice !== null ? Number(p.discountPrice) : null;
-      return {
-        ...p,
-        price,
-        discountPrice,
-        ...this.discountPresentation(price, discountPrice),
-        category: {
-          id: p.category.id,
-          name: p.category.name,
-          nameAr: p.category.nameAr,
-        },
-        merchant: {
-          id: p.category.merchant.id,
-          name: p.category.merchant.name,
-        },
-      };
-    });
+    const items = rows.map((p) => ({
+      ...this.attachProductPricing(p, true),
+      category: {
+        id: p.category.id,
+        name: p.category.name,
+        nameAr: p.category.nameAr,
+      },
+      merchant: {
+        id: p.category.merchant.id,
+        name: p.category.merchant.name,
+      },
+    }));
 
     return this.pagedResponse(items, total, pg.page, pg.limit);
   }
@@ -633,6 +754,7 @@ export class MerchantCatalogService {
     }
 
     this.assertDiscountNotAbovePrice(dto.price, dto.discountPrice);
+    this.assertOptionGroupsValid(dto.optionGroups);
 
     const created = await this.prisma.product.create({
       data: {
@@ -650,18 +772,20 @@ export class MerchantCatalogService {
         images: {
           create: galleryUrls.map((url, sortOrder) => ({ url, sortOrder })),
         },
+        ...(dto.optionGroups?.length
+          ? {
+              optionGroups: {
+                create: this.buildOptionGroupsCreate(dto.optionGroups),
+              },
+            }
+          : {}),
       },
-      include: { images: { orderBy: { sortOrder: 'asc' } } },
+      include: {
+        images: { orderBy: { sortOrder: 'asc' } },
+        ...OPTION_GROUPS_INCLUDE,
+      },
     });
-    const price = Number(created.price);
-    const discountPrice =
-      created.discountPrice !== null ? Number(created.discountPrice) : null;
-    return {
-      ...created,
-      price,
-      discountPrice,
-      ...this.discountPresentation(price, discountPrice),
-    };
+    return this.attachProductPricing(created, false);
   }
 
   async updateProduct(
@@ -691,8 +815,11 @@ export class MerchantCatalogService {
         product.discountPrice !== null ? Number(product.discountPrice) : null;
     }
     this.assertDiscountNotAbovePrice(effectivePrice, effectiveDiscount);
+    if (dto.optionGroups !== undefined) {
+      this.assertOptionGroupsValid(dto.optionGroups);
+    }
 
-    const { extraImageUrls, imageUrl, ...rest } = dto;
+    const { extraImageUrls, imageUrl, optionGroups, ...rest } = dto;
 
     return this.prisma.$transaction(async (tx) => {
       if (extraImageUrls !== undefined) {
@@ -706,6 +833,10 @@ export class MerchantCatalogService {
             })),
           });
         }
+      }
+
+      if (optionGroups !== undefined) {
+        await this.replaceProductOptionGroups(tx, productId, optionGroups);
       }
 
       const updated = await tx.product.update({
@@ -725,17 +856,12 @@ export class MerchantCatalogService {
               : undefined,
           ...(imageUrl !== undefined ? { imageUrl } : {}),
         },
-        include: { images: { orderBy: { sortOrder: 'asc' } } },
+        include: {
+          images: { orderBy: { sortOrder: 'asc' } },
+          ...OPTION_GROUPS_INCLUDE,
+        },
       });
-      const price = Number(updated.price);
-      const discountPrice =
-        updated.discountPrice !== null ? Number(updated.discountPrice) : null;
-      return {
-        ...updated,
-        price,
-        discountPrice,
-        ...this.discountPresentation(price, discountPrice),
-      };
+      return this.attachProductPricing(updated, false);
     });
   }
 

@@ -47,6 +47,7 @@ export function mapOrderDetail(
       unitPrice: Number(oi.unitPrice),
       totalPrice: Number(oi.totalPrice),
       message: snap?.message ?? null,
+      selectedOptions: snap?.selectedOptions ?? [],
     };
   });
 

@@ -4,8 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { resolveEffectiveUnitPrice } from '../common/product-pricing';
+import {
+  formatProductNameWithOptions,
+  resolveUnitPriceWithOptions,
+  validateProductOptionSelections,
+} from '../common/product-option-pricing';
 import { OrderNotificationsPort } from '../notifications/notifications.port';
+import type { SelectedOptionSnapshot } from '../merchant/product-option.types';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCheckoutDto } from './dto/create-checkout.dto';
 
@@ -18,6 +23,7 @@ type LineItem = {
   listPrice: number;
   discountPrice: number | null;
   message: string | null;
+  selectedOptions: SelectedOptionSnapshot[];
 };
 
 export type CheckoutItemsSnapshot = {
@@ -35,6 +41,7 @@ export type CheckoutItemsSnapshot = {
     unitPrice: number;
     totalPrice: number;
     message: string | null;
+    selectedOptions: SelectedOptionSnapshot[];
   }>;
 };
 
@@ -78,7 +85,20 @@ export class CheckoutService {
         id: { in: productIds },
         category: { merchantId: dto.merchantId },
       },
-      select: { id: true },
+      select: {
+        id: true,
+        price: true,
+        discountPrice: true,
+        optionGroups: {
+          orderBy: { sortOrder: 'asc' },
+          include: {
+            choices: {
+              where: { isActive: true },
+              orderBy: { sortOrder: 'asc' },
+            },
+          },
+        },
+      },
     });
 
     if (products.length !== productIds.length) {
@@ -87,20 +107,42 @@ export class CheckoutService {
       );
     }
 
+    const productById = new Map(products.map((p) => [p.id, p]));
+
     const lineItems: LineItem[] = dto.items.map((item) => {
-      const unitPrice = resolveEffectiveUnitPrice(
-        item.price,
-        item.discountPrice,
+      const catalog = productById.get(item.productId);
+      if (!catalog) {
+        throw new BadRequestException('Invalid product');
+      }
+
+      const listPrice = Number(catalog.price);
+      const catalogDiscount =
+        catalog.discountPrice !== null ? Number(catalog.discountPrice) : null;
+
+      const { selected } = validateProductOptionSelections(
+        catalog.optionGroups,
+        item.selectedChoiceIds,
       );
+
+      const unitPrice = resolveUnitPriceWithOptions(
+        listPrice,
+        catalogDiscount,
+        selected.map((s) => s.priceModifier),
+      );
+
+      const baseName = item.productName.trim();
+      const productName = formatProductNameWithOptions(baseName, selected);
+
       return {
         productId: item.productId,
-        productName: item.productName.trim(),
+        productName,
         quantity: item.quantity,
         unitPrice,
         totalPrice: unitPrice * item.quantity,
-        listPrice: item.price,
-        discountPrice: item.discountPrice ?? null,
+        listPrice,
+        discountPrice: catalogDiscount,
         message: item.message?.trim() || null,
+        selectedOptions: selected,
       };
     });
 
@@ -122,6 +164,7 @@ export class CheckoutService {
         unitPrice: l.unitPrice,
         totalPrice: l.totalPrice,
         message: l.message,
+        selectedOptions: l.selectedOptions,
       })),
     };
 
@@ -212,6 +255,7 @@ export class CheckoutService {
           unitPrice: Number(oi.unitPrice),
           totalPrice: Number(oi.totalPrice),
           message: snap?.message ?? null,
+          selectedOptions: snap?.selectedOptions ?? [],
         };
       }),
       createdAt: order.createdAt,

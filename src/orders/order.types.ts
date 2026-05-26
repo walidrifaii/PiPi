@@ -1,3 +1,5 @@
+import type { SelectedOptionSnapshot } from '../merchant/product-option.types';
+
 export type OrderItemsSnapshot = {
   merchantName: string;
   latitude: number;
@@ -13,6 +15,7 @@ export type OrderItemsSnapshot = {
     unitPrice: number;
     totalPrice: number;
     message: string | null;
+    selectedOptions?: SelectedOptionSnapshot[];
   }>;
 };
 

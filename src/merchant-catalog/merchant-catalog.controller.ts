@@ -30,6 +30,7 @@ import { MerchantJwtScopeGuard } from '../auth/merchant-jwt-scope.guard';
 import { EffectiveMerchantId } from '../auth/effective-merchant-id.decorator';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CreateProductMerchantMultipartDto } from './dto/create-product-merchant-multipart.dto';
+import { parseOptionGroupsJson } from './parse-option-groups-json';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { MerchantCatalogService } from './merchant-catalog.service';
@@ -139,7 +140,7 @@ export class MerchantCatalogController {
 
   @ApiOperation({
     summary:
-      'Create product (multipart). Upload photo via `imageUrl` (file picker in Swagger).',
+      'Create product (multipart). Upload photo via `imageUrl`. Optional sizes/extras via `optionGroupsJson`.',
   })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -153,6 +154,13 @@ export class MerchantCatalogController {
         description: { type: 'string' },
         descriptionAr: { type: 'string', description: 'Arabic description' },
         discountPrice: { type: 'number' },
+        optionGroupsJson: {
+          type: 'string',
+          description:
+            'Optional JSON array of option groups (e.g. Size: Small/Medium/Large with priceModifier). Same structure as PATCH body optionGroups.',
+          example:
+            '[{"name":"Size","isRequired":true,"minSelect":1,"maxSelect":1,"choices":[{"name":"Small","priceModifier":0},{"name":"Medium","priceModifier":2},{"name":"Large","priceModifier":4}]}]',
+        },
         imageUrl: {
           type: 'string',
           format: 'binary',
@@ -176,6 +184,8 @@ export class MerchantCatalogController {
         'athar/products',
       );
     }
+    const optionGroups = parseOptionGroupsJson(dto.optionGroupsJson);
+
     return this.catalog.createProduct(
       merchantId,
       dto.categoryId,
@@ -186,6 +196,7 @@ export class MerchantCatalogController {
         nameAr: dto.nameAr,
         descriptionAr: dto.descriptionAr,
         discountPrice: dto.discountPrice,
+        optionGroups,
       },
       mainImageUrlFromUpload,
       [],

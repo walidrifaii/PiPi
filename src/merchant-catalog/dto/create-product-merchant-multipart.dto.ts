@@ -50,4 +50,14 @@ export class CreateProductMerchantMultipartDto {
   @Min(0)
   @ValidateDiscountNotAbovePrice()
   discountPrice?: number;
+
+  @ApiPropertyOptional({
+    description:
+      'JSON array of option groups (same shape as CreateProductDto.optionGroups)',
+    example:
+      '[{"name":"Size","choices":[{"name":"Small","priceModifier":0},{"name":"Large","priceModifier":2}]}]',
+  })
+  @IsOptional()
+  @IsString()
+  optionGroupsJson?: string;
 }

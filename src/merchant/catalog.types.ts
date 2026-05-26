@@ -1,3 +1,5 @@
+import type { ProductOptionGroupView } from './product-option.types';
+
 /** Flattened product row for listings and legacy clients */
 export type UnifiedProduct = {
   id: string;
@@ -14,4 +16,5 @@ export type UnifiedProduct = {
   images: string[];
   category: string;
   categoryAr: string | null;
+  optionGroups: ProductOptionGroupView[];
 };

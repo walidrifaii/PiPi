@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsInt,
   IsNumber,
   IsOptional,
@@ -50,4 +51,15 @@ export class CheckoutItemDto {
   @IsString()
   @MaxLength(500)
   message?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'Selected option choice UUIDs (e.g. Large size). Server validates and adds price modifiers.',
+    type: [String],
+    format: 'uuid',
+  })
+  @IsOptional()
+  @IsArray()
+  @IsUUID('4', { each: true })
+  selectedChoiceIds?: string[];
 }
