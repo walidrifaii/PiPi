@@ -10,7 +10,7 @@ export function orderStatusNotificationCopy(
     case 'ACCEPTED':
       return {
         title: 'Order accepted',
-        body: `${store} accepted your order. You can track it in the app.`,
+        body: `${store} accepted your order.`,
       };
     case 'PREPARING':
       return {

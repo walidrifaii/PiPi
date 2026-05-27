@@ -30,7 +30,7 @@ export class DriverOrdersController {
   constructor(private readonly driverOrders: DriverOrdersService) {}
 
   @ApiOperation({
-    summary: 'List unassigned delivery offers (ACCEPTED, no driver)',
+    summary: 'List unassigned delivery offers (ACCEPTED after merchant accept, no driver)',
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })

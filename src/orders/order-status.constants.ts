@@ -46,20 +46,14 @@ export function canMerchantTransition(from: string, to: string): boolean {
   return allowed.includes(next);
 }
 
-/** Unassigned offers after the merchant accepts (status ACCEPTED). */
+/** Unassigned offers after merchant accept (status ACCEPTED, no driver). */
 export const DRIVER_OFFER_STATUSES = ['ACCEPTED'] as const;
 
-/** Assigned orders the driver is fulfilling (ACCEPTED kept for legacy assigned rows). */
+/** Assigned orders the driver is fulfilling. */
 export const DRIVER_ACTIVE_STATUSES = ['DELIVERING', 'ACCEPTED'] as const;
 
-/** Customer can open live tracking from merchant accept through delivery. */
-export const CUSTOMER_TRACKABLE_STATUSES = [
-  'ACCEPTED',
-  'PREPARING',
-  'READY',
-  'DISPATCHED',
-  'DELIVERING',
-] as const;
+/** Customer live tracking after driver accept (status DELIVERING). */
+export const CUSTOMER_TRACKABLE_STATUSES = ['DELIVERING', 'DISPATCHED'] as const;
 
 export function isCustomerTrackableStatus(
   status: string | null | undefined,
