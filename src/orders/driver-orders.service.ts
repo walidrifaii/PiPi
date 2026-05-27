@@ -295,6 +295,8 @@ export class DriverOrdersService {
         orderId: order.id,
         status: 'DELIVERING',
         merchantName,
+        title: 'Delivery accepted',
+        body: `A driver accepted your order from ${merchantName}. Tap to track your delivery.`,
       });
 
     if (!result.sent) {

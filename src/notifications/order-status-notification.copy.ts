@@ -23,10 +23,14 @@ export function orderStatusNotificationCopy(
         body: `Your order from ${store} is ready.`,
       };
     case 'DISPATCHED':
-    case 'DELIVERING':
       return {
         title: 'On the way',
         body: `Your order from ${store} is on the way.`,
+      };
+    case 'DELIVERING':
+      return {
+        title: 'Delivery accepted',
+        body: `A driver accepted your order from ${store}. You can track it now.`,
       };
     case 'DELIVERED':
       return {

@@ -74,10 +74,10 @@ export class NotificationsService extends OrderNotificationsPort {
       return { sent: false, reason: 'not_configured' };
     }
 
-    const copy = orderStatusNotificationCopy(
-      params.status,
-      params.merchantName,
-    );
+    const copy =
+      params.title?.trim() && params.body?.trim()
+        ? { title: params.title.trim(), body: params.body.trim() }
+        : orderStatusNotificationCopy(params.status, params.merchantName);
     const data = buildOrderStatusFcmData(params.orderId, params.status);
 
     try {

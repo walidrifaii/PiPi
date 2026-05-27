@@ -9,6 +9,9 @@ export type SendOrderStatusParams = {
   orderId: string;
   status: string;
   merchantName?: string;
+  /** Optional override (e.g. driver accepted delivery). */
+  title?: string;
+  body?: string;
 };
 
 export type SendNewOrderAlertParams = {
