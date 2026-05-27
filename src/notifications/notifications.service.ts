@@ -5,10 +5,10 @@ import {
 } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
-import { orderStatusNotificationCopy } from './order-status-notification.copy';
+import { orderStatusNotificationCopy } from './order-status-notification-copy';
 import { SendTestNotificationDto } from './dto/send-test-notification.dto';
 import { buildNewOrderFcmData } from './new-order-payload';
-import { newOrderNotificationCopy } from './new-order-notification.copy';
+import { newOrderNotificationCopy } from './new-order-notification-copy';
 import { buildOrderStatusFcmData } from './order-status-payload';
 import {
   OrderNotificationsPort,
@@ -70,18 +70,33 @@ export class NotificationsService extends OrderNotificationsPort {
   async sendOrderStatusUpdate(
     params: SendOrderStatusParams,
   ): Promise<SendOrderStatusResult> {
-    if (!this.firebaseAdmin.messaging) {
+    const messaging = this.firebaseAdmin.messaging;
+    if (!messaging) {
       return { sent: false, reason: 'not_configured' };
     }
 
-    const copy =
-      params.title?.trim() && params.body?.trim()
-        ? { title: params.title.trim(), body: params.body.trim() }
-        : orderStatusNotificationCopy(params.status, params.merchantName);
+    const titleOverride =
+      params.title !== undefined && params.title !== null
+        ? String(params.title).trim()
+        : '';
+    const bodyOverride =
+      params.body !== undefined && params.body !== null
+        ? String(params.body).trim()
+        : '';
+
+    const copy: { title: string; body: string } =
+      titleOverride.length > 0 && bodyOverride.length > 0
+        ? { title: titleOverride, body: bodyOverride }
+        : orderStatusNotificationCopy(
+            String(params.status ?? ''),
+            params.merchantName != null
+              ? String(params.merchantName)
+              : undefined,
+          );
     const data = buildOrderStatusFcmData(params.orderId, params.status);
 
     try {
-      const messageId = await this.firebaseAdmin.messaging!.send({
+      const messageId = await messaging.send({
         token: params.fcmToken,
         notification: {
           title: copy.title,
@@ -120,7 +135,8 @@ export class NotificationsService extends OrderNotificationsPort {
     if (tokens.length === 0) {
       return { sent: false, reason: 'no_tokens' };
     }
-    if (!this.firebaseAdmin.messaging) {
+    const messaging = this.firebaseAdmin.messaging;
+    if (!messaging) {
       return { sent: false, reason: 'not_configured' };
     }
 
@@ -132,7 +148,7 @@ export class NotificationsService extends OrderNotificationsPort {
     const data = buildNewOrderFcmData(params.orderId, params.merchantId);
 
     try {
-      const response = await this.firebaseAdmin.messaging!.sendEachForMulticast({
+      const response = await messaging.sendEachForMulticast({
         tokens,
         notification: {
           title: copy.title,
