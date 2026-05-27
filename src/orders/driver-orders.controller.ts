@@ -30,7 +30,7 @@ export class DriverOrdersController {
   constructor(private readonly driverOrders: DriverOrdersService) {}
 
   @ApiOperation({
-    summary: 'List unassigned delivery offers (READY / DISPATCHED, no driver)',
+    summary: 'List unassigned delivery offers (ACCEPTED, no driver)',
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
@@ -44,7 +44,7 @@ export class DriverOrdersController {
   }
 
   @ApiOperation({
-    summary: 'Your current active delivery (DISPATCHED / DELIVERING), if any',
+    summary: 'Your current active delivery (DELIVERING), if any',
   })
   @Get('active')
   getActive(@Req() req: { user: JwtUserPayload }) {

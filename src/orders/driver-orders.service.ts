@@ -3,10 +3,16 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import {
+  OrderNotificationsPort,
+  type SendOrderStatusResult,
+} from '../notifications/notifications.port';
 import { PrismaService } from '../prisma/prisma.service';
+import { TrackingService } from '../tracking/tracking.service';
 import {
   DRIVER_ACTIVE_STATUSES,
   DRIVER_OFFER_STATUSES,
@@ -15,7 +21,7 @@ import {
   normalizeOrderStatus,
 } from './order-status.constants';
 import { mapDriverOrderDetail, mapDriverOrderOffer } from './order-driver.mapper';
-import { OrderWithRelations } from './order.types';
+import { OrderItemsSnapshot, OrderWithRelations } from './order.types';
 
 const driverOfferSelect = {
   id: true,
@@ -44,7 +50,13 @@ const driverOrderInclude = {
 
 @Injectable()
 export class DriverOrdersService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly log = new Logger(DriverOrdersService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notifications: OrderNotificationsPort,
+    private readonly tracking: TrackingService,
+  ) {}
 
   private normalizePagination(page: number, limit: number) {
     const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
@@ -202,7 +214,7 @@ export class DriverOrdersService {
         driverId: null,
         status: { in: [...DRIVER_OFFER_STATUSES] },
       },
-      data: { driverId },
+      data: { driverId, status: 'DELIVERING' },
     });
 
     if (updated.count === 0) {
@@ -240,10 +252,54 @@ export class DriverOrdersService {
       include: driverOrderInclude,
     });
 
+    const row = order! as OrderWithRelations;
+    await this.notifyCustomerDelivering(row);
+    void this.tracking
+      .syncOrderMeta(orderId, row.userId, driverId)
+      .catch(() => undefined);
+
     return {
       accepted: true as const,
-      order: mapDriverOrderDetail(order! as OrderWithRelations),
+      order: mapDriverOrderDetail(row),
     };
+  }
+
+  private parseSnapshot(raw: unknown): OrderItemsSnapshot | null {
+    if (!raw || typeof raw !== 'object') {
+      return null;
+    }
+    const s = raw as OrderItemsSnapshot;
+    if (!Array.isArray(s.items)) {
+      return null;
+    }
+    return s;
+  }
+
+  private async notifyCustomerDelivering(order: OrderWithRelations) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: order.userId },
+      select: { fcmToken: true },
+    });
+    if (!user?.fcmToken?.trim()) {
+      return;
+    }
+
+    const snapshot = this.parseSnapshot(order.itemsSnapshot);
+    const merchantName = snapshot?.merchantName ?? order.merchant.name;
+
+    const result: SendOrderStatusResult =
+      await this.notifications.sendOrderStatusUpdate({
+        fcmToken: user.fcmToken.trim(),
+        orderId: order.id,
+        status: 'DELIVERING',
+        merchantName,
+      });
+
+    if (!result.sent) {
+      this.log.debug(
+        `Order ${order.id} driver-accept push not sent: ${result.reason ?? 'unknown'}`,
+      );
+    }
   }
 
   async assertDriverOwnsOrder(driverId: string, orderId: string) {

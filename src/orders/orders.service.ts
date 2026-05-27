@@ -111,7 +111,7 @@ export class OrdersService {
 
   async listForMerchant(merchantId: string, page = 1, limit = 20) {
     const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
-    const where = { merchantId };
+    const where = { merchantId, status: 'PENDING' };
     const [rows, total] = await Promise.all([
       this.prisma.order.findMany({
         where,

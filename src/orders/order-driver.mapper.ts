@@ -53,8 +53,14 @@ export function mapDriverOrderDetail(order: OrderWithRelations) {
   const snapshot = parseSnapshot(order.itemsSnapshot);
   return {
     ...base,
-    latitude: snapshot?.latitude ?? null,
-    longitude: snapshot?.longitude ?? null,
+    merchantLatitude: snapshot?.latitude ?? null,
+    merchantLongitude: snapshot?.longitude ?? null,
+    customerLatitude: order.address
+      ? Number(order.address.latitude)
+      : null,
+    customerLongitude: order.address
+      ? Number(order.address.longitude)
+      : null,
     deliveryTimeMinutes: snapshot?.deliveryTimeMinutes ?? null,
     customerPhone: order.user?.phone ?? null,
   };

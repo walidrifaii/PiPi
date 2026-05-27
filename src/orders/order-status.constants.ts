@@ -13,14 +13,14 @@ export type OrderStatus = (typeof ORDER_STATUSES)[number];
 
 const TERMINAL: ReadonlySet<string> = new Set(['DELIVERED', 'CANCELLED']);
 
-/** Allowed next statuses from each current status (merchant flow). */
+/** Merchant may only accept or cancel new orders; accepted orders leave their queue. */
 const MERCHANT_TRANSITIONS: Record<string, readonly string[]> = {
   PENDING: ['ACCEPTED', 'CANCELLED'],
-  ACCEPTED: ['PREPARING', 'CANCELLED'],
-  PREPARING: ['READY', 'DISPATCHED', 'DELIVERING', 'CANCELLED'],
-  READY: ['DISPATCHED', 'DELIVERING', 'CANCELLED'],
-  DISPATCHED: ['DELIVERING', 'DELIVERED', 'CANCELLED'],
-  DELIVERING: ['DELIVERED', 'CANCELLED'],
+  ACCEPTED: [],
+  PREPARING: [],
+  READY: [],
+  DISPATCHED: [],
+  DELIVERING: [],
   DELIVERED: [],
   CANCELLED: [],
 };
@@ -46,11 +46,27 @@ export function canMerchantTransition(from: string, to: string): boolean {
   return allowed.includes(next);
 }
 
-/** Orders visible in the driver app offer list (unassigned). */
-export const DRIVER_OFFER_STATUSES = ['READY', 'DISPATCHED'] as const;
+/** Unassigned offers after the merchant accepts (status ACCEPTED). */
+export const DRIVER_OFFER_STATUSES = ['ACCEPTED'] as const;
 
-/** Orders the driver is actively delivering. */
-export const DRIVER_ACTIVE_STATUSES = ['DISPATCHED', 'DELIVERING'] as const;
+/** Assigned orders the driver is fulfilling (ACCEPTED kept for legacy assigned rows). */
+export const DRIVER_ACTIVE_STATUSES = ['DELIVERING', 'ACCEPTED'] as const;
+
+/** Customer can open live tracking from merchant accept through delivery. */
+export const CUSTOMER_TRACKABLE_STATUSES = [
+  'ACCEPTED',
+  'PREPARING',
+  'READY',
+  'DISPATCHED',
+  'DELIVERING',
+] as const;
+
+export function isCustomerTrackableStatus(
+  status: string | null | undefined,
+): boolean {
+  const s = normalizeOrderStatus(status);
+  return (CUSTOMER_TRACKABLE_STATUSES as readonly string[]).includes(s);
+}
 
 export function isDriverOfferStatus(status: string | null | undefined): boolean {
   const s = normalizeOrderStatus(status);
