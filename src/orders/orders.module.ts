@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { TrackingModule } from '../tracking/tracking.module';
 import { NotificationsService } from '../notifications/notifications.service';
 import { OrderNotificationsPort } from '../notifications/notifications.port';
 import { PrismaModule } from '../prisma/prisma.module';
@@ -9,7 +10,7 @@ import { OrdersService } from './orders.service';
 import { UserOrdersController } from './user-orders.controller';
 
 @Module({
-  imports: [PrismaModule, NotificationsModule],
+  imports: [PrismaModule, NotificationsModule, TrackingModule],
   controllers: [
     UserOrdersController,
     MerchantOrdersController,

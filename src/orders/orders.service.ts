@@ -10,6 +10,7 @@ import {
   type SendOrderStatusResult,
 } from '../notifications/notifications.port';
 import { PrismaService } from '../prisma/prisma.service';
+import { TrackingService } from '../tracking/tracking.service';
 import { ListOrdersAdminQueryDto } from './dto/list-orders-admin-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { mapOrderDetail, mapOrderSummary } from './order.mapper';
@@ -42,6 +43,7 @@ export class OrdersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly notifications: OrderNotificationsPort,
+    private readonly tracking: TrackingService,
   ) {}
 
   private normalizePagination(page: number, limit: number) {
@@ -305,6 +307,12 @@ export class OrdersService {
 
     const row = updated as OrderWithRelations;
     await this.notifyCustomerOrderStatus(row, newStatus);
+
+    if (newStatus === 'DELIVERING' && row.driverId) {
+      void this.tracking
+        .syncOrderMeta(orderId, row.userId, row.driverId)
+        .catch(() => undefined);
+    }
 
     return mapOrderDetail(row, {
       includeCustomer: scope.superAdmin || !!scope.merchantId,

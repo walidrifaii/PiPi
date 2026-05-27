@@ -19,10 +19,13 @@ import { CheckoutModule } from './checkout/checkout.module';
 import { OrdersModule } from './orders/orders.module';
 import { MerchantDeliveryTimeModule } from './merchant-delivery-time/merchant-delivery-time.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { FirebaseAdminModule } from './firebase/firebase-admin.module';
+import { TrackingModule } from './tracking/tracking.module';
 
 @Module({
   imports: [
     PrismaModule,
+    FirebaseAdminModule,
     AuthModule,
     MerchantTypeModule,
     UsersModule,
@@ -34,6 +37,7 @@ import { NotificationsModule } from './notifications/notifications.module';
     OrdersModule,
     MerchantDeliveryTimeModule,
     NotificationsModule,
+    TrackingModule,
   ],
   controllers: [
     AppController,

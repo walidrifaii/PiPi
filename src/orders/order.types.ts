@@ -24,6 +24,7 @@ export type OrderWithRelations = {
   userId: string;
   merchantId: string;
   addressId: string | null;
+  driverId: string | null;
   status: string | null;
   subtotal: { toString(): string } | null;
   deliveryFee: { toString(): string } | null;

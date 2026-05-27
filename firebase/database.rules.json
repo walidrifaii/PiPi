@@ -1,0 +1,18 @@
+{
+  "rules": {
+    "orders": {
+      "$orderId": {
+        "meta": {
+          ".read": "auth != null",
+          ".write": false
+        },
+        "tracking": {
+          "location": {
+            ".read": "auth != null && (auth.uid === root.child('orders').child($orderId).child('meta').child('userUid').val() || auth.uid === root.child('orders').child($orderId).child('meta').child('driverUid').val())",
+            ".write": "auth != null && auth.uid === root.child('orders').child($orderId).child('meta').child('driverUid').val()"
+          }
+        }
+      }
+    }
+  }
+}
