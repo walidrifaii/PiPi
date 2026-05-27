@@ -70,7 +70,12 @@ export class TrackingService {
       throw new NotFoundException('Order not found');
     }
 
-    if (order.driverId && order.driverId !== driverId) {
+    if (!order.driverId) {
+      throw new BadRequestException(
+        'Accept the order first (POST /drivers/me/orders/:orderId/accept)',
+      );
+    }
+    if (order.driverId !== driverId) {
       throw new ForbiddenException('Order is assigned to another driver');
     }
 
@@ -78,13 +83,6 @@ export class TrackingService {
     const status = (order.status ?? 'PENDING').toUpperCase();
     if (terminal.has(status)) {
       throw new BadRequestException(`Cannot track order in status ${status}`);
-    }
-
-    if (!order.driverId) {
-      await this.prisma.order.update({
-        where: { id: orderId },
-        data: { driverId },
-      });
     }
 
     await this.syncOrderMeta(orderId, order.userId, driverId);

@@ -295,6 +295,7 @@ model Order {
   @@index([userId])
   @@index([merchantId])
   @@index([driverId])
+  @@index([status, driverId])
   @@index([addressId])
   @@map("orders")
 }

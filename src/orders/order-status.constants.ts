@@ -46,6 +46,22 @@ export function canMerchantTransition(from: string, to: string): boolean {
   return allowed.includes(next);
 }
 
+/** Orders visible in the driver app offer list (unassigned). */
+export const DRIVER_OFFER_STATUSES = ['READY', 'DISPATCHED'] as const;
+
+/** Orders the driver is actively delivering. */
+export const DRIVER_ACTIVE_STATUSES = ['DISPATCHED', 'DELIVERING'] as const;
+
+export function isDriverOfferStatus(status: string | null | undefined): boolean {
+  const s = normalizeOrderStatus(status);
+  return (DRIVER_OFFER_STATUSES as readonly string[]).includes(s);
+}
+
+export function isDriverActiveStatus(status: string | null | undefined): boolean {
+  const s = normalizeOrderStatus(status);
+  return (DRIVER_ACTIVE_STATUSES as readonly string[]).includes(s);
+}
+
 export function canSuperAdminTransition(from: string, to: string): boolean {
   const current = normalizeOrderStatus(from);
   const next = normalizeOrderStatus(to);

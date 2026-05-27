@@ -8,6 +8,8 @@ import { AdminOrdersController } from './admin-orders.controller';
 import { MerchantOrdersController } from './merchant-orders.controller';
 import { OrdersService } from './orders.service';
 import { UserOrdersController } from './user-orders.controller';
+import { DriverOrdersController } from './driver-orders.controller';
+import { DriverOrdersService } from './driver-orders.service';
 
 @Module({
   imports: [PrismaModule, NotificationsModule, TrackingModule],
@@ -15,14 +17,16 @@ import { UserOrdersController } from './user-orders.controller';
     UserOrdersController,
     MerchantOrdersController,
     AdminOrdersController,
+    DriverOrdersController,
   ],
   providers: [
     OrdersService,
+    DriverOrdersService,
     {
       provide: OrderNotificationsPort,
       useExisting: NotificationsService,
     },
   ],
-  exports: [OrdersService],
+  exports: [OrdersService, DriverOrdersService],
 })
 export class OrdersModule {}
