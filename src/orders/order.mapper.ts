@@ -1,3 +1,7 @@
+import {
+  resolveCustomerCoordinates,
+  resolveMerchantCoordinates,
+} from './order-coordinates';
 import { OrderItemsSnapshot, OrderWithRelations } from './order.types';
 
 function parseSnapshot(raw: unknown): OrderItemsSnapshot | null {
@@ -35,6 +39,8 @@ export function mapOrderDetail(
   options: { includeCustomer?: boolean } = {},
 ) {
   const snapshot = parseSnapshot(order.itemsSnapshot);
+  const merchantCoords = resolveMerchantCoordinates(order);
+  const customerCoords = resolveCustomerCoordinates(order);
   const items = order.orderItems.map((oi, index) => {
     const snap = snapshot?.items[index];
     return {
@@ -61,8 +67,10 @@ export function mapOrderDetail(
       id: order.merchant.id,
       name: snapshot?.merchantName ?? order.merchant.name,
     },
-    latitude: snapshot?.latitude ?? null,
-    longitude: snapshot?.longitude ?? null,
+    latitude: merchantCoords.latitude,
+    longitude: merchantCoords.longitude,
+    customerLatitude: customerCoords.latitude,
+    customerLongitude: customerCoords.longitude,
     distanceKm: snapshot?.distanceKm ?? null,
     deliveryTimeMinutes: snapshot?.deliveryTimeMinutes ?? null,
     addressId: order.addressId,

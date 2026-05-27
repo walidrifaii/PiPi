@@ -41,7 +41,12 @@ export type OrderWithRelations = {
     unitPrice: { toString(): string };
     totalPrice: { toString(): string };
   }>;
-  merchant: { id: string; name: string };
+  merchant: {
+    id: string;
+    name: string;
+    latitude?: { toString(): string } | null;
+    longitude?: { toString(): string } | null;
+  };
   user?: {
     id: string;
     fullName: string | null;

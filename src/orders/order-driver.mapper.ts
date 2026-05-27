@@ -1,3 +1,7 @@
+import {
+  resolveCustomerCoordinates,
+  resolveMerchantCoordinates,
+} from './order-coordinates';
 import { OrderItemsSnapshot, OrderWithRelations } from './order.types';
 
 function parseSnapshot(raw: unknown): OrderItemsSnapshot | null {
@@ -18,9 +22,17 @@ export function mapDriverOrderOffer(order: {
   deliveryFee: { toString(): string } | null;
   itemsSnapshot: unknown;
   createdAt: Date;
-  merchant: { name: string };
+  merchant: {
+    name: string;
+    latitude?: { toString(): string } | null;
+    longitude?: { toString(): string } | null;
+  };
   user?: { fullName: string | null } | null;
-  address?: { addressLine: string } | null;
+  address?: {
+    addressLine: string;
+    latitude?: { toString(): string };
+    longitude?: { toString(): string };
+  } | null;
   orderItems?: Array<{ productName: string }>;
 }) {
   const snapshot = parseSnapshot(order.itemsSnapshot);
@@ -32,6 +44,9 @@ export function mapDriverOrderOffer(order: {
     itemNames.length > 0
       ? itemNames.join(', ').slice(0, 280)
       : 'Order items';
+
+  const merchantCoords = resolveMerchantCoordinates(order);
+  const customerCoords = resolveCustomerCoordinates(order);
 
   return {
     id: order.id,
@@ -45,6 +60,10 @@ export function mapDriverOrderOffer(order: {
     itemCount: itemNames.length,
     itemsSummary,
     createdAt: order.createdAt,
+    merchantLatitude: merchantCoords.latitude,
+    merchantLongitude: merchantCoords.longitude,
+    customerLatitude: customerCoords.latitude,
+    customerLongitude: customerCoords.longitude,
   };
 }
 
@@ -53,14 +72,6 @@ export function mapDriverOrderDetail(order: OrderWithRelations) {
   const snapshot = parseSnapshot(order.itemsSnapshot);
   return {
     ...base,
-    merchantLatitude: snapshot?.latitude ?? null,
-    merchantLongitude: snapshot?.longitude ?? null,
-    customerLatitude: order.address
-      ? Number(order.address.latitude)
-      : null,
-    customerLongitude: order.address
-      ? Number(order.address.longitude)
-      : null,
     deliveryTimeMinutes: snapshot?.deliveryTimeMinutes ?? null,
     customerPhone: order.user?.phone ?? null,
   };

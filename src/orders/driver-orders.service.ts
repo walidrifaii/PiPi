@@ -29,14 +29,14 @@ const driverOfferSelect = {
   deliveryFee: true,
   itemsSnapshot: true,
   createdAt: true,
-  merchant: { select: { name: true } },
+  merchant: { select: { name: true, latitude: true, longitude: true } },
   user: { select: { fullName: true } },
-  address: { select: { addressLine: true } },
+  address: { select: { addressLine: true, latitude: true, longitude: true } },
 } satisfies Prisma.OrderSelect;
 
 const driverOrderInclude = {
   orderItems: { orderBy: { id: Prisma.SortOrder.asc }, take: 20 },
-  merchant: { select: { id: true, name: true } },
+  merchant: { select: { id: true, name: true, latitude: true, longitude: true } },
   user: { select: { id: true, fullName: true, phone: true } },
   address: {
     select: {
@@ -107,9 +107,11 @@ export class DriverOrdersService {
     await this.assertDriverActive(driverId);
 
     const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
+    const offerMaxAgeMs = 72 * 60 * 60 * 1000;
     const where: Prisma.OrderWhereInput = {
       driverId: null,
       status: { in: [...DRIVER_OFFER_STATUSES] },
+      createdAt: { gte: new Date(Date.now() - offerMaxAgeMs) },
     };
 
     const [rows, total] = await Promise.all([
