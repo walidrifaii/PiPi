@@ -256,9 +256,7 @@ export class DriverOrdersService {
 
     const row = order! as OrderWithRelations;
     await this.notifyCustomerDelivering(row);
-    void this.tracking
-      .syncOrderMeta(orderId, row.userId, driverId)
-      .catch(() => undefined);
+    await this.tracking.syncOrderMeta(orderId, row.userId, driverId);
 
     return {
       accepted: true as const,

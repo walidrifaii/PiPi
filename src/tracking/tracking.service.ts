@@ -8,6 +8,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import type { JwtUserPayload } from '../auth/jwt-user.payload';
+import { isCustomerTrackableStatus } from '../orders/order-status.constants';
 
 export type TrackingLocationPayload = {
   lat: number;
@@ -130,6 +131,38 @@ export class TrackingService {
 
     await this.writeLocation(orderId, order.userId, driverId, payload);
     return { ok: true as const };
+  }
+
+  /** Customer polling fallback — reads last driver GPS from RTDB via Admin SDK. */
+  async getCustomerTrackingLocation(userId: string, orderId: string) {
+    const order = await this.prisma.order.findFirst({
+      where: { id: orderId, userId },
+      select: { driverId: true, status: true },
+    });
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+    if (!order.driverId || !isCustomerTrackableStatus(order.status)) {
+      return { location: null as Record<string, unknown> | null };
+    }
+
+    await this.syncOrderMeta(orderId, userId, order.driverId);
+
+    const db = this.firebase.database;
+    if (!db) {
+      return { location: null as Record<string, unknown> | null };
+    }
+
+    const snap = await db.ref(`orders/${orderId}/tracking/location`).get();
+    if (!snap.exists()) {
+      return { location: null as Record<string, unknown> | null };
+    }
+
+    const val: unknown = snap.val();
+    if (!val || typeof val !== 'object' || Array.isArray(val)) {
+      return { location: null as Record<string, unknown> | null };
+    }
+    return { location: val as Record<string, unknown> };
   }
 
   async syncOrderMeta(orderId: string, userId: string, driverId: string) {

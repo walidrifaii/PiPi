@@ -17,6 +17,7 @@ import { mapOrderDetail, mapOrderSummary } from './order.mapper';
 import {
   canMerchantTransition,
   canSuperAdminTransition,
+  isCustomerTrackableStatus,
   isTerminalOrderStatus,
   normalizeOrderStatus,
 } from './order-status.constants';
@@ -106,7 +107,16 @@ export class OrdersService {
     if (!order) {
       throw new NotFoundException('Order not found');
     }
-    return mapOrderDetail(order as OrderWithRelations);
+    const row = order as OrderWithRelations;
+    if (
+      row.driverId &&
+      isCustomerTrackableStatus(row.status)
+    ) {
+      await this.tracking
+        .syncOrderMeta(orderId, userId, row.driverId)
+        .catch(() => undefined);
+    }
+    return mapOrderDetail(row);
   }
 
   async listForMerchant(merchantId: string, page = 1, limit = 20) {
