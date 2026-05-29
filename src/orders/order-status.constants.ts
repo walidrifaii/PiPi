@@ -49,8 +49,8 @@ export function canMerchantTransition(from: string, to: string): boolean {
 /** Unassigned offers after merchant accept (status ACCEPTED, no driver). */
 export const DRIVER_OFFER_STATUSES = ['ACCEPTED'] as const;
 
-/** Assigned orders the driver is fulfilling. */
-export const DRIVER_ACTIVE_STATUSES = ['DELIVERING', 'ACCEPTED'] as const;
+/** Assigned orders the driver is fulfilling (set on driver accept). */
+export const DRIVER_ACTIVE_STATUSES = ['DELIVERING'] as const;
 
 /** Customer live tracking after driver accept (status DELIVERING). */
 export const CUSTOMER_TRACKABLE_STATUSES = ['DELIVERING', 'DISPATCHED'] as const;
