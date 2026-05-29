@@ -73,6 +73,16 @@ export class DriverOrdersController {
     return this.driverOrders.acceptOrder(req.user.sub, orderId);
   }
 
+  @ApiOperation({ summary: 'Confirm pickup at merchant (DISPATCHED)' })
+  @ApiParam({ name: 'orderId', type: String })
+  @Post(':orderId/pickup')
+  confirmPickup(
+    @Req() req: { user: JwtUserPayload },
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+  ) {
+    return this.driverOrders.confirmPickup(req.user.sub, orderId);
+  }
+
   @ApiOperation({ summary: 'Mark your active delivery as finished (DELIVERED)' })
   @ApiParam({ name: 'orderId', type: String })
   @Post(':orderId/complete')

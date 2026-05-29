@@ -304,6 +304,68 @@ export class DriverOrdersService {
     }
   }
 
+  /** Driver picked up order at merchant → DISPATCHED (customer notified). */
+  async confirmPickup(driverId: string, orderId: string) {
+    await this.assertDriverActive(driverId);
+    await this.assertDriverOwnsOrder(driverId, orderId);
+
+    const updated = await this.prisma.order.updateMany({
+      where: {
+        id: orderId,
+        driverId,
+        status: 'DELIVERING',
+      },
+      data: { status: 'DISPATCHED' },
+    });
+
+    if (updated.count === 0) {
+      throw new BadRequestException(
+        'Order must be DELIVERING before confirming pickup',
+      );
+    }
+
+    const order = await this.prisma.order.findFirst({
+      where: { id: orderId, driverId },
+      include: driverOrderInclude,
+    });
+
+    const row = order! as OrderWithRelations;
+    await this.notifyCustomerDispatched(row);
+
+    return {
+      pickedUp: true as const,
+      order: mapDriverOrderDetail(row),
+    };
+  }
+
+  private async notifyCustomerDispatched(order: OrderWithRelations) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: order.userId },
+      select: { fcmToken: true },
+    });
+    if (!user?.fcmToken?.trim()) {
+      return;
+    }
+
+    const snapshot = this.parseSnapshot(order.itemsSnapshot);
+    const merchantName = snapshot?.merchantName ?? order.merchant.name;
+
+    const result = await this.notifications.sendOrderStatusUpdate({
+      fcmToken: user.fcmToken.trim(),
+      orderId: order.id,
+      status: 'DISPATCHED',
+      merchantName,
+      title: 'Order picked up',
+      body: `Your driver picked up your order from ${merchantName} and is heading to you.`,
+    });
+
+    if (!result.sent) {
+      this.log.debug(
+        `Order ${order.id} pickup push not sent: ${result.reason ?? 'unknown'}`,
+      );
+    }
+  }
+
   /** Mark assigned order as delivered and notify the customer. */
   async completeOrder(driverId: string, orderId: string) {
     await this.assertDriverActive(driverId);
@@ -313,13 +375,15 @@ export class DriverOrdersService {
       where: {
         id: orderId,
         driverId,
-        status: { in: [...DRIVER_ACTIVE_STATUSES] },
+        status: 'DISPATCHED',
       },
       data: { status: 'DELIVERED' },
     });
 
     if (updated.count === 0) {
-      throw new BadRequestException('Order cannot be completed in its current status');
+      throw new BadRequestException(
+        'Confirm pickup at the merchant before finishing delivery',
+      );
     }
 
     const order = await this.prisma.order.findFirst({

@@ -24,8 +24,8 @@ export function orderStatusNotificationCopy(
       };
     case 'DISPATCHED':
       return {
-        title: 'On the way',
-        body: `Your order from ${store} is on the way.`,
+        title: 'Order picked up',
+        body: `Your driver picked up your order from ${store} and is on the way to you.`,
       };
     case 'DELIVERING':
       return {
