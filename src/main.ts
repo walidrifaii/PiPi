@@ -12,6 +12,8 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:63237',
       'https://delivery-web-ebon.vercel.app',
+      'https://pip-pip-delivery.com',
+      'http://localhost:51697',
     ],
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
     credentials: true,
