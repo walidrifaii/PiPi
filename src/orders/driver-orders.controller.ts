@@ -23,6 +23,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import type { JwtUserPayload } from '../auth/jwt-user.payload';
 import { DriverOrdersService } from './driver-orders.service';
 import { OrderChatService } from '../tracking/order-chat.service';
+import { OrderCallService } from '../tracking/order-call.service';
 import { SendOrderMessageDto } from '../tracking/dto/send-order-message.dto';
 
 @ApiTags('Delivery')
@@ -33,6 +34,7 @@ export class DriverOrdersController {
   constructor(
     private readonly driverOrders: DriverOrdersService,
     private readonly orderChat: OrderChatService,
+    private readonly orderCall: OrderCallService,
   ) {}
 
   @ApiOperation({
@@ -129,6 +131,16 @@ export class DriverOrdersController {
     @Param('orderId', ParseUUIDPipe) orderId: string,
   ) {
     return this.orderChat.listMessagesForDriver(req.user.sub, orderId);
+  }
+
+  @ApiOperation({ summary: 'Start in-app voice call (Agora token + channel)' })
+  @ApiParam({ name: 'orderId', type: String })
+  @Post(':orderId/call')
+  startCall(
+    @Req() req: { user: JwtUserPayload },
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+  ) {
+    return this.orderCall.startCallForDriver(req.user.sub, orderId);
   }
 
   @ApiOperation({ summary: 'Send a chat message to the customer' })

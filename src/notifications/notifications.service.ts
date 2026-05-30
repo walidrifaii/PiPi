@@ -201,6 +201,7 @@ export class NotificationsService extends OrderNotificationsPort {
         data: {
           type: 'order_chat',
           orderId: params.orderId,
+          recipientRole: params.recipientRole,
         },
         android: {
           priority: 'high',
@@ -215,6 +216,41 @@ export class NotificationsService extends OrderNotificationsPort {
       this.log.warn(
         `Chat push failed for order ${params.orderId}: ${reason}`,
       );
+      return { sent: false, reason };
+    }
+  }
+
+  async sendOrderCallInvite(
+    params: import('./notifications.port').SendOrderCallInviteParams,
+  ): Promise<import('./notifications.port').SendOrderChatMessageResult> {
+    const messaging = this.firebaseAdmin.messaging;
+    if (!messaging) {
+      return { sent: false, reason: 'not_configured' };
+    }
+
+    try {
+      const messageId = await messaging.send({
+        token: params.fcmToken,
+        notification: {
+          title: params.title,
+          body: params.body,
+        },
+        data: {
+          type: 'order_call',
+          orderId: params.orderId,
+          recipientRole: params.recipientRole,
+        },
+        android: {
+          priority: 'high',
+          notification: {
+            channelId: 'pip_pip_default',
+          },
+        },
+      });
+      return { sent: true, messageId };
+    } catch (err) {
+      const reason = err instanceof Error ? err.message : String(err);
+      this.log.warn(`Call invite push failed for order ${params.orderId}: ${reason}`);
       return { sent: false, reason };
     }
   }

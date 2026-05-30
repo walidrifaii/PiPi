@@ -35,12 +35,22 @@ export type SendOrderChatMessageParams = {
   orderId: string;
   title: string;
   body: string;
+  recipientRole: 'user' | 'driver';
 };
 
 export type SendOrderChatMessageResult = {
   sent: boolean;
   messageId?: string;
   reason?: string;
+};
+
+export type SendOrderCallInviteParams = {
+  /** FCM data: `user` or `driver` — who receives the push */
+  recipientRole: 'user' | 'driver';
+  fcmToken: string;
+  orderId: string;
+  title: string;
+  body: string;
 };
 
 /** Injection token for order push notifications (avoids orders ↔ notifications type cycles). */

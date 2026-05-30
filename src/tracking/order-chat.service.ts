@@ -229,6 +229,7 @@ export class OrderChatService {
           orderId,
           title: 'New message',
           body: `${senderName}: ${preview}`,
+          recipientRole: 'driver',
         });
       }
     } else {
@@ -239,6 +240,7 @@ export class OrderChatService {
           orderId,
           title: 'Message from driver',
           body: `${senderName}: ${preview}`,
+          recipientRole: 'user',
         });
       }
     }
