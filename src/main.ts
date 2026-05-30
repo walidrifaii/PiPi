@@ -13,7 +13,7 @@ async function bootstrap() {
       'http://localhost:63237',
       'https://delivery-web-ebon.vercel.app',
       'https://pip-pip-delivery.com',
-      'http://localhost:51697',
+      'http://localhost:52855',
     ],
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
     credentials: true,
