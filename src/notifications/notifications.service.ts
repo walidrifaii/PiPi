@@ -206,7 +206,8 @@ export class NotificationsService extends OrderNotificationsPort {
         android: {
           priority: 'high',
           notification: {
-            channelId: 'pip_pip_default',
+            channelId: 'pip_pip_chat',
+            sound: 'road_runner_beep_beep',
           },
         },
       });
@@ -243,7 +244,8 @@ export class NotificationsService extends OrderNotificationsPort {
         android: {
           priority: 'high',
           notification: {
-            channelId: 'pip_pip_default',
+            channelId: 'pip_pip_calls',
+            sound: 'road_runner_beep_beep',
           },
         },
       });
