@@ -30,6 +30,19 @@ export type SendNewOrderAlertResult = {
   reason?: string;
 };
 
+export type SendOrderChatMessageParams = {
+  fcmToken: string;
+  orderId: string;
+  title: string;
+  body: string;
+};
+
+export type SendOrderChatMessageResult = {
+  sent: boolean;
+  messageId?: string;
+  reason?: string;
+};
+
 /** Injection token for order push notifications (avoids orders ↔ notifications type cycles). */
 export abstract class OrderNotificationsPort {
   abstract sendOrderStatusUpdate(

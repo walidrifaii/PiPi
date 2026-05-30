@@ -776,6 +776,13 @@ export class AuthService {
       if (!driver) {
         throw new UnauthorizedException('No account found for this phone');
       }
+      const fcmToken = normalizeFcmToken(dto.fcmToken);
+      if (fcmToken) {
+        await this.prisma.driver.update({
+          where: { id: driver.id },
+          data: { fcmToken },
+        });
+      }
       const tokens = await this.buildDriverLoginResponse(driver);
       return { accountType: 'driver' as const, ...tokens };
     }
@@ -916,6 +923,15 @@ export class AuthService {
     const fcmToken = normalizeFcmToken(token) ?? null;
     await this.prisma.superAdmin.update({
       where: { id: adminId },
+      data: { fcmToken },
+    });
+    return { ok: true as const };
+  }
+
+  async setDriverFcmToken(driverId: string, token?: string) {
+    const fcmToken = normalizeFcmToken(token) ?? null;
+    await this.prisma.driver.update({
+      where: { id: driverId },
       data: { fcmToken },
     });
     return { ok: true as const };

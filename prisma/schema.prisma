@@ -87,6 +87,8 @@ model Driver {
   vehicleType  String?  @map("vehicle_type") @db.VarChar(100)
   status       String?  @db.VarChar(50)
   isActive     Boolean  @default(true) @map("is_active")
+  /// FCM device token for delivery chat / order alerts.
+  fcmToken     String?  @map("fcm_token") @db.VarChar(512)
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
   orders       Order[]

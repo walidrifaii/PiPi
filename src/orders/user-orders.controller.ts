@@ -5,6 +5,8 @@ import {
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
+  Post,
+  Body,
   Query,
   Req,
   UseGuards,
@@ -21,6 +23,8 @@ import { JwtUserPayload } from '../auth/jwt-user.payload';
 import { UserAccountGuard } from '../auth/user-account.guard';
 import { OrdersService } from './orders.service';
 import { TrackingService } from '../tracking/tracking.service';
+import { OrderChatService } from '../tracking/order-chat.service';
+import { SendOrderMessageDto } from '../tracking/dto/send-order-message.dto';
 
 @ApiTags('Customer')
 @ApiBearerAuth()
@@ -30,6 +34,7 @@ export class UserOrdersController {
   constructor(
     private readonly ordersService: OrdersService,
     private readonly tracking: TrackingService,
+    private readonly orderChat: OrderChatService,
   ) {}
 
   @ApiOperation({ summary: 'List your orders (customer JWT)' })
@@ -65,5 +70,28 @@ export class UserOrdersController {
     @Param('orderId', ParseUUIDPipe) orderId: string,
   ) {
     return this.ordersService.getForUser(req.user!.sub, orderId);
+  }
+
+  @ApiOperation({
+    summary: 'Phone number for the assigned driver (active delivery only)',
+  })
+  @ApiParam({ name: 'orderId', type: String })
+  @Get(':orderId/contact')
+  getContact(
+    @Req() req: { user?: JwtUserPayload },
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+  ) {
+    return this.orderChat.getContactForUser(req.user!.sub, orderId);
+  }
+
+  @ApiOperation({ summary: 'Send a chat message to the driver' })
+  @ApiParam({ name: 'orderId', type: String })
+  @Post(':orderId/messages')
+  sendMessage(
+    @Req() req: { user?: JwtUserPayload },
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+    @Body() dto: SendOrderMessageDto,
+  ) {
+    return this.orderChat.sendMessage(req.user!, orderId, dto.text);
   }
 }

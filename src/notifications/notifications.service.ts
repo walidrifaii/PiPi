@@ -181,4 +181,41 @@ export class NotificationsService extends OrderNotificationsPort {
       return { sent: false, reason };
     }
   }
+
+  /** Push for a new in-delivery chat message. Does not throw on failure. */
+  async sendOrderChatMessage(
+    params: import('./notifications.port').SendOrderChatMessageParams,
+  ): Promise<import('./notifications.port').SendOrderChatMessageResult> {
+    const messaging = this.firebaseAdmin.messaging;
+    if (!messaging) {
+      return { sent: false, reason: 'not_configured' };
+    }
+
+    try {
+      const messageId = await messaging.send({
+        token: params.fcmToken,
+        notification: {
+          title: params.title,
+          body: params.body,
+        },
+        data: {
+          type: 'order_chat',
+          orderId: params.orderId,
+        },
+        android: {
+          priority: 'high',
+          notification: {
+            channelId: 'pip_pip_default',
+          },
+        },
+      });
+      return { sent: true, messageId };
+    } catch (err) {
+      const reason = err instanceof Error ? err.message : String(err);
+      this.log.warn(
+        `Chat push failed for order ${params.orderId}: ${reason}`,
+      );
+      return { sent: false, reason };
+    }
+  }
 }

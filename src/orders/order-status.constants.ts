@@ -62,6 +62,13 @@ export function isCustomerTrackableStatus(
   return (CUSTOMER_TRACKABLE_STATUSES as readonly string[]).includes(s);
 }
 
+/** Customer ↔ driver chat and phone while delivery is active. */
+export function isOrderContactableStatus(
+  status: string | null | undefined,
+): boolean {
+  return isCustomerTrackableStatus(status);
+}
+
 export function isDriverOfferStatus(status: string | null | undefined): boolean {
   const s = normalizeOrderStatus(status);
   return (DRIVER_OFFER_STATUSES as readonly string[]).includes(s);

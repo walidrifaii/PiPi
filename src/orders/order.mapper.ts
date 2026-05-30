@@ -89,6 +89,15 @@ export function mapOrderDetail(
     notes: order.notes,
     items,
     createdAt: order.createdAt,
+    ...(order.driverId && order.driver
+      ? {
+          driver: {
+            id: order.driver.id,
+            fullName: order.driver.fullName,
+            vehicleType: order.driver.vehicleType,
+          },
+        }
+      : {}),
     ...(options.includeCustomer && order.user
       ? {
           customer: {

@@ -7,6 +7,7 @@ import {
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { MerchantJwtScopeGuard } from './merchant-jwt-scope.guard';
 import { SuperAdminGuard } from './super-admin.guard';
+import { DriverAccountGuard } from './driver-account.guard';
 import { EffectiveMerchantId } from './effective-merchant-id.decorator';
 import { OptionalFcmTokenDto } from './dto/optional-fcm-token.dto';
 import { AuthService } from './auth.service';
@@ -41,5 +42,18 @@ export class FcmTokenController {
     @Body() dto: OptionalFcmTokenDto,
   ) {
     return this.authService.setSuperAdminFcmToken(req.user.sub, dto.fcmToken);
+  }
+
+  @ApiOperation({
+    summary: 'Save FCM device token for the logged-in driver',
+  })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, DriverAccountGuard)
+  @Patch('drivers/me/fcm-token')
+  setDriverFcmToken(
+    @Req() req: { user: JwtUserPayload },
+    @Body() dto: OptionalFcmTokenDto,
+  ) {
+    return this.authService.setDriverFcmToken(req.user.sub, dto.fcmToken);
   }
 }

@@ -58,4 +58,10 @@ export type OrderWithRelations = {
     latitude: { toString(): string };
     longitude: { toString(): string };
   } | null;
+  driver?: {
+    id: string;
+    fullName: string | null;
+    phone: string;
+    vehicleType: string | null;
+  } | null;
 };

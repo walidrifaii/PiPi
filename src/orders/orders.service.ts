@@ -35,6 +35,14 @@ const orderInclude = {
       longitude: true,
     },
   },
+  driver: {
+    select: {
+      id: true,
+      fullName: true,
+      phone: true,
+      vehicleType: true,
+    },
+  },
 } satisfies Prisma.OrderInclude;
 
 @Injectable()

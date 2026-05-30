@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   ParseUUIDPipe,
   Post,
+  Body,
   Query,
   Req,
   UseGuards,
@@ -21,13 +22,18 @@ import { DriverAccountGuard } from '../auth/driver-account.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import type { JwtUserPayload } from '../auth/jwt-user.payload';
 import { DriverOrdersService } from './driver-orders.service';
+import { OrderChatService } from '../tracking/order-chat.service';
+import { SendOrderMessageDto } from '../tracking/dto/send-order-message.dto';
 
 @ApiTags('Delivery')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, DriverAccountGuard)
 @Controller('drivers/me/orders')
 export class DriverOrdersController {
-  constructor(private readonly driverOrders: DriverOrdersService) {}
+  constructor(
+    private readonly driverOrders: DriverOrdersService,
+    private readonly orderChat: OrderChatService,
+  ) {}
 
   @ApiOperation({
     summary: 'List unassigned delivery offers (ACCEPTED after merchant accept, no driver)',
@@ -101,5 +107,28 @@ export class DriverOrdersController {
     @Param('orderId', ParseUUIDPipe) orderId: string,
   ) {
     return this.driverOrders.getOne(req.user.sub, orderId);
+  }
+
+  @ApiOperation({
+    summary: 'Customer phone for call (active delivery only)',
+  })
+  @ApiParam({ name: 'orderId', type: String })
+  @Get(':orderId/contact')
+  getContact(
+    @Req() req: { user: JwtUserPayload },
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+  ) {
+    return this.orderChat.getContactForDriver(req.user.sub, orderId);
+  }
+
+  @ApiOperation({ summary: 'Send a chat message to the customer' })
+  @ApiParam({ name: 'orderId', type: String })
+  @Post(':orderId/messages')
+  sendMessage(
+    @Req() req: { user: JwtUserPayload },
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+    @Body() dto: SendOrderMessageDto,
+  ) {
+    return this.orderChat.sendMessage(req.user, orderId, dto.text);
   }
 }
