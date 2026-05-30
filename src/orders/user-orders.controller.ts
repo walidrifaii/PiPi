@@ -106,7 +106,38 @@ export class UserOrdersController {
     return this.orderCall.startCallForUser(req.user!.sub, orderId);
   }
 
-  @ApiOperation({ summary: 'Send a chat message to the driver' })
+  @ApiOperation({ summary: 'Accept incoming order voice call' })
+  @ApiParam({ name: 'orderId', type: String })
+  @Post(':orderId/call/accept')
+  acceptCall(
+    @Req() req: { user?: JwtUserPayload },
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+  ) {
+    return this.orderCall.acceptCallForUser(req.user!.sub, orderId);
+  }
+
+  @ApiOperation({ summary: 'Decline or cancel order voice call' })
+  @ApiParam({ name: 'orderId', type: String })
+  @Post(':orderId/call/decline')
+  declineCall(
+    @Req() req: { user?: JwtUserPayload },
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+  ) {
+    return this.orderCall.declineCallForUser(req.user!.sub, orderId);
+  }
+
+  @ApiOperation({ summary: 'Push notify for a Firestore chat message' })
+  @ApiParam({ name: 'orderId', type: String })
+  @Post(':orderId/messages/notify')
+  notifyMessage(
+    @Req() req: { user?: JwtUserPayload },
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+    @Body() dto: SendOrderMessageDto,
+  ) {
+    return this.orderChat.notifyMessage(req.user!, orderId, dto.text);
+  }
+
+  @ApiOperation({ summary: 'Send a chat message to the driver (server write fallback)' })
   @ApiParam({ name: 'orderId', type: String })
   @Post(':orderId/messages')
   sendMessage(

@@ -16,11 +16,21 @@ service cloud.firestore {
 
     match /orders/{orderId} {
       allow read: if isOrderParticipant(orderId);
-      allow write: if false;
+      allow create, delete: if false;
+      allow update: if isOrderParticipant(orderId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['call'])
+        && request.resource.data.call is map
+        && request.resource.data.call.keys().hasAll(['callId', 'channel', 'status', 'startedBy', 'startedAt', 'active']);
 
       match /messages/{messageId} {
         allow read: if isOrderParticipant(orderId);
-        allow write: if false;
+        allow create: if isOrderParticipant(orderId)
+          && request.resource.data.senderUid == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 1000
+          && request.resource.data.createdAt is int;
+        allow update, delete: if false;
       }
     }
   }

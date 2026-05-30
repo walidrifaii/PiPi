@@ -25,6 +25,7 @@ export type OrderChatMessageDto = {
   senderRole: string;
   text: string;
   createdAt: number;
+  status?: string;
 };
 
 @Injectable()
@@ -123,7 +124,46 @@ export class OrderChatService {
       senderRole: String(data.senderRole ?? ''),
       text: String(data.text ?? ''),
       createdAt: Number(data.createdAt ?? 0),
+      status: String(data.status ?? 'sent'),
     };
+  }
+
+  private async pushChatNotification(
+    order: Awaited<ReturnType<OrderChatService['loadOrderForContact']>>,
+    user: JwtUserPayload,
+    orderId: string,
+    trimmed: string,
+  ) {
+    const preview =
+      trimmed.length > 80 ? `${trimmed.slice(0, 77)}...` : trimmed;
+    const senderName =
+      user.role === 'DRIVER'
+        ? order.driver!.fullName?.trim() || 'Driver'
+        : order.user.fullName?.trim() || 'Customer';
+
+    if (user.role === 'USER') {
+      const token = order.driver!.fcmToken?.trim();
+      if (token) {
+        await this.notifications.sendOrderChatMessage({
+          fcmToken: token,
+          orderId,
+          title: 'New message',
+          body: `${senderName}: ${preview}`,
+          recipientRole: 'driver',
+        });
+      }
+    } else {
+      const token = order.user.fcmToken?.trim();
+      if (token) {
+        await this.notifications.sendOrderChatMessage({
+          fcmToken: token,
+          orderId,
+          title: 'Message from driver',
+          body: `${senderName}: ${preview}`,
+          recipientRole: 'user',
+        });
+      }
+    }
   }
 
   async listMessagesForUser(userId: string, orderId: string) {
@@ -204,42 +244,41 @@ export class OrderChatService {
       senderRole,
       text: trimmed,
       createdAt,
+      status: 'sent',
     };
 
     await ref.set(payload);
-
-    const preview =
-      trimmed.length > 80 ? `${trimmed.slice(0, 77)}...` : trimmed;
-    const senderName =
-      user.role === 'DRIVER'
-        ? order.driver!.fullName?.trim() || 'Driver'
-        : order.user.fullName?.trim() || 'Customer';
-
-    if (user.role === 'USER') {
-      const driver = order.driver!;
-      const token = driver.fcmToken?.trim();
-      if (token) {
-        await this.notifications.sendOrderChatMessage({
-          fcmToken: token,
-          orderId,
-          title: 'New message',
-          body: `${senderName}: ${preview}`,
-          recipientRole: 'driver',
-        });
-      }
-    } else {
-      const token = order.user.fcmToken?.trim();
-      if (token) {
-        await this.notifications.sendOrderChatMessage({
-          fcmToken: token,
-          orderId,
-          title: 'Message from driver',
-          body: `${senderName}: ${preview}`,
-          recipientRole: 'user',
-        });
-      }
-    }
+    await this.pushChatNotification(order, user, orderId, trimmed);
 
     return payload;
+  }
+
+  /** FCM only — client already wrote the message to Firestore. */
+  async notifyMessage(
+    user: JwtUserPayload,
+    orderId: string,
+    text: string,
+  ) {
+    const trimmed = text.trim();
+    if (!trimmed) {
+      throw new BadRequestException('Message cannot be empty');
+    }
+
+    const order = await this.loadOrderForContact(orderId);
+
+    if (user.role === 'USER') {
+      if (order.userId !== user.sub) {
+        throw new ForbiddenException('Not your order');
+      }
+    } else if (user.role === 'DRIVER') {
+      if (order.driverId !== user.sub) {
+        throw new ForbiddenException('Not your delivery');
+      }
+    } else {
+      throw new ForbiddenException('Only customer or driver can send messages');
+    }
+
+    await this.pushChatNotification(order, user, orderId, trimmed);
+    return { ok: true as const };
   }
 }

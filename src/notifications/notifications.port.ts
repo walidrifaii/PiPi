@@ -51,6 +51,7 @@ export type SendOrderCallInviteParams = {
   orderId: string;
   title: string;
   body: string;
+  callerName?: string;
 };
 
 /** Injection token for order push notifications (avoids orders ↔ notifications type cycles). */

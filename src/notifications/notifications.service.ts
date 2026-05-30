@@ -240,6 +240,9 @@ export class NotificationsService extends OrderNotificationsPort {
           type: 'order_call',
           orderId: params.orderId,
           recipientRole: params.recipientRole,
+          ...(params.callerName
+            ? { callerName: params.callerName }
+            : {}),
         },
         android: {
           priority: 'high',
