@@ -99,6 +99,75 @@ export class OrderChatService {
     };
   }
 
+  private parseMessagesFromRtdb(
+    raw: unknown,
+  ): Array<{
+    id: string;
+    senderUid: string;
+    senderRole: string;
+    text: string;
+    createdAt: number;
+  }> {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+      return [];
+    }
+    const messages: Array<{
+      id: string;
+      senderUid: string;
+      senderRole: string;
+      text: string;
+      createdAt: number;
+    }> = [];
+    for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
+      if (!value || typeof value !== 'object' || Array.isArray(value)) {
+        continue;
+      }
+      const row = value as Record<string, unknown>;
+      messages.push({
+        id: String(row.id ?? key),
+        senderUid: String(row.senderUid ?? ''),
+        senderRole: String(row.senderRole ?? ''),
+        text: String(row.text ?? ''),
+        createdAt: Number(row.createdAt ?? 0),
+      });
+    }
+    messages.sort((a, b) => a.createdAt - b.createdAt);
+    return messages;
+  }
+
+  async listMessagesForUser(userId: string, orderId: string) {
+    const order = await this.loadOrderForContact(orderId);
+    if (order.userId !== userId) {
+      throw new ForbiddenException('Not your order');
+    }
+    return this.listMessages(orderId, order.userId, order.driverId!);
+  }
+
+  async listMessagesForDriver(driverId: string, orderId: string) {
+    const order = await this.loadOrderForContact(orderId);
+    if (order.driverId !== driverId) {
+      throw new ForbiddenException('Not your delivery');
+    }
+    return this.listMessages(orderId, order.userId, order.driverId!);
+  }
+
+  private async listMessages(
+    orderId: string,
+    userId: string,
+    driverId: string,
+  ) {
+    const db = this.firebase.database;
+    if (!db) {
+      return { messages: [] as ReturnType<OrderChatService['parseMessagesFromRtdb']> };
+    }
+
+    await this.tracking.syncOrderMeta(orderId, userId, driverId);
+
+    const snap = await db.ref(`orders/${orderId}/messages`).get();
+    const messages = this.parseMessagesFromRtdb(snap.val());
+    return { messages };
+  }
+
   async sendMessage(
     user: JwtUserPayload,
     orderId: string,

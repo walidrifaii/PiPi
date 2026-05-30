@@ -84,6 +84,16 @@ export class UserOrdersController {
     return this.orderChat.getContactForUser(req.user!.sub, orderId);
   }
 
+  @ApiOperation({ summary: 'List chat messages for an order (HTTP fallback)' })
+  @ApiParam({ name: 'orderId', type: String })
+  @Get(':orderId/messages')
+  listMessages(
+    @Req() req: { user?: JwtUserPayload },
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+  ) {
+    return this.orderChat.listMessagesForUser(req.user!.sub, orderId);
+  }
+
   @ApiOperation({ summary: 'Send a chat message to the driver' })
   @ApiParam({ name: 'orderId', type: String })
   @Post(':orderId/messages')

@@ -121,6 +121,16 @@ export class DriverOrdersController {
     return this.orderChat.getContactForDriver(req.user.sub, orderId);
   }
 
+  @ApiOperation({ summary: 'List chat messages for an order (HTTP fallback)' })
+  @ApiParam({ name: 'orderId', type: String })
+  @Get(':orderId/messages')
+  listMessages(
+    @Req() req: { user: JwtUserPayload },
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+  ) {
+    return this.orderChat.listMessagesForDriver(req.user.sub, orderId);
+  }
+
   @ApiOperation({ summary: 'Send a chat message to the customer' })
   @ApiParam({ name: 'orderId', type: String })
   @Post(':orderId/messages')
