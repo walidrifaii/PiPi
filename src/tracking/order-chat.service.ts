@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import type { DocumentData } from 'firebase-admin/firestore';
 import { PrismaService } from '../prisma/prisma.service';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { NotificationsService } from '../notifications/notifications.service';
@@ -18,6 +19,14 @@ export type OrderContactDto = {
   role: 'customer' | 'driver';
 };
 
+export type OrderChatMessageDto = {
+  id: string;
+  senderUid: string;
+  senderRole: string;
+  text: string;
+  createdAt: number;
+};
+
 @Injectable()
 export class OrderChatService {
   constructor(
@@ -26,6 +35,14 @@ export class OrderChatService {
     private readonly tracking: TrackingService,
     private readonly notifications: NotificationsService,
   ) {}
+
+  private messagesCollection(orderId: string) {
+    const firestore = this.firebase.firestore;
+    if (!firestore) {
+      return null;
+    }
+    return firestore.collection('orders').doc(orderId).collection('messages');
+  }
 
   private async loadOrderForContact(orderId: string) {
     const order = await this.prisma.order.findUnique({
@@ -99,40 +116,14 @@ export class OrderChatService {
     };
   }
 
-  private parseMessagesFromRtdb(
-    raw: unknown,
-  ): Array<{
-    id: string;
-    senderUid: string;
-    senderRole: string;
-    text: string;
-    createdAt: number;
-  }> {
-    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
-      return [];
-    }
-    const messages: Array<{
-      id: string;
-      senderUid: string;
-      senderRole: string;
-      text: string;
-      createdAt: number;
-    }> = [];
-    for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
-      if (!value || typeof value !== 'object' || Array.isArray(value)) {
-        continue;
-      }
-      const row = value as Record<string, unknown>;
-      messages.push({
-        id: String(row.id ?? key),
-        senderUid: String(row.senderUid ?? ''),
-        senderRole: String(row.senderRole ?? ''),
-        text: String(row.text ?? ''),
-        createdAt: Number(row.createdAt ?? 0),
-      });
-    }
-    messages.sort((a, b) => a.createdAt - b.createdAt);
-    return messages;
+  private docToMessage(id: string, data: DocumentData): OrderChatMessageDto {
+    return {
+      id: String(data.id ?? id),
+      senderUid: String(data.senderUid ?? ''),
+      senderRole: String(data.senderRole ?? ''),
+      text: String(data.text ?? ''),
+      createdAt: Number(data.createdAt ?? 0),
+    };
   }
 
   async listMessagesForUser(userId: string, orderId: string) {
@@ -156,15 +147,17 @@ export class OrderChatService {
     userId: string,
     driverId: string,
   ) {
-    const db = this.firebase.database;
-    if (!db) {
-      return { messages: [] as ReturnType<OrderChatService['parseMessagesFromRtdb']> };
+    const messagesCol = this.messagesCollection(orderId);
+    if (!messagesCol) {
+      return { messages: [] as OrderChatMessageDto[] };
     }
 
     await this.tracking.syncOrderMeta(orderId, userId, driverId);
 
-    const snap = await db.ref(`orders/${orderId}/messages`).get();
-    const messages = this.parseMessagesFromRtdb(snap.val());
+    const snap = await messagesCol.orderBy('createdAt', 'asc').get();
+    const messages = snap.docs.map((doc) =>
+      this.docToMessage(doc.id, doc.data()),
+    );
     return { messages };
   }
 
@@ -193,25 +186,27 @@ export class OrderChatService {
       throw new ForbiddenException('Only customer or driver can send messages');
     }
 
-    const db = this.firebase.database;
-    if (!db) {
+    const messagesCol = this.messagesCollection(orderId);
+    if (!messagesCol) {
       throw new BadRequestException('Chat is not configured');
     }
 
     await this.tracking.syncOrderMeta(orderId, order.userId, order.driverId!);
 
-    const ref = db.ref(`orders/${orderId}/messages`).push();
-    const messageId = ref.key ?? `${Date.now()}`;
+    const ref = messagesCol.doc();
+    const messageId = ref.id;
     const createdAt = Date.now();
     const senderRole = user.role === 'DRIVER' ? 'driver' : 'user';
 
-    await ref.set({
+    const payload = {
       id: messageId,
       senderUid,
       senderRole,
       text: trimmed,
       createdAt,
-    });
+    };
+
+    await ref.set(payload);
 
     const preview =
       trimmed.length > 80 ? `${trimmed.slice(0, 77)}...` : trimmed;
@@ -245,12 +240,6 @@ export class OrderChatService {
       }
     }
 
-    return {
-      id: messageId,
-      senderUid,
-      senderRole,
-      text: trimmed,
-      createdAt,
-    };
+    return payload;
   }
 }

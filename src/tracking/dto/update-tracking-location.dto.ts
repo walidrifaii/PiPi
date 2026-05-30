@@ -36,4 +36,10 @@ export class UpdateTrackingLocationDto {
   @IsNumber()
   @Min(0)
   speed?: number;
+
+  @ApiPropertyOptional({ description: 'Client timestamp (ms since epoch)' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  timestamp?: number;
 }

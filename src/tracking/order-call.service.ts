@@ -106,7 +106,7 @@ export class OrderCallService {
     const token = this.buildAgoraToken(channel, uid);
 
     const driver = order.driver!;
-    await this.signalCall(orderId, order.userId, order.driverId!, 'user');
+    await this.signalCall(orderId, 'user');
     await this.notifyIncomingCall(
       orderId,
       { user: order.user, driver },
@@ -141,7 +141,7 @@ export class OrderCallService {
     const token = this.buildAgoraToken(channel, uid);
 
     const driver = order.driver!;
-    await this.signalCall(orderId, order.userId, order.driverId!, 'driver');
+    await this.signalCall(orderId, 'driver');
     await this.notifyIncomingCall(
       orderId,
       { user: order.user, driver },
@@ -158,23 +158,22 @@ export class OrderCallService {
     };
   }
 
-  private async signalCall(
-    orderId: string,
-    userId: string,
-    driverId: string,
-    startedBy: 'user' | 'driver',
-  ) {
-    const db = this.firebase.database;
-    if (!db) {
+  /** Firestore call invite (live listener + FCM). */
+  private async signalCall(orderId: string, startedBy: 'user' | 'driver') {
+    const firestore = this.firebase.firestore;
+    if (!firestore) {
       return;
     }
-    await db.ref(`orders/${orderId}/call`).set({
-      active: true,
-      startedBy,
-      startedAt: Date.now(),
-      userUid: `user:${userId}`,
-      driverUid: `driver:${driverId}`,
-    });
+    await firestore.collection('orders').doc(orderId).set(
+      {
+        call: {
+          active: true,
+          startedBy,
+          startedAt: Date.now(),
+        },
+      },
+      { merge: true },
+    );
   }
 
   private async notifyIncomingCall(

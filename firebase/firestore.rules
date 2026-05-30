@@ -1,0 +1,27 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function orderData(orderId) {
+      return get(/databases/$(database)/documents/orders/$(orderId)).data;
+    }
+
+    function isOrderParticipant(orderId) {
+      return request.auth != null
+        && (
+          request.auth.uid == orderData(orderId).userUid
+          || request.auth.uid == orderData(orderId).driverUid
+        );
+    }
+
+    match /orders/{orderId} {
+      allow read: if isOrderParticipant(orderId);
+      allow write: if false;
+
+      match /messages/{messageId} {
+        allow read: if isOrderParticipant(orderId);
+        allow write: if false;
+      }
+    }
+  }
+}

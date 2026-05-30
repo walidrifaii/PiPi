@@ -20,6 +20,9 @@ export type TrackingLocationPayload = {
 
 @Injectable()
 export class TrackingService {
+  /** Server-side throttle: max 1 location write per driver per second. */
+  private readonly lastDriverWriteMs = new Map<string, number>();
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly firebase: FirebaseAdminService,
@@ -108,11 +111,16 @@ export class TrackingService {
         active: false,
         stoppedAt: Date.now(),
       });
+      await db.ref(`drivers/${driverId}`).update({
+        active: false,
+        orderId: null,
+        stoppedAt: Date.now(),
+      });
     }
     return { orderId, active: false };
   }
 
-  /** Fallback when client cannot write to RTDB directly (same throttling on client). */
+  /** Driver GPS via HTTP only (no client → Firebase writes). Throttled server-side. */
   async updateDriverLocation(
     driverId: string,
     orderId: string,
@@ -127,6 +135,10 @@ export class TrackingService {
     }
     if (order.driverId !== driverId) {
       throw new ForbiddenException('Not your delivery');
+    }
+
+    if (!this.acceptThrottledWrite(driverId)) {
+      return { ok: true as const, throttled: true as const };
     }
 
     await this.writeLocation(orderId, order.userId, driverId, payload);
@@ -153,7 +165,10 @@ export class TrackingService {
       return { location: null as Record<string, unknown> | null };
     }
 
-    const snap = await db.ref(`orders/${orderId}/tracking/location`).get();
+    let snap = await db.ref(`drivers/${order.driverId}`).get();
+    if (!snap.exists()) {
+      snap = await db.ref(`orders/${orderId}/tracking/location`).get();
+    }
     if (!snap.exists()) {
       return { location: null as Record<string, unknown> | null };
     }
@@ -166,16 +181,32 @@ export class TrackingService {
   }
 
   async syncOrderMeta(orderId: string, userId: string, driverId: string) {
-    const db = this.firebase.database;
-    if (!db) {
-      return;
-    }
-    await db.ref(`orders/${orderId}/meta`).set({
+    const meta = {
       userUid: `user:${userId}`,
       driverUid: `driver:${driverId}`,
       active: true,
       updatedAt: Date.now(),
-    });
+    };
+
+    const db = this.firebase.database;
+    if (db) {
+      await db.ref(`orders/${orderId}/meta`).set(meta);
+    }
+
+    const firestore = this.firebase.firestore;
+    if (firestore) {
+      await firestore.collection('orders').doc(orderId).set(meta, { merge: true });
+    }
+  }
+
+  private acceptThrottledWrite(driverId: string): boolean {
+    const now = Date.now();
+    const last = this.lastDriverWriteMs.get(driverId) ?? 0;
+    if (now - last < 1000) {
+      return false;
+    }
+    this.lastDriverWriteMs.set(driverId, now);
+    return true;
   }
 
   private async writeLocation(
@@ -189,14 +220,25 @@ export class TrackingService {
       throw new ServiceUnavailableException('Firebase Realtime Database is not configured');
     }
 
-    await this.syncOrderMeta(orderId, userId, driverId);
-    await db.ref(`orders/${orderId}/tracking/location`).set({
+    const updatedAt = Date.now();
+    const location = {
       lat: payload.lat,
       lng: payload.lng,
       ...(payload.accuracy != null ? { accuracy: payload.accuracy } : {}),
       ...(payload.heading != null ? { heading: payload.heading } : {}),
       ...(payload.speed != null ? { speed: payload.speed } : {}),
-      updatedAt: Date.now(),
+      updatedAt,
+    };
+
+    await this.syncOrderMeta(orderId, userId, driverId);
+
+    await db.ref(`drivers/${driverId}`).set({
+      ...location,
+      driverId,
+      orderId,
+      active: true,
     });
+
+    await db.ref(`orders/${orderId}/tracking/location`).set(location);
   }
 }

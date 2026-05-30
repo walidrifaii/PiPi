@@ -33,6 +33,10 @@ export class FirebaseAdminService implements OnModuleInit {
     return this.ready ? admin.auth() : null;
   }
 
+  get firestore(): admin.firestore.Firestore | null {
+    return this.ready ? admin.firestore() : null;
+  }
+
   databaseUrl(): string | null {
     const url = process.env.FIREBASE_DATABASE_URL?.trim();
     return url || null;

@@ -1,5 +1,11 @@
 {
   "rules": {
+    "drivers": {
+      "$driverId": {
+        ".read": "auth != null",
+        ".write": false
+      }
+    },
     "orders": {
       "$orderId": {
         "meta": {
@@ -9,18 +15,8 @@
         "tracking": {
           "location": {
             ".read": "auth != null && (auth.uid === root.child('orders').child($orderId).child('meta').child('userUid').val() || auth.uid === root.child('orders').child($orderId).child('meta').child('driverUid').val())",
-            ".write": "auth != null && auth.uid === root.child('orders').child($orderId).child('meta').child('driverUid').val()"
+            ".write": false
           }
-        },
-        "messages": {
-          ".read": "auth != null && (auth.uid === root.child('orders').child($orderId).child('meta').child('userUid').val() || auth.uid === root.child('orders').child($orderId).child('meta').child('driverUid').val())",
-          "$messageId": {
-            ".write": "auth != null && (auth.uid === root.child('orders').child($orderId).child('meta').child('userUid').val() || auth.uid === root.child('orders').child($orderId).child('meta').child('driverUid').val()) && newData.child('senderUid').val() === auth.uid && newData.child('text').isString() && newData.child('text').val().length > 0 && newData.child('text').val().length <= 1000"
-          }
-        },
-        "call": {
-          ".read": "auth != null && (auth.uid === root.child('orders').child($orderId).child('meta').child('userUid').val() || auth.uid === root.child('orders').child($orderId).child('meta').child('driverUid').val())",
-          ".write": false
         }
       }
     }
