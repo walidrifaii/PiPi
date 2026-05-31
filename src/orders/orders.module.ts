@@ -9,6 +9,7 @@ import { MerchantOrdersController } from './merchant-orders.controller';
 import { OrdersService } from './orders.service';
 import { UserOrdersController } from './user-orders.controller';
 import { DriverOrdersController } from './driver-orders.controller';
+import { DriverEarningsController } from './driver-earnings.controller';
 import { DriverOrdersService } from './driver-orders.service';
 
 @Module({
@@ -18,6 +19,7 @@ import { DriverOrdersService } from './driver-orders.service';
     MerchantOrdersController,
     AdminOrdersController,
     DriverOrdersController,
+    DriverEarningsController,
   ],
   providers: [
     OrdersService,

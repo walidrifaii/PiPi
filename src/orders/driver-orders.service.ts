@@ -157,6 +157,92 @@ export class DriverOrdersService {
     };
   }
 
+  private roundMoney(value: number): number {
+    return Math.round(value * 100) / 100;
+  }
+
+  private earningsPeriodBounds(period: 'day' | 'week' | 'month'): {
+    from: Date;
+    to: Date;
+  } {
+    const now = new Date();
+    const to = now;
+    let from: Date;
+
+    if (period === 'day') {
+      from = new Date(now);
+      from.setHours(0, 0, 0, 0);
+    } else if (period === 'week') {
+      from = new Date(now);
+      from.setDate(from.getDate() - 6);
+      from.setHours(0, 0, 0, 0);
+    } else {
+      from = new Date(now.getFullYear(), now.getMonth(), 1);
+    }
+
+    return { from, to };
+  }
+
+  private formatOrderDisplayId(orderId: string, checkoutRef?: string | null): string {
+    const ref = checkoutRef?.trim();
+    if (ref) {
+      return ref.length > 8 ? ref.slice(-8).toUpperCase() : ref.toUpperCase();
+    }
+    return orderId.slice(0, 8).toUpperCase();
+  }
+
+  /** Completed deliveries and delivery-fee earnings for the selected period. */
+  async getEarnings(driverId: string, periodRaw: string) {
+    await this.assertDriverActive(driverId);
+
+    const period: 'day' | 'week' | 'month' =
+      periodRaw === 'day' || periodRaw === 'month' ? periodRaw : 'week';
+    const { from, to } = this.earningsPeriodBounds(period);
+
+    const rows = await this.prisma.order.findMany({
+      where: {
+        driverId,
+        status: 'DELIVERED',
+        createdAt: { gte: from, lte: to },
+      },
+      select: {
+        ...driverOfferSelect,
+        checkoutRef: true,
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 500,
+    });
+
+    let totalEarnings = 0;
+    let totalFoodValue = 0;
+
+    const trips = rows.map((row) => {
+      const mapped = mapDriverOrderOffer(row);
+      const deliveryFee = mapped.fee ?? 0;
+      const orderValue = mapped.subtotal ?? 0;
+      totalEarnings += deliveryFee;
+      totalFoodValue += orderValue;
+
+      return {
+        id: mapped.id,
+        displayId: this.formatOrderDisplayId(row.id, row.checkoutRef),
+        merchantName: mapped.merchantName,
+        completedAt: mapped.createdAt.toISOString(),
+        orderValue: this.roundMoney(orderValue),
+        deliveryFee: this.roundMoney(deliveryFee),
+        earnings: this.roundMoney(deliveryFee),
+      };
+    });
+
+    return {
+      period,
+      totalEarnings: this.roundMoney(totalEarnings),
+      totalFoodValue: this.roundMoney(totalFoodValue),
+      tripCount: trips.length,
+      trips,
+    };
+  }
+
   async listMine(driverId: string, page = 1, limit = 20) {
     await this.assertDriverActive(driverId);
 
