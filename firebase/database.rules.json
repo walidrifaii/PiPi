@@ -3,7 +3,7 @@
     "drivers": {
       "$driverId": {
         ".read": "auth != null",
-        ".write": false
+        ".write": "auth != null && auth.uid === ('driver:' + $driverId)"
       }
     },
     "orders": {
@@ -15,7 +15,7 @@
         "tracking": {
           "location": {
             ".read": "auth != null && (auth.uid === root.child('orders').child($orderId).child('meta').child('userUid').val() || auth.uid === root.child('orders').child($orderId).child('meta').child('driverUid').val())",
-            ".write": false
+            ".write": "auth != null && auth.uid === root.child('orders').child($orderId).child('meta').child('driverUid').val()"
           }
         }
       }

@@ -121,8 +121,14 @@ export class TrackingService {
       await db.ref(`drivers/${driverId}`).update({
         active: false,
         orderId: null,
+        lat: null,
+        lng: null,
+        accuracy: null,
+        heading: null,
+        speed: null,
         stoppedAt: Date.now(),
       });
+      await db.ref(`orders/${orderId}/tracking/location`).remove();
     }
     return { orderId, active: false };
   }
@@ -144,7 +150,7 @@ export class TrackingService {
       throw new ForbiddenException('Not your delivery');
     }
 
-    if (!this.acceptThrottledWrite(driverId)) {
+    if (!this.acceptThrottledWrite(driverId, payload)) {
       return { ok: true as const, throttled: true as const };
     }
 
@@ -172,19 +178,60 @@ export class TrackingService {
       return { location: null as Record<string, unknown> | null };
     }
 
-    let snap = await db.ref(`drivers/${order.driverId}`).get();
-    if (!snap.exists()) {
-      snap = await db.ref(`orders/${orderId}/tracking/location`).get();
-    }
-    if (!snap.exists()) {
-      return { location: null as Record<string, unknown> | null };
+    const orderSnap = await db.ref(`orders/${orderId}/tracking/location`).get();
+    const fromOrder = this.parseRtdbLocation(orderSnap.val());
+    if (fromOrder) {
+      return { location: fromOrder };
     }
 
-    const val: unknown = snap.val();
+    const driverSnap = await db.ref(`drivers/${order.driverId}`).get();
+    const fromDriver = this.parseRtdbDriverLocation(
+      driverSnap.val(),
+      orderId,
+      order.driverId,
+    );
+    return { location: fromDriver };
+  }
+
+  /** Order-scoped GPS node (lat/lng only). */
+  private parseRtdbLocation(val: unknown): Record<string, unknown> | null {
     if (!val || typeof val !== 'object' || Array.isArray(val)) {
-      return { location: null as Record<string, unknown> | null };
+      return null;
     }
-    return { location: val as Record<string, unknown> };
+    const row = val as Record<string, unknown>;
+    const lat = Number(row.lat);
+    const lng = Number(row.lng);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+      return null;
+    }
+    if (Math.abs(lat) > 90 || Math.abs(lng) > 180) {
+      return null;
+    }
+    return row;
+  }
+
+  /** Driver-wide GPS node — ignore stale/inactive or wrong-order snapshots. */
+  private parseRtdbDriverLocation(
+    val: unknown,
+    orderId: string,
+    driverId: string,
+  ): Record<string, unknown> | null {
+    if (!val || typeof val !== 'object' || Array.isArray(val)) {
+      return null;
+    }
+    const row = val as Record<string, unknown>;
+    if (row.active === false) {
+      return null;
+    }
+    const snapOrderId = row.orderId?.toString();
+    if (snapOrderId && snapOrderId !== orderId) {
+      return null;
+    }
+    const snapDriverId = row.driverId?.toString();
+    if (snapDriverId && snapDriverId !== driverId) {
+      return null;
+    }
+    return this.parseRtdbLocation(row);
   }
 
   async syncOrderMeta(orderId: string, userId: string, driverId: string) {
@@ -210,12 +257,29 @@ export class TrackingService {
     await firestore.collection('orders').doc(orderId).set(meta, { merge: true });
   }
 
-  private acceptThrottledWrite(driverId: string): boolean {
+  /** At least every 3s to RTDB; otherwise max 1 write/sec when moving. */
+  private acceptThrottledWrite(
+    driverId: string,
+    payload: TrackingLocationPayload,
+  ): boolean {
     const now = Date.now();
     const last = this.lastDriverWriteMs.get(driverId) ?? 0;
-    if (now - last < 1000) {
+    const elapsed = now - last;
+
+    if (elapsed >= 3000) {
+      this.lastDriverWriteMs.set(driverId, now);
+      return true;
+    }
+    if (elapsed < 1000) {
       return false;
     }
+
+    const lat = Number(payload.lat);
+    const lng = Number(payload.lng);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+      return false;
+    }
+
     this.lastDriverWriteMs.set(driverId, now);
     return true;
   }
@@ -250,6 +314,10 @@ export class TrackingService {
       active: true,
     });
 
-    await db.ref(`orders/${orderId}/tracking/location`).set(location);
+    await db.ref(`orders/${orderId}/tracking/location`).set({
+      ...location,
+      orderId,
+      driverId,
+    });
   }
 }
