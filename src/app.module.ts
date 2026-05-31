@@ -22,6 +22,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { FirebaseAdminModule } from './firebase/firebase-admin.module';
 import { TrackingModule } from './tracking/tracking.module';
 import { MerchantOfferModule } from './merchant-offer/merchant-offer.module';
+import { MerchantOfferAdminController } from './merchant-offer/merchant-offer-admin.controller';
 import { MerchantOfferPublicController } from './merchant-offer/merchant-offer-public.controller';
 
 @Module({
@@ -46,6 +47,8 @@ import { MerchantOfferPublicController } from './merchant-offer/merchant-offer-p
     AppController,
     // Before MerchantController so `/merchants/me/*` and `/merchants/:id/offers` are not captured by `:merchantId`.
     MerchantCatalogController,
+    // Before MerchantOfferPublicController so `/merchants/admin/offers` is not captured as `:merchantId=admin`.
+    MerchantOfferAdminController,
     MerchantOfferPublicController,
     MerchantController,
     MerchantCatalogSuperAdminController,

@@ -260,18 +260,39 @@ export class MerchantController {
   @ApiTags('Storefront')
   @ApiOperation({
     summary:
-      'List discounted products across all active merchants (on sale: discount price below list price)',
+      'List discounted products across active merchants in the user service area (on sale: discount price below list price)',
+    description:
+      'Requires lat and lng. If the user is outside every active service-area polygon, returns an empty list. Only products from stores whose GPS is inside that same polygon are included.',
+  })
+  @ApiQuery({
+    name: 'lat',
+    required: true,
+    description: 'User latitude (WGS84)',
+  })
+  @ApiQuery({
+    name: 'lng',
+    required: true,
+    description: 'User longitude (WGS84)',
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
   @Get('products/discounts')
-  listDiscountedProductsAcrossMerchants(
+  async listDiscountedProductsAcrossMerchants(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query('lat') lat: string,
+    @Query('lng') lng: string,
   ) {
+    const { lat: userLat, lng: userLng } = parseRequiredLatLng(lat, lng);
+    const scopeMerchantIds =
+      await this.merchantIntegrationService.getMerchantIdsInUserServiceArea(
+        userLat,
+        userLng,
+      );
     return this.merchantCatalogService.listDiscountedProductsAcrossMerchants(
       page,
       limit,
+      scopeMerchantIds,
     );
   }
 

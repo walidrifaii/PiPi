@@ -606,19 +606,29 @@ export class MerchantCatalogService {
   }
 
   /**
-   * All products on sale across every active merchant (`discount_price` set and
-   * strictly below `price`). Pagination is applied in the database.
+   * Discounted products from active merchants in the user's service area
+   * (`discount_price` set and strictly below `price`). Pagination is applied in the database.
    */
-  async listDiscountedProductsAcrossMerchants(page = 1, limit = 20) {
+  async listDiscountedProductsAcrossMerchants(
+    page = 1,
+    limit = 20,
+    scopeMerchantIds: string[] = [],
+  ) {
     const pg = this.normalizePagination(page, limit);
 
+    if (scopeMerchantIds.length === 0) {
+      return this.pagedResponse([], 0, pg.page, pg.limit);
+    }
+
     const openIds = await this.merchantIdsOpenForBusiness();
-    if (openIds.length === 0) {
+    const scopeSet = new Set(scopeMerchantIds);
+    const allowedIds = openIds.filter((id) => scopeSet.has(id));
+    if (allowedIds.length === 0) {
       return this.pagedResponse([], 0, pg.page, pg.limit);
     }
 
     const openIdList = Prisma.join(
-      openIds.map((id) => Prisma.sql`${id}::uuid`),
+      allowedIds.map((id) => Prisma.sql`${id}::uuid`),
       ', ',
     );
 
