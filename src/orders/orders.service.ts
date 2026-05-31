@@ -751,4 +751,86 @@ export class OrdersService {
       updatedAt: new Date().toISOString(),
     };
   }
+
+  private formatOrderDisplayId(
+    orderId: string,
+    checkoutRef?: string | null,
+  ): string {
+    const ref = checkoutRef?.trim();
+    if (ref) {
+      return ref.length > 8 ? ref.slice(-8).toUpperCase() : ref.toUpperCase();
+    }
+    return orderId.slice(0, 8).toUpperCase();
+  }
+
+  private buildMerchantOrderEarningsList(
+    rows: Array<{
+      id: string;
+      checkoutRef: string | null;
+      createdAt: Date;
+      itemsSnapshot: unknown;
+      subtotal: { toString(): string } | null;
+    }>,
+    sharePercent: number,
+  ) {
+    return rows.map((row) => {
+      const gross = this.merchantGrossFoodFromRow(row);
+      const net = computeMerchantEarningsFromFoodSubtotal(gross, sharePercent);
+      return {
+        id: row.id,
+        displayId: this.formatOrderDisplayId(row.id, row.checkoutRef),
+        completedAt: row.createdAt.toISOString(),
+        grossFood: gross,
+        netEarnings: net,
+        platformFee: roundMoney(Math.max(0, gross - net)),
+      };
+    });
+  }
+
+  async getMerchantEarningsForAdmin(
+    merchantId: string,
+    query: MerchantEarningsQueryDto,
+  ) {
+    const merchant = await this.prisma.merchant.findUnique({
+      where: { id: merchantId },
+      select: { id: true, name: true, isActive: true },
+    });
+    if (!merchant) {
+      throw new NotFoundException('Merchant not found');
+    }
+
+    const { from, to } = this.resolveMerchantEarningsPeriod(query);
+    const earningsSelect = {
+      id: true,
+      checkoutRef: true,
+      createdAt: true,
+      itemsSnapshot: true,
+      subtotal: true,
+    } satisfies Prisma.OrderSelect;
+
+    const [summary, sharePercent, orderRows] = await Promise.all([
+      this.getMerchantEarnings(merchantId, query),
+      this.platformSettings.getMerchantFoodSharePercent(),
+      this.prisma.order.findMany({
+        where: {
+          merchantId,
+          status: 'DELIVERED',
+          createdAt: { gte: from, lte: to },
+        },
+        select: earningsSelect,
+        orderBy: { createdAt: 'desc' },
+        take: 100,
+      }),
+    ]);
+
+    return {
+      ...summary,
+      merchant: {
+        id: merchant.id,
+        name: merchant.name,
+        isActive: merchant.isActive,
+      },
+      orders: this.buildMerchantOrderEarningsList(orderRows, sharePercent),
+    };
+  }
 }

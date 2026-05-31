@@ -12,6 +12,8 @@ import { UserOrdersController } from './user-orders.controller';
 import { DriverOrdersController } from './driver-orders.controller';
 import { DriverEarningsController } from './driver-earnings.controller';
 import { MerchantEarningsController } from './merchant-earnings.controller';
+import { AdminDriverEarningsController } from './admin-driver-earnings.controller';
+import { AdminMerchantEarningsController } from './admin-merchant-earnings.controller';
 import { DriverOrdersService } from './driver-orders.service';
 
 @Module({
@@ -23,6 +25,8 @@ import { DriverOrdersService } from './driver-orders.service';
     DriverOrdersController,
     DriverEarningsController,
     MerchantEarningsController,
+    AdminDriverEarningsController,
+    AdminMerchantEarningsController,
   ],
   providers: [
     OrdersService,

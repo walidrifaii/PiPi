@@ -176,9 +176,10 @@ export class DriverOrdersService {
     return Math.round(value * 100) / 100;
   }
 
-  private earningsPeriodBounds(period: 'day' | 'week' | 'month'): {
+  private earningsPeriodBounds(period: 'day' | 'week' | 'month' | 'all'): {
     from: Date;
     to: Date;
+    period: 'day' | 'week' | 'month' | 'all';
   } {
     const now = new Date();
     const to = now;
@@ -191,28 +192,39 @@ export class DriverOrdersService {
       from = new Date(now);
       from.setDate(from.getDate() - 6);
       from.setHours(0, 0, 0, 0);
+    } else if (period === 'all') {
+      from = new Date(now);
+      from.setDate(from.getDate() - 89);
+      from.setHours(0, 0, 0, 0);
     } else {
       from = new Date(now.getFullYear(), now.getMonth(), 1);
     }
 
-    return { from, to };
+    return { from, to, period };
   }
 
-  private formatOrderDisplayId(orderId: string, checkoutRef?: string | null): string {
-    const ref = checkoutRef?.trim();
-    if (ref) {
-      return ref.length > 8 ? ref.slice(-8).toUpperCase() : ref.toUpperCase();
+  private resolveDriverEarningsPeriod(periodRaw: string): {
+    from: Date;
+    to: Date;
+    period: 'day' | 'week' | 'month' | 'all';
+  } {
+    const period: 'day' | 'week' | 'month' | 'all' =
+      periodRaw === 'day' || periodRaw === 'month' || periodRaw === 'all'
+        ? periodRaw
+        : 'week';
+    return this.earningsPeriodBounds(period);
+  }
+
+  private async buildDriverEarnings(
+    driverId: string,
+    periodRaw: string,
+    options: { requireActive: boolean },
+  ) {
+    if (options.requireActive) {
+      await this.assertDriverActive(driverId);
     }
-    return orderId.slice(0, 8).toUpperCase();
-  }
 
-  /** Completed deliveries and delivery-fee earnings for the selected period. */
-  async getEarnings(driverId: string, periodRaw: string) {
-    await this.assertDriverActive(driverId);
-
-    const period: 'day' | 'week' | 'month' =
-      periodRaw === 'day' || periodRaw === 'month' ? periodRaw : 'week';
-    const { from, to } = this.earningsPeriodBounds(period);
+    const { from, to, period } = this.resolveDriverEarningsPeriod(periodRaw);
     const sharePercent = await this.driverSharePercent();
 
     const rows = await this.prisma.order.findMany({
@@ -226,11 +238,13 @@ export class DriverOrdersService {
         checkoutRef: true,
       },
       orderBy: { createdAt: 'desc' },
-      take: 500,
+      take: period === 'all' ? 1000 : 500,
     });
 
     let totalEarnings = 0;
     let totalFoodValue = 0;
+    let totalDeliveryFees = 0;
+    let totalPlatformFee = 0;
 
     const trips = rows.map((row) => {
       const mapped = mapDriverOrderOffer({
@@ -239,9 +253,12 @@ export class DriverOrdersService {
       });
       const fullDeliveryFee = mapped.deliveryFee ?? 0;
       const driverEarnings = mapped.driverEarnings ?? mapped.fee ?? 0;
+      const platformFee = Math.max(0, fullDeliveryFee - driverEarnings);
       const orderValue = mapped.subtotal ?? 0;
       totalEarnings += driverEarnings;
       totalFoodValue += orderValue;
+      totalDeliveryFees += fullDeliveryFee;
+      totalPlatformFee += platformFee;
 
       return {
         id: mapped.id,
@@ -251,19 +268,61 @@ export class DriverOrdersService {
         orderValue: this.roundMoney(orderValue),
         deliveryFee: this.roundMoney(fullDeliveryFee),
         earnings: this.roundMoney(driverEarnings),
-        platformFee: this.roundMoney(
-          Math.max(0, fullDeliveryFee - driverEarnings),
-        ),
+        platformFee: this.roundMoney(platformFee),
       };
     });
 
     return {
       period,
+      periodFrom: from.toISOString(),
+      periodTo: to.toISOString(),
       driverSharePercent: sharePercent,
       totalEarnings: this.roundMoney(totalEarnings),
       totalFoodValue: this.roundMoney(totalFoodValue),
+      totalDeliveryFees: this.roundMoney(totalDeliveryFees),
+      totalPlatformFee: this.roundMoney(totalPlatformFee),
       tripCount: trips.length,
       trips,
+    };
+  }
+
+  private formatOrderDisplayId(orderId: string, checkoutRef?: string | null): string {
+    const ref = checkoutRef?.trim();
+    if (ref) {
+      return ref.length > 8 ? ref.slice(-8).toUpperCase() : ref.toUpperCase();
+    }
+    return orderId.slice(0, 8).toUpperCase();
+  }
+
+  /** Completed deliveries and delivery-fee earnings for the selected period. */
+  async getEarnings(driverId: string, periodRaw: string) {
+    return this.buildDriverEarnings(driverId, periodRaw, {
+      requireActive: true,
+    });
+  }
+
+  /** Super admin: driver earnings with platform fee breakdown. */
+  async getEarningsForAdmin(driverId: string, periodRaw: string) {
+    const driver = await this.prisma.driver.findUnique({
+      where: { id: driverId },
+      select: { id: true, fullName: true, isActive: true, phone: true },
+    });
+    if (!driver) {
+      throw new NotFoundException('Driver not found');
+    }
+
+    const earnings = await this.buildDriverEarnings(driverId, periodRaw, {
+      requireActive: false,
+    });
+
+    return {
+      ...earnings,
+      driver: {
+        id: driver.id,
+        fullName: driver.fullName,
+        phone: driver.phone,
+        isActive: driver.isActive,
+      },
     };
   }
 
