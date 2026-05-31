@@ -20,6 +20,7 @@ import {
   isTerminalOrderStatus,
   normalizeOrderStatus,
 } from './order-status.constants';
+import { PlatformSettingsService } from '../platform-settings/platform-settings.service';
 import { mapDriverOrderDetail, mapDriverOrderOffer } from './order-driver.mapper';
 import { OrderItemsSnapshot, OrderWithRelations } from './order.types';
 
@@ -58,7 +59,12 @@ export class DriverOrdersService {
     private readonly prisma: PrismaService,
     private readonly notifications: OrderNotificationsPort,
     private readonly tracking: TrackingService,
+    private readonly platformSettings: PlatformSettingsService,
   ) {}
+
+  private async driverSharePercent(): Promise<number> {
+    return this.platformSettings.getDriverDeliverySharePercent();
+  }
 
   private normalizePagination(page: number, limit: number) {
     const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
@@ -127,8 +133,12 @@ export class DriverOrdersService {
       this.prisma.order.count({ where }),
     ]);
 
+    const sharePercent = await this.driverSharePercent();
+
     return this.pagedResponse(
-      rows.map((o) => mapDriverOrderOffer(o)),
+      rows.map((o) =>
+        mapDriverOrderOffer({ ...o, driverSharePercent: sharePercent }),
+      ),
       total,
       p,
       l,
@@ -152,8 +162,13 @@ export class DriverOrdersService {
       return { order: null };
     }
 
+    const sharePercent = await this.driverSharePercent();
+
     return {
-      order: mapDriverOrderDetail(order as OrderWithRelations),
+      order: mapDriverOrderDetail(
+        order as OrderWithRelations,
+        sharePercent,
+      ),
     };
   }
 
@@ -198,6 +213,7 @@ export class DriverOrdersService {
     const period: 'day' | 'week' | 'month' =
       periodRaw === 'day' || periodRaw === 'month' ? periodRaw : 'week';
     const { from, to } = this.earningsPeriodBounds(period);
+    const sharePercent = await this.driverSharePercent();
 
     const rows = await this.prisma.order.findMany({
       where: {
@@ -217,10 +233,14 @@ export class DriverOrdersService {
     let totalFoodValue = 0;
 
     const trips = rows.map((row) => {
-      const mapped = mapDriverOrderOffer(row);
-      const deliveryFee = mapped.fee ?? 0;
+      const mapped = mapDriverOrderOffer({
+        ...row,
+        driverSharePercent: sharePercent,
+      });
+      const fullDeliveryFee = mapped.deliveryFee ?? 0;
+      const driverEarnings = mapped.driverEarnings ?? mapped.fee ?? 0;
       const orderValue = mapped.subtotal ?? 0;
-      totalEarnings += deliveryFee;
+      totalEarnings += driverEarnings;
       totalFoodValue += orderValue;
 
       return {
@@ -229,13 +249,17 @@ export class DriverOrdersService {
         merchantName: mapped.merchantName,
         completedAt: mapped.createdAt.toISOString(),
         orderValue: this.roundMoney(orderValue),
-        deliveryFee: this.roundMoney(deliveryFee),
-        earnings: this.roundMoney(deliveryFee),
+        deliveryFee: this.roundMoney(fullDeliveryFee),
+        earnings: this.roundMoney(driverEarnings),
+        platformFee: this.roundMoney(
+          Math.max(0, fullDeliveryFee - driverEarnings),
+        ),
       };
     });
 
     return {
       period,
+      driverSharePercent: sharePercent,
       totalEarnings: this.roundMoney(totalEarnings),
       totalFoodValue: this.roundMoney(totalFoodValue),
       tripCount: trips.length,
@@ -260,8 +284,12 @@ export class DriverOrdersService {
       this.prisma.order.count({ where }),
     ]);
 
+    const sharePercent = await this.driverSharePercent();
+
     return this.pagedResponse(
-      rows.map((o) => mapDriverOrderOffer(o)),
+      rows.map((o) =>
+        mapDriverOrderOffer({ ...o, driverSharePercent: sharePercent }),
+      ),
       total,
       p,
       l,
@@ -276,7 +304,8 @@ export class DriverOrdersService {
     if (!order) {
       throw new NotFoundException('Order not found');
     }
-    return mapDriverOrderDetail(order as OrderWithRelations);
+    const sharePercent = await this.driverSharePercent();
+    return mapDriverOrderDetail(order as OrderWithRelations, sharePercent);
   }
 
   /**
@@ -320,9 +349,13 @@ export class DriverOrdersService {
           where: { id: orderId, driverId },
           include: driverOrderInclude,
         });
+        const sharePercent = await this.driverSharePercent();
         return {
           accepted: true as const,
-          order: mapDriverOrderDetail(order! as OrderWithRelations),
+          order: mapDriverOrderDetail(
+            order! as OrderWithRelations,
+            sharePercent,
+          ),
         };
       }
       if (existing.driverId) {
@@ -346,9 +379,11 @@ export class DriverOrdersService {
     await this.notifyCustomerDelivering(row);
     await this.tracking.syncOrderMeta(orderId, row.userId, driverId);
 
+    const sharePercent = await this.driverSharePercent();
+
     return {
       accepted: true as const,
-      order: mapDriverOrderDetail(row),
+      order: mapDriverOrderDetail(row, sharePercent),
     };
   }
 
@@ -420,9 +455,11 @@ export class DriverOrdersService {
     const row = order! as OrderWithRelations;
     await this.notifyCustomerDispatched(row);
 
+    const sharePercent = await this.driverSharePercent();
+
     return {
       pickedUp: true as const,
-      order: mapDriverOrderDetail(row),
+      order: mapDriverOrderDetail(row, sharePercent),
     };
   }
 
@@ -482,9 +519,11 @@ export class DriverOrdersService {
     const row = order! as OrderWithRelations;
     await this.notifyCustomerDelivered(row);
 
+    const sharePercent = await this.driverSharePercent();
+
     return {
       completed: true as const,
-      order: mapDriverOrderDetail(row),
+      order: mapDriverOrderDetail(row, sharePercent),
     };
   }
 

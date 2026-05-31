@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { TrackingModule } from '../tracking/tracking.module';
+import { PlatformSettingsModule } from '../platform-settings/platform-settings.module';
 import { NotificationsService } from '../notifications/notifications.service';
 import { OrderNotificationsPort } from '../notifications/notifications.port';
 import { PrismaModule } from '../prisma/prisma.module';
@@ -13,7 +14,7 @@ import { DriverEarningsController } from './driver-earnings.controller';
 import { DriverOrdersService } from './driver-orders.service';
 
 @Module({
-  imports: [PrismaModule, NotificationsModule, TrackingModule],
+  imports: [PrismaModule, NotificationsModule, TrackingModule, PlatformSettingsModule],
   controllers: [
     UserOrdersController,
     MerchantOrdersController,

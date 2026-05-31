@@ -24,6 +24,7 @@ import { TrackingModule } from './tracking/tracking.module';
 import { MerchantOfferModule } from './merchant-offer/merchant-offer.module';
 import { MerchantOfferAdminController } from './merchant-offer/merchant-offer-admin.controller';
 import { MerchantOfferPublicController } from './merchant-offer/merchant-offer-public.controller';
+import { PlatformSettingsModule } from './platform-settings/platform-settings.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { MerchantOfferPublicController } from './merchant-offer/merchant-offer-p
     NotificationsModule,
     TrackingModule,
     MerchantOfferModule,
+    PlatformSettingsModule,
   ],
   controllers: [
     AppController,

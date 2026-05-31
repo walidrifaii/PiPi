@@ -2,6 +2,7 @@ import {
   resolveCustomerCoordinates,
   resolveMerchantCoordinates,
 } from './order-coordinates';
+import { computeDriverEarningsFromDeliveryFee } from '../platform-settings/driver-delivery-share';
 import { OrderItemsSnapshot, OrderWithRelations } from './order.types';
 
 function parseSnapshot(raw: unknown): OrderItemsSnapshot | null {
@@ -64,11 +65,17 @@ export function mapDriverOrderOffer(order: {
     longitude?: { toString(): string };
   } | null;
   orderItems?: Array<{ productName: string }>;
+  driverSharePercent?: number;
 }) {
   const snapshot = parseSnapshot(order.itemsSnapshot);
   const { deliveryFee, subtotal, total } = resolveDriverOrderMoney(
     order,
     snapshot,
+  );
+  const sharePercent = order.driverSharePercent ?? 100;
+  const driverEarnings = computeDriverEarningsFromDeliveryFee(
+    deliveryFee,
+    sharePercent,
   );
   const itemNames =
     snapshot?.items.map((i) => i.productName) ??
@@ -89,9 +96,12 @@ export function mapDriverOrderOffer(order: {
     merchantAddress: snapshot?.merchantName ?? order.merchant.name,
     customerName: order.user?.fullName?.trim() || 'Customer',
     customerAddress: order.address?.addressLine ?? 'Delivery address',
-    /** Driver earnings — delivery fee only. */
-    fee: deliveryFee,
+    /** Full customer delivery fee. */
     deliveryFee,
+    /** Driver payout (deliveryFee × share %). */
+    fee: driverEarnings,
+    driverEarnings,
+    driverSharePercent: sharePercent,
     /** Customer order value (items only). */
     subtotal,
     /** Customer order total (items + delivery). */
@@ -107,8 +117,14 @@ export function mapDriverOrderOffer(order: {
   };
 }
 
-export function mapDriverOrderDetail(order: OrderWithRelations) {
-  const base = mapDriverOrderOffer(order);
+export function mapDriverOrderDetail(
+  order: OrderWithRelations,
+  driverSharePercent?: number,
+) {
+  const base = mapDriverOrderOffer({
+    ...order,
+    driverSharePercent,
+  });
   const snapshot = parseSnapshot(order.itemsSnapshot);
   const items = order.orderItems.map((oi, index) => {
     const snap = snapshot?.items[index];

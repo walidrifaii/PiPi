@@ -339,3 +339,12 @@ model OrderItem {
   @@index([orderId])
   @@map("order_items")
 }
+
+/// Key-value platform configuration (super-admin editable).
+model AppSetting {
+  key       String   @id @db.VarChar(100)
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("app_settings")
+}
