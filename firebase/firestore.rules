@@ -10,6 +10,11 @@ service cloud.firestore {
       return orderDoc(orderId).data;
     }
 
+    function orderMissingParticipantMeta(orderId) {
+      return !orderDoc(orderId).exists
+        || !orderData(orderId).keys().hasAll(['userUid', 'driverUid']);
+    }
+
     function isOrderParticipant(orderId) {
       return request.auth != null
         && orderDoc(orderId).exists
@@ -17,6 +22,15 @@ service cloud.firestore {
         && (
           request.auth.uid == orderData(orderId).userUid
           || request.auth.uid == orderData(orderId).driverUid
+        );
+    }
+
+    function canWriteParticipantMeta(orderId) {
+      return request.auth != null
+        && request.resource.data.keys().hasAll(['userUid', 'driverUid'])
+        && (
+          request.auth.uid == request.resource.data.userUid
+          || request.auth.uid == request.resource.data.driverUid
         );
     }
 
@@ -36,24 +50,15 @@ service cloud.firestore {
     match /orders/{orderId} {
       allow read: if isOrderParticipant(orderId);
 
-      // Client applies meta from GET .../chat-ready (JWT-protected API).
-      allow create: if request.auth != null
-        && !orderDoc(orderId).exists
-        && request.resource.data.keys().hasAll(['userUid', 'driverUid'])
-        && (
-          request.auth.uid == request.resource.data.userUid
-          || request.auth.uid == request.resource.data.driverUid
-        );
+      allow create: if canWriteParticipantMeta(orderId)
+        && !orderDoc(orderId).exists;
 
       allow update: if request.auth != null
         && orderDoc(orderId).exists
         && (
           (isOrderParticipant(orderId) && isCallOnlyUpdate())
-          || (isMetaOnlyUpdate()
-            && (
-              request.auth.uid == request.resource.data.userUid
-              || request.auth.uid == request.resource.data.driverUid
-            ))
+          || (canWriteParticipantMeta(orderId)
+            && (isMetaOnlyUpdate() || orderMissingParticipantMeta(orderId)))
         );
 
       allow delete: if false;
