@@ -35,6 +35,7 @@ import { UpsertMerchantWorkingHoursDto } from './merchant/dto/upsert-merchant-wo
 import { ParseUuidMerchantIdPipe } from './common/parse-uuid-merchant-id.pipe';
 import { MerchantCatalogService } from './merchant-catalog/merchant-catalog.service';
 import { MerchantIntegrationService } from './merchant.integration.service';
+import { MerchantOfferService } from './merchant-offer/merchant-offer.service';
 import {
   parseRequiredLatLng,
   parseStorefrontSearchType,
@@ -45,6 +46,7 @@ export class MerchantController {
   constructor(
     private readonly merchantIntegrationService: MerchantIntegrationService,
     private readonly merchantCatalogService: MerchantCatalogService,
+    private readonly merchantOfferService: MerchantOfferService,
   ) {}
 
   @ApiTags('Storefront')
@@ -271,6 +273,30 @@ export class MerchantController {
       page,
       limit,
     );
+  }
+
+  @ApiTags('Storefront')
+  @ApiOperation({
+    summary: 'List active store promos (paginated, one image per promo)',
+    description:
+      'Marketing cards for customers. Checkout uses each product list price or its own discount_price — not this promo percent.',
+  })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @ApiQuery({
+    name: 'merchantId',
+    required: false,
+    type: String,
+    description:
+      'Filter to one merchant (UUID). Omit to list all merchants with active offers.',
+  })
+  @Get('offers')
+  listMerchantOffers(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query('merchantId') merchantId?: string,
+  ) {
+    return this.merchantOfferService.listPublic(page, limit, merchantId);
   }
 
   @ApiTags('Storefront · Menu')

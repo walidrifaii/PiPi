@@ -41,6 +41,13 @@ export class CreateMerchantOfferAdminDto {
   discountPercent!: number;
 
   @ApiProperty({
+    description: 'When the promo becomes visible (ISO 8601).',
+    example: '2026-06-01T00:00:00.000Z',
+  })
+  @IsDateString()
+  startsAt!: string;
+
+  @ApiProperty({
     description: 'When the promo closes (ISO 8601). After this it is hidden from customers.',
     example: '2026-06-30T23:59:59.000Z',
   })

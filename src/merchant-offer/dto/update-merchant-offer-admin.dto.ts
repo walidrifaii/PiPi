@@ -47,6 +47,14 @@ export class UpdateMerchantOfferAdminDto {
   isActive?: boolean;
 
   @ApiPropertyOptional({
+    description: 'New start date-time (ISO 8601)',
+    example: '2026-06-01T00:00:00.000Z',
+  })
+  @IsOptional()
+  @IsDateString()
+  startsAt?: string;
+
+  @ApiPropertyOptional({
     description: 'New close date-time (ISO 8601)',
     example: '2026-07-15T23:59:59.000Z',
   })

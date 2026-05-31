@@ -10,15 +10,11 @@ import {
   Patch,
   Post,
   Query,
-  UploadedFile,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiBody,
-  ApiConsumes,
   ApiOperation,
   ApiParam,
   ApiQuery,
@@ -26,7 +22,6 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { SuperAdminGuard } from '../auth/super-admin.guard';
-import { CloudinaryService } from '../common/cloudinary.service';
 import { CreateMerchantOfferAdminDto } from './dto/create-merchant-offer-admin.dto';
 import { UpdateMerchantOfferAdminDto } from './dto/update-merchant-offer-admin.dto';
 import { MerchantOfferService } from './merchant-offer.service';
@@ -36,15 +31,12 @@ import { MerchantOfferService } from './merchant-offer.service';
 @UseGuards(JwtAuthGuard, SuperAdminGuard)
 @Controller('merchants/admin/offers')
 export class MerchantOfferAdminController {
-  constructor(
-    private readonly offers: MerchantOfferService,
-    private readonly cloudinary: CloudinaryService,
-  ) {}
+  constructor(private readonly offers: MerchantOfferService) {}
 
   @ApiOperation({
     summary: 'List all merchant promos (super admin)',
     description:
-      'Display-only offers shown to customers. Checkout always uses each product list/discount price.',
+      'Display-only offers shown to customers. Card image comes from the merchant cover/logo.',
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
@@ -71,70 +63,25 @@ export class MerchantOfferAdminController {
   }
 
   @ApiOperation({
-    summary: 'Create merchant promo (super admin, pick merchant + image)',
+    summary: 'Create merchant promo (super admin, pick merchant)',
     description:
-      'Promo is shown on the customer app only. Product prices at checkout are unchanged unless the merchant set per-product discount_price.',
+      'Promo card uses the merchant cover image (or logo). Product prices at checkout are unchanged unless the merchant set per-product discount_price.',
   })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      required: ['merchantId', 'image', 'discountPercent', 'endsAt'],
-      properties: {
-        merchantId: { type: 'string', format: 'uuid' },
-        image: { type: 'string', format: 'binary' },
-        title: { type: 'string' },
-        discountPercent: { type: 'number', example: 10 },
-        endsAt: { type: 'string', format: 'date-time' },
-        isActive: { type: 'boolean' },
-      },
-    },
-  })
+  @ApiBody({ type: CreateMerchantOfferAdminDto })
   @Post()
-  @UseInterceptors(FileInterceptor('image'))
-  async create(
-    @Body() dto: CreateMerchantOfferAdminDto,
-    @UploadedFile() file?: Express.Multer.File,
-  ) {
-    const buffer = this.offers.requireImageFile(file);
-    const imageUrl = await this.cloudinary.uploadImage(
-      buffer,
-      'athar/merchant-offers',
-    );
-    return this.offers.createForAdmin(dto, imageUrl);
+  create(@Body() dto: CreateMerchantOfferAdminDto) {
+    return this.offers.createForAdmin(dto);
   }
 
   @ApiOperation({ summary: 'Update merchant promo (super admin)' })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        merchantId: { type: 'string', format: 'uuid' },
-        image: { type: 'string', format: 'binary' },
-        title: { type: 'string' },
-        discountPercent: { type: 'number' },
-        endsAt: { type: 'string', format: 'date-time' },
-        isActive: { type: 'boolean' },
-      },
-    },
-  })
+  @ApiBody({ type: UpdateMerchantOfferAdminDto })
   @ApiParam({ name: 'offerId', type: String, format: 'uuid' })
   @Patch(':offerId')
-  @UseInterceptors(FileInterceptor('image'))
-  async update(
+  update(
     @Param('offerId', ParseUUIDPipe) offerId: string,
     @Body() dto: UpdateMerchantOfferAdminDto,
-    @UploadedFile() file?: Express.Multer.File,
   ) {
-    let imageUrl: string | undefined;
-    if (file?.buffer?.length) {
-      imageUrl = await this.cloudinary.uploadImage(
-        file.buffer,
-        'athar/merchant-offers',
-      );
-    }
-    return this.offers.updateForAdmin(offerId, dto, imageUrl);
+    return this.offers.updateForAdmin(offerId, dto);
   }
 
   @ApiOperation({ summary: 'Delete merchant promo (super admin)' })

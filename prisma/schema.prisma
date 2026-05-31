@@ -140,8 +140,11 @@ model MerchantOffer {
   title           String?  @db.VarChar(255)
   /// Percentage off list price (e.g. 10 = 10% off).
   discountPercent Decimal  @map("discount_percent") @db.Decimal(5, 2)
-  imageUrl        String   @map("image_url") @db.VarChar(500)
+  /// Legacy optional upload; API display image comes from merchant cover/logo.
+  imageUrl        String?  @map("image_url") @db.VarChar(500)
   isActive        Boolean  @default(true) @map("is_active")
+  /// When the promo becomes visible to customers.
+  startsAt        DateTime @map("starts_at")
   /// When reached, offer is auto-deactivated and hidden from customers.
   endsAt          DateTime @map("ends_at")
   createdAt       DateTime @default(now()) @map("created_at")
@@ -149,7 +152,7 @@ model MerchantOffer {
   merchant        Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
 
   @@index([merchantId])
-  @@index([isActive, endsAt])
+  @@index([isActive, startsAt, endsAt])
   @@map("merchant_offers")
 }
 

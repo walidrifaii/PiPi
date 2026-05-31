@@ -8,10 +8,14 @@ import {
   computeMerchantOpenNow,
   workingIntervalsToWeek,
 } from '../common/merchant-open-status';
-import { CloudinaryService } from '../common/cloudinary.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMerchantOfferAdminDto } from './dto/create-merchant-offer-admin.dto';
 import { UpdateMerchantOfferAdminDto } from './dto/update-merchant-offer-admin.dto';
+
+type MerchantImageFields = {
+  imageUrl: string | null;
+  coverImageUrl: string | null;
+};
 
 export type MerchantOfferView = {
   id: string;
@@ -19,9 +23,12 @@ export type MerchantOfferView = {
   title: string | null;
   /** Display badge only — checkout uses product list/discount prices. */
   discountPercent: number;
-  imageUrl: string;
+  /** Merchant cover image, then logo — not a separate offer upload. */
+  imageUrl: string | null;
   isActive: boolean;
+  startsAt: Date;
   endsAt: Date;
+  isNotStarted: boolean;
   isExpired: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -32,6 +39,7 @@ export type AdminMerchantOfferView = MerchantOfferView & {
     id: string;
     name: string;
     logoUrl: string | null;
+    coverImageUrl: string | null;
   };
 };
 
@@ -40,15 +48,13 @@ export type PublicMerchantOfferView = MerchantOfferView & {
     id: string;
     name: string;
     logoUrl: string | null;
+    coverImageUrl: string | null;
   };
 };
 
 @Injectable()
 export class MerchantOfferService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly cloudinary: CloudinaryService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   private normalizePagination(page: number, limit: number) {
     const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
@@ -81,29 +87,48 @@ export class MerchantOfferService {
     };
   }
 
+  private parseDateField(value: string, field: string): Date {
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) {
+      throw new BadRequestException(`${field} must be a valid ISO date-time`);
+    }
+    return parsed;
+  }
+
+  private assertValidOfferWindow(startsAt: Date, endsAt: Date) {
+    if (startsAt.getTime() >= endsAt.getTime()) {
+      throw new BadRequestException('startsAt must be before endsAt');
+    }
+  }
+
+  private isNotStartedAt(startsAt: Date, now = new Date()): boolean {
+    return startsAt.getTime() > now.getTime();
+  }
+
   private isExpiredAt(endsAt: Date, now = new Date()): boolean {
     return endsAt.getTime() <= now.getTime();
   }
 
-  private parseEndsAt(value: string): Date {
-    const endsAt = new Date(value);
-    if (Number.isNaN(endsAt.getTime())) {
-      throw new BadRequestException('endsAt must be a valid ISO date-time');
-    }
-    return endsAt;
+  private parseStartsAt(value: string): Date {
+    return this.parseDateField(value, 'startsAt');
   }
 
-  private assertEndsAtInFuture(endsAt: Date, now = new Date()) {
-    if (this.isExpiredAt(endsAt, now)) {
-      throw new BadRequestException('endsAt must be in the future');
-    }
+  private parseEndsAt(value: string): Date {
+    return this.parseDateField(value, 'endsAt');
   }
 
   private liveOfferWhere(now = new Date()): Prisma.MerchantOfferWhereInput {
     return {
       isActive: true,
+      startsAt: { lte: now },
       endsAt: { gt: now },
     };
+  }
+
+  private resolveDisplayImageUrl(
+    merchant: MerchantImageFields,
+  ): string | null {
+    return merchant.coverImageUrl ?? merchant.imageUrl ?? null;
   }
 
   private mapRow(
@@ -112,34 +137,49 @@ export class MerchantOfferService {
       merchantId: string;
       title: string | null;
       discountPercent: { toString(): string };
-      imageUrl: string;
       isActive: boolean;
+      startsAt: Date;
       endsAt: Date;
       createdAt: Date;
       updatedAt: Date;
     },
     now = new Date(),
+    merchant?: MerchantImageFields,
   ): MerchantOfferView {
     const isExpired = this.isExpiredAt(row.endsAt, now);
+    const isNotStarted = this.isNotStartedAt(row.startsAt, now);
     return {
       id: row.id,
       merchantId: row.merchantId,
       title: row.title,
       discountPercent: Number(row.discountPercent),
-      imageUrl: row.imageUrl,
-      isActive: row.isActive && !isExpired,
+      imageUrl: merchant ? this.resolveDisplayImageUrl(merchant) : null,
+      isActive: row.isActive && !isExpired && !isNotStarted,
+      startsAt: row.startsAt,
       endsAt: row.endsAt,
+      isNotStarted,
       isExpired,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
     };
   }
 
-  requireImageFile(file?: Express.Multer.File): Buffer {
-    if (!file?.buffer?.length) {
-      throw new BadRequestException('image file is required');
+  private mapMerchantImages(merchant: MerchantImageFields) {
+    return {
+      logoUrl: merchant.imageUrl,
+      coverImageUrl: merchant.coverImageUrl,
+    };
+  }
+
+  private async loadMerchantImages(merchantId: string) {
+    const merchant = await this.prisma.merchant.findUnique({
+      where: { id: merchantId },
+      select: { imageUrl: true, coverImageUrl: true },
+    });
+    if (!merchant) {
+      throw new NotFoundException('Merchant not found');
     }
-    return file.buffer;
+    return merchant;
   }
 
   private async assertMerchantExists(merchantId: string) {
@@ -214,7 +254,9 @@ export class MerchantOfferService {
       this.prisma.merchantOffer.findMany({
         where,
         include: {
-          merchant: { select: { id: true, name: true, imageUrl: true } },
+          merchant: {
+            select: { id: true, name: true, imageUrl: true, coverImageUrl: true },
+          },
         },
         orderBy: { createdAt: 'desc' },
         skip: pg.skip,
@@ -223,11 +265,11 @@ export class MerchantOfferService {
     ]);
 
     const items: AdminMerchantOfferView[] = rows.map((r) => ({
-      ...this.mapRow(r, now),
+      ...this.mapRow(r, now, r.merchant),
       merchant: {
         id: r.merchant.id,
         name: r.merchant.name,
-        logoUrl: r.merchant.imageUrl,
+        ...this.mapMerchantImages(r.merchant),
       },
     }));
 
@@ -240,30 +282,34 @@ export class MerchantOfferService {
     const row = await this.prisma.merchantOffer.findUnique({
       where: { id: offerId },
       include: {
-        merchant: { select: { id: true, name: true, imageUrl: true } },
+        merchant: {
+          select: { id: true, name: true, imageUrl: true, coverImageUrl: true },
+        },
       },
     });
     if (!row) {
       throw new NotFoundException('Offer not found');
     }
     return {
-      ...this.mapRow(row, now),
+      ...this.mapRow(row, now, row.merchant),
       merchant: {
         id: row.merchant.id,
         name: row.merchant.name,
-        logoUrl: row.merchant.imageUrl,
+        ...this.mapMerchantImages(row.merchant),
       },
     };
   }
 
-  async createForAdmin(dto: CreateMerchantOfferAdminDto, imageUrl: string) {
+  async createForAdmin(dto: CreateMerchantOfferAdminDto) {
     await this.assertMerchantExists(dto.merchantId);
     await this.expireDueOffers(dto.merchantId);
 
+    const startsAt = this.parseStartsAt(dto.startsAt);
     const endsAt = this.parseEndsAt(dto.endsAt);
+    this.assertValidOfferWindow(startsAt, endsAt);
     const isActive = dto.isActive ?? true;
-    if (isActive) {
-      this.assertEndsAtInFuture(endsAt);
+    if (isActive && this.isExpiredAt(endsAt)) {
+      throw new BadRequestException('endsAt must be in the future for active offers');
     }
 
     const row = await this.prisma.merchantOffer.create({
@@ -271,20 +317,17 @@ export class MerchantOfferService {
         merchantId: dto.merchantId,
         title: dto.title?.trim() || null,
         discountPercent: new Prisma.Decimal(dto.discountPercent),
-        imageUrl,
         isActive,
+        startsAt,
         endsAt,
       },
     });
 
-    return this.mapRow(row);
+    const merchant = await this.loadMerchantImages(row.merchantId);
+    return this.mapRow(row, new Date(), merchant);
   }
 
-  async updateForAdmin(
-    offerId: string,
-    dto: UpdateMerchantOfferAdminDto,
-    imageUrl?: string,
-  ) {
+  async updateForAdmin(offerId: string, dto: UpdateMerchantOfferAdminDto) {
     const existing = await this.prisma.merchantOffer.findUnique({
       where: { id: offerId },
     });
@@ -298,15 +341,20 @@ export class MerchantOfferService {
 
     await this.expireDueOffers(existing.merchantId);
 
+    const nextStartsAt =
+      dto.startsAt !== undefined
+        ? this.parseStartsAt(dto.startsAt)
+        : existing.startsAt;
     const nextEndsAt =
       dto.endsAt !== undefined
         ? this.parseEndsAt(dto.endsAt)
         : existing.endsAt;
+    this.assertValidOfferWindow(nextStartsAt, nextEndsAt);
     const nextActive =
       dto.isActive !== undefined ? dto.isActive : existing.isActive;
 
-    if (nextActive) {
-      this.assertEndsAtInFuture(nextEndsAt);
+    if (nextActive && this.isExpiredAt(nextEndsAt)) {
+      throw new BadRequestException('endsAt must be in the future for active offers');
     }
 
     const row = await this.prisma.merchantOffer.update({
@@ -320,16 +368,13 @@ export class MerchantOfferService {
           ? { discountPercent: new Prisma.Decimal(dto.discountPercent) }
           : {}),
         ...(dto.isActive !== undefined ? { isActive: dto.isActive } : {}),
+        ...(dto.startsAt !== undefined ? { startsAt: nextStartsAt } : {}),
         ...(dto.endsAt !== undefined ? { endsAt: nextEndsAt } : {}),
-        ...(imageUrl !== undefined ? { imageUrl } : {}),
       },
     });
 
-    if (imageUrl !== undefined && imageUrl !== existing.imageUrl) {
-      await this.cloudinary.deleteImageByUrl(existing.imageUrl);
-    }
-
-    return this.mapRow(row);
+    const merchant = await this.loadMerchantImages(row.merchantId);
+    return this.mapRow(row, new Date(), merchant);
   }
 
   async removeForAdmin(offerId: string) {
@@ -341,7 +386,6 @@ export class MerchantOfferService {
     }
 
     await this.prisma.merchantOffer.delete({ where: { id: offerId } });
-    await this.cloudinary.deleteImageByUrl(existing.imageUrl);
 
     return { message: 'Offer deleted' };
   }
@@ -358,6 +402,11 @@ export class MerchantOfferService {
       this.prisma.merchantOffer.count({ where }),
       this.prisma.merchantOffer.findMany({
         where,
+        include: {
+          merchant: {
+            select: { imageUrl: true, coverImageUrl: true },
+          },
+        },
         orderBy: { createdAt: 'desc' },
         skip: pg.skip,
         take: pg.limit,
@@ -365,7 +414,7 @@ export class MerchantOfferService {
     ]);
 
     return this.pagedResponse(
-      rows.map((r) => this.mapRow(r, now)),
+      rows.map((r) => this.mapRow(r, now, r.merchant)),
       total,
       pg.page,
       pg.limit,
@@ -377,11 +426,16 @@ export class MerchantOfferService {
     const now = new Date();
     const row = await this.prisma.merchantOffer.findFirst({
       where: { id: offerId, merchantId },
+      include: {
+        merchant: {
+          select: { imageUrl: true, coverImageUrl: true },
+        },
+      },
     });
     if (!row) {
       throw new NotFoundException('Offer not found');
     }
-    return this.mapRow(row, now);
+    return this.mapRow(row, now, row.merchant);
   }
 
   /** Public storefront: live display promos for open merchants. */
@@ -411,7 +465,7 @@ export class MerchantOfferService {
         where,
         include: {
           merchant: {
-            select: { id: true, name: true, imageUrl: true },
+            select: { id: true, name: true, imageUrl: true, coverImageUrl: true },
           },
         },
         orderBy: { createdAt: 'desc' },
@@ -421,11 +475,11 @@ export class MerchantOfferService {
     ]);
 
     const items: PublicMerchantOfferView[] = rows.map((r) => ({
-      ...this.mapRow(r, now),
+      ...this.mapRow(r, now, r.merchant),
       merchant: {
         id: r.merchant.id,
         name: r.merchant.name,
-        logoUrl: r.merchant.imageUrl,
+        ...this.mapMerchantImages(r.merchant),
       },
     }));
 
