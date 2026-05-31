@@ -200,7 +200,8 @@ export class CheckoutService {
     }
 
     const customerTotal = this.roundMoney(customerSubtotal + deliveryFee);
-    const merchantTotal = this.roundMoney(merchantSubtotal + deliveryFee);
+    // Merchant is paid for food only; delivery fee goes to platform/driver.
+    const merchantTotal = merchantSubtotal;
 
     this.assertClientMoney('subtotal', dto.subtotal, customerSubtotal);
     this.assertClientMoney('total', dto.total, customerTotal);

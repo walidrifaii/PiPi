@@ -14,7 +14,7 @@ export type OrderItemsSnapshot = {
   customerTotal?: number;
   /** Server-computed merchant-facing subtotal (no store promo). */
   merchantSubtotal?: number;
-  /** Server-computed merchant-facing total (merchant subtotal + delivery). */
+  /** Server-computed merchant-facing total (food subtotal only, no delivery). */
   merchantTotal?: number;
   deliveryFee?: number;
   items: Array<{

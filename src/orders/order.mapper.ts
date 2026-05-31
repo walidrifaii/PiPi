@@ -103,23 +103,18 @@ function resolveOrderTotals(
       : deliveryFeeFromOrder;
 
   if (audience === 'merchant') {
-    if (
-      snapshot?.merchantSubtotal !== undefined &&
-      snapshot?.merchantTotal !== undefined
-    ) {
+    if (snapshot?.merchantSubtotal !== undefined) {
       return {
         subtotal: snapshot.merchantSubtotal,
-        deliveryFee,
-        total: snapshot.merchantTotal,
+        deliveryFee: null,
+        total: snapshot.merchantSubtotal,
       };
     }
 
     const subtotal = roundMoney(
       items.reduce((sum, item) => sum + item.totalPrice, 0),
     );
-    const total =
-      deliveryFee !== null ? roundMoney(subtotal + deliveryFee) : subtotal;
-    return { subtotal, deliveryFee, total };
+    return { subtotal, deliveryFee: null, total: subtotal };
   }
 
   return {
@@ -146,8 +141,8 @@ function offerFieldsForAudience(
   if (audience === 'admin') {
     if (snapshot?.merchantSubtotal !== undefined) {
       fields.merchantSubtotal = snapshot.merchantSubtotal;
-    }
-    if (snapshot?.merchantTotal !== undefined) {
+      fields.merchantTotal = snapshot.merchantSubtotal;
+    } else if (snapshot?.merchantTotal !== undefined) {
       fields.merchantTotal = snapshot.merchantTotal;
     }
   }
