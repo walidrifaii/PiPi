@@ -33,6 +33,7 @@ export type OrderItemsSnapshot = {
     /** Line total shown to the merchant (no merchant promo). */
     merchantTotalPrice?: number;
     message: string | null;
+    imageUrl?: string | null;
     selectedOptions?: SelectedOptionSnapshot[];
   }>;
 };

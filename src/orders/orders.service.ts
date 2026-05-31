@@ -14,6 +14,7 @@ import { TrackingService } from '../tracking/tracking.service';
 import { ListOrdersAdminQueryDto } from './dto/list-orders-admin-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { mapOrderDetail, mapOrderSummary } from './order.mapper';
+import { resolveProductDisplayImage } from '../common/product-display-image';
 import {
   canMerchantTransition,
   canSuperAdminTransition,
@@ -169,9 +170,30 @@ export class OrdersService {
     if (!order) {
       throw new NotFoundException('Order not found');
     }
-    return mapOrderDetail(order as OrderWithRelations, {
+    const row = order as OrderWithRelations;
+    const productIds = [...new Set(row.orderItems.map((i) => i.productId))];
+    const products =
+      productIds.length > 0
+        ? await this.prisma.product.findMany({
+            where: { id: { in: productIds } },
+            select: {
+              id: true,
+              imageUrl: true,
+              images: {
+                orderBy: { sortOrder: 'asc' },
+                take: 1,
+                select: { url: true },
+              },
+            },
+          })
+        : [];
+    const productImages = new Map(
+      products.map((p) => [p.id, resolveProductDisplayImage(p)]),
+    );
+    return mapOrderDetail(row, {
       includeCustomer: true,
       audience: 'merchant',
+      productImages,
     });
   }
 

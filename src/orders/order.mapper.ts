@@ -28,6 +28,7 @@ type MappedOrderItem = {
   id: string;
   productId: string;
   productName: string;
+  imageUrl: string | null;
   quantity: number;
   price: number;
   discountPrice: number | null;
@@ -42,10 +43,13 @@ function mapOrderItem(
   snap: OrderItemsSnapshot['items'][number] | undefined,
   snapshot: OrderItemsSnapshot | null,
   audience: OrderDetailAudience,
+  productImages?: Map<string, string | null>,
 ): MappedOrderItem {
   const listPrice = snap?.listPrice ?? Number(oi.unitPrice);
   const modifiers =
     snap?.selectedOptions?.map((o) => Number(o.priceModifier)) ?? [];
+  const imageUrl =
+    snap?.imageUrl ?? productImages?.get(oi.productId) ?? null;
 
   if (audience === 'merchant') {
     const productDiscount =
@@ -65,6 +69,7 @@ function mapOrderItem(
       id: oi.id,
       productId: oi.productId,
       productName: oi.productName,
+      imageUrl,
       quantity: oi.quantity,
       price: listPrice,
       discountPrice: productDiscount,
@@ -79,6 +84,7 @@ function mapOrderItem(
     id: oi.id,
     productId: oi.productId,
     productName: oi.productName,
+    imageUrl,
     quantity: oi.quantity,
     price: listPrice,
     discountPrice: snap?.discountPrice ?? null,
@@ -182,6 +188,7 @@ export function mapOrderDetail(
   options: {
     includeCustomer?: boolean;
     audience?: OrderDetailAudience;
+    productImages?: Map<string, string | null>;
   } = {},
 ) {
   const audience = options.audience ?? 'customer';
@@ -189,7 +196,13 @@ export function mapOrderDetail(
   const merchantCoords = resolveMerchantCoordinates(order);
   const customerCoords = resolveCustomerCoordinates(order);
   const items = order.orderItems.map((oi, index) =>
-    mapOrderItem(oi, snapshot?.items[index], snapshot, audience),
+    mapOrderItem(
+      oi,
+      snapshot?.items[index],
+      snapshot,
+      audience,
+      options.productImages,
+    ),
   );
   const totals = resolveOrderTotals(order, snapshot, items, audience);
 

@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { randomUUID } from 'crypto';
+import { resolveProductDisplayImage } from '../common/product-display-image';
 import {
   formatProductNameWithOptions,
   resolveUnitPriceWithOptions,
@@ -19,6 +20,7 @@ import { resolveStorefrontProductPricing } from '../merchant-offer/merchant-offe
 type LineItem = {
   productId: string;
   productName: string;
+  imageUrl: string | null;
   quantity: number;
   unitPrice: number;
   totalPrice: number;
@@ -46,6 +48,7 @@ export type CheckoutItemsSnapshot = {
   items: Array<{
     productId: string;
     productName: string;
+    imageUrl: string | null;
     quantity: number;
     listPrice: number;
     discountPrice: number | null;
@@ -106,6 +109,12 @@ export class CheckoutService {
         id: true,
         price: true,
         discountPrice: true,
+        imageUrl: true,
+        images: {
+          orderBy: { sortOrder: 'asc' },
+          take: 1,
+          select: { url: true },
+        },
         optionGroups: {
           orderBy: { sortOrder: 'asc' },
           include: {
@@ -174,6 +183,7 @@ export class CheckoutService {
       return {
         productId: item.productId,
         productName,
+        imageUrl: resolveProductDisplayImage(catalog),
         quantity: item.quantity,
         unitPrice,
         totalPrice: unitPrice * item.quantity,
@@ -222,6 +232,7 @@ export class CheckoutService {
       items: lineItems.map((l) => ({
         productId: l.productId,
         productName: l.productName,
+        imageUrl: l.imageUrl,
         quantity: l.quantity,
         listPrice: l.listPrice,
         discountPrice: l.discountPrice,
@@ -320,6 +331,7 @@ export class CheckoutService {
           id: oi.id,
           productId: oi.productId,
           productName: oi.productName,
+          imageUrl: snap?.imageUrl ?? null,
           quantity: oi.quantity,
           price: snap?.listPrice ?? Number(oi.unitPrice),
           discountPrice: snap?.discountPrice ?? null,
