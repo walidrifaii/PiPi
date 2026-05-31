@@ -9,3 +9,6 @@ CREATE TABLE "app_settings" (
 
 INSERT INTO "app_settings" ("key", "value", "updated_at")
 VALUES ('driver_delivery_fee_share_percent', '60', CURRENT_TIMESTAMP);
+
+INSERT INTO "app_settings" ("key", "value", "updated_at")
+VALUES ('merchant_food_share_percent', '100', CURRENT_TIMESTAMP);

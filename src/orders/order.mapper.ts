@@ -1,4 +1,5 @@
 import { resolveUnitPriceWithOptions } from '../common/product-option-pricing';
+import { computeMerchantEarningsFromFoodSubtotal } from '../platform-settings/driver-delivery-share';
 import {
   resolveCustomerCoordinates,
   resolveMerchantCoordinates,
@@ -100,6 +101,7 @@ function resolveOrderTotals(
   snapshot: OrderItemsSnapshot | null,
   items: MappedOrderItem[],
   audience: OrderDetailAudience,
+  merchantFoodSharePercent?: number,
 ) {
   const deliveryFeeFromOrder =
     order.deliveryFee !== null ? Number(order.deliveryFee) : null;
@@ -109,18 +111,27 @@ function resolveOrderTotals(
       : deliveryFeeFromOrder;
 
   if (audience === 'merchant') {
+    const share = merchantFoodSharePercent ?? 100;
+    let grossSubtotal: number;
+
     if (snapshot?.merchantSubtotal !== undefined) {
-      return {
-        subtotal: snapshot.merchantSubtotal,
-        deliveryFee: null,
-        total: snapshot.merchantSubtotal,
-      };
+      grossSubtotal = snapshot.merchantSubtotal;
+    } else {
+      grossSubtotal = roundMoney(
+        items.reduce((sum, item) => sum + item.totalPrice, 0),
+      );
     }
 
-    const subtotal = roundMoney(
-      items.reduce((sum, item) => sum + item.totalPrice, 0),
+    const subtotal = computeMerchantEarningsFromFoodSubtotal(
+      grossSubtotal,
+      share,
     );
-    return { subtotal, deliveryFee: null, total: subtotal };
+
+    return {
+      subtotal,
+      deliveryFee: null,
+      total: subtotal,
+    };
   }
 
   return {
@@ -159,12 +170,19 @@ function offerFieldsForAudience(
 export function mapOrderSummary(
   order: OrderWithRelations,
   audience: OrderDetailAudience = 'customer',
+  merchantFoodSharePercent?: number,
 ) {
   const snapshot = parseSnapshot(order.itemsSnapshot);
   const items = order.orderItems.map((oi, index) =>
     mapOrderItem(oi, snapshot?.items[index], snapshot, audience),
   );
-  const totals = resolveOrderTotals(order, snapshot, items, audience);
+  const totals = resolveOrderTotals(
+    order,
+    snapshot,
+    items,
+    audience,
+    merchantFoodSharePercent,
+  );
 
   return {
     id: order.id,
@@ -189,6 +207,7 @@ export function mapOrderDetail(
     includeCustomer?: boolean;
     audience?: OrderDetailAudience;
     productImages?: Map<string, string | null>;
+    merchantFoodSharePercent?: number;
   } = {},
 ) {
   const audience = options.audience ?? 'customer';
@@ -204,7 +223,13 @@ export function mapOrderDetail(
       options.productImages,
     ),
   );
-  const totals = resolveOrderTotals(order, snapshot, items, audience);
+  const totals = resolveOrderTotals(
+    order,
+    snapshot,
+    items,
+    audience,
+    options.merchantFoodSharePercent,
+  );
 
   return {
     id: order.id,

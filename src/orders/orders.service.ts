@@ -15,6 +15,7 @@ import { ListOrdersAdminQueryDto } from './dto/list-orders-admin-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { mapOrderDetail, mapOrderSummary } from './order.mapper';
 import { resolveProductDisplayImage } from '../common/product-display-image';
+import { PlatformSettingsService } from '../platform-settings/platform-settings.service';
 import {
   canMerchantTransition,
   canSuperAdminTransition,
@@ -54,6 +55,7 @@ export class OrdersService {
     private readonly prisma: PrismaService,
     private readonly notifications: OrderNotificationsPort,
     private readonly tracking: TrackingService,
+    private readonly platformSettings: PlatformSettingsService,
   ) {}
 
   private normalizePagination(page: number, limit: number) {
@@ -141,9 +143,16 @@ export class OrdersService {
       }),
       this.prisma.order.count({ where }),
     ]);
+    const merchantFoodSharePercent =
+      await this.platformSettings.getMerchantFoodSharePercent();
+
     return this.pagedResponse(
       rows.map((o) => {
-        const summary = mapOrderSummary(o as OrderWithRelations, 'merchant');
+        const summary = mapOrderSummary(
+          o as OrderWithRelations,
+          'merchant',
+          merchantFoodSharePercent,
+        );
         const row = o as OrderWithRelations;
         return {
           ...summary,
@@ -190,10 +199,13 @@ export class OrdersService {
     const productImages = new Map(
       products.map((p) => [p.id, resolveProductDisplayImage(p)]),
     );
+    const merchantFoodSharePercent =
+      await this.platformSettings.getMerchantFoodSharePercent();
     return mapOrderDetail(row, {
       includeCustomer: true,
       audience: 'merchant',
       productImages,
+      merchantFoodSharePercent,
     });
   }
 
