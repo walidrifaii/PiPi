@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseUUIDPipe, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Post, Query, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -30,5 +30,22 @@ export class AdminDriverEarningsController {
     @Query() query: AdminDriverEarningsQueryDto,
   ) {
     return this.driverOrders.getEarningsForAdmin(driverId, query.period ?? 'month');
+  }
+
+  @ApiOperation({
+    summary:
+      'Mark all unpaid driver earnings in the period as PAID (saved in history, zeroes driver balance)',
+  })
+  @ApiParam({ name: 'driverId', type: String })
+  @ApiQuery({ name: 'period', required: false, enum: ['day', 'week', 'month', 'all'] })
+  @Post(':driverId/earnings/mark-paid')
+  markDriverPaid(
+    @Param('driverId', ParseUUIDPipe) driverId: string,
+    @Query() query: AdminDriverEarningsQueryDto,
+  ) {
+    return this.driverOrders.markDriverEarningsPaid(
+      driverId,
+      query.period ?? 'month',
+    );
   }
 }

@@ -21,6 +21,7 @@ import {
   normalizeOrderStatus,
 } from './order-status.constants';
 import { PlatformSettingsService } from '../platform-settings/platform-settings.service';
+import { EarningsSettlementsService } from './earnings-settlements.service';
 import { mapDriverOrderDetail, mapDriverOrderOffer } from './order-driver.mapper';
 import { OrderItemsSnapshot, OrderWithRelations } from './order.types';
 
@@ -60,6 +61,7 @@ export class DriverOrdersService {
     private readonly notifications: OrderNotificationsPort,
     private readonly tracking: TrackingService,
     private readonly platformSettings: PlatformSettingsService,
+    private readonly settlements: EarningsSettlementsService,
   ) {}
 
   private async driverSharePercent(): Promise<number> {
@@ -218,14 +220,17 @@ export class DriverOrdersService {
   private async buildDriverEarnings(
     driverId: string,
     periodRaw: string,
-    options: { requireActive: boolean },
+    options: { requireActive: boolean; forAdmin?: boolean },
   ) {
     if (options.requireActive) {
       await this.assertDriverActive(driverId);
     }
 
     const { from, to, period } = this.resolveDriverEarningsPeriod(periodRaw);
-    const sharePercent = await this.driverSharePercent();
+    const [sharePercent, paidOrderIds] = await Promise.all([
+      this.driverSharePercent(),
+      this.settlements.getPaidOrderIds('DRIVER', driverId),
+    ]);
 
     const rows = await this.prisma.order.findMany({
       where: {
@@ -242,11 +247,13 @@ export class DriverOrdersService {
     });
 
     let totalEarnings = 0;
+    let totalPaidEarnings = 0;
     let totalFoodValue = 0;
     let totalDeliveryFees = 0;
     let totalPlatformFee = 0;
+    let unpaidTripCount = 0;
 
-    const trips = rows.map((row) => {
+    const trips = rows.flatMap((row) => {
       const mapped = mapDriverOrderOffer({
         ...row,
         driverSharePercent: sharePercent,
@@ -255,24 +262,45 @@ export class DriverOrdersService {
       const driverEarnings = mapped.driverEarnings ?? mapped.fee ?? 0;
       const platformFee = Math.max(0, fullDeliveryFee - driverEarnings);
       const orderValue = mapped.subtotal ?? 0;
-      totalEarnings += driverEarnings;
-      totalFoodValue += orderValue;
-      totalDeliveryFees += fullDeliveryFee;
-      totalPlatformFee += platformFee;
+      const isPaid = paidOrderIds.has(row.id);
+      const payoutStatus = isPaid ? 'PAID' : 'UNPAID';
 
-      return {
-        id: mapped.id,
-        displayId: this.formatOrderDisplayId(row.id, row.checkoutRef),
-        merchantName: mapped.merchantName,
-        completedAt: mapped.createdAt.toISOString(),
-        orderValue: this.roundMoney(orderValue),
-        deliveryFee: this.roundMoney(fullDeliveryFee),
-        earnings: this.roundMoney(driverEarnings),
-        platformFee: this.roundMoney(platformFee),
-      };
+      if (options.forAdmin) {
+        if (isPaid) {
+          totalPaidEarnings += driverEarnings;
+        } else {
+          totalEarnings += driverEarnings;
+          unpaidTripCount += 1;
+        }
+        totalFoodValue += orderValue;
+        totalDeliveryFees += fullDeliveryFee;
+        totalPlatformFee += platformFee;
+      } else if (!isPaid) {
+        totalEarnings += driverEarnings;
+        totalFoodValue += orderValue;
+        totalDeliveryFees += fullDeliveryFee;
+        totalPlatformFee += platformFee;
+        unpaidTripCount += 1;
+      } else {
+        return [];
+      }
+
+      return [
+        {
+          id: mapped.id,
+          displayId: this.formatOrderDisplayId(row.id, row.checkoutRef),
+          merchantName: mapped.merchantName,
+          completedAt: mapped.createdAt.toISOString(),
+          orderValue: this.roundMoney(orderValue),
+          deliveryFee: this.roundMoney(fullDeliveryFee),
+          earnings: this.roundMoney(driverEarnings),
+          platformFee: this.roundMoney(platformFee),
+          payoutStatus,
+        },
+      ];
     });
 
-    return {
+    const result: Record<string, unknown> = {
       period,
       periodFrom: from.toISOString(),
       periodTo: to.toISOString(),
@@ -281,9 +309,16 @@ export class DriverOrdersService {
       totalFoodValue: this.roundMoney(totalFoodValue),
       totalDeliveryFees: this.roundMoney(totalDeliveryFees),
       totalPlatformFee: this.roundMoney(totalPlatformFee),
-      tripCount: trips.length,
+      tripCount: unpaidTripCount,
       trips,
     };
+
+    if (options.forAdmin) {
+      result.totalPaidEarnings = this.roundMoney(totalPaidEarnings);
+      result.paidTripCount = rows.length - unpaidTripCount;
+    }
+
+    return result;
   }
 
   private formatOrderDisplayId(orderId: string, checkoutRef?: string | null): string {
@@ -313,7 +348,16 @@ export class DriverOrdersService {
 
     const earnings = await this.buildDriverEarnings(driverId, periodRaw, {
       requireActive: false,
+      forAdmin: true,
     });
+
+    const { from, to } = this.resolveDriverEarningsPeriod(periodRaw);
+    const settlements = await this.settlements.listSettlements(
+      'DRIVER',
+      driverId,
+      from,
+      to,
+    );
 
     return {
       ...earnings,
@@ -323,6 +367,31 @@ export class DriverOrdersService {
         phone: driver.phone,
         isActive: driver.isActive,
       },
+      settlements,
+    };
+  }
+
+  async markDriverEarningsPaid(driverId: string, periodRaw: string) {
+    const { from, to } = this.resolveDriverEarningsPeriod(periodRaw);
+    const sharePercent = await this.driverSharePercent();
+    const settlement = await this.settlements.markDriverEarningsPaid(
+      driverId,
+      from,
+      to,
+      sharePercent,
+    );
+
+    return {
+      id: settlement.id,
+      referenceCode: settlement.referenceCode,
+      periodFrom: settlement.periodFrom.toISOString(),
+      periodTo: settlement.periodTo.toISOString(),
+      grossAmount: Number(settlement.grossAmount),
+      netAmount: Number(settlement.netAmount),
+      platformFee: Number(settlement.platformFee),
+      orderCount: settlement.orderCount,
+      status: settlement.status,
+      paidAt: settlement.paidAt.toISOString(),
     };
   }
 

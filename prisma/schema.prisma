@@ -92,6 +92,7 @@ model Driver {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
   orders       Order[]
+  earningsSettlements EarningsSettlement[]
 
   @@map("drivers")
 }
@@ -127,6 +128,7 @@ model Merchant {
   workingIntervals MerchantWorkingInterval[]
   deliveryTime MerchantDeliveryTime?
   offers       MerchantOffer[]
+  earningsSettlements EarningsSettlement[]
 
   @@index([merchantTypeId])
   @@index([cityCode])
@@ -338,6 +340,32 @@ model OrderItem {
 
   @@index([orderId])
   @@map("order_items")
+}
+
+/// Super-admin payout record — marks orders as paid without deleting history.
+model EarningsSettlement {
+  id              String    @id @default(uuid()) @db.Uuid
+  participantType String    @map("participant_type") @db.VarChar(20)
+  driverId        String?   @map("driver_id") @db.Uuid
+  merchantId      String?   @map("merchant_id") @db.Uuid
+  referenceCode   String    @unique @map("reference_code") @db.VarChar(32)
+  periodFrom      DateTime  @map("period_from")
+  periodTo        DateTime  @map("period_to")
+  grossAmount     Decimal   @map("gross_amount") @db.Decimal(12, 2)
+  netAmount       Decimal   @map("net_amount") @db.Decimal(12, 2)
+  platformFee     Decimal   @map("platform_fee") @db.Decimal(12, 2)
+  orderCount      Int       @map("order_count")
+  orderIds        Json      @map("order_ids")
+  status          String    @default("PAID") @db.VarChar(20)
+  paidAt          DateTime  @default(now()) @map("paid_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  driver          Driver?   @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  merchant        Merchant? @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@index([driverId, status])
+  @@index([merchantId, status])
+  @@index([paidAt])
+  @@map("earnings_settlements")
 }
 
 /// Key-value platform configuration (super-admin editable).

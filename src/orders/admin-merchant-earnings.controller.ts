@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseUUIDPipe, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Post, Query, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -31,5 +31,20 @@ export class AdminMerchantEarningsController {
     @Query() query: MerchantEarningsQueryDto,
   ) {
     return this.ordersService.getMerchantEarningsForAdmin(merchantId, query);
+  }
+
+  @ApiOperation({
+    summary:
+      'Mark all unpaid merchant earnings in the period as PAID (saved in history, zeroes merchant balance)',
+  })
+  @ApiParam({ name: 'merchantId', type: String })
+  @ApiQuery({ name: 'from', required: false, type: String })
+  @ApiQuery({ name: 'to', required: false, type: String })
+  @Post(':merchantId/earnings/mark-paid')
+  markMerchantPaid(
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
+    @Query() query: MerchantEarningsQueryDto,
+  ) {
+    return this.ordersService.markMerchantEarningsPaid(merchantId, query);
   }
 }

@@ -15,6 +15,7 @@ import { MerchantEarningsController } from './merchant-earnings.controller';
 import { AdminDriverEarningsController } from './admin-driver-earnings.controller';
 import { AdminMerchantEarningsController } from './admin-merchant-earnings.controller';
 import { DriverOrdersService } from './driver-orders.service';
+import { EarningsSettlementsService } from './earnings-settlements.service';
 
 @Module({
   imports: [PrismaModule, NotificationsModule, TrackingModule, PlatformSettingsModule],
@@ -31,6 +32,7 @@ import { DriverOrdersService } from './driver-orders.service';
   providers: [
     OrdersService,
     DriverOrdersService,
+    EarningsSettlementsService,
     {
       provide: OrderNotificationsPort,
       useExisting: NotificationsService,

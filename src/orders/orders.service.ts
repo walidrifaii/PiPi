@@ -21,6 +21,7 @@ import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { mapOrderDetail, mapOrderSummary } from './order.mapper';
 import { resolveProductDisplayImage } from '../common/product-display-image';
 import { PlatformSettingsService } from '../platform-settings/platform-settings.service';
+import { EarningsSettlementsService } from './earnings-settlements.service';
 import {
   canMerchantTransition,
   canSuperAdminTransition,
@@ -61,6 +62,7 @@ export class OrdersService {
     private readonly notifications: OrderNotificationsPort,
     private readonly tracking: TrackingService,
     private readonly platformSettings: PlatformSettingsService,
+    private readonly settlements: EarningsSettlementsService,
   ) {}
 
   private normalizePagination(page: number, limit: number) {
@@ -650,25 +652,21 @@ export class OrdersService {
       });
   }
 
+  private filterUnpaidMerchantRows<
+    T extends { id: string },
+  >(rows: T[], paidOrderIds: Set<string>): T[] {
+    return rows.filter((row) => !paidOrderIds.has(row.id));
+  }
+
   async getMerchantEarnings(
     merchantId: string,
     query: MerchantEarningsQueryDto,
+    options: { forAdmin?: boolean } = {},
   ) {
     const { from, to } = this.resolveMerchantEarningsPeriod(query);
     const durationMs = to.getTime() - from.getTime() + 1;
     const prevTo = new Date(from.getTime() - 1);
     const prevFrom = new Date(prevTo.getTime() - durationMs + 1);
-
-    const settlementWeeks = 4;
-    const settlementFrom = new Date(this.startOfUtcWeek(new Date()));
-    settlementFrom.setUTCDate(
-      settlementFrom.getUTCDate() - (settlementWeeks - 1) * 7,
-    );
-
-    const fetchFrom =
-      prevFrom.getTime() < settlementFrom.getTime()
-        ? prevFrom
-        : settlementFrom;
 
     const earningsSelect = {
       id: true,
@@ -678,27 +676,37 @@ export class OrdersService {
       subtotal: true,
     } satisfies Prisma.OrderSelect;
 
-    const [sharePercent, rows] = await Promise.all([
-      this.platformSettings.getMerchantFoodSharePercent(),
-      this.prisma.order.findMany({
-        where: {
-          merchantId,
-          status: 'DELIVERED',
-          createdAt: { gte: fetchFrom, lte: to },
-        },
-        select: earningsSelect,
-        orderBy: { createdAt: 'desc' },
-      }),
-    ]);
+    const [sharePercent, paidOrderIds, rows, paidSettlements] =
+      await Promise.all([
+        this.platformSettings.getMerchantFoodSharePercent(),
+        this.settlements.getPaidOrderIds('MERCHANT', merchantId),
+        this.prisma.order.findMany({
+          where: {
+            merchantId,
+            status: 'DELIVERED',
+            createdAt: { gte: prevFrom, lte: to },
+          },
+          select: earningsSelect,
+          orderBy: { createdAt: 'desc' },
+        }),
+        this.settlements.listSettlements('MERCHANT', merchantId),
+      ]);
 
     const inRange = (row: { createdAt: Date }, start: Date, end: Date) =>
       row.createdAt.getTime() >= start.getTime() &&
       row.createdAt.getTime() <= end.getTime();
 
-    const currentRows = rows.filter((row) => inRange(row, from, to));
-    const previousRows = rows.filter((row) => inRange(row, prevFrom, prevTo));
-    const settlementRows = rows.filter((row) =>
-      inRange(row, settlementFrom, to),
+    const currentRowsAll = rows.filter((row) => inRange(row, from, to));
+    const previousRowsAll = rows.filter((row) =>
+      inRange(row, prevFrom, prevTo),
+    );
+    const currentRows = this.filterUnpaidMerchantRows(
+      currentRowsAll,
+      paidOrderIds,
+    );
+    const previousRows = this.filterUnpaidMerchantRows(
+      previousRowsAll,
+      paidOrderIds,
     );
 
     const current = this.aggregateMerchantEarningsRows(
@@ -716,7 +724,23 @@ export class OrdersService {
       timeZone: 'UTC',
     });
 
-    return {
+    const recentSettlements = paidSettlements.slice(0, 4).map((settlement) => ({
+      id: settlement.referenceCode,
+      label: new Date(settlement.paidAt).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        timeZone: 'UTC',
+      }),
+      periodStart: settlement.periodFrom,
+      periodEnd: settlement.periodTo,
+      amount: settlement.netAmount,
+      orderCount: settlement.orderCount,
+      status: 'COMPLETED' as const,
+      displayIndex: 0,
+    }));
+
+    const result: Record<string, unknown> = {
       period: {
         from: from.toISOString(),
         to: to.toISOString(),
@@ -743,13 +767,28 @@ export class OrdersService {
         ),
       },
       chart: this.buildDailyChart(currentRows, sharePercent, from, to),
-      recentSettlements: this.buildWeeklySettlements(
-        settlementRows,
-        sharePercent,
-        settlementWeeks,
-      ),
+      recentSettlements,
       updatedAt: new Date().toISOString(),
     };
+
+    if (options.forAdmin) {
+      let totalPaidEarnings = 0;
+      for (const row of currentRowsAll) {
+        if (!paidOrderIds.has(row.id)) {
+          continue;
+        }
+        const gross = this.merchantGrossFoodFromRow(row);
+        totalPaidEarnings += computeMerchantEarningsFromFoodSubtotal(
+          gross,
+          sharePercent,
+        );
+      }
+      result.totalPaidEarnings = roundMoney(totalPaidEarnings);
+      result.paidOrderCount = currentRowsAll.length - currentRows.length;
+      result.settlements = paidSettlements;
+    }
+
+    return result;
   }
 
   private formatOrderDisplayId(
@@ -772,10 +811,13 @@ export class OrdersService {
       subtotal: { toString(): string } | null;
     }>,
     sharePercent: number,
+    paidOrderIds: Set<string>,
+    options: { forAdmin?: boolean } = {},
   ) {
-    return rows.map((row) => {
+    const mapped = rows.map((row) => {
       const gross = this.merchantGrossFoodFromRow(row);
       const net = computeMerchantEarningsFromFoodSubtotal(gross, sharePercent);
+      const isPaid = paidOrderIds.has(row.id);
       return {
         id: row.id,
         displayId: this.formatOrderDisplayId(row.id, row.checkoutRef),
@@ -783,8 +825,15 @@ export class OrdersService {
         grossFood: gross,
         netEarnings: net,
         platformFee: roundMoney(Math.max(0, gross - net)),
+        payoutStatus: isPaid ? ('PAID' as const) : ('UNPAID' as const),
       };
     });
+
+    if (options.forAdmin) {
+      return mapped;
+    }
+
+    return mapped.filter((order) => order.payoutStatus === 'UNPAID');
   }
 
   async getMerchantEarningsForAdmin(
@@ -808,9 +857,10 @@ export class OrdersService {
       subtotal: true,
     } satisfies Prisma.OrderSelect;
 
-    const [summary, sharePercent, orderRows] = await Promise.all([
-      this.getMerchantEarnings(merchantId, query),
+    const [summary, sharePercent, paidOrderIds, orderRows] = await Promise.all([
+      this.getMerchantEarnings(merchantId, query, { forAdmin: true }),
       this.platformSettings.getMerchantFoodSharePercent(),
+      this.settlements.getPaidOrderIds('MERCHANT', merchantId),
       this.prisma.order.findMany({
         where: {
           merchantId,
@@ -830,7 +880,39 @@ export class OrdersService {
         name: merchant.name,
         isActive: merchant.isActive,
       },
-      orders: this.buildMerchantOrderEarningsList(orderRows, sharePercent),
+      orders: this.buildMerchantOrderEarningsList(
+        orderRows,
+        sharePercent,
+        paidOrderIds,
+        { forAdmin: true },
+      ),
+    };
+  }
+
+  async markMerchantEarningsPaid(
+    merchantId: string,
+    query: MerchantEarningsQueryDto,
+  ) {
+    const { from, to } = this.resolveMerchantEarningsPeriod(query);
+    const sharePercent = await this.platformSettings.getMerchantFoodSharePercent();
+    const settlement = await this.settlements.markMerchantEarningsPaid(
+      merchantId,
+      from,
+      to,
+      sharePercent,
+    );
+
+    return {
+      id: settlement.id,
+      referenceCode: settlement.referenceCode,
+      periodFrom: settlement.periodFrom.toISOString(),
+      periodTo: settlement.periodTo.toISOString(),
+      grossAmount: Number(settlement.grossAmount),
+      netAmount: Number(settlement.netAmount),
+      platformFee: Number(settlement.platformFee),
+      orderCount: settlement.orderCount,
+      status: settlement.status,
+      paidAt: settlement.paidAt.toISOString(),
     };
   }
 }
