@@ -24,6 +24,9 @@ type LineItem = {
   totalPrice: number;
   listPrice: number;
   discountPrice: number | null;
+  productDiscountPrice: number | null;
+  merchantUnitPrice: number;
+  merchantTotalPrice: number;
   message: string | null;
   selectedOptions: SelectedOptionSnapshot[];
 };
@@ -34,14 +37,23 @@ export type CheckoutItemsSnapshot = {
   longitude: number;
   distanceKm: number;
   deliveryTimeMinutes: number;
+  merchantOfferPercent: number | null;
+  customerSubtotal: number;
+  customerTotal: number;
+  merchantSubtotal: number;
+  merchantTotal: number;
+  deliveryFee: number;
   items: Array<{
     productId: string;
     productName: string;
     quantity: number;
     listPrice: number;
     discountPrice: number | null;
+    productDiscountPrice: number | null;
     unitPrice: number;
     totalPrice: number;
+    merchantUnitPrice: number;
+    merchantTotalPrice: number;
     message: string | null;
     selectedOptions: SelectedOptionSnapshot[];
   }>;
@@ -49,6 +61,8 @@ export type CheckoutItemsSnapshot = {
 
 @Injectable()
 export class CheckoutService {
+  private static readonly MONEY_TOLERANCE = 0.02;
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly orderNotifications: OrderNotificationsPort,
@@ -130,16 +144,28 @@ export class CheckoutService {
         offerPercent,
       );
       const catalogDiscount = pricing.discountPrice;
+      const merchantPricing = resolveStorefrontProductPricing(
+        listPrice,
+        storedDiscount,
+        null,
+      );
+      const productDiscountPrice = merchantPricing.discountPrice;
 
       const { selected } = validateProductOptionSelections(
         catalog.optionGroups,
         item.selectedChoiceIds,
       );
+      const modifiers = selected.map((s) => s.priceModifier);
 
       const unitPrice = resolveUnitPriceWithOptions(
         listPrice,
         catalogDiscount,
-        selected.map((s) => s.priceModifier),
+        modifiers,
+      );
+      const merchantUnitPrice = resolveUnitPriceWithOptions(
+        listPrice,
+        productDiscountPrice,
+        modifiers,
       );
 
       const baseName = item.productName.trim();
@@ -153,13 +179,32 @@ export class CheckoutService {
         totalPrice: unitPrice * item.quantity,
         listPrice,
         discountPrice: catalogDiscount,
+        productDiscountPrice,
+        merchantUnitPrice,
+        merchantTotalPrice: merchantUnitPrice * item.quantity,
         message: item.message?.trim() || null,
         selectedOptions: selected,
       };
     });
 
-    const deliveryFee =
-      Math.round((dto.total - dto.subtotal) * 100) / 100;
+    const customerSubtotal = this.roundMoney(
+      lineItems.reduce((sum, line) => sum + line.totalPrice, 0),
+    );
+    const merchantSubtotal = this.roundMoney(
+      lineItems.reduce((sum, line) => sum + line.merchantTotalPrice, 0),
+    );
+
+    const deliveryFee = this.roundMoney(dto.total - dto.subtotal);
+    if (deliveryFee < 0) {
+      throw new BadRequestException('total cannot be less than subtotal');
+    }
+
+    const customerTotal = this.roundMoney(customerSubtotal + deliveryFee);
+    const merchantTotal = this.roundMoney(merchantSubtotal + deliveryFee);
+
+    this.assertClientMoney('subtotal', dto.subtotal, customerSubtotal);
+    this.assertClientMoney('total', dto.total, customerTotal);
+
     const checkoutRef = `chk_${randomUUID()}`;
     const itemsSnapshot: CheckoutItemsSnapshot = {
       merchantName: dto.merchantName.trim(),
@@ -167,14 +212,23 @@ export class CheckoutService {
       longitude: dto.longitude,
       distanceKm: dto.distanceKm,
       deliveryTimeMinutes: dto.deliveryTimeMinutes,
+      merchantOfferPercent: offerPercent,
+      customerSubtotal,
+      customerTotal,
+      merchantSubtotal,
+      merchantTotal,
+      deliveryFee,
       items: lineItems.map((l) => ({
         productId: l.productId,
         productName: l.productName,
         quantity: l.quantity,
         listPrice: l.listPrice,
         discountPrice: l.discountPrice,
+        productDiscountPrice: l.productDiscountPrice,
         unitPrice: l.unitPrice,
         totalPrice: l.totalPrice,
+        merchantUnitPrice: l.merchantUnitPrice,
+        merchantTotalPrice: l.merchantTotalPrice,
         message: l.message,
         selectedOptions: l.selectedOptions,
       })),
@@ -187,9 +241,9 @@ export class CheckoutService {
           merchantId: dto.merchantId,
           addressId: dto.addressId ?? null,
           status: 'PENDING',
-          subtotal: dto.subtotal,
+          subtotal: customerSubtotal,
           deliveryFee,
-          total: dto.total,
+          total: customerTotal,
           deliveryAddress: null,
           notes: dto.notes ?? null,
           checkoutRef,
@@ -227,7 +281,8 @@ export class CheckoutService {
       merchantId: order.merchant.id,
       merchantName: snapshot.merchantName,
       userId,
-      total: Number(order.total),
+      customerTotal,
+      merchantTotal,
     });
 
     return {
@@ -255,6 +310,9 @@ export class CheckoutService {
       subtotal: Number(order.subtotal),
       deliveryFee: Number(order.deliveryFee),
       total: Number(order.total),
+      ...(snapshot.merchantOfferPercent
+        ? { merchantOfferPercent: snapshot.merchantOfferPercent }
+        : {}),
       items: order.orderItems.map((oi, index) => {
         const snap = snapshot.items[index];
         return {
@@ -274,12 +332,28 @@ export class CheckoutService {
     };
   }
 
+  private roundMoney(value: number): number {
+    return Math.round(value * 100) / 100;
+  }
+
+  private assertClientMoney(field: string, client: number, server: number) {
+    if (
+      Math.abs(this.roundMoney(client) - server) >
+      CheckoutService.MONEY_TOLERANCE
+    ) {
+      throw new BadRequestException(
+        `Order ${field} does not match server pricing. Please refresh and try again.`,
+      );
+    }
+  }
+
   private async notifyMerchantAndAdminsNewOrder(params: {
     orderId: string;
     merchantId: string;
     merchantName: string;
     userId: string;
-    total: number;
+    customerTotal: number;
+    merchantTotal: number;
   }) {
     try {
       const [merchant, admins, customer] = await Promise.all([
@@ -297,26 +371,32 @@ export class CheckoutService {
         }),
       ]);
 
-      const tokens: string[] = [];
+      const customerName = customer?.fullName ?? undefined;
       const merchantToken = merchant?.fcmToken?.trim();
       if (merchantToken) {
-        tokens.push(merchantToken);
-      }
-      for (const admin of admins) {
-        const t = admin.fcmToken?.trim();
-        if (t) {
-          tokens.push(t);
-        }
+        await this.orderNotifications.sendNewOrderAlert({
+          tokens: [merchantToken],
+          orderId: params.orderId,
+          merchantId: params.merchantId,
+          merchantName: params.merchantName,
+          customerName,
+          total: params.merchantTotal,
+        });
       }
 
-      await this.orderNotifications.sendNewOrderAlert({
-        tokens,
-        orderId: params.orderId,
-        merchantId: params.merchantId,
-        merchantName: params.merchantName,
-        customerName: customer?.fullName ?? undefined,
-        total: params.total,
-      });
+      const adminTokens = admins
+        .map((a) => a.fcmToken?.trim())
+        .filter((t): t is string => !!t && t.length > 0);
+      if (adminTokens.length > 0) {
+        await this.orderNotifications.sendNewOrderAlert({
+          tokens: adminTokens,
+          orderId: params.orderId,
+          merchantId: params.merchantId,
+          merchantName: params.merchantName,
+          customerName,
+          total: params.customerTotal,
+        });
+      }
     } catch {
       // Checkout must succeed even if push fails.
     }

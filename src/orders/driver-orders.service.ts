@@ -26,6 +26,8 @@ import { OrderItemsSnapshot, OrderWithRelations } from './order.types';
 const driverOfferSelect = {
   id: true,
   status: true,
+  subtotal: true,
+  total: true,
   deliveryFee: true,
   itemsSnapshot: true,
   createdAt: true,

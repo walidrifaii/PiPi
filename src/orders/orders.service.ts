@@ -142,7 +142,7 @@ export class OrdersService {
     ]);
     return this.pagedResponse(
       rows.map((o) => {
-        const summary = mapOrderSummary(o as OrderWithRelations);
+        const summary = mapOrderSummary(o as OrderWithRelations, 'merchant');
         const row = o as OrderWithRelations;
         return {
           ...summary,
@@ -171,6 +171,7 @@ export class OrdersService {
     }
     return mapOrderDetail(order as OrderWithRelations, {
       includeCustomer: true,
+      audience: 'merchant',
     });
   }
 
@@ -203,7 +204,7 @@ export class OrdersService {
   }
 
   private mapAdminOrderRow(o: OrderWithRelations) {
-    const summary = mapOrderSummary(o);
+    const summary = mapOrderSummary(o, 'admin');
     return {
       ...summary,
       userId: o.userId,
@@ -300,6 +301,11 @@ export class OrdersService {
     if (current === newStatus) {
       return mapOrderDetail(order as OrderWithRelations, {
         includeCustomer: scope.superAdmin || !!scope.merchantId,
+        audience: scope.superAdmin
+          ? 'admin'
+          : scope.merchantId
+            ? 'merchant'
+            : 'customer',
       });
     }
 
@@ -334,6 +340,11 @@ export class OrdersService {
 
     return mapOrderDetail(row, {
       includeCustomer: scope.superAdmin || !!scope.merchantId,
+      audience: scope.superAdmin
+        ? 'admin'
+        : scope.merchantId
+          ? 'merchant'
+          : 'customer',
     });
   }
 

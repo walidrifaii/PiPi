@@ -15,11 +15,41 @@ function parseSnapshot(raw: unknown): OrderItemsSnapshot | null {
   return s;
 }
 
+/** Customer-facing money for drivers (what the customer ordered/paid — not merchant promo view). */
+function resolveDriverOrderMoney(
+  order: {
+    subtotal?: { toString(): string } | null;
+    total?: { toString(): string } | null;
+    deliveryFee?: { toString(): string } | null;
+  },
+  snapshot: OrderItemsSnapshot | null,
+) {
+  const deliveryFee =
+    snapshot?.deliveryFee ??
+    (order.deliveryFee !== null && order.deliveryFee !== undefined
+      ? Number(order.deliveryFee)
+      : 0);
+  const subtotal =
+    snapshot?.customerSubtotal ??
+    (order.subtotal !== null && order.subtotal !== undefined
+      ? Number(order.subtotal)
+      : null);
+  const total =
+    snapshot?.customerTotal ??
+    (order.total !== null && order.total !== undefined
+      ? Number(order.total)
+      : null);
+
+  return { deliveryFee, subtotal, total };
+}
+
 /** Lightweight card for driver offer list (uses snapshot items when present). */
 export function mapDriverOrderOffer(order: {
   id: string;
   status: string | null;
-  deliveryFee: { toString(): string } | null;
+  deliveryFee?: { toString(): string } | null;
+  subtotal?: { toString(): string } | null;
+  total?: { toString(): string } | null;
   itemsSnapshot: unknown;
   createdAt: Date;
   merchant: {
@@ -36,6 +66,10 @@ export function mapDriverOrderOffer(order: {
   orderItems?: Array<{ productName: string }>;
 }) {
   const snapshot = parseSnapshot(order.itemsSnapshot);
+  const { deliveryFee, subtotal, total } = resolveDriverOrderMoney(
+    order,
+    snapshot,
+  );
   const itemNames =
     snapshot?.items.map((i) => i.productName) ??
     order.orderItems?.map((i) => i.productName) ??
@@ -55,7 +89,13 @@ export function mapDriverOrderOffer(order: {
     merchantAddress: snapshot?.merchantName ?? order.merchant.name,
     customerName: order.user?.fullName?.trim() || 'Customer',
     customerAddress: order.address?.addressLine ?? 'Delivery address',
-    fee: order.deliveryFee !== null ? Number(order.deliveryFee) : 0,
+    /** Driver earnings — delivery fee only. */
+    fee: deliveryFee,
+    deliveryFee,
+    /** Customer order value (items only). */
+    subtotal,
+    /** Customer order total (items + delivery). */
+    total,
     distanceKm: snapshot?.distanceKm ?? null,
     itemCount: itemNames.length,
     itemsSummary,
@@ -70,8 +110,19 @@ export function mapDriverOrderOffer(order: {
 export function mapDriverOrderDetail(order: OrderWithRelations) {
   const base = mapDriverOrderOffer(order);
   const snapshot = parseSnapshot(order.itemsSnapshot);
+  const items = order.orderItems.map((oi, index) => {
+    const snap = snapshot?.items[index];
+    return {
+      productName: oi.productName,
+      quantity: oi.quantity,
+      unitPrice: snap?.unitPrice ?? Number(oi.unitPrice),
+      totalPrice: snap?.totalPrice ?? Number(oi.totalPrice),
+    };
+  });
+
   return {
     ...base,
+    items,
     deliveryTimeMinutes: snapshot?.deliveryTimeMinutes ?? null,
     customerPhone: order.user?.phone ?? null,
   };

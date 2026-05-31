@@ -15,7 +15,7 @@ export class CheckoutController {
 
   @ApiOperation({
     summary:
-      'Place order for one merchant. Client sends merchantName, subtotal, total, distanceKm, deliveryTimeMinutes, latitude, longitude',
+      'Place order for one merchant. Client sends merchantName, subtotal, total, distanceKm, deliveryTimeMinutes, latitude, longitude. Subtotal and total are validated against server pricing (line items + delivery); server values are stored.',
   })
   @Post()
   create(
