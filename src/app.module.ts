@@ -21,6 +21,7 @@ import { MerchantDeliveryTimeModule } from './merchant-delivery-time/merchant-de
 import { NotificationsModule } from './notifications/notifications.module';
 import { FirebaseAdminModule } from './firebase/firebase-admin.module';
 import { TrackingModule } from './tracking/tracking.module';
+import { MerchantOfferModule } from './merchant-offer/merchant-offer.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { TrackingModule } from './tracking/tracking.module';
     MerchantDeliveryTimeModule,
     NotificationsModule,
     TrackingModule,
+    MerchantOfferModule,
   ],
   controllers: [
     AppController,

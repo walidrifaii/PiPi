@@ -20,6 +20,8 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { MerchantOfferService } from '../merchant-offer/merchant-offer.service';
+import { resolveStorefrontProductPricing } from '../merchant-offer/merchant-offer-pricing';
 
 const OPTION_GROUPS_INCLUDE = {
   optionGroups: {
@@ -32,7 +34,10 @@ const OPTION_GROUPS_INCLUDE = {
 
 @Injectable()
 export class MerchantCatalogService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly merchantOffers: MerchantOfferService,
+  ) {}
 
   private normalizePagination(page: number, limit: number) {
     const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
@@ -217,13 +222,34 @@ export class MerchantCatalogService {
   private attachProductPricing<T extends { price: unknown; discountPrice: unknown }>(
     row: T & { optionGroups?: Parameters<MerchantCatalogService['mapOptionGroups']>[0] },
     activeOnly = false,
+    /** When set (including null), applies live merchant promo to storefront pricing. */
+    storefrontOfferPercent?: number | null,
   ) {
     const price = Number(row.price);
-    const discountPrice =
+    const storedDiscount =
       row.discountPrice !== null ? Number(row.discountPrice) : null;
     const optionGroups = row.optionGroups
       ? this.mapOptionGroups(row.optionGroups, activeOnly)
       : [];
+
+    if (storefrontOfferPercent !== undefined) {
+      const pricing = resolveStorefrontProductPricing(
+        price,
+        storedDiscount,
+        storefrontOfferPercent,
+      );
+      return {
+        ...row,
+        price: pricing.price,
+        discountPrice: pricing.discountPrice,
+        hasDiscount: pricing.hasDiscount,
+        effectivePrice: pricing.effectivePrice,
+        merchantOfferPercent: pricing.merchantOfferPercent,
+        optionGroups,
+      };
+    }
+
+    const discountPrice = storedDiscount;
     return {
       ...row,
       price,
@@ -305,7 +331,11 @@ export class MerchantCatalogService {
       throw new NotFoundException('Product not found');
     }
 
-    const priced = this.attachProductPricing(row, true);
+    const offerPercent =
+      await this.merchantOffers.getLiveOfferPercentForMerchant(
+        row.category.merchant.id,
+      );
+    const priced = this.attachProductPricing(row, true, offerPercent);
     const merchant = row.category.merchant;
 
     return {
@@ -320,6 +350,7 @@ export class MerchantCatalogService {
       imageUrl: row.imageUrl,
       hasDiscount: priced.hasDiscount,
       effectivePrice: priced.effectivePrice,
+      merchantOfferPercent: offerPercent,
       optionGroups: priced.optionGroups,
       images: row.images,
       createdAt: row.createdAt,
@@ -480,8 +511,15 @@ export class MerchantCatalogService {
         take: pg.limit,
       }),
     ]);
+    const offerPercent = activeOptionsOnly
+      ? await this.merchantOffers.getLiveOfferPercentForMerchant(merchantId)
+      : undefined;
     const items = rows.map((p) =>
-      this.attachProductPricing(p, activeOptionsOnly),
+      this.attachProductPricing(
+        p,
+        activeOptionsOnly,
+        activeOptionsOnly ? offerPercent : undefined,
+      ),
     );
     return this.pagedResponse(items, total, pg.page, pg.limit);
   }
@@ -553,8 +591,15 @@ export class MerchantCatalogService {
         take: pg.limit,
       }),
     ]);
+    const offerPercent = activeOptionsOnly
+      ? await this.merchantOffers.getLiveOfferPercentForMerchant(merchantId)
+      : undefined;
     const items = rows.map((p) => ({
-      ...this.attachProductPricing(p, activeOptionsOnly),
+      ...this.attachProductPricing(
+        p,
+        activeOptionsOnly,
+        activeOptionsOnly ? offerPercent : undefined,
+      ),
       category: p.category,
     }));
     return this.pagedResponse(items, total, pg.page, pg.limit);

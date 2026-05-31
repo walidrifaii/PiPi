@@ -126,10 +126,31 @@ model Merchant {
   categories   MerchantCategory[]
   workingIntervals MerchantWorkingInterval[]
   deliveryTime MerchantDeliveryTime?
+  offers       MerchantOffer[]
 
   @@index([merchantTypeId])
   @@index([cityCode])
   @@map("merchants")
+}
+
+/// Customer-facing promo card for a store (super admin). Display only — checkout uses product prices.
+model MerchantOffer {
+  id              String   @id @default(uuid()) @db.Uuid
+  merchantId      String   @map("merchant_id") @db.Uuid
+  title           String?  @db.VarChar(255)
+  /// Percentage off list price (e.g. 10 = 10% off).
+  discountPercent Decimal  @map("discount_percent") @db.Decimal(5, 2)
+  imageUrl        String   @map("image_url") @db.VarChar(500)
+  isActive        Boolean  @default(true) @map("is_active")
+  /// When reached, offer is auto-deactivated and hidden from customers.
+  endsAt          DateTime @map("ends_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  merchant        Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@index([merchantId])
+  @@index([isActive, endsAt])
+  @@map("merchant_offers")
 }
 
 /// One open/close interval in the merchant's local timezone (see merchants.timezone). Weekday 1=Mon … 7=Sun.

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { NotificationsService } from '../notifications/notifications.service';
 import { OrderNotificationsPort } from '../notifications/notifications.port';
+import { MerchantOfferModule } from '../merchant-offer/merchant-offer.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { CheckoutController } from './checkout.controller';
 import { CheckoutService } from './checkout.service';
@@ -9,7 +10,7 @@ import { UserAddressController } from './user-address.controller';
 import { UserAddressService } from './user-address.service';
 
 @Module({
-  imports: [PrismaModule, NotificationsModule],
+  imports: [PrismaModule, NotificationsModule, MerchantOfferModule],
   controllers: [CheckoutController, UserAddressController],
   providers: [
     CheckoutService,

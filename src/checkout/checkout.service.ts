@@ -13,6 +13,8 @@ import { OrderNotificationsPort } from '../notifications/notifications.port';
 import type { SelectedOptionSnapshot } from '../merchant/product-option.types';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCheckoutDto } from './dto/create-checkout.dto';
+import { MerchantOfferService } from '../merchant-offer/merchant-offer.service';
+import { resolveStorefrontProductPricing } from '../merchant-offer/merchant-offer-pricing';
 
 type LineItem = {
   productId: string;
@@ -50,6 +52,7 @@ export class CheckoutService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly orderNotifications: OrderNotificationsPort,
+    private readonly merchantOffers: MerchantOfferService,
   ) {}
 
   async createOrder(userId: string, dto: CreateCheckoutDto) {
@@ -109,6 +112,9 @@ export class CheckoutService {
 
     const productById = new Map(products.map((p) => [p.id, p]));
 
+    const offerPercent =
+      await this.merchantOffers.getLiveOfferPercentForMerchant(dto.merchantId);
+
     const lineItems: LineItem[] = dto.items.map((item) => {
       const catalog = productById.get(item.productId);
       if (!catalog) {
@@ -116,8 +122,14 @@ export class CheckoutService {
       }
 
       const listPrice = Number(catalog.price);
-      const catalogDiscount =
+      const storedDiscount =
         catalog.discountPrice !== null ? Number(catalog.discountPrice) : null;
+      const pricing = resolveStorefrontProductPricing(
+        listPrice,
+        storedDiscount,
+        offerPercent,
+      );
+      const catalogDiscount = pricing.discountPrice;
 
       const { selected } = validateProductOptionSelections(
         catalog.optionGroups,
