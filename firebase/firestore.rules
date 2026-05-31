@@ -20,13 +20,43 @@ service cloud.firestore {
         );
     }
 
+    function isMetaOnlyUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(['userUid', 'driverUid', 'active', 'updatedAt']);
+    }
+
+    function isCallOnlyUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['call'])
+        && request.resource.data.call is map
+        && request.resource.data.call.keys().hasAll(
+          ['callId', 'channel', 'status', 'startedBy', 'startedAt', 'active']
+        );
+    }
+
     match /orders/{orderId} {
       allow read: if isOrderParticipant(orderId);
-      allow create, delete: if false;
-      allow update: if isOrderParticipant(orderId)
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['call'])
-        && request.resource.data.call is map
-        && request.resource.data.call.keys().hasAll(['callId', 'channel', 'status', 'startedBy', 'startedAt', 'active']);
+
+      // Client applies meta from GET .../chat-ready (JWT-protected API).
+      allow create: if request.auth != null
+        && !orderDoc(orderId).exists
+        && request.resource.data.keys().hasAll(['userUid', 'driverUid'])
+        && (
+          request.auth.uid == request.resource.data.userUid
+          || request.auth.uid == request.resource.data.driverUid
+        );
+
+      allow update: if request.auth != null
+        && orderDoc(orderId).exists
+        && (
+          (isOrderParticipant(orderId) && isCallOnlyUpdate())
+          || (isMetaOnlyUpdate()
+            && (
+              request.auth.uid == request.resource.data.userUid
+              || request.auth.uid == request.resource.data.driverUid
+            ))
+        );
+
+      allow delete: if false;
 
       match /messages/{messageId} {
         allow read: if isOrderParticipant(orderId);
