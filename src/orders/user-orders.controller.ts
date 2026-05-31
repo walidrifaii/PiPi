@@ -75,6 +75,18 @@ export class UserOrdersController {
   }
 
   @ApiOperation({
+    summary: 'Sync Firestore order meta so chat security rules allow reads/writes',
+  })
+  @ApiParam({ name: 'orderId', type: String })
+  @Get(':orderId/chat-ready')
+  chatReady(
+    @Req() req: { user?: JwtUserPayload },
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+  ) {
+    return this.orderChat.prepareChatForUser(req.user!.sub, orderId);
+  }
+
+  @ApiOperation({
     summary: 'Phone number for the assigned driver (active delivery only)',
   })
   @ApiParam({ name: 'orderId', type: String })
@@ -145,6 +157,11 @@ export class UserOrdersController {
     @Param('orderId', ParseUUIDPipe) orderId: string,
     @Body() dto: SendOrderMessageDto,
   ) {
-    return this.orderChat.sendMessage(req.user!, orderId, dto.text);
+    return this.orderChat.sendMessage(
+      req.user!,
+      orderId,
+      dto.text,
+      dto.messageId,
+    );
   }
 }

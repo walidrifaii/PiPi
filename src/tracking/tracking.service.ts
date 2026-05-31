@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
   ServiceUnavailableException,
 } from '@nestjs/common';
@@ -20,6 +21,8 @@ export type TrackingLocationPayload = {
 
 @Injectable()
 export class TrackingService {
+  private readonly log = new Logger(TrackingService.name);
+
   /** Server-side throttle: max 1 location write per driver per second. */
   private readonly lastDriverWriteMs = new Map<string, number>();
 
@@ -27,6 +30,10 @@ export class TrackingService {
     private readonly prisma: PrismaService,
     private readonly firebase: FirebaseAdminService,
   ) {}
+
+  isFirestoreConfigured(): boolean {
+    return this.firebase.firestore != null;
+  }
 
   firebaseUidForJwt(user: JwtUserPayload): string {
     if (user.role === 'DRIVER') {
@@ -194,9 +201,13 @@ export class TrackingService {
     }
 
     const firestore = this.firebase.firestore;
-    if (firestore) {
-      await firestore.collection('orders').doc(orderId).set(meta, { merge: true });
+    if (!firestore) {
+      this.log.warn(
+        `Firestore not configured — order ${orderId} meta not written (chat/call rules will deny client writes).`,
+      );
+      return;
     }
+    await firestore.collection('orders').doc(orderId).set(meta, { merge: true });
   }
 
   private acceptThrottledWrite(driverId: string): boolean {

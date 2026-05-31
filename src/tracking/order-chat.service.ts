@@ -79,14 +79,42 @@ export class OrderChatService {
     return order;
   }
 
+  async prepareChatForUser(userId: string, orderId: string) {
+    const order = await this.loadOrderForContact(orderId);
+    if (order.userId !== userId) {
+      throw new ForbiddenException('Not your order');
+    }
+    await this.tracking.syncOrderMeta(orderId, order.userId, order.driverId!);
+    return {
+      orderId,
+      userUid: `user:${order.userId}`,
+      driverUid: `driver:${order.driverId}`,
+      myUid: `user:${userId}`,
+      firestoreReady: this.tracking.isFirestoreConfigured(),
+    };
+  }
+
+  async prepareChatForDriver(driverId: string, orderId: string) {
+    const order = await this.loadOrderForContact(orderId);
+    if (order.driverId !== driverId) {
+      throw new ForbiddenException('Not your delivery');
+    }
+    await this.tracking.syncOrderMeta(orderId, order.userId, order.driverId!);
+    return {
+      orderId,
+      userUid: `user:${order.userId}`,
+      driverUid: `driver:${order.driverId}`,
+      myUid: `driver:${driverId}`,
+      firestoreReady: this.tracking.isFirestoreConfigured(),
+    };
+  }
+
   async getContactForUser(userId: string, orderId: string): Promise<OrderContactDto> {
     const order = await this.loadOrderForContact(orderId);
     if (order.userId !== userId) {
       throw new ForbiddenException('Not your order');
     }
-    await this.tracking
-      .syncOrderMeta(orderId, order.userId, order.driverId!)
-      .catch(() => undefined);
+    await this.tracking.syncOrderMeta(orderId, order.userId, order.driverId!);
 
     const driver = order.driver!;
     return {
@@ -105,9 +133,7 @@ export class OrderChatService {
     if (order.driverId !== driverId) {
       throw new ForbiddenException('Not your delivery');
     }
-    await this.tracking
-      .syncOrderMeta(orderId, order.userId, order.driverId!)
-      .catch(() => undefined);
+    await this.tracking.syncOrderMeta(orderId, order.userId, order.driverId!);
 
     return {
       orderId,
@@ -205,6 +231,7 @@ export class OrderChatService {
     user: JwtUserPayload,
     orderId: string,
     text: string,
+    clientMessageId?: string,
   ) {
     const trimmed = text.trim();
     if (!trimmed) {
@@ -233,7 +260,11 @@ export class OrderChatService {
 
     await this.tracking.syncOrderMeta(orderId, order.userId, order.driverId!);
 
-    const ref = messagesCol.doc();
+    const trimmedId = clientMessageId?.trim();
+    const ref =
+      trimmedId && trimmedId.length > 0
+        ? messagesCol.doc(trimmedId)
+        : messagesCol.doc();
     const messageId = ref.id;
     const createdAt = Date.now();
     const senderRole = user.role === 'DRIVER' ? 'driver' : 'user';
@@ -278,6 +309,7 @@ export class OrderChatService {
       throw new ForbiddenException('Only customer or driver can send messages');
     }
 
+    await this.tracking.syncOrderMeta(orderId, order.userId, order.driverId!);
     await this.pushChatNotification(order, user, orderId, trimmed);
     return { ok: true as const };
   }

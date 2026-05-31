@@ -2,12 +2,18 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    function orderDoc(orderId) {
+      return get(/databases/$(database)/documents/orders/$(orderId));
+    }
+
     function orderData(orderId) {
-      return get(/databases/$(database)/documents/orders/$(orderId)).data;
+      return orderDoc(orderId).data;
     }
 
     function isOrderParticipant(orderId) {
       return request.auth != null
+        && orderDoc(orderId).exists
+        && orderData(orderId).keys().hasAll(['userUid', 'driverUid'])
         && (
           request.auth.uid == orderData(orderId).userUid
           || request.auth.uid == orderData(orderId).driverUid
@@ -29,7 +35,7 @@ service cloud.firestore {
           && request.resource.data.text is string
           && request.resource.data.text.size() > 0
           && request.resource.data.text.size() <= 1000
-          && request.resource.data.createdAt is int;
+          && request.resource.data.createdAt is number;
         allow update, delete: if false;
       }
     }
