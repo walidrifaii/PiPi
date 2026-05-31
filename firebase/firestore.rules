@@ -2,33 +2,33 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    function orderDoc(orderId) {
-      return get(/databases/$(database)/documents/orders/$(orderId));
+    function orderRef(orderId) {
+      return /databases/$(database)/documents/orders/$(orderId);
+    }
+
+    function orderExists(orderId) {
+      return exists(orderRef(orderId));
     }
 
     function orderData(orderId) {
-      return orderDoc(orderId).data;
+      return get(orderRef(orderId)).data;
     }
 
-    function orderMissingParticipantMeta(orderId) {
-      return !orderDoc(orderId).exists
-        || !orderData(orderId).keys().hasAll(['userUid', 'driverUid']);
-    }
-
-    function isOrderParticipant(orderId) {
+    // Participant = Firebase Auth uid matches userUid or driverUid on the order doc.
+    function isParticipant(orderId) {
       return request.auth != null
-        && orderDoc(orderId).exists
-        && orderData(orderId).keys().hasAll(['userUid', 'driverUid'])
+        && orderExists(orderId)
         && (
           request.auth.uid == orderData(orderId).userUid
           || request.auth.uid == orderData(orderId).driverUid
         );
     }
 
-    // Caller must be one of the two participants they claim in the write.
-    function canWriteParticipantMeta() {
+    // Opening chat: client may merge userUid + driverUid from chat-ready API.
+    function canSetParticipantMeta() {
       return request.auth != null
-        && request.resource.data.keys().hasAll(['userUid', 'driverUid'])
+        && request.resource.data.userUid is string
+        && request.resource.data.driverUid is string
         && (
           request.auth.uid == request.resource.data.userUid
           || request.auth.uid == request.resource.data.driverUid
@@ -37,32 +37,27 @@ service cloud.firestore {
 
     function isCallOnlyUpdate() {
       return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['call'])
-        && request.resource.data.call is map
-        && request.resource.data.call.keys().hasAll(
-          ['callId', 'channel', 'status', 'startedBy', 'startedAt', 'active']
-        );
+        && request.resource.data.call is map;
     }
 
     match /orders/{orderId} {
-      allow read: if isOrderParticipant(orderId);
+      allow read: if isParticipant(orderId);
 
-      // App opens chat: create order doc with participant uids (from chat-ready API).
-      allow create: if canWriteParticipantMeta()
-        && !orderDoc(orderId).exists;
+      allow create: if canSetParticipantMeta() && !orderExists(orderId);
 
-      // Meta merge (userUid/driverUid) OR call signaling for participants.
       allow update: if request.auth != null
-        && orderDoc(orderId).exists
+        && orderExists(orderId)
         && (
-          (isOrderParticipant(orderId) && isCallOnlyUpdate())
-          || canWriteParticipantMeta()
-        );
+          isParticipant(orderId)
+          || canSetParticipantMeta()
+        )
+        && (canSetParticipantMeta() || isCallOnlyUpdate());
 
       allow delete: if false;
 
       match /messages/{messageId} {
-        allow read: if isOrderParticipant(orderId);
-        allow create: if isOrderParticipant(orderId)
+        allow read: if isParticipant(orderId);
+        allow create: if isParticipant(orderId)
           && request.resource.data.senderUid == request.auth.uid
           && request.resource.data.text is string
           && request.resource.data.text.size() > 0
