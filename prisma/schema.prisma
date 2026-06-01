@@ -83,6 +83,28 @@ model UserNotification {
   @@map("user_notifications")
 }
 
+/// Super-admin mass notification campaign (processed in batches of users).
+model NotificationBroadcast {
+  id               String   @id @default(uuid()) @db.Uuid
+  title            String   @db.VarChar(255)
+  message          String   @db.Text
+  category         String   @default("SPECIAL_OFFER") @db.VarChar(32)
+  status           String   @default("IN_PROGRESS") @db.VarChar(20)
+  /// Cursor: last user id included in a completed batch.
+  lastUserId       String?  @map("last_user_id") @db.Uuid
+  totalUsers       Int      @default(0) @map("total_users")
+  usersProcessed   Int      @default(0) @map("users_processed")
+  inboxCreated     Int      @default(0) @map("inbox_created")
+  pushSuccessCount Int      @default(0) @map("push_success_count")
+  pushFailureCount Int      @default(0) @map("push_failure_count")
+  sendPush         Boolean  @default(true) @map("send_push")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@index([status, createdAt(sort: Desc)])
+  @@map("notification_broadcasts")
+}
+
 /// Saved delivery location for a customer (referenced at checkout by id).
 model UserAddress {
   id                  String   @id @default(uuid()) @db.Uuid

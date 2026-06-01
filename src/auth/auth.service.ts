@@ -941,6 +941,15 @@ export class AuthService {
     return { ok: true as const };
   }
 
+  async setUserFcmToken(userId: string, token?: string) {
+    const fcmToken = normalizeFcmToken(token) ?? null;
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { fcmToken },
+    });
+    return { ok: true as const };
+  }
+
   /** Clears stored FCM token so pushes are not sent to this device after logout. */
   async logoutUser(userId: string) {
     await this.prisma.user.updateMany({

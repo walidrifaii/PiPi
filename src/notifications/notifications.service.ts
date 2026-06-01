@@ -10,6 +10,7 @@ import { SendTestNotificationDto } from './dto/send-test-notification.dto';
 import { buildNewOrderFcmData } from './new-order-payload';
 import { newOrderNotificationCopy } from './new-order-notification-copy';
 import { buildOrderStatusFcmData } from './order-status-payload';
+import { buildUserNotificationFcmData } from './user-notification-fcm-payload';
 import {
   OrderNotificationsPort,
   type SendNewOrderAlertParams,
@@ -36,6 +37,97 @@ export class NotificationsService extends OrderNotificationsPort {
       );
     }
     return messaging;
+  }
+
+  /**
+   * Promo/inbox push — same delivery path as order status (one FCM message per token).
+   * Mobile app must handle data.type === "user_notification" (like "order_status").
+   */
+  async sendBroadcastPush(params: {
+    recipients: Array<{ token: string; notificationId?: string }>;
+    title: string;
+    body: string;
+    broadcastId: string;
+    category: string;
+  }): Promise<{
+    sent: boolean;
+    successCount: number;
+    failureCount: number;
+    reason?: string;
+    failures?: Array<{ token: string; reason: string }>;
+  }> {
+    const recipients = params.recipients
+      .map((r) => ({
+        token: r.token.trim(),
+        notificationId: r.notificationId,
+      }))
+      .filter((r) => r.token.length > 0);
+
+    if (recipients.length === 0) {
+      return {
+        sent: false,
+        successCount: 0,
+        failureCount: 0,
+        reason: 'no_tokens',
+      };
+    }
+
+    const messaging = this.firebaseAdmin.messaging;
+    if (!messaging) {
+      return {
+        sent: false,
+        successCount: 0,
+        failureCount: recipients.length,
+        reason: 'not_configured',
+      };
+    }
+
+    let successCount = 0;
+    let failureCount = 0;
+    const failures: Array<{ token: string; reason: string }> = [];
+
+    for (const recipient of recipients) {
+      const data = buildUserNotificationFcmData({
+        category: params.category,
+        broadcastId: params.broadcastId,
+        notificationId: recipient.notificationId,
+      });
+
+      try {
+        await messaging.send({
+          token: recipient.token,
+          notification: {
+            title: params.title,
+            body: params.body,
+          },
+          data,
+          android: {
+            priority: 'high',
+            notification: {
+              channelId: 'pip_pip_default',
+            },
+          },
+        });
+        successCount += 1;
+      } catch (err) {
+        failureCount += 1;
+        const reason = err instanceof Error ? err.message : String(err);
+        failures.push({ token: recipient.token, reason });
+        this.log.warn(
+          `Broadcast push failed for ${params.broadcastId}: ${reason}`,
+        );
+      }
+    }
+
+    return {
+      sent: successCount > 0,
+      successCount,
+      failureCount,
+      ...(failureCount > 0 ? { failures: failures.slice(0, 5) } : {}),
+      ...(successCount === 0 && failureCount > 0
+        ? { reason: 'all_failed' }
+        : {}),
+    };
   }
 
   async sendTestNotification(dto: SendTestNotificationDto) {

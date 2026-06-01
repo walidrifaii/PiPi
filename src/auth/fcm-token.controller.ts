@@ -8,6 +8,7 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { MerchantJwtScopeGuard } from './merchant-jwt-scope.guard';
 import { SuperAdminGuard } from './super-admin.guard';
 import { DriverAccountGuard } from './driver-account.guard';
+import { UserAccountGuard } from './user-account.guard';
 import { EffectiveMerchantId } from './effective-merchant-id.decorator';
 import { OptionalFcmTokenDto } from './dto/optional-fcm-token.dto';
 import { AuthService } from './auth.service';
@@ -17,6 +18,20 @@ import type { JwtUserPayload } from './jwt-user.payload';
 @Controller()
 export class FcmTokenController {
   constructor(private readonly authService: AuthService) {}
+
+  @ApiOperation({
+    summary:
+      'Save FCM device token for the logged-in customer (required for push + broadcasts)',
+  })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, UserAccountGuard)
+  @Patch('user/me/fcm-token')
+  setUserFcmToken(
+    @Req() req: { user: JwtUserPayload },
+    @Body() dto: OptionalFcmTokenDto,
+  ) {
+    return this.authService.setUserFcmToken(req.user.sub, dto.fcmToken);
+  }
 
   @ApiOperation({
     summary: 'Save FCM device token for the logged-in merchant (web/mobile dashboard)',
