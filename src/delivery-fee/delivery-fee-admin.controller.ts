@@ -43,7 +43,7 @@ export class DeliveryFeeAdminController {
 
   @ApiOperation({
     summary:
-      'Create delivery fee: fixedFee + ceil(distanceKm / kmUnit) × feePerUnit. Saves sampleBreakdown in DB.',
+      'Create delivery fee: flat ≤ includedKm; extra per km until maxKm; price capped at maxFee.',
   })
   @Post()
   create(@Body() dto: CreateDeliveryFeeConfigDto) {

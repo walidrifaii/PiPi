@@ -422,16 +422,22 @@ model AppSetting {
   @@map("app_settings")
 }
 
-/// Delivery fee: fixed base + distance charge per configurable km unit (super-admin CRUD).
+/// Delivery fee: flat fee inside includedKm, extra per km after, capped at maxFee.
 model DeliveryFeeConfig {
   id               String   @id @default(uuid()) @db.Uuid
   name             String?  @db.VarChar(100)
-  /// Base delivery price always charged (e.g. 1.50).
+  /// Minimum / flat fee for distance ≤ includedKm (e.g. 1.50).
   fixedFee         Decimal  @map("fixed_fee") @db.Decimal(12, 2)
-  /// Bill every N km (e.g. 1 = per km, 2 = every 2 km, 5 = every 5 km).
+  /// Km included in fixedFee only — no extra charge within this radius.
+  includedKm       Decimal  @default(10) @map("included_km") @db.Decimal(8, 2)
+  /// Bill extra distance in steps of N km beyond includedKm.
   kmUnit           Decimal  @default(1) @map("km_unit") @db.Decimal(8, 2)
-  /// Price charged for each kmUnit block (e.g. $1 per 2 km when kmUnit=2).
+  /// Price per kmUnit step after includedKm.
   feePerUnit       Decimal  @map("fee_per_unit") @db.Decimal(12, 2)
+  /// Maximum total delivery fee (long trips never exceed this).
+  maxFee           Decimal  @default(15) @map("max_fee") @db.Decimal(12, 2)
+  /// Bill at most this many km — beyond it, distance does not increase the fee.
+  maxKm            Decimal  @default(30) @map("max_km") @db.Decimal(8, 2)
   /// Saved example breakdown (updated on admin save).
   sampleBreakdown  Json?    @map("sample_breakdown")
   isActive         Boolean  @default(false) @map("is_active")

@@ -48,8 +48,11 @@ export type CheckoutItemsSnapshot = {
   deliveryFee: number;
   deliveryFeeBreakdown: {
     fixedFee: number;
+    includedKm: number;
     kmUnit: number;
     feePerUnit: number;
+    maxFee: number;
+    maxKm: number;
     deliveryFee: number;
     configId: string | null;
   };
@@ -240,8 +243,11 @@ export class CheckoutService {
       deliveryFee,
       deliveryFeeBreakdown: {
         fixedFee: feeCalc.fixedFee,
+        includedKm: feeCalc.includedKm,
         kmUnit: feeCalc.kmUnit,
         feePerUnit: feeCalc.feePerUnit,
+        maxFee: feeCalc.maxFee,
+        maxKm: feeCalc.maxKm,
         deliveryFee: feeCalc.deliveryFee,
         configId: feeCalc.configId,
       },

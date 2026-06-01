@@ -19,7 +19,8 @@ export class CreateDeliveryFeeConfigDto {
 
   @ApiProperty({
     example: 1.5,
-    description: 'Fixed base delivery price (always added)',
+    description:
+      'Minimum delivery fee. Charged alone when distance ≤ includedKm (no extra per km).',
   })
   @Type(() => Number)
   @IsNumber()
@@ -27,9 +28,18 @@ export class CreateDeliveryFeeConfigDto {
   fixedFee!: number;
 
   @ApiProperty({
-    example: 1,
+    example: 10,
     description:
-      'Distance step in km (1 = charge every 1 km, 2 = every 2 km, 5 = every 5 km). Admin can change this.',
+      'Km radius included in fixedFee only (e.g. 1.5 for up to 10 km — no extra charge inside).',
+  })
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0.01)
+  includedKm!: number;
+
+  @ApiProperty({
+    example: 1,
+    description: 'After includedKm, charge every N extra km (1 = each km).',
   })
   @Type(() => Number)
   @IsNumber()
@@ -38,18 +48,36 @@ export class CreateDeliveryFeeConfigDto {
 
   @ApiProperty({
     example: 1,
-    description:
-      'Price charged for each km step (e.g. kmUnit=2 and feePerUnit=1 → $1 per 2 km)',
+    description: 'Price per km step beyond includedKm.',
   })
   @Type(() => Number)
   @IsNumber()
   @Min(0)
   feePerUnit!: number;
 
-  @ApiPropertyOptional({
-    example: 5,
+  @ApiProperty({
+    example: 8,
     description:
-      'Distance (km) used to build and save sampleBreakdown in DB when creating',
+      'Maximum delivery fee (price cap). Never charge more than this amount.',
+  })
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  maxFee!: number;
+
+  @ApiProperty({
+    example: 30,
+    description:
+      'Maximum km for billing. Trips longer than this pay the same as maxKm (no extra charge after).',
+  })
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0.01)
+  maxKm!: number;
+
+  @ApiPropertyOptional({
+    example: 15,
+    description: 'Preview distance for sampleBreakdown saved in DB',
   })
   @IsOptional()
   @Type(() => Number)

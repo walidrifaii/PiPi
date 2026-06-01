@@ -7,6 +7,9 @@ import { Prisma } from '@prisma/client';
 import {
   computeDeliveryFeeBreakdown,
   DEFAULT_DELIVERY_FEE_FORMULA,
+  DEFAULT_INCLUDED_KM,
+  DEFAULT_MAX_FEE,
+  DEFAULT_MAX_KM,
   type DeliveryFeeBreakdown,
   type DeliveryFeeFormula,
   deliveryFeeBetweenPoints,
@@ -20,8 +23,11 @@ export type DeliveryFeeConfigItem = {
   id: string;
   name: string | null;
   fixedFee: number;
+  includedKm: number;
   kmUnit: number;
   feePerUnit: number;
+  maxFee: number;
+  maxKm: number;
   sampleBreakdown: DeliveryFeeBreakdown | null;
   isActive: boolean;
   sortOrder: number;
@@ -37,6 +43,24 @@ export class DeliveryFeeService {
     return Number(value);
   }
 
+  private assertFormula(
+    fixedFee: number,
+    includedKm: number,
+    maxFee: number,
+    maxKm: number,
+  ) {
+    if (maxFee < fixedFee) {
+      throw new BadRequestException(
+        'maxFee must be greater than or equal to fixedFee (minimum charge)',
+      );
+    }
+    if (maxKm < includedKm) {
+      throw new BadRequestException(
+        'maxKm must be greater than or equal to includedKm',
+      );
+    }
+  }
+
   private parseBreakdown(raw: unknown): DeliveryFeeBreakdown | null {
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
       return null;
@@ -45,52 +69,51 @@ export class DeliveryFeeService {
     if (typeof o.fixedFee !== 'number' || typeof o.deliveryFee !== 'number') {
       return null;
     }
-    // New format
-    if (typeof o.kmUnit === 'number' && typeof o.feePerUnit === 'number') {
-      return o as DeliveryFeeBreakdown;
-    }
-    // Legacy rows (extra fields ignored)
-    if (typeof o.feePerKm === 'number') {
-      return {
-        fixedFee: o.fixedFee,
-        kmUnit: typeof o.kmUnit === 'number' ? o.kmUnit : 1,
-        feePerUnit: o.feePerKm,
-        deliveryFee: o.deliveryFee,
-      };
-    }
-    if (
-      typeof o.kmUnit === 'number' &&
+    const kmUnit = typeof o.kmUnit === 'number' ? o.kmUnit : 1;
+    const feePerUnit =
       typeof o.feePerUnit === 'number'
-    ) {
-      return {
-        fixedFee: o.fixedFee,
-        kmUnit: o.kmUnit,
-        feePerUnit: o.feePerUnit,
-        deliveryFee: o.deliveryFee,
-      };
-    }
-    return null;
+        ? o.feePerUnit
+        : typeof o.feePerKm === 'number'
+          ? o.feePerKm
+          : 1;
+    const includedKm =
+      typeof o.includedKm === 'number' ? o.includedKm : DEFAULT_INCLUDED_KM;
+    const maxFee =
+      typeof o.maxFee === 'number'
+        ? o.maxFee
+        : Math.max(o.fixedFee as number, DEFAULT_MAX_FEE);
+    const maxKm =
+      typeof o.maxKm === 'number'
+        ? o.maxKm
+        : Math.max(includedKm, DEFAULT_MAX_KM);
+
+    return {
+      fixedFee: o.fixedFee,
+      includedKm,
+      kmUnit,
+      feePerUnit,
+      maxFee,
+      maxKm,
+      deliveryFee: o.deliveryFee,
+    };
   }
 
   buildSampleBreakdown(
-    fixedFee: number,
-    kmUnit: number,
-    feePerUnit: number,
+    formula: DeliveryFeeFormula,
     previewDistanceKm = 5,
   ): DeliveryFeeBreakdown {
-    return computeDeliveryFeeBreakdown(previewDistanceKm, {
-      fixedFee,
-      kmUnit,
-      feePerUnit,
-    });
+    return computeDeliveryFeeBreakdown(previewDistanceKm, formula);
   }
 
   private mapRow(row: {
     id: string;
     name: string | null;
     fixedFee: Prisma.Decimal;
+    includedKm: Prisma.Decimal;
     kmUnit: Prisma.Decimal;
     feePerUnit: Prisma.Decimal;
+    maxFee: Prisma.Decimal;
+    maxKm: Prisma.Decimal;
     sampleBreakdown: unknown;
     isActive: boolean;
     sortOrder: number;
@@ -101,8 +124,11 @@ export class DeliveryFeeService {
       id: row.id,
       name: row.name,
       fixedFee: this.toNumber(row.fixedFee),
+      includedKm: this.toNumber(row.includedKm),
       kmUnit: this.toNumber(row.kmUnit),
       feePerUnit: this.toNumber(row.feePerUnit),
+      maxFee: this.toNumber(row.maxFee),
+      maxKm: this.toNumber(row.maxKm),
       sampleBreakdown: this.parseBreakdown(row.sampleBreakdown),
       isActive: row.isActive,
       sortOrder: row.sortOrder,
@@ -113,13 +139,19 @@ export class DeliveryFeeService {
 
   toFormula(row: {
     fixedFee: Prisma.Decimal;
+    includedKm: Prisma.Decimal;
     kmUnit: Prisma.Decimal;
     feePerUnit: Prisma.Decimal;
+    maxFee: Prisma.Decimal;
+    maxKm: Prisma.Decimal;
   }): DeliveryFeeFormula {
     return {
       fixedFee: this.toNumber(row.fixedFee),
+      includedKm: this.toNumber(row.includedKm),
       kmUnit: this.toNumber(row.kmUnit),
       feePerUnit: this.toNumber(row.feePerUnit),
+      maxFee: this.toNumber(row.maxFee),
+      maxKm: this.toNumber(row.maxKm),
     };
   }
 
@@ -165,8 +197,11 @@ export class DeliveryFeeService {
       const active = await this.getActiveConfig();
       return {
         fixedFee: active.fixedFee,
+        includedKm: active.includedKm,
         kmUnit: active.kmUnit,
         feePerUnit: active.feePerUnit,
+        maxFee: active.maxFee,
+        maxKm: active.maxKm,
       };
     } catch {
       return DEFAULT_DELIVERY_FEE_FORMULA;
@@ -180,8 +215,11 @@ export class DeliveryFeeService {
     const formula = config
       ? {
           fixedFee: config.fixedFee,
+          includedKm: config.includedKm,
           kmUnit: config.kmUnit,
           feePerUnit: config.feePerUnit,
+          maxFee: config.maxFee,
+          maxKm: config.maxKm,
         }
       : DEFAULT_DELIVERY_FEE_FORMULA;
     return {
@@ -193,15 +231,24 @@ export class DeliveryFeeService {
   async createAdmin(
     dto: CreateDeliveryFeeConfigDto,
   ): Promise<DeliveryFeeConfigItem> {
+    this.assertFormula(dto.fixedFee, dto.includedKm, dto.maxFee, dto.maxKm);
+
     const isActive = dto.isActive ?? false;
     if (isActive) {
       await this.deactivateOthersExcept();
     }
 
+    const formula: DeliveryFeeFormula = {
+      fixedFee: dto.fixedFee,
+      includedKm: dto.includedKm,
+      kmUnit: dto.kmUnit,
+      feePerUnit: dto.feePerUnit,
+      maxFee: dto.maxFee,
+      maxKm: dto.maxKm,
+    };
+
     const sampleBreakdown = this.buildSampleBreakdown(
-      dto.fixedFee,
-      dto.kmUnit,
-      dto.feePerUnit,
+      formula,
       dto.previewDistanceKm ?? 5,
     );
 
@@ -209,8 +256,11 @@ export class DeliveryFeeService {
       data: {
         name: dto.name?.trim() || null,
         fixedFee: dto.fixedFee,
+        includedKm: dto.includedKm,
         kmUnit: dto.kmUnit,
         feePerUnit: dto.feePerUnit,
+        maxFee: dto.maxFee,
+        maxKm: dto.maxKm,
         sampleBreakdown: sampleBreakdown as unknown as Prisma.InputJsonValue,
         isActive,
         sortOrder: dto.sortOrder ?? 0,
@@ -238,24 +288,35 @@ export class DeliveryFeeService {
       dto.fixedFee !== undefined
         ? dto.fixedFee
         : this.toNumber(existing.fixedFee);
+    const includedKm =
+      dto.includedKm !== undefined
+        ? dto.includedKm
+        : this.toNumber(existing.includedKm);
     const kmUnit =
       dto.kmUnit !== undefined ? dto.kmUnit : this.toNumber(existing.kmUnit);
     const feePerUnit =
       dto.feePerUnit !== undefined
         ? dto.feePerUnit
         : this.toNumber(existing.feePerUnit);
+    const maxFee =
+      dto.maxFee !== undefined ? dto.maxFee : this.toNumber(existing.maxFee);
+    const maxKm =
+      dto.maxKm !== undefined ? dto.maxKm : this.toNumber(existing.maxKm);
+
+    this.assertFormula(fixedFee, includedKm, maxFee, maxKm);
 
     const shouldRefreshSample =
       dto.fixedFee !== undefined ||
+      dto.includedKm !== undefined ||
       dto.kmUnit !== undefined ||
       dto.feePerUnit !== undefined ||
+      dto.maxFee !== undefined ||
+      dto.maxKm !== undefined ||
       dto.previewDistanceKm !== undefined;
 
     const sampleBreakdown = shouldRefreshSample
       ? this.buildSampleBreakdown(
-          fixedFee,
-          kmUnit,
-          feePerUnit,
+          { fixedFee, includedKm, kmUnit, feePerUnit, maxFee, maxKm },
           dto.previewDistanceKm ?? 5,
         )
       : undefined;
@@ -267,8 +328,11 @@ export class DeliveryFeeService {
           ? { name: dto.name.trim() || null }
           : {}),
         ...(dto.fixedFee !== undefined ? { fixedFee: dto.fixedFee } : {}),
+        ...(dto.includedKm !== undefined ? { includedKm: dto.includedKm } : {}),
         ...(dto.kmUnit !== undefined ? { kmUnit: dto.kmUnit } : {}),
         ...(dto.feePerUnit !== undefined ? { feePerUnit: dto.feePerUnit } : {}),
+        ...(dto.maxFee !== undefined ? { maxFee: dto.maxFee } : {}),
+        ...(dto.maxKm !== undefined ? { maxKm: dto.maxKm } : {}),
         ...(sampleBreakdown !== undefined
           ? {
               sampleBreakdown:

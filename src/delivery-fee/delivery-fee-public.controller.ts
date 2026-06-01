@@ -10,7 +10,7 @@ export class DeliveryFeePublicController {
 
   @ApiOperation({
     summary:
-      'Active delivery fee (fixedFee + km steps) and saved sampleBreakdown (public)',
+      'Active delivery fee (includedKm, maxKm, maxFee) and sampleBreakdown',
   })
   @Get('active')
   getActive() {
