@@ -54,10 +54,33 @@ model User {
   fcmToken     String?       @map("fcm_token") @db.VarChar(512)
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @updatedAt @map("updated_at")
-  orders       Order[]
-  addresses    UserAddress[]
+  orders          Order[]
+  addresses       UserAddress[]
+  notifications   UserNotification[]
 
   @@map("users")
+}
+
+/// In-app notification inbox for customers (order updates, promos, system messages).
+model UserNotification {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  /// ORDER_STATUS | SPECIAL_OFFER | SYSTEM_UPDATE | SECURITY_ALERT
+  category  String   @db.VarChar(32)
+  title     String   @db.VarChar(255)
+  message   String   @db.Text
+  /// INBOX (default) or DEVELOPER_LAB for test/dev notifications.
+  channel   String   @default("INBOX") @db.VarChar(32)
+  isRead    Boolean  @default(false) @map("is_read")
+  readAt    DateTime? @map("read_at")
+  /// Deep-link payload: orderId, promoCode, etc.
+  metadata  Json?
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, channel, createdAt(sort: Desc)])
+  @@index([userId, isRead])
+  @@map("user_notifications")
 }
 
 /// Saved delivery location for a customer (referenced at checkout by id).

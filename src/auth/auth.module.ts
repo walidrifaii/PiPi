@@ -4,6 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { CloudinaryService } from '../common/cloudinary.service';
 import { OtpModule } from '../otp/otp.module';
 import { PrismaModule } from '../prisma/prisma.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 import { UsersModule } from '../users/users.module';
 import { AuthMerchantController } from './auth-merchant.controller';
 import { AuthSuperAdminController } from './auth-super-admin.controller';
@@ -24,6 +25,7 @@ import { UserAccountGuard } from './user-account.guard';
   imports: [
     PrismaModule,
     UsersModule,
+    NotificationsModule,
     OtpModule,
     PassportModule,
     JwtModule.register({

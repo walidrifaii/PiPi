@@ -11,6 +11,7 @@ import {
   OrderNotificationsPort,
   type SendOrderStatusResult,
 } from '../notifications/notifications.port';
+import { UserNotificationsService } from '../notifications/user-notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { TrackingService } from '../tracking/tracking.service';
 import {
@@ -59,6 +60,7 @@ export class DriverOrdersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly notifications: OrderNotificationsPort,
+    private readonly userNotifications: UserNotificationsService,
     private readonly tracking: TrackingService,
     private readonly platformSettings: PlatformSettingsService,
     private readonly settlements: EarningsSettlementsService,
@@ -527,6 +529,36 @@ export class DriverOrdersService {
   }
 
   private async notifyCustomerDelivering(order: OrderWithRelations) {
+    await this.notifyCustomerOrderInboxAndPush(order, {
+      status: 'DELIVERING',
+      title: 'Delivery accepted',
+      body: `A driver accepted your order from ${this.merchantNameFromOrder(order)}. Tap to track your delivery.`,
+    });
+  }
+
+  private merchantNameFromOrder(order: OrderWithRelations): string {
+    const snapshot = this.parseSnapshot(order.itemsSnapshot);
+    return snapshot?.merchantName ?? order.merchant.name;
+  }
+
+  private async notifyCustomerOrderInboxAndPush(
+    order: OrderWithRelations,
+    params: {
+      status: string;
+      title?: string;
+      body?: string;
+    },
+  ) {
+    const merchantName = this.merchantNameFromOrder(order);
+    const copy = await this.userNotifications.createFromOrderStatus({
+      userId: order.userId,
+      orderId: order.id,
+      status: params.status,
+      merchantName,
+      title: params.title,
+      body: params.body,
+    });
+
     const user = await this.prisma.user.findUnique({
       where: { id: order.userId },
       select: { fcmToken: true },
@@ -535,22 +567,19 @@ export class DriverOrdersService {
       return;
     }
 
-    const snapshot = this.parseSnapshot(order.itemsSnapshot);
-    const merchantName = snapshot?.merchantName ?? order.merchant.name;
-
     const result: SendOrderStatusResult =
       await this.notifications.sendOrderStatusUpdate({
         fcmToken: user.fcmToken.trim(),
         orderId: order.id,
-        status: 'DELIVERING',
+        status: params.status,
         merchantName,
-        title: 'Delivery accepted',
-        body: `A driver accepted your order from ${merchantName}. Tap to track your delivery.`,
+        title: copy.title,
+        body: copy.body,
       });
 
     if (!result.sent) {
       this.log.debug(
-        `Order ${order.id} driver-accept push not sent: ${result.reason ?? 'unknown'}`,
+        `Order ${order.id} status push not sent: ${result.reason ?? 'unknown'}`,
       );
     }
   }
@@ -592,31 +621,12 @@ export class DriverOrdersService {
   }
 
   private async notifyCustomerDispatched(order: OrderWithRelations) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: order.userId },
-      select: { fcmToken: true },
-    });
-    if (!user?.fcmToken?.trim()) {
-      return;
-    }
-
-    const snapshot = this.parseSnapshot(order.itemsSnapshot);
-    const merchantName = snapshot?.merchantName ?? order.merchant.name;
-
-    const result = await this.notifications.sendOrderStatusUpdate({
-      fcmToken: user.fcmToken.trim(),
-      orderId: order.id,
+    const merchantName = this.merchantNameFromOrder(order);
+    await this.notifyCustomerOrderInboxAndPush(order, {
       status: 'DISPATCHED',
-      merchantName,
       title: 'Order picked up',
       body: `Your driver picked up your order from ${merchantName} and is heading to you.`,
     });
-
-    if (!result.sent) {
-      this.log.debug(
-        `Order ${order.id} pickup push not sent: ${result.reason ?? 'unknown'}`,
-      );
-    }
   }
 
   /** Mark assigned order as delivered and notify the customer. */
@@ -656,22 +666,8 @@ export class DriverOrdersService {
   }
 
   private async notifyCustomerDelivered(order: OrderWithRelations) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: order.userId },
-      select: { fcmToken: true },
-    });
-    if (!user?.fcmToken?.trim()) {
-      return;
-    }
-
-    const snapshot = this.parseSnapshot(order.itemsSnapshot);
-    const merchantName = snapshot?.merchantName ?? order.merchant.name;
-
-    await this.notifications.sendOrderStatusUpdate({
-      fcmToken: user.fcmToken.trim(),
-      orderId: order.id,
+    await this.notifyCustomerOrderInboxAndPush(order, {
       status: 'DELIVERED',
-      merchantName,
     });
   }
 

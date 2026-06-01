@@ -26,6 +26,7 @@ import { OtpService } from '../otp/otp.service';
 import { UsersService } from '../users/users.service';
 import { loginEligibleUserFilter } from '../users/user-account-deletion';
 import { assertPhoneAvailableAcrossUserAndDriver } from '../common/phone-account-uniqueness';
+import { UserNotificationsService } from '../notifications/user-notifications.service';
 import { normalizeFcmToken } from './fcm-token.util';
 import {
   DRIVER_ACCOUNT_ROLE,
@@ -54,6 +55,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly otpService: OtpService,
     private readonly usersService: UsersService,
+    private readonly userNotifications: UserNotificationsService,
   ) {}
 
   private async signAccessToken(payload: JwtUserPayload): Promise<string> {
@@ -590,6 +592,8 @@ export class AuthService {
         updatedAt: true,
       },
     });
+
+    await this.userNotifications.createWelcome(user.id);
 
     const { accessToken, refreshToken } = await this.issueTokenPair({
       sub: user.id,

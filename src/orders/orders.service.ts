@@ -9,6 +9,7 @@ import {
   OrderNotificationsPort,
   type SendOrderStatusResult,
 } from '../notifications/notifications.port';
+import { UserNotificationsService } from '../notifications/user-notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { TrackingService } from '../tracking/tracking.service';
 import {
@@ -60,6 +61,7 @@ export class OrdersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly notifications: OrderNotificationsPort,
+    private readonly userNotifications: UserNotificationsService,
     private readonly tracking: TrackingService,
     private readonly platformSettings: PlatformSettingsService,
     private readonly settlements: EarningsSettlementsService,
@@ -278,6 +280,16 @@ export class OrdersService {
     order: OrderWithRelations,
     status: string,
   ) {
+    const snapshot = this.parseSnapshot(order.itemsSnapshot);
+    const merchantName = snapshot?.merchantName ?? order.merchant.name;
+
+    const copy = await this.userNotifications.createFromOrderStatus({
+      userId: order.userId,
+      orderId: order.id,
+      status,
+      merchantName,
+    });
+
     const user = await this.prisma.user.findUnique({
       where: { id: order.userId },
       select: { fcmToken: true },
@@ -286,15 +298,14 @@ export class OrdersService {
       return;
     }
 
-    const snapshot = this.parseSnapshot(order.itemsSnapshot);
-    const merchantName = snapshot?.merchantName ?? order.merchant.name;
-
     const result: SendOrderStatusResult =
       await this.notifications.sendOrderStatusUpdate({
         fcmToken: user.fcmToken.trim(),
         orderId: order.id,
         status,
         merchantName,
+        title: copy.title,
+        body: copy.body,
       });
 
     if (!result.sent) {
