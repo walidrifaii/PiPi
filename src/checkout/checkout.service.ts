@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { resolveProductDisplayImage } from '../common/product-display-image';
+import { DeliveryFeeService } from '../delivery-fee/delivery-fee.service';
 import {
   formatProductNameWithOptions,
   resolveUnitPriceWithOptions,
@@ -45,6 +46,13 @@ export type CheckoutItemsSnapshot = {
   merchantSubtotal: number;
   merchantTotal: number;
   deliveryFee: number;
+  deliveryFeeBreakdown: {
+    fixedFee: number;
+    kmUnit: number;
+    feePerUnit: number;
+    deliveryFee: number;
+    configId: string | null;
+  };
   items: Array<{
     productId: string;
     productName: string;
@@ -70,6 +78,7 @@ export class CheckoutService {
     private readonly prisma: PrismaService,
     private readonly orderNotifications: OrderNotificationsPort,
     private readonly merchantOffers: MerchantOfferService,
+    private readonly deliveryFees: DeliveryFeeService,
   ) {}
 
   async createOrder(userId: string, dto: CreateCheckoutDto) {
@@ -204,10 +213,8 @@ export class CheckoutService {
       lineItems.reduce((sum, line) => sum + line.merchantTotalPrice, 0),
     );
 
-    const deliveryFee = this.roundMoney(dto.total - dto.subtotal);
-    if (deliveryFee < 0) {
-      throw new BadRequestException('total cannot be less than subtotal');
-    }
+    const feeCalc = await this.deliveryFees.computeForDistance(dto.distanceKm);
+    const deliveryFee = this.roundMoney(feeCalc.deliveryFee);
 
     const customerTotal = this.roundMoney(customerSubtotal + deliveryFee);
     // Merchant is paid for food only; delivery fee goes to platform/driver.
@@ -215,6 +222,8 @@ export class CheckoutService {
 
     this.assertClientMoney('subtotal', dto.subtotal, customerSubtotal);
     this.assertClientMoney('total', dto.total, customerTotal);
+    const clientDeliveryFee = this.roundMoney(dto.total - dto.subtotal);
+    this.assertClientMoney('delivery fee', clientDeliveryFee, deliveryFee);
 
     const checkoutRef = `chk_${randomUUID()}`;
     const itemsSnapshot: CheckoutItemsSnapshot = {
@@ -229,6 +238,13 @@ export class CheckoutService {
       merchantSubtotal,
       merchantTotal,
       deliveryFee,
+      deliveryFeeBreakdown: {
+        fixedFee: feeCalc.fixedFee,
+        kmUnit: feeCalc.kmUnit,
+        feePerUnit: feeCalc.feePerUnit,
+        deliveryFee: feeCalc.deliveryFee,
+        configId: feeCalc.configId,
+      },
       items: lineItems.map((l) => ({
         productId: l.productId,
         productName: l.productName,
