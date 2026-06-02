@@ -1,11 +1,13 @@
 import type { SelectedOptionSnapshot } from '../merchant/product-option.types';
+import type { DeliveryTimeMinutesRange } from '../common/delivery-time-range';
 
 export type OrderItemsSnapshot = {
   merchantName: string;
   latitude: number;
   longitude: number;
   distanceKm: number;
-  deliveryTimeMinutes: number;
+  /** { min, max } in minutes; legacy orders may store a single number. */
+  deliveryTimeMinutes: DeliveryTimeMinutesRange | number;
   /** Super-admin store promo % applied at checkout (null when none). */
   merchantOfferPercent?: number | null;
   /** Server-computed customer subtotal (what the user pays for items). */

@@ -1,3 +1,4 @@
+import { normalizeDeliveryTimeMinutes } from '../common/delivery-time-range';
 import {
   resolveCustomerCoordinates,
   resolveMerchantCoordinates,
@@ -139,7 +140,8 @@ export function mapDriverOrderDetail(
   return {
     ...base,
     items,
-    deliveryTimeMinutes: snapshot?.deliveryTimeMinutes ?? null,
+    deliveryTimeMinutes:
+      normalizeDeliveryTimeMinutes(snapshot?.deliveryTimeMinutes) ?? null,
     customerPhone: order.user?.phone ?? null,
   };
 }

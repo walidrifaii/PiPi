@@ -1,4 +1,5 @@
 import { resolveUnitPriceWithOptions } from '../common/product-option-pricing';
+import { normalizeDeliveryTimeMinutes } from '../common/delivery-time-range';
 import { computeMerchantEarningsFromFoodSubtotal } from '../platform-settings/driver-delivery-share';
 import {
   resolveCustomerCoordinates,
@@ -194,7 +195,8 @@ export function mapOrderSummary(
     deliveryFee: totals.deliveryFee,
     total: totals.total,
     distanceKm: snapshot?.distanceKm ?? null,
-    deliveryTimeMinutes: snapshot?.deliveryTimeMinutes ?? null,
+    deliveryTimeMinutes:
+      normalizeDeliveryTimeMinutes(snapshot?.deliveryTimeMinutes) ?? null,
     itemCount: order.orderItems.length,
     createdAt: order.createdAt,
     ...offerFieldsForAudience(snapshot, audience),
@@ -246,7 +248,8 @@ export function mapOrderDetail(
     customerLatitude: customerCoords.latitude,
     customerLongitude: customerCoords.longitude,
     distanceKm: snapshot?.distanceKm ?? null,
-    deliveryTimeMinutes: snapshot?.deliveryTimeMinutes ?? null,
+    deliveryTimeMinutes:
+      normalizeDeliveryTimeMinutes(snapshot?.deliveryTimeMinutes) ?? null,
     addressId: order.addressId,
     address: order.address
       ? {

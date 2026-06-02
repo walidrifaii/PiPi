@@ -4,7 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { randomUUID } from 'crypto';
+import { Prisma } from '@prisma/client';
 import { resolveProductDisplayImage } from '../common/product-display-image';
+import type { DeliveryTimeMinutesRange } from '../common/delivery-time-range';
+import {
+  computeMerchantOpenNow,
+  workingIntervalsToWeek,
+} from '../common/merchant-open-status';
 import { DeliveryFeeService } from '../delivery-fee/delivery-fee.service';
 import {
   formatProductNameWithOptions,
@@ -39,7 +45,7 @@ export type CheckoutItemsSnapshot = {
   latitude: number;
   longitude: number;
   distanceKm: number;
-  deliveryTimeMinutes: number;
+  deliveryTimeMinutes: DeliveryTimeMinutesRange;
   merchantOfferPercent: number | null;
   customerSubtotal: number;
   customerTotal: number;
@@ -87,15 +93,31 @@ export class CheckoutService {
   async createOrder(userId: string, dto: CreateCheckoutDto) {
     const merchant = await this.prisma.merchant.findUnique({
       where: { id: dto.merchantId },
-      select: { id: true, isActive: true },
+      select: {
+        id: true,
+        isActive: true,
+        useWorkingHours: true,
+        timezone: true,
+        workingIntervals: {
+          orderBy: [
+            { weekday: Prisma.SortOrder.asc },
+            { sortOrder: Prisma.SortOrder.asc },
+          ],
+          select: {
+            weekday: true,
+            openLocal: true,
+            closeLocal: true,
+            sortOrder: true,
+          },
+        },
+      },
     });
 
     if (!merchant) {
       throw new NotFoundException('Merchant not found');
     }
-    if (!merchant.isActive) {
-      throw new BadRequestException('Merchant is not accepting orders');
-    }
+
+    this.assertMerchantOpenForCheckout(merchant);
 
     if (dto.addressId) {
       const saved = await this.prisma.userAddress.findFirst({
@@ -233,7 +255,10 @@ export class CheckoutService {
       latitude: dto.latitude,
       longitude: dto.longitude,
       distanceKm: dto.distanceKm,
-      deliveryTimeMinutes: dto.deliveryTimeMinutes,
+      deliveryTimeMinutes: {
+        min: dto.deliveryTimeMinutes.min,
+        max: dto.deliveryTimeMinutes.max,
+      },
       merchantOfferPercent: offerPercent,
       customerSubtotal,
       customerTotal,
@@ -390,6 +415,39 @@ export class CheckoutService {
 
   private roundMoney(value: number): number {
     return Math.round(value * 100) / 100;
+  }
+
+  private assertMerchantOpenForCheckout(merchant: {
+    isActive: boolean;
+    useWorkingHours: boolean;
+    timezone: string | null;
+    workingIntervals: Array<{
+      weekday: number;
+      openLocal: string;
+      closeLocal: string;
+      sortOrder: number;
+    }>;
+  }) {
+    if (!merchant.isActive) {
+      throw new BadRequestException(
+        'This store is closed and not accepting orders',
+      );
+    }
+
+    const week = workingIntervalsToWeek(merchant.workingIntervals);
+    const weekOrNull = week.days.length > 0 ? week : null;
+    const isOpen = computeMerchantOpenNow({
+      isActive: merchant.isActive,
+      useWorkingHours: merchant.useWorkingHours,
+      timezone: merchant.timezone,
+      week: weekOrNull,
+    });
+
+    if (!isOpen) {
+      throw new BadRequestException(
+        'This store is outside working hours. Please try again later.',
+      );
+    }
   }
 
   private assertClientMoney(field: string, client: number, server: number) {

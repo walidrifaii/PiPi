@@ -3,7 +3,6 @@ import { Type } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
-  IsInt,
   IsNumber,
   IsOptional,
   IsString,
@@ -13,6 +12,7 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
+import { DeliveryTimeMinutesDto } from '../../common/dto/delivery-time-minutes.dto';
 import { CheckoutItemDto } from './checkout-item.dto';
 
 export class CreateCheckoutDto {
@@ -70,13 +70,13 @@ export class CreateCheckoutDto {
   distanceKm: number;
 
   @ApiProperty({
-    description: 'Estimated delivery time in minutes (from client)',
-    example: 35,
+    description: 'Estimated delivery time range in minutes (from client)',
+    example: { min: 10, max: 40 },
+    type: DeliveryTimeMinutesDto,
   })
-  @Type(() => Number)
-  @IsInt()
-  @Min(0)
-  deliveryTimeMinutes: number;
+  @ValidateNested()
+  @Type(() => DeliveryTimeMinutesDto)
+  deliveryTimeMinutes: DeliveryTimeMinutesDto;
 
   @ApiProperty({
     description: 'Delivery location latitude (from client)',
