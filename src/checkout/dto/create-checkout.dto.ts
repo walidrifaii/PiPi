@@ -31,17 +31,34 @@ export class CreateCheckoutDto {
   @MaxLength(255)
   merchantName: string;
 
-  @ApiProperty({ description: 'Order subtotal (from client)' })
+  @ApiPropertyOptional({
+    description:
+      'Deprecated — server computes food subtotal from items. If sent, must match server.',
+  })
+  @IsOptional()
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
-  subtotal: number;
+  subtotal?: number;
 
-  @ApiProperty({ description: 'Order total including delivery (from client)' })
+  @ApiPropertyOptional({
+    description:
+      'Deprecated — server computes total (food + deliveryFee). If sent, must match server.',
+  })
+  @IsOptional()
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
-  total: number;
+  total?: number;
+
+  @ApiProperty({
+    description:
+      'Delivery fee from GET /delivery-fees/quote. Must match server quote for distanceKm.',
+  })
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  deliveryFee: number;
 
   @ApiProperty({
     description: 'Delivery distance in km (from client)',

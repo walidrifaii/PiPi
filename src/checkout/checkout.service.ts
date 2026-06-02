@@ -85,10 +85,6 @@ export class CheckoutService {
   ) {}
 
   async createOrder(userId: string, dto: CreateCheckoutDto) {
-    if (dto.total < dto.subtotal) {
-      throw new BadRequestException('total cannot be less than subtotal');
-    }
-
     const merchant = await this.prisma.merchant.findUnique({
       where: { id: dto.merchantId },
       select: { id: true, isActive: true },
@@ -223,10 +219,13 @@ export class CheckoutService {
     // Merchant is paid for food only; delivery fee goes to platform/driver.
     const merchantTotal = merchantSubtotal;
 
-    this.assertClientMoney('subtotal', dto.subtotal, customerSubtotal);
-    this.assertClientMoney('total', dto.total, customerTotal);
-    const clientDeliveryFee = this.roundMoney(dto.total - dto.subtotal);
-    this.assertClientMoney('delivery fee', clientDeliveryFee, deliveryFee);
+    this.assertClientMoney('delivery fee', dto.deliveryFee, deliveryFee);
+    if (dto.subtotal !== undefined) {
+      this.assertClientMoney('subtotal', dto.subtotal, customerSubtotal);
+    }
+    if (dto.total !== undefined) {
+      this.assertClientMoney('total', dto.total, customerTotal);
+    }
 
     const checkoutRef = `chk_${randomUUID()}`;
     const itemsSnapshot: CheckoutItemsSnapshot = {
@@ -341,9 +340,29 @@ export class CheckoutService {
             longitude: Number(order.address.longitude),
           }
         : null,
-      subtotal: Number(order.subtotal),
-      deliveryFee: Number(order.deliveryFee),
-      total: Number(order.total),
+      /** Customer food subtotal (includes store offer when active). */
+      subtotal: customerSubtotal,
+      customerSubtotal,
+      deliveryFee,
+      /** Customer pays food + delivery. */
+      total: customerTotal,
+      customerTotal,
+      /** Merchant food only — no delivery fee, no store-wide promo. */
+      merchantSubtotal,
+      merchantTotal,
+      deliveryFeeBreakdown: snapshot.deliveryFeeBreakdown,
+      pricing: {
+        customer: {
+          subtotal: customerSubtotal,
+          deliveryFee,
+          total: customerTotal,
+        },
+        merchant: {
+          subtotal: merchantSubtotal,
+          total: merchantTotal,
+          deliveryFee: 0,
+        },
+      },
       ...(snapshot.merchantOfferPercent
         ? { merchantOfferPercent: snapshot.merchantOfferPercent }
         : {}),
@@ -359,6 +378,8 @@ export class CheckoutService {
           discountPrice: snap?.discountPrice ?? null,
           unitPrice: Number(oi.unitPrice),
           totalPrice: Number(oi.totalPrice),
+          merchantUnitPrice: snap?.merchantUnitPrice ?? null,
+          merchantTotalPrice: snap?.merchantTotalPrice ?? null,
           message: snap?.message ?? null,
           selectedOptions: snap?.selectedOptions ?? [],
         };
