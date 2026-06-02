@@ -67,6 +67,7 @@ export type OrderWithRelations = {
   merchant: {
     id: string;
     name: string;
+    imageUrl?: string | null;
     latitude?: { toString(): string } | null;
     longitude?: { toString(): string } | null;
   };

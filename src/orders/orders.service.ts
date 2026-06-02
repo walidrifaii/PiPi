@@ -34,7 +34,7 @@ import { OrderItemsSnapshot, OrderWithRelations } from './order.types';
 
 const orderInclude = {
   orderItems: { orderBy: { id: Prisma.SortOrder.asc } },
-  merchant: { select: { id: true, name: true, latitude: true, longitude: true } },
+  merchant: { select: { id: true, name: true, imageUrl: true, latitude: true, longitude: true } },
   user: { select: { id: true, fullName: true, phone: true } },
   address: {
     select: {

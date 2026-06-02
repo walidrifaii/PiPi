@@ -191,6 +191,7 @@ export function mapOrderSummary(
     status: order.status,
     merchantId: order.merchantId,
     merchantName: snapshot?.merchantName ?? order.merchant.name,
+    logoUrl: order.merchant.imageUrl ?? null,
     subtotal: totals.subtotal,
     deliveryFee: totals.deliveryFee,
     total: totals.total,
@@ -242,6 +243,7 @@ export function mapOrderDetail(
     merchant: {
       id: order.merchant.id,
       name: snapshot?.merchantName ?? order.merchant.name,
+      logoUrl: order.merchant.imageUrl ?? null,
     },
     latitude: merchantCoords.latitude,
     longitude: merchantCoords.longitude,
