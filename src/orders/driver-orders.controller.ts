@@ -59,6 +59,14 @@ export class DriverOrdersController {
     return this.driverOrders.getActiveAssignment(req.user.sub);
   }
 
+  @ApiOperation({
+    summary: 'All your active deliveries (same-merchant batch)',
+  })
+  @Get('active/all')
+  getActiveAll(@Req() req: { user: JwtUserPayload }) {
+    return this.driverOrders.listActiveAssignments(req.user.sub);
+  }
+
   @ApiOperation({ summary: 'List orders assigned to you' })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })

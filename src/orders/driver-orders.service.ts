@@ -17,6 +17,7 @@ import { TrackingService } from '../tracking/tracking.service';
 import {
   DRIVER_ACTIVE_STATUSES,
   DRIVER_OFFER_STATUSES,
+  MAX_DRIVER_BATCH_ORDERS,
   isDriverOfferStatus,
   isTerminalOrderStatus,
   normalizeOrderStatus,
@@ -114,6 +115,19 @@ export class DriverOrdersService {
     }
   }
 
+  /** Distinct merchant ids of the driver's current active deliveries. */
+  private async activeMerchantIds(driverId: string): Promise<string[]> {
+    const rows = await this.prisma.order.findMany({
+      where: {
+        driverId,
+        status: { in: [...DRIVER_ACTIVE_STATUSES] },
+      },
+      select: { merchantId: true },
+      distinct: ['merchantId'],
+    });
+    return rows.map((r) => r.merchantId);
+  }
+
   /** Unassigned orders ready for pickup (indexed filter, lean select). */
   async listAvailable(driverId: string, page = 1, limit = 20) {
     await this.assertDriverActive(driverId);
@@ -125,6 +139,14 @@ export class DriverOrdersService {
       status: { in: [...DRIVER_OFFER_STATUSES] },
       createdAt: { gte: new Date(Date.now() - offerMaxAgeMs) },
     };
+
+    // If the driver already has an active delivery, only surface offers from
+    // the SAME merchant (same pickup). Offers from other merchants stay hidden
+    // until the current delivery is finished.
+    const activeMerchants = await this.activeMerchantIds(driverId);
+    if (activeMerchants.length > 0) {
+      where.merchantId = { in: activeMerchants };
+    }
 
     const [rows, total] = await Promise.all([
       this.prisma.order.findMany({
@@ -172,6 +194,28 @@ export class DriverOrdersService {
       order: mapDriverOrderDetail(
         order as OrderWithRelations,
         sharePercent,
+      ),
+    };
+  }
+
+  /** All in-progress deliveries for this driver (same-merchant batch). */
+  async listActiveAssignments(driverId: string) {
+    await this.assertDriverActive(driverId);
+
+    const orders = await this.prisma.order.findMany({
+      where: {
+        driverId,
+        status: { in: [...DRIVER_ACTIVE_STATUSES] },
+      },
+      include: driverOrderInclude,
+      orderBy: { createdAt: 'asc' },
+    });
+
+    const sharePercent = await this.driverSharePercent();
+
+    return {
+      orders: orders.map((o) =>
+        mapDriverOrderDetail(o as OrderWithRelations, sharePercent),
       ),
     };
   }
@@ -444,17 +488,42 @@ export class DriverOrdersService {
   async acceptOrder(driverId: string, orderId: string) {
     await this.assertDriverActive(driverId);
 
-    const active = await this.prisma.order.findFirst({
+    // Orders the driver is already delivering (excluding this one).
+    const activeOrders = await this.prisma.order.findMany({
       where: {
         driverId,
         status: { in: [...DRIVER_ACTIVE_STATUSES] },
       },
-      select: { id: true },
+      select: { id: true, merchantId: true },
     });
-    if (active && active.id !== orderId) {
-      throw new BadRequestException(
-        'Finish your current delivery before accepting another order',
+    const otherActive = activeOrders.filter((o) => o.id !== orderId);
+
+    if (otherActive.length > 0) {
+      const target = await this.prisma.order.findUnique({
+        where: { id: orderId },
+        select: { merchantId: true },
+      });
+      if (!target) {
+        throw new NotFoundException('Order not found');
+      }
+
+      // Only same-merchant orders can be batched together (single pickup point).
+      const sameMerchant = otherActive.every(
+        (o) => o.merchantId === target.merchantId,
       );
+      if (!sameMerchant) {
+        throw new BadRequestException(
+          'You can only take additional orders from the same merchant. ' +
+            'Finish your current delivery before accepting orders from a different store.',
+        );
+      }
+
+      // Cap how many orders can be carried in one batch.
+      if (otherActive.length + 1 > MAX_DRIVER_BATCH_ORDERS) {
+        throw new BadRequestException(
+          `You can carry at most ${MAX_DRIVER_BATCH_ORDERS} orders at once`,
+        );
+      }
     }
 
     const updated = await this.prisma.order.updateMany({

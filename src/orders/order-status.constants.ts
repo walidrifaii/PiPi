@@ -52,6 +52,13 @@ export const DRIVER_OFFER_STATUSES = ['ACCEPTED'] as const;
 /** Assigned orders the driver is fulfilling (to merchant or to customer). */
 export const DRIVER_ACTIVE_STATUSES = ['DELIVERING', 'DISPATCHED'] as const;
 
+/**
+ * Max orders a driver may carry at once. Additional orders are only allowed
+ * when they belong to the SAME merchant as the driver's current delivery
+ * (same pickup point), so the driver can batch multiple orders from one store.
+ */
+export const MAX_DRIVER_BATCH_ORDERS = 3;
+
 /** Customer live tracking after driver accept (status DELIVERING). */
 export const CUSTOMER_TRACKABLE_STATUSES = ['DELIVERING', 'DISPATCHED'] as const;
 
