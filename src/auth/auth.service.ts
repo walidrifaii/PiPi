@@ -753,14 +753,20 @@ export class AuthService {
 
   /** Step 2: verify OTP — returns user or driver based on account type. */
   async verifyLoginOtp(dto: VerifyLoginOtpDto) {
-    const pending = this.otpService.consumePendingAppLogin(dto.phone);
-    if (!pending) {
+    if (!this.otpService.hasPendingAppLogin(dto.phone)) {
       throw new BadRequestException(
         'Login session expired or not found. Call POST /auth/user/login first.',
       );
     }
 
     this.otpService.verifyAppLoginOtp(dto.phone, dto.code);
+
+    const pending = this.otpService.consumePendingAppLogin(dto.phone);
+    if (!pending) {
+      throw new BadRequestException(
+        'Login session expired or not found. Call POST /auth/user/login first.',
+      );
+    }
 
     if (pending.accountType === 'driver') {
       const driver = await this.prisma.driver.findFirst({
