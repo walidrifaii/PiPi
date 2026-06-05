@@ -9,12 +9,16 @@ import { orderStatusNotificationCopy } from './order-status-notification-copy';
 import { SendTestNotificationDto } from './dto/send-test-notification.dto';
 import { buildNewOrderFcmData } from './new-order-payload';
 import { newOrderNotificationCopy } from './new-order-notification-copy';
+import { buildDriverOfferFcmData } from './driver-offer-payload';
+import { driverOfferNotificationCopy } from './driver-offer-notification-copy';
 import { buildOrderStatusFcmData } from './order-status-payload';
 import { buildUserNotificationFcmData } from './user-notification-fcm-payload';
 import {
   OrderNotificationsPort,
   type SendNewOrderAlertParams,
   type SendNewOrderAlertResult,
+  type SendDriverOfferAlertParams,
+  type SendDriverOfferAlertResult,
   type SendOrderStatusParams,
   type SendOrderStatusResult,
 } from './notifications.port';
@@ -269,6 +273,66 @@ export class NotificationsService extends OrderNotificationsPort {
       const reason = err instanceof Error ? err.message : String(err);
       this.log.warn(
         `New order push failed for order ${params.orderId}: ${reason}`,
+      );
+      return { sent: false, reason };
+    }
+  }
+
+  /**
+   * Notify all driver devices when a merchant accepts an order (status ACCEPTED).
+   */
+  async sendDriverOfferAlert(
+    params: SendDriverOfferAlertParams,
+  ): Promise<SendDriverOfferAlertResult> {
+    const tokens = [
+      ...new Set(
+        params.tokens.map((t) => t.trim()).filter((t) => t.length > 0),
+      ),
+    ];
+    if (tokens.length === 0) {
+      return { sent: false, reason: 'no_tokens' };
+    }
+    const messaging = this.firebaseAdmin.messaging;
+    if (!messaging) {
+      return { sent: false, reason: 'not_configured' };
+    }
+
+    const copy = driverOfferNotificationCopy({
+      merchantName: params.merchantName,
+      deliveryFee: params.deliveryFee,
+    });
+    const data = buildDriverOfferFcmData(params.orderId, params.merchantId);
+
+    try {
+      const response = await messaging.sendEachForMulticast({
+        tokens,
+        notification: {
+          title: copy.title,
+          body: copy.body,
+        },
+        data,
+        android: {
+          priority: 'high',
+          notification: {
+            channelId: 'pip_pip_default',
+          },
+        },
+      });
+      const successCount = response.successCount;
+      const failureCount = response.failureCount;
+      if (successCount === 0) {
+        return {
+          sent: false,
+          successCount,
+          failureCount,
+          reason: 'all_failed',
+        };
+      }
+      return { sent: true, successCount, failureCount };
+    } catch (err) {
+      const reason = err instanceof Error ? err.message : String(err);
+      this.log.warn(
+        `Driver offer push failed for order ${params.orderId}: ${reason}`,
       );
       return { sent: false, reason };
     }

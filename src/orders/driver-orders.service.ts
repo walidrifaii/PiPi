@@ -14,6 +14,7 @@ import {
 import { UserNotificationsService } from '../notifications/user-notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { TrackingService } from '../tracking/tracking.service';
+import { DriverOffersLiveService } from '../tracking/driver-offers-live.service';
 import {
   DRIVER_ACTIVE_STATUSES,
   DRIVER_OFFER_STATUSES,
@@ -63,6 +64,7 @@ export class DriverOrdersService {
     private readonly notifications: OrderNotificationsPort,
     private readonly userNotifications: UserNotificationsService,
     private readonly tracking: TrackingService,
+    private readonly driverOffersLive: DriverOffersLiveService,
     private readonly platformSettings: PlatformSettingsService,
     private readonly settlements: EarningsSettlementsService,
   ) {}
@@ -577,6 +579,7 @@ export class DriverOrdersService {
     const row = order! as OrderWithRelations;
     await this.notifyCustomerDelivering(row);
     await this.tracking.syncOrderMeta(orderId, row.userId, driverId);
+    void this.driverOffersLive.removeOffer(orderId).catch(() => undefined);
 
     const sharePercent = await this.driverSharePercent();
 

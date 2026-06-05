@@ -12,6 +12,7 @@ import {
 import { UserNotificationsService } from '../notifications/user-notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { TrackingService } from '../tracking/tracking.service';
+import { DriverOffersLiveService } from '../tracking/driver-offers-live.service';
 import {
   computeMerchantEarningsFromFoodSubtotal,
   roundMoney,
@@ -63,6 +64,7 @@ export class OrdersService {
     private readonly notifications: OrderNotificationsPort,
     private readonly userNotifications: UserNotificationsService,
     private readonly tracking: TrackingService,
+    private readonly driverOffersLive: DriverOffersLiveService,
     private readonly platformSettings: PlatformSettingsService,
     private readonly settlements: EarningsSettlementsService,
   ) {}
@@ -315,6 +317,72 @@ export class OrdersService {
     }
   }
 
+  /** Push + RTDB when merchant accepts — drivers see offers without refresh. */
+  private async notifyDriversNewOffer(order: OrderWithRelations) {
+    const snapshot = this.parseSnapshot(order.itemsSnapshot);
+    const merchantName = snapshot?.merchantName ?? order.merchant.name;
+    const deliveryFee =
+      order.deliveryFee != null ? Number(order.deliveryFee) : undefined;
+
+    try {
+      await this.driverOffersLive.publishOffer({
+        orderId: order.id,
+        merchantId: order.merchantId,
+        merchantName,
+        status: 'ACCEPTED',
+        ...(deliveryFee != null && Number.isFinite(deliveryFee)
+          ? { deliveryFee }
+          : {}),
+      });
+    } catch (err) {
+      this.log.warn(
+        `Driver offer RTDB publish failed for ${order.id}: ${err instanceof Error ? err.message : err}`,
+      );
+    }
+
+    try {
+      const drivers = await this.prisma.driver.findMany({
+        where: { isActive: true, fcmToken: { not: null } },
+        select: { fcmToken: true },
+      });
+      const tokens = drivers
+        .map((d) => d.fcmToken?.trim())
+        .filter((t): t is string => !!t && t.length > 0);
+
+      if (tokens.length === 0) {
+        return;
+      }
+
+      const result = await this.notifications.sendDriverOfferAlert({
+        tokens,
+        orderId: order.id,
+        merchantId: order.merchantId,
+        merchantName,
+        deliveryFee,
+      });
+
+      if (!result.sent) {
+        this.log.debug(
+          `Driver offer push for ${order.id} not sent: ${result.reason ?? 'unknown'}`,
+        );
+      }
+    } catch (err) {
+      this.log.warn(
+        `Driver offer push failed for ${order.id}: ${err instanceof Error ? err.message : err}`,
+      );
+    }
+  }
+
+  private async clearDriverOfferLive(orderId: string) {
+    try {
+      await this.driverOffersLive.removeOffer(orderId);
+    } catch (err) {
+      this.log.warn(
+        `Driver offer RTDB remove failed for ${orderId}: ${err instanceof Error ? err.message : err}`,
+      );
+    }
+  }
+
   async updateStatusForMerchant(
     merchantId: string,
     orderId: string,
@@ -383,6 +451,12 @@ export class OrdersService {
 
     const row = updated as OrderWithRelations;
     await this.notifyCustomerOrderStatus(row, newStatus);
+
+    if (newStatus === 'ACCEPTED') {
+      void this.notifyDriversNewOffer(row);
+    } else {
+      void this.clearDriverOfferLive(orderId);
+    }
 
     if (newStatus === 'DELIVERING' && row.driverId) {
       void this.tracking

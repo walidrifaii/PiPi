@@ -307,7 +307,7 @@ export class TrackingService {
 
     await this.syncOrderMeta(orderId, userId, driverId);
 
-    await db.ref(`drivers/${driverId}`).set({
+    await db.ref(`drivers/${driverId}`).update({
       ...location,
       driverId,
       orderId,

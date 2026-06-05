@@ -1,9 +1,24 @@
 {
   "rules": {
     "drivers": {
+      ".read": "auth != null && auth.uid.matches(/^admin:.+/)",
       "$driverId": {
         ".read": "auth != null",
         ".write": "auth != null && auth.uid === ('driver:' + $driverId)"
+      }
+    },
+    "driverPresence": {
+      ".read": "auth != null && auth.uid.matches(/^admin:.+/)",
+      "$driverId": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === ('driver:' + $driverId)"
+      }
+    },
+    "driverOffers": {
+      ".read": "auth != null",
+      "$orderId": {
+        ".read": "auth != null",
+        ".write": false
       }
     },
     "orders": {
