@@ -34,7 +34,7 @@ export class RedisThrottlerStorage implements ThrottlerStorage {
     }
 
     try {
-      return await this.incrementRedis(
+      return await this.incrementSlidingWindow(
         client,
         key,
         ttl,
@@ -53,7 +53,8 @@ export class RedisThrottlerStorage implements ThrottlerStorage {
     }
   }
 
-  private async incrementRedis(
+  /** Sliding window counter (shared across app instances via Redis). */
+  private async incrementSlidingWindow(
     client: Redis,
     key: string,
     ttl: number,
@@ -61,8 +62,9 @@ export class RedisThrottlerStorage implements ThrottlerStorage {
     blockDuration: number,
     throttlerName: string,
   ): Promise<ThrottleRecord> {
-    const hitsKey = `${key}:hits:${throttlerName}`;
+    const windowKey = `${key}:sw:${throttlerName}`;
     const blockKey = `${key}:block:${throttlerName}`;
+    const now = Date.now();
 
     const blockTtlMs = await client.pttl(blockKey);
     if (blockTtlMs > 0) {
@@ -74,28 +76,32 @@ export class RedisThrottlerStorage implements ThrottlerStorage {
       };
     }
 
-    const hits = await client.incr(hitsKey);
-    let hitWindowTtlMs = await client.pttl(hitsKey);
-    if (hitWindowTtlMs < 0) {
-      await client.pexpire(hitsKey, ttl);
-      hitWindowTtlMs = ttl;
-    }
+    await client.zremrangebyscore(windowKey, 0, now - ttl);
+    const currentHits = await client.zcard(windowKey);
 
-    const timeToExpire = Math.max(1, Math.ceil(hitWindowTtlMs / 1000));
-
-    if (hits > limit) {
+    if (currentHits >= limit) {
       await client.set(blockKey, '1', 'PX', blockDuration);
       return {
-        totalHits: hits,
-        timeToExpire,
+        totalHits: currentHits,
+        timeToExpire: Math.max(1, Math.ceil(ttl / 1000)),
         isBlocked: true,
         timeToBlockExpire: Math.max(1, Math.ceil(blockDuration / 1000)),
       };
     }
 
+    const member = `${now}:${Math.random().toString(36).slice(2, 10)}`;
+    await client.zadd(windowKey, now, member);
+    await client.pexpire(windowKey, ttl);
+
+    const totalHits = currentHits + 1;
+    const oldest = await client.zrange(windowKey, 0, 0, 'WITHSCORES');
+    const oldestTs =
+      oldest.length >= 2 ? Number.parseInt(oldest[1], 10) : now;
+    const windowRemainingMs = Math.max(0, oldestTs + ttl - now);
+
     return {
-      totalHits: hits,
-      timeToExpire,
+      totalHits,
+      timeToExpire: Math.max(1, Math.ceil(windowRemainingMs / 1000)),
       isBlocked: false,
       timeToBlockExpire: 0,
     };
