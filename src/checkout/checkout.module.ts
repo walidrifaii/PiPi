@@ -9,6 +9,10 @@ import { CheckoutController } from './checkout.controller';
 import { CheckoutService } from './checkout.service';
 import { UserAddressController } from './user-address.controller';
 import { UserAddressService } from './user-address.service';
+import {
+  CheckoutV2Controller,
+  UserAddressV2Controller,
+} from '../v2/controllers/feature.v2-controllers';
 
 @Module({
   imports: [
@@ -17,7 +21,12 @@ import { UserAddressService } from './user-address.service';
     MerchantOfferModule,
     DeliveryFeeModule,
   ],
-  controllers: [CheckoutController, UserAddressController],
+  controllers: [
+    CheckoutController,
+    UserAddressController,
+    CheckoutV2Controller,
+    UserAddressV2Controller,
+  ],
   providers: [
     CheckoutService,
     UserAddressService,

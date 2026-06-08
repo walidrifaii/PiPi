@@ -27,6 +27,7 @@ import { MerchantOfferPublicController } from './merchant-offer/merchant-offer-p
 import { PlatformSettingsModule } from './platform-settings/platform-settings.module';
 import { DeliveryFeeModule } from './delivery-fee/delivery-fee.module';
 import { V2Module } from './v2/v2.module';
+import { APP_V2_CONTROLLERS } from './v2/controllers/app.v2-controllers';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { V2Module } from './v2/v2.module';
     MerchantOfferPublicController,
     MerchantController,
     MerchantCatalogSuperAdminController,
+    ...APP_V2_CONTROLLERS,
   ],
   providers: [
     AppService,

@@ -7,10 +7,11 @@ import { TrackingService } from './tracking.service';
 import { DriverOffersLiveService } from './driver-offers-live.service';
 import { OrderChatService } from './order-chat.service';
 import { OrderCallService } from './order-call.service';
+import { TrackingV2Controller } from '../v2/controllers/feature.v2-controllers';
 
 @Module({
   imports: [PrismaModule, AuthModule, NotificationsModule],
-  controllers: [TrackingController],
+  controllers: [TrackingController, TrackingV2Controller],
   providers: [
     TrackingService,
     DriverOffersLiveService,

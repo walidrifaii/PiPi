@@ -7,6 +7,11 @@ import { NotificationsController } from './notifications.controller';
 import { NotificationsService } from './notifications.service';
 import { UserNotificationsController } from './user-notifications.controller';
 import { UserNotificationsService } from './user-notifications.service';
+import {
+  NotificationBroadcastAdminV2Controller,
+  NotificationsV2Controller,
+  UserNotificationsV2Controller,
+} from '../v2/controllers/feature.v2-controllers';
 
 @Module({
   imports: [FirebaseAdminModule, PrismaModule],
@@ -14,6 +19,9 @@ import { UserNotificationsService } from './user-notifications.service';
     NotificationsController,
     UserNotificationsController,
     NotificationBroadcastAdminController,
+    NotificationsV2Controller,
+    UserNotificationsV2Controller,
+    NotificationBroadcastAdminV2Controller,
   ],
   providers: [
     NotificationsService,

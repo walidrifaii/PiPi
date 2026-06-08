@@ -16,6 +16,16 @@ import { AdminDriverEarningsController } from './admin-driver-earnings.controlle
 import { AdminMerchantEarningsController } from './admin-merchant-earnings.controller';
 import { DriverOrdersService } from './driver-orders.service';
 import { EarningsSettlementsService } from './earnings-settlements.service';
+import {
+  AdminDriverEarningsV2Controller,
+  AdminMerchantEarningsV2Controller,
+  AdminOrdersV2Controller,
+  DriverEarningsV2Controller,
+  DriverOrdersV2Controller,
+  MerchantEarningsV2Controller,
+  MerchantOrdersV2Controller,
+  UserOrdersV2Controller,
+} from '../v2/controllers/feature.v2-controllers';
 
 @Module({
   imports: [PrismaModule, NotificationsModule, TrackingModule, PlatformSettingsModule],
@@ -28,6 +38,14 @@ import { EarningsSettlementsService } from './earnings-settlements.service';
     MerchantEarningsController,
     AdminDriverEarningsController,
     AdminMerchantEarningsController,
+    UserOrdersV2Controller,
+    MerchantOrdersV2Controller,
+    AdminOrdersV2Controller,
+    DriverOrdersV2Controller,
+    DriverEarningsV2Controller,
+    MerchantEarningsV2Controller,
+    AdminDriverEarningsV2Controller,
+    AdminMerchantEarningsV2Controller,
   ],
   providers: [
     OrdersService,
