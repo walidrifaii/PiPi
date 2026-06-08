@@ -1,12 +1,18 @@
 import 'dotenv/config';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { SWAGGER_X_TAG_GROUPS } from './swagger/swagger-tag-groups';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  if (process.env.TRUST_PROXY === 'true') {
+    app.set('trust proxy', true);
+  }
+
   app.enableCors({
     origin: [
       'http://localhost:3000',
@@ -27,12 +33,16 @@ async function bootstrap() {
     }),
   );
 
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
+
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Athar API')
     .setDescription(
       'Endpoints are grouped for **Super Admin**, **Merchant**, **Storefront** (public browse), **Customer**, **Delivery**, and **Shared** (auth refresh, app login, health). Use the sections in the Swagger UI sidebar on `/api`.',
     )
-    .setVersion('1.0')
+    .setVersion('1.0 + 2.0')
     .addBearerAuth()
     .build();
 

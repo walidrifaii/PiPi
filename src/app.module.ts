@@ -26,6 +26,7 @@ import { MerchantOfferAdminController } from './merchant-offer/merchant-offer-ad
 import { MerchantOfferPublicController } from './merchant-offer/merchant-offer-public.controller';
 import { PlatformSettingsModule } from './platform-settings/platform-settings.module';
 import { DeliveryFeeModule } from './delivery-fee/delivery-fee.module';
+import { V2Module } from './v2/v2.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { DeliveryFeeModule } from './delivery-fee/delivery-fee.module';
     MerchantOfferModule,
     PlatformSettingsModule,
     DeliveryFeeModule,
+    V2Module,
   ],
   controllers: [
     AppController,
