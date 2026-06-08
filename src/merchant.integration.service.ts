@@ -31,6 +31,7 @@ import {
   nameStartsWithFilter,
   normalizeNameSearchTerm,
 } from './common/name-search';
+import { MerchantGeoQueryService } from './geo/merchant-geo-query.service';
 import { PrismaService } from './prisma/prisma.service';
 import { ServiceAreaService } from './service-area/service-area.service';
 
@@ -121,6 +122,7 @@ export class MerchantIntegrationService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly serviceArea: ServiceAreaService,
+    private readonly geoQuery: MerchantGeoQueryService,
   ) {}
 
   private get db(): PrismaClient {
@@ -303,22 +305,26 @@ export class MerchantIntegrationService {
     q: GetMerchantsQuery = {},
   ): Promise<PagedMerchantsResponse> {
     const pg = this.normalizePagination(q.page ?? 1, q.limit ?? 20);
+    const parsed = this.parseGetMerchantsQuery(q);
+
+    if (
+      parsed.hasLat &&
+      parsed.userLat !== undefined &&
+      parsed.userLng !== undefined &&
+      (await this.geoQuery.isGeoSqlReady())
+    ) {
+      return this.getMerchantsWithGeoSql(parsed, pg);
+    }
+
+    return this.getMerchantsLegacy(parsed, pg);
+  }
+
+  private parseGetMerchantsQuery(q: GetMerchantsQuery) {
     const merchantTypeCode = q.merchantTypeCode;
     const cityRaw = q.cityCode;
     const latRaw = q.lat;
     const lngRaw = q.lng;
     const radiusRaw = q.radiusKm;
-
-    if (merchantTypeCode) {
-      const code = merchantTypeCode.trim().toUpperCase();
-      const exists = await this.db.merchantType.findUnique({
-        where: { code },
-        select: { id: true },
-      });
-      if (!exists) {
-        throw new BadRequestException('Invalid merchantType filter');
-      }
-    }
 
     const latStr = latRaw?.trim() ?? '';
     const lngStr = lngRaw?.trim() ?? '';
@@ -363,16 +369,121 @@ export class MerchantIntegrationService {
         ? cityRaw.trim().toUpperCase()
         : undefined;
 
+    return {
+      merchantTypeCode,
+      normalizedCity,
+      hasLat,
+      userLat,
+      userLng,
+      radiusKm,
+    };
+  }
+
+  private async assertValidMerchantTypeFilter(
+    merchantTypeCode?: string,
+  ): Promise<void> {
+    if (!merchantTypeCode) {
+      return;
+    }
+    const code = merchantTypeCode.trim().toUpperCase();
+    const exists = await this.db.merchantType.findUnique({
+      where: { code },
+      select: { id: true },
+    });
+    if (!exists) {
+      throw new BadRequestException('Invalid merchantType filter');
+    }
+  }
+
+  private async getMerchantsWithGeoSql(
+    parsed: ReturnType<MerchantIntegrationService['parseGetMerchantsQuery']>,
+    pg: ReturnType<MerchantIntegrationService['normalizePagination']>,
+  ): Promise<PagedMerchantsResponse> {
+    await this.assertValidMerchantTypeFilter(parsed.merchantTypeCode);
+
+    const { userLat, userLng } = parsed;
+    if (userLat === undefined || userLng === undefined) {
+      return this.getMerchantsLegacy(parsed, pg);
+    }
+
+    let effectiveCity = parsed.normalizedCity;
+    if (!effectiveCity) {
+      effectiveCity =
+        (await this.geoQuery.resolveServiceAreaCodeForPoint(
+          userLng,
+          userLat,
+        )) ?? undefined;
+      if (!effectiveCity) {
+        return this.pagedResponse([], 0, pg.page, pg.limit);
+      }
+    } else {
+      const inside = await this.geoQuery.isPointInActiveServiceArea(
+        effectiveCity,
+        userLng,
+        userLat,
+      );
+      if (!inside) {
+        return this.pagedResponse([], 0, pg.page, pg.limit);
+      }
+    }
+
+    const pageResult = await this.geoQuery.getMerchantsNearPointPage({
+      cityCode: effectiveCity,
+      userLat,
+      userLng,
+      merchantTypeCode: parsed.merchantTypeCode,
+      radiusKm: parsed.radiusKm,
+      page: pg.page,
+      limit: pg.limit,
+      skip: pg.skip,
+    });
+    if (!pageResult) {
+      return this.getMerchantsLegacy(parsed, pg);
+    }
+
+    if (pageResult.ids.length === 0) {
+      return this.pagedResponse([], pageResult.total, pg.page, pg.limit);
+    }
+
+    const rows = await this.db.merchant.findMany({
+      where: { id: { in: pageResult.ids } },
+      select: this.listSelect,
+    });
+    const rowById = new Map(
+      rows.map((r) => [r.id, r as unknown as MerchantRowForList]),
+    );
+    const items = pageResult.ids
+      .map((id) => {
+        const row = rowById.get(id);
+        if (!row) {
+          return null;
+        }
+        return this.rowToListItem(row, pageResult.distanceKmById.get(id));
+      })
+      .filter((item): item is MerchantListItem => item !== null);
+
+    return this.pagedResponse(items, pageResult.total, pg.page, pg.limit);
+  }
+
+  private async getMerchantsLegacy(
+    parsed: ReturnType<MerchantIntegrationService['parseGetMerchantsQuery']>,
+    pg: ReturnType<MerchantIntegrationService['normalizePagination']>,
+  ): Promise<PagedMerchantsResponse> {
+    await this.assertValidMerchantTypeFilter(parsed.merchantTypeCode);
+
+    const {
+      merchantTypeCode,
+      normalizedCity,
+      hasLat,
+      userLat,
+      userLng,
+      radiusKm,
+    } = parsed;
+
     let effectiveCity = normalizedCity;
-    /** When set, both user (already checked) and each merchant GPS must lie inside here. */
     let serviceBoundaryPoly: PolygonRings | undefined;
 
-    if (
-      !normalizedCity &&
-      hasLat &&
-      userLat !== undefined &&
-      userLng !== undefined
-    ) {
+    if (!normalizedCity && hasLat && userLat !== undefined && userLng !== undefined) {
       const resolved = await this.serviceArea.findActiveAreaContainingPoint(
         userLng,
         userLat,
@@ -408,13 +519,27 @@ export class MerchantIntegrationService {
       where.cityCode = effectiveCity;
     }
 
+    if (!hasLat || userLat === undefined || userLng === undefined) {
+      const total = await this.db.merchant.count({ where });
+      const rows = await this.db.merchant.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        select: this.listSelect,
+        skip: pg.skip,
+        take: pg.limit,
+      });
+      const items = rows.map((r) =>
+        this.rowToListItem(r as unknown as MerchantRowForList),
+      );
+      return this.pagedResponse(items, total, pg.page, pg.limit);
+    }
+
     let rows = await this.db.merchant.findMany({
       where,
-      orderBy: hasLat ? undefined : { createdAt: 'desc' },
       select: this.listSelect,
     });
 
-    if (serviceBoundaryPoly !== undefined && hasLat) {
+    if (serviceBoundaryPoly !== undefined) {
       rows = filterRowsWithCoordinatesInBoundary(
         rows,
         serviceBoundaryPoly,
@@ -422,57 +547,45 @@ export class MerchantIntegrationService {
       );
     }
 
-    let items: MerchantListItem[];
-
-    if (!hasLat || userLat === undefined || userLng === undefined) {
-      items = rows.map((r) =>
-        this.rowToListItem(r as unknown as MerchantRowForList),
-      );
-    } else {
-      type WithDist = { row: MerchantRowForList; distanceKm: number | null };
-      let withDist: WithDist[] = rows.map((r) => {
-        const row = r as MerchantRowForList;
-        const lat = this.decimalToNumber(row.latitude);
-        const lng = this.decimalToNumber(row.longitude);
-        if (lat === null || lng === null) {
-          return { row, distanceKm: null };
-        }
-        return {
-          row,
-          distanceKm: haversineDistanceKm(userLat, userLng, lat, lng),
-        };
-      });
-
-      if (radiusKm !== undefined) {
-        withDist = withDist.filter(
-          (x) => x.distanceKm !== null && x.distanceKm <= radiusKm,
-        );
+    type WithDist = { row: MerchantRowForList; distanceKm: number | null };
+    let withDist: WithDist[] = rows.map((r) => {
+      const row = r as MerchantRowForList;
+      const lat = this.decimalToNumber(row.latitude);
+      const lng = this.decimalToNumber(row.longitude);
+      if (lat === null || lng === null) {
+        return { row, distanceKm: null };
       }
+      return {
+        row,
+        distanceKm: haversineDistanceKm(userLat, userLng, lat, lng),
+      };
+    });
 
-      withDist.sort((a, b) => {
-        if (a.distanceKm === null && b.distanceKm === null) {
-          return b.row.createdAt.getTime() - a.row.createdAt.getTime();
-        }
-        if (a.distanceKm === null) {
-          return 1;
-        }
-        if (b.distanceKm === null) {
-          return -1;
-        }
-        if (a.distanceKm !== b.distanceKm) {
-          return a.distanceKm - b.distanceKm;
-        }
-        return b.row.createdAt.getTime() - a.row.createdAt.getTime();
-      });
-
-      items = withDist.map((x) =>
-        this.rowToListItem(
-          x.row as unknown as MerchantRowForList,
-          x.distanceKm,
-        ),
+    if (radiusKm !== undefined) {
+      withDist = withDist.filter(
+        (x) => x.distanceKm !== null && x.distanceKm <= radiusKm,
       );
     }
 
+    withDist.sort((a, b) => {
+      if (a.distanceKm === null && b.distanceKm === null) {
+        return b.row.createdAt.getTime() - a.row.createdAt.getTime();
+      }
+      if (a.distanceKm === null) {
+        return 1;
+      }
+      if (b.distanceKm === null) {
+        return -1;
+      }
+      if (a.distanceKm !== b.distanceKm) {
+        return a.distanceKm - b.distanceKm;
+      }
+      return b.row.createdAt.getTime() - a.row.createdAt.getTime();
+    });
+
+    const items = withDist.map((x) =>
+      this.rowToListItem(x.row, x.distanceKm),
+    );
     const total = items.length;
     const pageItems = items.slice(pg.skip, pg.skip + pg.limit);
     return this.pagedResponse(pageItems, total, pg.page, pg.limit);
@@ -486,6 +599,17 @@ export class MerchantIntegrationService {
     userLat: number,
     userLng: number,
   ): Promise<string[]> {
+    if (await this.geoQuery.isGeoSqlReady()) {
+      const code = await this.geoQuery.resolveServiceAreaCodeForPoint(
+        userLng,
+        userLat,
+      );
+      if (!code) {
+        return [];
+      }
+      return this.geoQuery.listMerchantIdsInServiceArea(code);
+    }
+
     const resolved = await this.serviceArea.findActiveAreaContainingPoint(
       userLng,
       userLat,

@@ -3,6 +3,7 @@ import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
 import { MerchantController } from './merchant.controller';
 import { AppService } from './app.service';
+import { AppRedisModule } from './common/app-redis.module';
 import { CloudinaryService } from './common/cloudinary.service';
 import { MerchantCatalogController } from './merchant-catalog/merchant-catalog.controller';
 import { MerchantCatalogSuperAdminController } from './merchant-catalog/merchant-catalog-super-admin.controller';
@@ -26,12 +27,15 @@ import { MerchantOfferAdminController } from './merchant-offer/merchant-offer-ad
 import { MerchantOfferPublicController } from './merchant-offer/merchant-offer-public.controller';
 import { PlatformSettingsModule } from './platform-settings/platform-settings.module';
 import { DeliveryFeeModule } from './delivery-fee/delivery-fee.module';
+import { GeoModule } from './geo/geo.module';
 import { V2Module } from './v2/v2.module';
 import { APP_V2_CONTROLLERS } from './v2/controllers/app.v2-controllers';
 
 @Module({
   imports: [
     PrismaModule,
+    AppRedisModule,
+    GeoModule,
     FirebaseAdminModule,
     AuthModule,
     MerchantTypeModule,
