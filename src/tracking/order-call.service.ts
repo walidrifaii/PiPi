@@ -363,6 +363,62 @@ export class OrderCallService {
     await this.declineCall(orderId, 'driver');
   }
 
+  async endCallForUser(
+    userId: string,
+    orderId: string,
+    durationSeconds?: number,
+  ): Promise<void> {
+    const order = await this.assertOrderCall(orderId);
+    if (order.userId !== userId) {
+      throw new ForbiddenException('Not your order');
+    }
+    await this.endCall(orderId, 'user', durationSeconds);
+  }
+
+  async endCallForDriver(
+    driverId: string,
+    orderId: string,
+    durationSeconds?: number,
+  ): Promise<void> {
+    const order = await this.assertOrderCall(orderId);
+    if (order.driverId !== driverId) {
+      throw new ForbiddenException('Not your delivery');
+    }
+    await this.endCall(orderId, 'driver', durationSeconds);
+  }
+
+  private async endCall(
+    orderId: string,
+    role: 'user' | 'driver',
+    durationSeconds?: number,
+  ): Promise<void> {
+    const signal = await this.readCallSignal(orderId);
+    if (!signal?.active) {
+      return;
+    }
+
+    const connected =
+      signal.status === 'ongoing' || signal.status === 'accepted';
+    let status: string;
+    if (connected) {
+      status = 'ended';
+    } else if (signal.startedBy === role && signal.status === 'ringing') {
+      status = 'cancelled';
+    } else {
+      status = 'ended';
+    }
+
+    await this.writeCallSignal(orderId, {
+      ...signal,
+      status,
+      active: false,
+      durationSeconds:
+        typeof durationSeconds === 'number' && durationSeconds >= 0
+          ? durationSeconds
+          : signal.durationSeconds,
+    });
+  }
+
   private async declineCall(
     orderId: string,
     role: 'user' | 'driver',

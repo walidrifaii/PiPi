@@ -745,7 +745,9 @@ export class MerchantController {
     @Param('merchantId') merchantId: string,
     @Body() dto: UpdateMerchantDto,
   ) {
-    return this.merchantIntegrationService.updateMerchant(merchantId, dto);
+    return this.merchantIntegrationService.updateMerchant(merchantId, dto, {
+      allowFoodSharePercent: true,
+    });
   }
 
   @ApiTags('Super Admin')

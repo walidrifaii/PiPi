@@ -216,6 +216,7 @@ export class MerchantIntegrationService {
     merchantTypeId: true,
     imageUrl: true,
     coverImageUrl: true,
+    foodSharePercent: true,
     isActive: true,
     useWorkingHours: true,
     timezone: true,
@@ -730,6 +731,7 @@ export class MerchantIntegrationService {
   async updateMerchant(
     merchantId: string,
     dto: UpdateMerchantDto,
+    options: { allowFoodSharePercent?: boolean } = {},
   ): Promise<MerchantListItem> {
     const current = await this.db.merchant.findUnique({
       where: { id: merchantId },
@@ -805,6 +807,11 @@ export class MerchantIntegrationService {
 
     let foodSharePercentUpdate: number | null | undefined;
     if (Object.hasOwn(dto, 'foodSharePercent')) {
+      if (!options.allowFoodSharePercent) {
+        throw new BadRequestException(
+          'foodSharePercent can only be set by super admin',
+        );
+      }
       const raw = (dto as { foodSharePercent?: unknown }).foodSharePercent;
       if (raw === undefined) {
         foodSharePercentUpdate = undefined;

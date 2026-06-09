@@ -183,6 +183,21 @@ export class DriverOrdersController {
     return this.orderCall.declineCallForDriver(req.user.sub, orderId);
   }
 
+  @ApiOperation({ summary: 'End an active or ringing order voice call' })
+  @ApiParam({ name: 'orderId', type: String })
+  @Post(':orderId/call/end')
+  endCall(
+    @Req() req: { user: JwtUserPayload },
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+    @Body() body: { durationSeconds?: number } = {},
+  ) {
+    return this.orderCall.endCallForDriver(
+      req.user.sub,
+      orderId,
+      body.durationSeconds,
+    );
+  }
+
   @ApiOperation({ summary: 'Push notify for a Firestore chat message' })
   @ApiParam({ name: 'orderId', type: String })
   @Post(':orderId/messages/notify')
