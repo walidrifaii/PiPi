@@ -166,6 +166,8 @@ model Merchant {
   useWorkingHours Boolean         @default(false) @map("use_working_hours")
   /// FCM device token for new-order push (dashboard / mobile).
   fcmToken     String?            @map("fcm_token") @db.VarChar(512)
+  /// Override platform food-share % for this store; null = use global app_settings default.
+  foodSharePercent Decimal?       @map("food_share_percent") @db.Decimal(5, 2)
   createdAt    DateTime           @default(now()) @map("created_at")
   updatedAt    DateTime           @updatedAt @map("updated_at")
   orders       Order[]

@@ -55,6 +55,8 @@ export type MerchantListItem = {
   updatedAt: Date;
   /** Set when listing with lat and lng (near me). */
   distanceKm?: number | null;
+  /** Per-store food earnings % override; null = global platform default. */
+  foodSharePercent?: number | null;
 };
 
 /** Store profile for guests and customers (GET /merchants/:merchantId). */
@@ -114,6 +116,7 @@ type MerchantRowForList = {
   cityCode: string | null;
   latitude: unknown;
   longitude: unknown;
+  foodSharePercent?: unknown;
   merchantType: { code: string };
 };
 
@@ -196,6 +199,14 @@ export class MerchantIntegrationService {
       createdAt: r.createdAt,
       updatedAt: r.updatedAt,
       ...(distanceKm !== undefined ? { distanceKm } : {}),
+      ...(Object.hasOwn(r, 'foodSharePercent')
+        ? {
+            foodSharePercent:
+              r.foodSharePercent != null
+                ? this.decimalToNumber(r.foodSharePercent)
+                : null,
+          }
+        : {}),
     };
   }
 
@@ -792,6 +803,26 @@ export class MerchantIntegrationService {
       }
     }
 
+    let foodSharePercentUpdate: number | null | undefined;
+    if (Object.hasOwn(dto, 'foodSharePercent')) {
+      const raw = (dto as { foodSharePercent?: unknown }).foodSharePercent;
+      if (raw === undefined) {
+        foodSharePercentUpdate = undefined;
+      } else if (raw === null) {
+        foodSharePercentUpdate = null;
+      } else if (typeof raw !== 'number' || !Number.isFinite(raw)) {
+        throw new BadRequestException(
+          'foodSharePercent must be a number between 0 and 100',
+        );
+      } else if (raw < 0 || raw > 100) {
+        throw new BadRequestException(
+          'foodSharePercent must be between 0 and 100',
+        );
+      } else {
+        foodSharePercentUpdate = raw;
+      }
+    }
+
     const updated = await this.db.merchant.update({
       where: { id: merchantId },
       data: {
@@ -812,8 +843,11 @@ export class MerchantIntegrationService {
         ...(longitudeUpdate !== undefined
           ? { longitude: longitudeUpdate }
           : {}),
+        ...(foodSharePercentUpdate !== undefined
+          ? { foodSharePercent: foodSharePercentUpdate }
+          : {}),
       },
-      select: this.listSelect,
+      select: { ...this.listSelect, foodSharePercent: true },
     });
     return this.rowToListItem(updated as unknown as MerchantRowForList);
   }

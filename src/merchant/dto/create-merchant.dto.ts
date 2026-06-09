@@ -101,4 +101,18 @@ export class CreateMerchantDto {
   @Min(-180)
   @Max(180)
   longitude?: number;
+
+  @ApiPropertyOptional({
+    minimum: 0,
+    maximum: 100,
+    nullable: true,
+    description:
+      'Merchant food earnings share % (e.g. 90 = merchant keeps 90% of food subtotal). Null clears override and uses global default.',
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  foodSharePercent?: number | null;
 }

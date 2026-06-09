@@ -155,7 +155,9 @@ export class OrdersService {
       this.prisma.order.count({ where }),
     ]);
     const merchantFoodSharePercent =
-      await this.platformSettings.getMerchantFoodSharePercent();
+      await this.platformSettings.getMerchantFoodSharePercentForMerchant(
+        merchantId,
+      );
 
     return this.pagedResponse(
       rows.map((o) => {
@@ -211,7 +213,9 @@ export class OrdersService {
       products.map((p) => [p.id, resolveProductDisplayImage(p)]),
     );
     const merchantFoodSharePercent =
-      await this.platformSettings.getMerchantFoodSharePercent();
+      await this.platformSettings.getMerchantFoodSharePercentForMerchant(
+        merchantId,
+      );
     return mapOrderDetail(row, {
       includeCustomer: true,
       audience: 'merchant',
@@ -763,7 +767,7 @@ export class OrdersService {
 
     const [sharePercent, paidOrderIds, rows, paidSettlements] =
       await Promise.all([
-        this.platformSettings.getMerchantFoodSharePercent(),
+        this.platformSettings.getMerchantFoodSharePercentForMerchant(merchantId),
         this.settlements.getPaidOrderIds('MERCHANT', merchantId),
         this.prisma.order.findMany({
           where: {
@@ -927,7 +931,12 @@ export class OrdersService {
   ) {
     const merchant = await this.prisma.merchant.findUnique({
       where: { id: merchantId },
-      select: { id: true, name: true, isActive: true },
+      select: {
+        id: true,
+        name: true,
+        isActive: true,
+        foodSharePercent: true,
+      },
     });
     if (!merchant) {
       throw new NotFoundException('Merchant not found');
@@ -944,7 +953,7 @@ export class OrdersService {
 
     const [summary, sharePercent, paidOrderIds, orderRows] = await Promise.all([
       this.getMerchantEarnings(merchantId, query, { forAdmin: true }),
-      this.platformSettings.getMerchantFoodSharePercent(),
+      this.platformSettings.getMerchantFoodSharePercentForMerchant(merchantId),
       this.settlements.getPaidOrderIds('MERCHANT', merchantId),
       this.prisma.order.findMany({
         where: {
@@ -964,6 +973,10 @@ export class OrdersService {
         id: merchant.id,
         name: merchant.name,
         isActive: merchant.isActive,
+        foodSharePercent:
+          merchant.foodSharePercent != null
+            ? Number(merchant.foodSharePercent)
+            : null,
       },
       orders: this.buildMerchantOrderEarningsList(
         orderRows,
@@ -979,7 +992,10 @@ export class OrdersService {
     query: MerchantEarningsQueryDto,
   ) {
     const { from, to } = this.resolveMerchantEarningsPeriod(query);
-    const sharePercent = await this.platformSettings.getMerchantFoodSharePercent();
+    const sharePercent =
+      await this.platformSettings.getMerchantFoodSharePercentForMerchant(
+        merchantId,
+      );
     const settlement = await this.settlements.markMerchantEarningsPaid(
       merchantId,
       from,

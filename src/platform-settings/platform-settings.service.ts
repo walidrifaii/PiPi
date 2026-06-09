@@ -72,6 +72,20 @@ export class PlatformSettingsService {
     );
   }
 
+  /** Effective food-share % for a store (per-merchant override or global default). */
+  async getMerchantFoodSharePercentForMerchant(
+    merchantId: string,
+  ): Promise<number> {
+    const merchant = await this.prisma.merchant.findUnique({
+      where: { id: merchantId },
+      select: { foodSharePercent: true },
+    });
+    if (merchant?.foodSharePercent != null) {
+      return clampSharePercent(Number(merchant.foodSharePercent));
+    }
+    return this.getMerchantFoodSharePercent();
+  }
+
   async setDriverDeliverySharePercent(percent: number): Promise<number> {
     return this.writePercentSetting(
       DRIVER_DELIVERY_FEE_SHARE_PERCENT_KEY,
