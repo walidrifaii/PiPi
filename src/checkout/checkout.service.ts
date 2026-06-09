@@ -22,6 +22,7 @@ import type { SelectedOptionSnapshot } from '../merchant/product-option.types';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCheckoutDto } from './dto/create-checkout.dto';
 import { MerchantOfferService } from '../merchant-offer/merchant-offer.service';
+import { PlatformSettingsService } from '../platform-settings/platform-settings.service';
 import { resolveStorefrontProductPricing } from '../merchant-offer/merchant-offer-pricing';
 
 type LineItem = {
@@ -88,9 +89,12 @@ export class CheckoutService {
     private readonly orderNotifications: OrderNotificationsPort,
     private readonly merchantOffers: MerchantOfferService,
     private readonly deliveryFees: DeliveryFeeService,
+    private readonly platformSettings: PlatformSettingsService,
   ) {}
 
   async createOrder(userId: string, dto: CreateCheckoutDto) {
+    await this.platformSettings.assertPlatformOpenForOrders();
+
     const merchant = await this.prisma.merchant.findUnique({
       where: { id: dto.merchantId },
       select: {

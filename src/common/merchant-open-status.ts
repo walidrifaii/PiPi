@@ -80,6 +80,21 @@ export function parseIsoWeekdayFromInput(value: unknown): number | null {
 /** IANA timezone for Lebanon (Beirut). */
 export const MERCHANT_TIMEZONE_LEBANON = 'Asia/Beirut';
 
+/** PipPip default: open 9:00 AM, close 1:00 AM next calendar day. */
+export const DEFAULT_PLATFORM_OPEN_LOCAL = '09:00';
+export const DEFAULT_PLATFORM_CLOSE_LOCAL = '01:00';
+
+export type PlatformOperatingHours = {
+  useOperatingHours: boolean;
+  timezone: string;
+  openLocal: string;
+  closeLocal: string;
+};
+
+export type PlatformOperatingStatus = PlatformOperatingHours & {
+  isOpenNow: boolean;
+};
+
 /**
  * Parses a local time string: 24-hour `HH:mm` / `H:mm`, or 12-hour `h:mm AM` / `h:mm PM` (case-insensitive).
  * Returns minutes from midnight, or null if invalid.
@@ -237,6 +252,33 @@ function getLocalWeekdayAndMinutes(
   }
 }
 
+/** @internal Exported for unit tests. */
+export function intervalMatchesLocalTime(
+  weekday: number,
+  minutes: number,
+  intervalWeekday: number,
+  openMinutes: number,
+  closeMinutes: number,
+): boolean {
+  if (closeMinutes > openMinutes) {
+    if (weekday !== intervalWeekday) {
+      return false;
+    }
+    return minutes >= openMinutes && minutes < closeMinutes;
+  }
+  if (closeMinutes < openMinutes) {
+    const nextWeekday = intervalWeekday === 7 ? 1 : intervalWeekday + 1;
+    if (weekday === intervalWeekday && minutes >= openMinutes) {
+      return true;
+    }
+    if (weekday === nextWeekday && minutes < closeMinutes) {
+      return true;
+    }
+    return false;
+  }
+  return false;
+}
+
 export function isWithinWorkingHours(
   timeZone: string,
   week: MerchantWorkingHoursWeek,
@@ -246,28 +288,44 @@ export function isWithinWorkingHours(
   if (!local) {
     return false;
   }
-  const day = week.days.find((d) => d.weekday === local.weekday);
-  if (!day || day.intervals.length === 0) {
-    return false;
-  }
-  const m = local.minutes;
-  for (const intv of day.intervals) {
-    const o = parseLocalTimeToMinutes(intv.open);
-    const c = parseLocalTimeToMinutes(intv.close);
-    if (o === null || c === null) {
-      continue;
-    }
-    if (c > o) {
-      if (m >= o && m < c) {
-        return true;
+  const { weekday, minutes } = local;
+
+  for (const day of week.days) {
+    for (const intv of day.intervals) {
+      const o = parseLocalTimeToMinutes(intv.open);
+      const c = parseLocalTimeToMinutes(intv.close);
+      if (o === null || c === null) {
+        continue;
       }
-    } else if (c < o) {
-      if (m >= o || m < c) {
+      if (intervalMatchesLocalTime(weekday, minutes, day.weekday, o, c)) {
         return true;
       }
     }
   }
   return false;
+}
+
+/** Daily platform schedule (same hours every day, close may be next morning). */
+export function buildDailyOperatingWeek(
+  openLocal: string,
+  closeLocal: string,
+): MerchantWorkingHoursWeek {
+  const days: MerchantWorkingHoursDay[] = [];
+  for (let weekday = 1; weekday <= 7; weekday++) {
+    days.push({
+      weekday,
+      intervals: [{ open: openLocal, close: closeLocal }],
+    });
+  }
+  return { days };
+}
+
+export function computePlatformOpenNow(
+  config: Pick<PlatformOperatingHours, 'timezone' | 'openLocal' | 'closeLocal'>,
+  now?: Date,
+): boolean {
+  const week = buildDailyOperatingWeek(config.openLocal, config.closeLocal);
+  return isWithinWorkingHours(config.timezone, week, now);
 }
 
 /** Build the weekly shape used by `isWithinWorkingHours` from DB interval rows. */

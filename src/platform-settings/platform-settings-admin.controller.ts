@@ -4,6 +4,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { SuperAdminGuard } from '../auth/super-admin.guard';
 import { UpdateDriverDeliveryShareDto } from './dto/update-driver-delivery-share.dto';
 import { UpdatePlatformEarningsDto } from './dto/update-platform-earnings.dto';
+import { UpdatePlatformOperatingHoursDto } from './dto/update-platform-operating-hours.dto';
 import { PlatformSettingsService } from './platform-settings.service';
 
 @ApiTags('Super Admin')
@@ -50,5 +51,22 @@ export class PlatformSettingsAdminController {
       dto.percent,
     );
     return { driverDeliverySharePercent: percent };
+  }
+
+  @ApiOperation({
+    summary:
+      'Platform delivery hours (default 9:00 AM – 1:00 AM next day). When closed, customers cannot checkout.',
+  })
+  @Get('operating-hours')
+  getOperatingHours() {
+    return this.settings.getPlatformOperatingStatus();
+  }
+
+  @ApiOperation({
+    summary: 'Update platform delivery hours',
+  })
+  @Patch('operating-hours')
+  updateOperatingHours(@Body() dto: UpdatePlatformOperatingHoursDto) {
+    return this.settings.updatePlatformOperatingHours(dto);
   }
 }
