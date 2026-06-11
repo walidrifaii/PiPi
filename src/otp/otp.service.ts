@@ -32,6 +32,9 @@ export interface PendingUserRegistration {
   expiresAt: number;
 }
 
+/** Dev/test accounts: fixed OTP instead of a random code (login, register, etc.). */
+const FIXED_OTP_BY_PHONE = new Map<string, number>([['+96170657961', 123456]]);
+
 @Injectable()
 export class OtpService {
   /** In-process store keyed by purpose:phone (sufficient until verify step uses Redis). */
@@ -69,8 +72,16 @@ export class OtpService {
       .digest('hex');
   }
 
-  private generateCode(): number {
+  private generateCode(phoneE164: string): number {
+    const fixed = FIXED_OTP_BY_PHONE.get(phoneE164);
+    if (fixed !== undefined) {
+      return fixed;
+    }
     return randomInt(100_000, 1_000_000);
+  }
+
+  private hasFixedOtp(phoneE164: string): boolean {
+    return FIXED_OTP_BY_PHONE.has(phoneE164);
   }
 
   setPendingRegistration(phone: string): string {
@@ -313,13 +324,17 @@ export class OtpService {
     expiresInSeconds: number;
   }> {
     const phoneE164 = this.normalizePhoneE164(phone);
-    const code = this.generateCode();
+    const code = this.generateCode(phoneE164);
     const ttl = this.ttlSeconds();
 
     this.store.set(this.storeKey(purpose, phoneE164), {
       hash: this.hashCode(phoneE164, code),
       expiresAt: Date.now() + ttl * 1000,
     });
+
+    if (this.hasFixedOtp(phoneE164)) {
+      return { ok: true, expiresInSeconds: ttl };
+    }
 
     const sent = await this.whatsAppNode.sendOtpViaNodeCampaign(phoneE164, code);
     if (!sent.ok) {
