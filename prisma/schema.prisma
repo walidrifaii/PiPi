@@ -262,6 +262,7 @@ model Product {
   price       Decimal        @db.Decimal(10, 2)
   discountPrice Decimal?     @map("discount_price") @db.Decimal(10, 2)
   imageUrl    String?        @map("image_url") @db.VarChar(500)
+  isActive    Boolean        @default(true) @map("is_active")
   createdAt   DateTime       @default(now()) @map("created_at")
   updatedAt   DateTime       @updatedAt @map("updated_at")
   category     MerchantCategory      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
@@ -269,6 +270,7 @@ model Product {
   optionGroups ProductOptionGroup[]
 
   @@index([categoryId])
+  @@index([isActive])
   @@map("products")
 }
 

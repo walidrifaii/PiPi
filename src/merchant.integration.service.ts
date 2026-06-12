@@ -319,16 +319,29 @@ export class MerchantIntegrationService {
     const pg = this.normalizePagination(q.page ?? 1, q.limit ?? 20);
     const parsed = this.parseGetMerchantsQuery(q);
 
-    if (
-      parsed.hasLat &&
-      parsed.userLat !== undefined &&
-      parsed.userLng !== undefined &&
-      (await this.geoQuery.isGeoSqlReady())
-    ) {
-      return this.getMerchantsWithGeoSql(parsed, pg);
-    }
+    // TEMP: ignore lat/lng and service-area filters — list all merchants.
+    // Old location-based routing (restore when re-enabling geo):
+    // if (
+    //   parsed.hasLat &&
+    //   parsed.userLat !== undefined &&
+    //   parsed.userLng !== undefined &&
+    //   (await this.geoQuery.isGeoSqlReady())
+    // ) {
+    //   return this.getMerchantsWithGeoSql(parsed, pg);
+    // }
+    // return this.getMerchantsLegacy(parsed, pg);
 
-    return this.getMerchantsLegacy(parsed, pg);
+    return this.getMerchantsLegacy(
+      {
+        ...parsed,
+        hasLat: false,
+        userLat: undefined,
+        userLng: undefined,
+        radiusKm: undefined,
+        normalizedCity: undefined,
+      },
+      pg,
+    );
   }
 
   private parseGetMerchantsQuery(q: GetMerchantsQuery) {

@@ -44,9 +44,9 @@ import {
 @Controller('merchants')
 export class MerchantController {
   constructor(
-    private readonly merchantIntegrationService: MerchantIntegrationService,
-    private readonly merchantCatalogService: MerchantCatalogService,
-    private readonly merchantOfferService: MerchantOfferService,
+    protected readonly merchantIntegrationService: MerchantIntegrationService,
+    protected readonly merchantCatalogService: MerchantCatalogService,
+    protected readonly merchantOfferService: MerchantOfferService,
   ) {}
 
   @ApiTags('Storefront')

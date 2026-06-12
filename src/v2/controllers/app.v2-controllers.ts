@@ -1,10 +1,10 @@
 import { AppController } from '../../app.controller';
 import { MerchantCatalogController } from '../../merchant-catalog/merchant-catalog.controller';
 import { MerchantCatalogSuperAdminController } from '../../merchant-catalog/merchant-catalog-super-admin.controller';
-import { MerchantController } from '../../merchant.controller';
 import { MerchantOfferAdminController } from '../../merchant-offer/merchant-offer-admin.controller';
 import { MerchantOfferPublicController } from '../../merchant-offer/merchant-offer-public.controller';
 import { createV2Controller } from './create-v2-controller';
+import { MerchantStorefrontV2Controller } from './merchant-storefront.v2-controller';
 
 export const AppV2Controller = createV2Controller(AppController);
 export const MerchantCatalogV2Controller = createV2Controller(
@@ -19,10 +19,7 @@ export const MerchantOfferPublicV2Controller = createV2Controller(
   MerchantOfferPublicController,
   'merchants',
 );
-export const MerchantV2Controller = createV2Controller(
-  MerchantController,
-  'merchants',
-);
+export const MerchantV2Controller = MerchantStorefrontV2Controller;
 export const MerchantCatalogSuperAdminV2Controller = createV2Controller(
   MerchantCatalogSuperAdminController,
   'merchants/admin',

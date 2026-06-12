@@ -1,7 +1,7 @@
 import { SuperAdminPlatformController } from '../../admin/super-admin-platform.controller';
 import { BannerAdminController } from '../../banner/banner-admin.controller';
 import { BannerController } from '../../banner/banner.controller';
-import { CheckoutController } from '../../checkout/checkout.controller';
+import { CheckoutV2Controller } from './checkout.v2-controller';
 import { UserAddressController } from '../../checkout/user-address.controller';
 import { DeliveryFeeAdminController } from '../../delivery-fee/delivery-fee-admin.controller';
 import { DriversController } from '../../drivers/drivers.controller';
@@ -36,10 +36,7 @@ export const BannerAdminV2Controller = createV2Controller(
   BannerAdminController,
   'banners/admin',
 );
-export const CheckoutV2Controller = createV2Controller(
-  CheckoutController,
-  'checkout',
-);
+export { CheckoutV2Controller };
 export const UserAddressV2Controller = createV2Controller(
   UserAddressController,
   'users/me/addresses',

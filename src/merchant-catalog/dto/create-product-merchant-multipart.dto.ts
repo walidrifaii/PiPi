@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsNumber,
   IsOptional,
   IsString,
@@ -50,6 +51,19 @@ export class CreateProductMerchantMultipartDto {
   @Min(0)
   @ValidateDiscountNotAbovePrice()
   discountPrice?: number;
+
+  @ApiPropertyOptional({
+    description: 'When false, product is hidden from v2 customer storefront.',
+    default: true,
+  })
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (value === 'true' || value === true) return true;
+    if (value === 'false' || value === false) return false;
+    return value;
+  })
+  @IsBoolean()
+  isActive?: boolean;
 
   @ApiPropertyOptional({
     description:

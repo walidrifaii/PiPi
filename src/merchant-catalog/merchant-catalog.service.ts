@@ -298,7 +298,10 @@ export class MerchantCatalogService {
   }
 
   /** Public storefront: product details by id (guest or logged-in customer). */
-  async getProductForStorefront(productId: string) {
+  async getProductForStorefront(
+    productId: string,
+    activeProductsOnly = false,
+  ) {
     const row = await this.prisma.product.findUnique({
       where: { id: productId },
       include: {
@@ -330,6 +333,9 @@ export class MerchantCatalogService {
     if (!row || !row.category.merchant.isActive) {
       throw new NotFoundException('Product not found');
     }
+    if (activeProductsOnly && !row.isActive) {
+      throw new NotFoundException('Product not found');
+    }
 
     const offerPercent =
       await this.merchantOffers.getLiveOfferPercentForMerchant(
@@ -340,6 +346,7 @@ export class MerchantCatalogService {
 
     return {
       id: row.id,
+      isActive: row.isActive,
       categoryId: row.categoryId,
       name: row.name,
       nameAr: row.nameAr,
@@ -468,9 +475,17 @@ export class MerchantCatalogService {
     categoryId: string,
     page = 1,
     limit = 20,
+    activeProductsOnly = false,
   ) {
     await this.assertMerchantBrowsable(merchantId);
-    return this.fetchProductsPaged(merchantId, categoryId, page, limit, true);
+    return this.fetchProductsPaged(
+      merchantId,
+      categoryId,
+      page,
+      limit,
+      true,
+      activeProductsOnly,
+    );
   }
 
   async listProducts(
@@ -489,6 +504,7 @@ export class MerchantCatalogService {
     page: number,
     limit: number,
     activeOptionsOnly: boolean,
+    activeProductsOnly = false,
   ) {
     const category = await this.prisma.merchantCategory.findFirst({
       where: { id: categoryId, merchantId },
@@ -497,7 +513,10 @@ export class MerchantCatalogService {
       throw new NotFoundException('Category not found');
     }
     const pg = this.normalizePagination(page, limit);
-    const where = { categoryId };
+    const where = {
+      categoryId,
+      ...(activeProductsOnly ? { isActive: true } : {}),
+    };
     const [total, rows] = await this.prisma.$transaction([
       this.prisma.product.count({ where }),
       this.prisma.product.findMany({
@@ -529,6 +548,7 @@ export class MerchantCatalogService {
     categoryId?: string,
     page = 1,
     limit = 20,
+    activeProductsOnly = false,
   ) {
     await this.assertMerchantBrowsable(merchantId);
     return this.fetchAllProductsPaged(
@@ -537,6 +557,7 @@ export class MerchantCatalogService {
       page,
       limit,
       true,
+      activeProductsOnly,
     );
   }
 
@@ -562,6 +583,7 @@ export class MerchantCatalogService {
     page: number,
     limit: number,
     activeOptionsOnly: boolean,
+    activeProductsOnly = false,
   ) {
     if (categoryId !== undefined && categoryId !== '') {
       const category = await this.prisma.merchantCategory.findFirst({
@@ -575,6 +597,7 @@ export class MerchantCatalogService {
     const where = {
       category: { merchantId },
       ...(categoryId !== undefined && categoryId !== '' ? { categoryId } : {}),
+      ...(activeProductsOnly ? { isActive: true } : {}),
     };
     const pg = this.normalizePagination(page, limit);
     const [total, rows] = await this.prisma.$transaction([
@@ -613,6 +636,7 @@ export class MerchantCatalogService {
     page = 1,
     limit = 20,
     scopeMerchantIds: string[] = [],
+    activeProductsOnly = false,
   ) {
     const pg = this.normalizePagination(page, limit);
 
@@ -632,6 +656,10 @@ export class MerchantCatalogService {
       ', ',
     );
 
+    const activeProductSql = activeProductsOnly
+      ? Prisma.sql`AND p.is_active = true`
+      : Prisma.empty;
+
     const countRows = await this.prisma.$queryRaw<{ count: bigint }[]>`
       SELECT COUNT(*)::bigint AS count
       FROM products p
@@ -641,6 +669,7 @@ export class MerchantCatalogService {
         AND p.discount_price < p.price
         AND m.is_active = true
         AND m.id IN (${openIdList})
+        ${activeProductSql}
     `;
     const total = Number(countRows[0]?.count ?? 0);
 
@@ -653,6 +682,7 @@ export class MerchantCatalogService {
         AND p.discount_price < p.price
         AND m.is_active = true
         AND m.id IN (${openIdList})
+        ${activeProductSql}
       ORDER BY p.updated_at DESC
       LIMIT ${pg.limit}
       OFFSET ${pg.skip}
@@ -712,6 +742,7 @@ export class MerchantCatalogService {
       merchantTypeCode?: string;
       /** Merchants whose GPS lies inside the polygon that contains the user. */
       scopeMerchantIds: string[];
+      activeProductsOnly?: boolean;
     },
   ) {
     const term = normalizeNameSearchTerm(name);
@@ -739,6 +770,7 @@ export class MerchantCatalogService {
         { name: nameStartsWithFilter(term) },
         { nameAr: nameStartsWithFilter(term) },
       ],
+      ...(filters.activeProductsOnly ? { isActive: true } : {}),
       category: {
         merchant: {
           id: { in: filters.scopeMerchantIds },
@@ -819,6 +851,7 @@ export class MerchantCatalogService {
         nameAr: dto.nameAr,
         descriptionAr: dto.descriptionAr,
         price: new Prisma.Decimal(dto.price),
+        isActive: dto.isActive ?? true,
         discountPrice:
           dto.discountPrice !== undefined
             ? new Prisma.Decimal(Number(dto.discountPrice))
@@ -901,6 +934,7 @@ export class MerchantCatalogService {
           description: rest.description,
           nameAr: rest.nameAr,
           descriptionAr: rest.descriptionAr,
+          isActive: rest.isActive,
           price:
             rest.price !== undefined
               ? new Prisma.Decimal(rest.price)

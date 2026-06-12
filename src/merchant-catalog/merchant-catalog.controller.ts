@@ -196,6 +196,7 @@ export class MerchantCatalogController {
         nameAr: dto.nameAr,
         descriptionAr: dto.descriptionAr,
         discountPrice: dto.discountPrice,
+        isActive: dto.isActive,
         optionGroups,
       },
       mainImageUrlFromUpload,

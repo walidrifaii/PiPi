@@ -32,8 +32,15 @@ export interface PendingUserRegistration {
   expiresAt: number;
 }
 
-/** Dev/test accounts: fixed OTP instead of a random code (login, register, etc.). */
-const FIXED_OTP_BY_PHONE = new Map<string, number>([['+96170657961', 123456]]);
+/** Login-only fixed OTP for a single test account. */
+const FIXED_LOGIN_OTP_PHONE = '+96170657961';
+const FIXED_LOGIN_OTP_CODE = 123456;
+
+const LOGIN_OTP_PURPOSES = new Set<OtpPurpose>([
+  'login',
+  'driver_login',
+  'app_login',
+]);
 
 @Injectable()
 export class OtpService {
@@ -72,16 +79,20 @@ export class OtpService {
       .digest('hex');
   }
 
-  private generateCode(phoneE164: string): number {
-    const fixed = FIXED_OTP_BY_PHONE.get(phoneE164);
-    if (fixed !== undefined) {
-      return fixed;
+  private generateCode(phoneE164: string, purpose: OtpPurpose): number {
+    if (
+      phoneE164 === FIXED_LOGIN_OTP_PHONE &&
+      LOGIN_OTP_PURPOSES.has(purpose)
+    ) {
+      return FIXED_LOGIN_OTP_CODE;
     }
     return randomInt(100_000, 1_000_000);
   }
 
-  private hasFixedOtp(phoneE164: string): boolean {
-    return FIXED_OTP_BY_PHONE.has(phoneE164);
+  private hasFixedLoginOtp(phoneE164: string, purpose: OtpPurpose): boolean {
+    return (
+      phoneE164 === FIXED_LOGIN_OTP_PHONE && LOGIN_OTP_PURPOSES.has(purpose)
+    );
   }
 
   setPendingRegistration(phone: string): string {
@@ -324,7 +335,7 @@ export class OtpService {
     expiresInSeconds: number;
   }> {
     const phoneE164 = this.normalizePhoneE164(phone);
-    const code = this.generateCode(phoneE164);
+    const code = this.generateCode(phoneE164, purpose);
     const ttl = this.ttlSeconds();
 
     this.store.set(this.storeKey(purpose, phoneE164), {
@@ -332,7 +343,7 @@ export class OtpService {
       expiresAt: Date.now() + ttl * 1000,
     });
 
-    if (this.hasFixedOtp(phoneE164)) {
+    if (this.hasFixedLoginOtp(phoneE164, purpose)) {
       return { ok: true, expiresInSeconds: ttl };
     }
 

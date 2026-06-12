@@ -11,7 +11,7 @@ import { CreateCheckoutDto } from './dto/create-checkout.dto';
 @UseGuards(JwtAuthGuard, UserAccountGuard)
 @Controller('checkout')
 export class CheckoutController {
-  constructor(private readonly checkoutService: CheckoutService) {}
+  constructor(protected readonly checkoutService: CheckoutService) {}
 
   @ApiOperation({
     summary:

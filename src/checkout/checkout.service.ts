@@ -90,7 +90,11 @@ export class CheckoutService {
     private readonly deliveryFees: DeliveryFeeService,
   ) {}
 
-  async createOrder(userId: string, dto: CreateCheckoutDto) {
+  async createOrder(
+    userId: string,
+    dto: CreateCheckoutDto,
+    opts?: { requireActiveProducts?: boolean },
+  ) {
     const merchant = await this.prisma.merchant.findUnique({
       where: { id: dto.merchantId },
       select: {
@@ -134,6 +138,7 @@ export class CheckoutService {
       where: {
         id: { in: productIds },
         category: { merchantId: dto.merchantId },
+        ...(opts?.requireActiveProducts ? { isActive: true } : {}),
       },
       select: {
         id: true,
