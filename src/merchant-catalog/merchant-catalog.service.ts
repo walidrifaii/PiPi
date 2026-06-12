@@ -907,7 +907,17 @@ export class MerchantCatalogService {
       this.assertOptionGroupsValid(dto.optionGroups);
     }
 
-    const { extraImageUrls, imageUrl, optionGroups, ...rest } = dto;
+    const { extraImageUrls, imageUrl, optionGroups, categoryId, ...rest } =
+      dto as UpdateProductDto & { categoryId?: string };
+
+    if (categoryId !== undefined) {
+      const category = await this.prisma.merchantCategory.findFirst({
+        where: { id: categoryId, merchantId },
+      });
+      if (!category) {
+        throw new NotFoundException('Category not found');
+      }
+    }
 
     return this.prisma.$transaction(async (tx) => {
       if (extraImageUrls !== undefined) {
@@ -930,19 +940,27 @@ export class MerchantCatalogService {
       const updated = await tx.product.update({
         where: { id: productId },
         data: {
-          name: rest.name,
-          description: rest.description,
-          nameAr: rest.nameAr,
-          descriptionAr: rest.descriptionAr,
-          isActive: rest.isActive,
-          price:
-            rest.price !== undefined
-              ? new Prisma.Decimal(rest.price)
-              : undefined,
-          discountPrice:
-            rest.discountPrice !== undefined
-              ? new Prisma.Decimal(Number(rest.discountPrice))
-              : undefined,
+          ...(categoryId !== undefined ? { categoryId } : {}),
+          ...(rest.name !== undefined ? { name: rest.name } : {}),
+          ...(rest.description !== undefined
+            ? { description: rest.description }
+            : {}),
+          ...(rest.nameAr !== undefined ? { nameAr: rest.nameAr } : {}),
+          ...(rest.descriptionAr !== undefined
+            ? { descriptionAr: rest.descriptionAr }
+            : {}),
+          ...(rest.isActive !== undefined ? { isActive: rest.isActive } : {}),
+          ...(rest.price !== undefined
+            ? { price: new Prisma.Decimal(rest.price) }
+            : {}),
+          ...(rest.discountPrice !== undefined
+            ? {
+                discountPrice:
+                  rest.discountPrice === null
+                    ? null
+                    : new Prisma.Decimal(Number(rest.discountPrice)),
+              }
+            : {}),
           ...(imageUrl !== undefined ? { imageUrl } : {}),
         },
         include: {

@@ -33,6 +33,7 @@ import { CreateProductMerchantMultipartDto } from './dto/create-product-merchant
 import { parseOptionGroupsJson } from './parse-option-groups-json';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { UpdateProductMerchantMultipartDto } from './dto/update-product-merchant-multipart.dto';
 import { MerchantCatalogService } from './merchant-catalog.service';
 
 /** Store catalog for logged-in merchants only (Bearer merchant JWT; store id from token). */
@@ -205,16 +206,46 @@ export class MerchantCatalogController {
   }
 
   @ApiOperation({
-    summary: 'Update product (JSON). Use imageUrl / extraImageUrls for images.',
+    summary:
+      'Update product (JSON or multipart). Send `imageUrl` file for a new main image.',
   })
+  @ApiConsumes('application/json', 'multipart/form-data')
   @ApiParam({ name: 'productId', type: String })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        categoryId: { type: 'string', format: 'uuid' },
+        name: { type: 'string' },
+        nameAr: { type: 'string' },
+        price: { type: 'number' },
+        description: { type: 'string' },
+        descriptionAr: { type: 'string' },
+        discountPrice: { type: 'number', nullable: true },
+        isActive: { type: 'boolean' },
+        imageUrl: { type: 'string', format: 'binary' },
+      },
+    },
+  })
   @Patch('products/:productId')
-  updateProduct(
+  @UseInterceptors(FileInterceptor('imageUrl'))
+  async updateProduct(
     @EffectiveMerchantId() merchantId: string,
     @Param('productId') productId: string,
-    @Body() dto: UpdateProductDto,
+    @Body() dto: UpdateProductDto | UpdateProductMerchantMultipartDto,
+    @UploadedFile() imageFile?: Express.Multer.File,
   ) {
-    return this.catalog.updateProduct(merchantId, productId, dto);
+    let uploadedImageUrl: string | undefined;
+    if (imageFile?.buffer) {
+      uploadedImageUrl = await this.cloudinary.uploadImage(
+        imageFile.buffer,
+        'athar/products',
+      );
+    }
+    return this.catalog.updateProduct(merchantId, productId, {
+      ...dto,
+      ...(uploadedImageUrl !== undefined ? { imageUrl: uploadedImageUrl } : {}),
+    });
   }
 
   @ApiOperation({ summary: 'Delete product' })
