@@ -142,16 +142,69 @@ export class OrdersService {
     return mapOrderDetail(row);
   }
 
-  async listForMerchant(
+  private async mapMerchantOrderList(
     merchantId: string,
-    page = 1,
-    limit = 20,
-    statuses: readonly string[] = MERCHANT_HISTORY_ORDER_STATUSES,
+    rows: OrderWithRelations[],
+    total: number,
+    page: number,
+    limit: number,
   ) {
+    const merchantFoodSharePercent =
+      await this.platformSettings.getMerchantFoodSharePercentForMerchant(
+        merchantId,
+      );
+
+    return this.pagedResponse(
+      rows.map((o) => {
+        const summary = mapOrderSummary(
+          o,
+          'merchant',
+          merchantFoodSharePercent,
+        );
+        return {
+          ...summary,
+          customer: o.user
+            ? {
+                id: o.user.id,
+                fullName: o.user.fullName,
+                phone: o.user.phone,
+              }
+            : null,
+        };
+      }),
+      total,
+      page,
+      limit,
+    );
+  }
+
+  async listForMerchant(merchantId: string, page = 1, limit = 20) {
+    const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
+    const where = { merchantId };
+    const [rows, total] = await Promise.all([
+      this.prisma.order.findMany({
+        where,
+        include: orderInclude,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: l,
+      }),
+      this.prisma.order.count({ where }),
+    ]);
+    return this.mapMerchantOrderList(
+      merchantId,
+      rows as OrderWithRelations[],
+      total,
+      p,
+      l,
+    );
+  }
+
+  async listHistoryForMerchant(merchantId: string, page = 1, limit = 20) {
     const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
     const where = {
       merchantId,
-      status: { in: [...statuses] },
+      status: { in: [...MERCHANT_HISTORY_ORDER_STATUSES] },
     };
     const [rows, total] = await Promise.all([
       this.prisma.order.findMany({
@@ -163,30 +216,9 @@ export class OrdersService {
       }),
       this.prisma.order.count({ where }),
     ]);
-    const merchantFoodSharePercent =
-      await this.platformSettings.getMerchantFoodSharePercentForMerchant(
-        merchantId,
-      );
-
-    return this.pagedResponse(
-      rows.map((o) => {
-        const summary = mapOrderSummary(
-          o as OrderWithRelations,
-          'merchant',
-          merchantFoodSharePercent,
-        );
-        const row = o as OrderWithRelations;
-        return {
-          ...summary,
-          customer: row.user
-            ? {
-                id: row.user.id,
-                fullName: row.user.fullName,
-                phone: row.user.phone,
-              }
-            : null,
-        };
-      }),
+    return this.mapMerchantOrderList(
+      merchantId,
+      rows as OrderWithRelations[],
       total,
       p,
       l,

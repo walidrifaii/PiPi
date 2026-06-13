@@ -21,11 +21,6 @@ import { EffectiveMerchantId } from '../auth/effective-merchant-id.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { MerchantJwtScopeGuard } from '../auth/merchant-jwt-scope.guard';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
-import {
-  MERCHANT_LIVE_ORDER_STATUSES,
-  normalizeOrderStatus,
-  resolveMerchantOrderListStatuses,
-} from './order-status.constants';
 import { OrdersService } from './orders.service';
 
 @ApiTags('Merchant')
@@ -35,69 +30,31 @@ import { OrdersService } from './orders.service';
 export class MerchantOrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @ApiOperation({
-    summary: 'List active orders for your store (merchant JWT)',
-    description:
-      'Returns PENDING, ACCEPTED, PREPARING, READY, DISPATCHED, and DELIVERING orders. Same as GET /merchants/me/orders?scope=live.',
-  })
+  @ApiOperation({ summary: 'List orders for your store (merchant JWT)' })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
-  @Get('live')
-  listLive(
-    @EffectiveMerchantId() merchantId: string,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
-  ) {
-    return this.ordersService.listForMerchant(
-      merchantId,
-      page,
-      limit,
-      MERCHANT_LIVE_ORDER_STATUSES,
-    );
-  }
-
-  @ApiOperation({
-    summary: 'List orders for your store (merchant JWT)',
-    description:
-      'Default (scope=history): DELIVERED and CANCELLED only. Use scope=live or GET /merchants/me/orders/live for active orders. Optional `status` comma-list overrides scope.',
-  })
-  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
-  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
-  @ApiQuery({
-    name: 'scope',
-    required: false,
-    enum: ['history', 'live'],
-    description: 'history = DELIVERED,CANCELLED (default). live = active queue.',
-  })
-  @ApiQuery({
-    name: 'status',
-    required: false,
-    type: String,
-    example: 'DELIVERED,CANCELLED',
-    description: 'Comma-separated statuses; overrides scope when provided.',
-  })
   @Get()
   list(
     @EffectiveMerchantId() merchantId: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
-    @Query('scope') scope?: string,
-    @Query('status') status?: string,
   ) {
-    const statusFilter = status
-      ?.split(',')
-      .map((value) => normalizeOrderStatus(value.trim()))
-      .filter(Boolean);
-    const statuses = resolveMerchantOrderListStatuses({
-      scope,
-      statusFilter: statusFilter?.length ? statusFilter : undefined,
-    });
-    return this.ordersService.listForMerchant(
-      merchantId,
-      page,
-      limit,
-      statuses,
-    );
+    return this.ordersService.listForMerchant(merchantId, page, limit);
+  }
+
+  @ApiOperation({
+    summary:
+      'List order history for your store — DELIVERED and CANCELLED only (merchant JWT)',
+  })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @Get('history')
+  listHistory(
+    @EffectiveMerchantId() merchantId: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+  ) {
+    return this.ordersService.listHistoryForMerchant(merchantId, page, limit);
   }
 
   @ApiOperation({ summary: 'Get one store order by id (merchant JWT)' })
