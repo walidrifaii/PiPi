@@ -19,6 +19,33 @@ export const MERCHANT_HISTORY_ORDER_STATUSES = [
   'CANCELLED',
 ] as const satisfies readonly OrderStatus[];
 
+/** Live merchant queue — in-progress orders (not terminal). */
+export const MERCHANT_LIVE_ORDER_STATUSES = [
+  'PENDING',
+  'ACCEPTED',
+  'PREPARING',
+  'READY',
+  'DISPATCHED',
+  'DELIVERING',
+] as const satisfies readonly OrderStatus[];
+
+export type MerchantOrderListScope = 'history' | 'live';
+
+/** Resolve status filter for GET /merchants/me/orders (explicit status wins over scope). */
+export function resolveMerchantOrderListStatuses(opts?: {
+  scope?: string | null;
+  statusFilter?: readonly string[];
+}): readonly string[] {
+  if (opts?.statusFilter?.length) {
+    return opts.statusFilter;
+  }
+  const scope = opts?.scope?.trim().toLowerCase();
+  if (scope === 'live') {
+    return MERCHANT_LIVE_ORDER_STATUSES;
+  }
+  return MERCHANT_HISTORY_ORDER_STATUSES;
+}
+
 /** Merchant may only accept or cancel new orders; accepted orders leave their queue. */
 const MERCHANT_TRANSITIONS: Record<string, readonly string[]> = {
   PENDING: ['ACCEPTED', 'CANCELLED'],
