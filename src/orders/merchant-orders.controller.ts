@@ -21,6 +21,7 @@ import { EffectiveMerchantId } from '../auth/effective-merchant-id.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { MerchantJwtScopeGuard } from '../auth/merchant-jwt-scope.guard';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
+import { normalizeOrderStatus } from './order-status.constants';
 import { OrdersService } from './orders.service';
 
 @ApiTags('Merchant')
@@ -30,16 +31,36 @@ import { OrdersService } from './orders.service';
 export class MerchantOrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @ApiOperation({ summary: 'List orders for your store (merchant JWT)' })
+  @ApiOperation({
+    summary: 'List orders for your store (merchant JWT)',
+    description:
+      'Returns DELIVERED and CANCELLED orders by default. Pass `status` as a comma-separated list to override (e.g. live orders: PENDING,ACCEPTED,PREPARING,READY,DISPATCHED,DELIVERING).',
+  })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: String,
+    example: 'DELIVERED,CANCELLED',
+  })
   @Get()
   list(
     @EffectiveMerchantId() merchantId: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query('status') status?: string,
   ) {
-    return this.ordersService.listForMerchant(merchantId, page, limit);
+    const statuses = status
+      ?.split(',')
+      .map((value) => normalizeOrderStatus(value.trim()))
+      .filter(Boolean);
+    return this.ordersService.listForMerchant(
+      merchantId,
+      page,
+      limit,
+      statuses?.length ? statuses : undefined,
+    );
   }
 
   @ApiOperation({ summary: 'Get one store order by id (merchant JWT)' })

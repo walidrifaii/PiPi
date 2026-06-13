@@ -29,6 +29,7 @@ import {
   canSuperAdminTransition,
   isCustomerTrackableStatus,
   isTerminalOrderStatus,
+  MERCHANT_HISTORY_ORDER_STATUSES,
   normalizeOrderStatus,
 } from './order-status.constants';
 import { OrderItemsSnapshot, OrderWithRelations } from './order.types';
@@ -141,9 +142,17 @@ export class OrdersService {
     return mapOrderDetail(row);
   }
 
-  async listForMerchant(merchantId: string, page = 1, limit = 20) {
+  async listForMerchant(
+    merchantId: string,
+    page = 1,
+    limit = 20,
+    statuses: readonly string[] = MERCHANT_HISTORY_ORDER_STATUSES,
+  ) {
     const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
-    const where = { merchantId };
+    const where = {
+      merchantId,
+      status: { in: [...statuses] },
+    };
     const [rows, total] = await Promise.all([
       this.prisma.order.findMany({
         where,

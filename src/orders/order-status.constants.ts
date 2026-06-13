@@ -13,6 +13,12 @@ export type OrderStatus = (typeof ORDER_STATUSES)[number];
 
 const TERMINAL: ReadonlySet<string> = new Set(['DELIVERED', 'CANCELLED']);
 
+/** Default merchant order list — completed or cancelled orders only. */
+export const MERCHANT_HISTORY_ORDER_STATUSES = [
+  'DELIVERED',
+  'CANCELLED',
+] as const satisfies readonly OrderStatus[];
+
 /** Merchant may only accept or cancel new orders; accepted orders leave their queue. */
 const MERCHANT_TRANSITIONS: Record<string, readonly string[]> = {
   PENDING: ['ACCEPTED', 'CANCELLED'],
