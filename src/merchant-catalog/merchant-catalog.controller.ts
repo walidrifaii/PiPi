@@ -32,7 +32,6 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { CreateProductMerchantMultipartDto } from './dto/create-product-merchant-multipart.dto';
 import { parseOptionGroupsJson } from './parse-option-groups-json';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 import { UpdateProductMerchantMultipartDto } from './dto/update-product-merchant-multipart.dto';
 import { MerchantCatalogService } from './merchant-catalog.service';
 
@@ -241,7 +240,7 @@ export class MerchantCatalogController {
   async updateProduct(
     @EffectiveMerchantId() merchantId: string,
     @Param('productId') productId: string,
-    @Body() dto: UpdateProductDto | UpdateProductMerchantMultipartDto,
+    @Body() dto: UpdateProductMerchantMultipartDto,
     @UploadedFile() imageFile?: Express.Multer.File,
   ) {
     let uploadedImageUrl: string | undefined;
@@ -251,8 +250,25 @@ export class MerchantCatalogController {
         'athar/products',
       );
     }
+    const optionGroups =
+      dto.optionGroupsJson !== undefined
+        ? parseOptionGroupsJson(dto.optionGroupsJson)
+        : undefined;
+
     return this.catalog.updateProduct(merchantId, productId, {
-      ...dto,
+      ...(dto.categoryId !== undefined ? { categoryId: dto.categoryId } : {}),
+      ...(dto.name !== undefined ? { name: dto.name } : {}),
+      ...(dto.nameAr !== undefined ? { nameAr: dto.nameAr } : {}),
+      ...(dto.description !== undefined ? { description: dto.description } : {}),
+      ...(dto.descriptionAr !== undefined
+        ? { descriptionAr: dto.descriptionAr }
+        : {}),
+      ...(dto.price !== undefined ? { price: dto.price } : {}),
+      ...(dto.discountPrice !== undefined
+        ? { discountPrice: dto.discountPrice }
+        : {}),
+      ...(dto.isActive !== undefined ? { isActive: dto.isActive } : {}),
+      ...(optionGroups !== undefined ? { optionGroups } : {}),
       ...(uploadedImageUrl !== undefined ? { imageUrl: uploadedImageUrl } : {}),
     });
   }
