@@ -2,13 +2,16 @@ import {
   Controller,
   DefaultValuePipe,
   Get,
+  Param,
   ParseIntPipe,
+  ParseUUIDPipe,
   Query,
   UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -58,6 +61,52 @@ export class MerchantEarningsController {
     return this.ordersService.listPaidOrdersForMerchant(
       merchantId,
       query,
+      page,
+      limit,
+    );
+  }
+
+  @ApiOperation({
+    summary:
+      'List paid earnings settlements for your store (each payout batch marked paid by admin)',
+  })
+  @ApiQuery({ name: 'from', required: false, type: String })
+  @ApiQuery({ name: 'to', required: false, type: String })
+  @ApiQuery({ name: 'last15Days', required: false, type: Boolean })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @Get('settlements')
+  listSettlements(
+    @EffectiveMerchantId() merchantId: string,
+    @Query() query: MerchantEarningsQueryDto,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+  ) {
+    return this.ordersService.listMerchantSettlements(
+      merchantId,
+      query,
+      page,
+      limit,
+    );
+  }
+
+  @ApiOperation({
+    summary:
+      'Get one earnings settlement and its paid orders (tap a settlement from the list)',
+  })
+  @ApiParam({ name: 'settlementId', type: String, format: 'uuid' })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @Get('settlements/:settlementId')
+  getSettlementOrders(
+    @EffectiveMerchantId() merchantId: string,
+    @Param('settlementId', ParseUUIDPipe) settlementId: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+  ) {
+    return this.ordersService.getMerchantSettlementOrders(
+      merchantId,
+      settlementId,
       page,
       limit,
     );

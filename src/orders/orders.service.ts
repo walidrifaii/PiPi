@@ -24,6 +24,7 @@ import { mapOrderDetail, mapOrderSummary } from './order.mapper';
 import { resolveProductDisplayImage } from '../common/product-display-image';
 import { PlatformSettingsService } from '../platform-settings/platform-settings.service';
 import { EarningsSettlementsService } from './earnings-settlements.service';
+import { parseSettlementOrderIds } from './earnings-settlement.constants';
 import {
   canMerchantTransition,
   canSuperAdminTransition,
@@ -618,6 +619,32 @@ export class OrdersService {
     return { from, to };
   }
 
+  /** Date filter for settlement lists; omit params to return all settlements. */
+  private resolveOptionalSettlementsPeriod(
+    query: MerchantEarningsQueryDto,
+  ): { from: Date; to: Date } | undefined {
+    if (query.last15Days) {
+      return this.resolveMerchantEarningsPeriod(query);
+    }
+
+    if (!query.from && !query.to) {
+      return undefined;
+    }
+
+    const now = new Date();
+    const from = query.from ? new Date(query.from) : new Date(0);
+    const to = query.to ? new Date(query.to) : now;
+
+    if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime())) {
+      throw new BadRequestException('Invalid earnings date range');
+    }
+    if (from.getTime() > to.getTime()) {
+      throw new BadRequestException('from must be before to');
+    }
+
+    return { from, to };
+  }
+
   private startOfUtcDay(date: Date): Date {
     return new Date(
       Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
@@ -895,7 +922,7 @@ export class OrdersService {
       netEarnings: current.netEarnings,
       avgOrderValue: current.avgOrderValue,
       orderCount: current.orderCount,
-      platformFee: current.platformFee,
+      ...(options.forAdmin ? { platformFee: current.platformFee } : {}),
       trends: {
         totalRevenuePercent: this.earningsTrendPercent(
           current.totalRevenue,
@@ -946,6 +973,39 @@ export class OrdersService {
     return orderId.slice(0, 8).toUpperCase();
   }
 
+  private mapMerchantSettlementView(settlement: {
+    id: string;
+    referenceCode: string;
+    periodFrom: Date | string;
+    periodTo: Date | string;
+    grossAmount: number;
+    netAmount: number;
+    orderCount: number;
+    status: string;
+    paidAt: Date | string;
+  }) {
+    return {
+      id: settlement.id,
+      referenceCode: settlement.referenceCode,
+      periodFrom:
+        typeof settlement.periodFrom === 'string'
+          ? settlement.periodFrom
+          : settlement.periodFrom.toISOString(),
+      periodTo:
+        typeof settlement.periodTo === 'string'
+          ? settlement.periodTo
+          : settlement.periodTo.toISOString(),
+      grossAmount: settlement.grossAmount,
+      netAmount: settlement.netAmount,
+      orderCount: settlement.orderCount,
+      status: settlement.status,
+      paidAt:
+        typeof settlement.paidAt === 'string'
+          ? settlement.paidAt
+          : settlement.paidAt.toISOString(),
+    };
+  }
+
   private buildMerchantOrderEarningsList(
     rows: Array<{
       id: string;
@@ -956,8 +1016,9 @@ export class OrdersService {
     }>,
     sharePercent: number,
     paidOrderIds: Set<string>,
-    options: { forAdmin?: boolean } = {},
+    options: { forAdmin?: boolean; includePlatformFee?: boolean } = {},
   ) {
+    const includePlatformFee = options.includePlatformFee !== false;
     const mapped = rows.map((row) => {
       const gross = this.merchantGrossFoodFromRow(row);
       const net = computeMerchantEarningsFromFoodSubtotal(gross, sharePercent);
@@ -968,7 +1029,9 @@ export class OrdersService {
         completedAt: row.createdAt.toISOString(),
         grossFood: gross,
         netEarnings: net,
-        platformFee: roundMoney(Math.max(0, gross - net)),
+        ...(includePlatformFee
+          ? { platformFee: roundMoney(Math.max(0, gross - net)) }
+          : {}),
         payoutStatus: isPaid ? ('PAID' as const) : ('UNPAID' as const),
       };
     });
@@ -1042,6 +1105,124 @@ export class OrdersService {
     };
   }
 
+  async listMerchantSettlements(
+    merchantId: string,
+    query: MerchantEarningsQueryDto,
+    page = 1,
+    limit = 20,
+  ) {
+    const period = this.resolveOptionalSettlementsPeriod(query);
+    const { page: p, limit: l } = this.normalizePagination(page, limit);
+
+    const { items, total } = await this.settlements.listSettlementsPaged(
+      'MERCHANT',
+      merchantId,
+      {
+        from: period?.from,
+        to: period?.to,
+        page: p,
+        limit: l,
+      },
+    );
+
+    return {
+      ...(period
+        ? {
+            period: {
+              from: period.from.toISOString(),
+              to: period.to.toISOString(),
+            },
+          }
+        : {}),
+      ...this.pagedResponse(
+        items.map((item) => this.mapMerchantSettlementView(item)),
+        total,
+        p,
+        l,
+      ),
+    };
+  }
+
+  async getMerchantSettlementOrders(
+    merchantId: string,
+    settlementId: string,
+    page = 1,
+    limit = 20,
+  ) {
+    const settlementRow = await this.settlements.findMerchantSettlement(
+      merchantId,
+      settlementId,
+    );
+    const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
+
+    const earningsSelect = {
+      id: true,
+      checkoutRef: true,
+      createdAt: true,
+      itemsSnapshot: true,
+      subtotal: true,
+    } satisfies Prisma.OrderSelect;
+
+    const orderIds = parseSettlementOrderIds(settlementRow.orderIds);
+    if (orderIds.length === 0) {
+      return {
+        settlement: this.mapMerchantSettlementView({
+          id: settlementRow.id,
+          referenceCode: settlementRow.referenceCode,
+          periodFrom: settlementRow.periodFrom,
+          periodTo: settlementRow.periodTo,
+          grossAmount: Number(settlementRow.grossAmount),
+          netAmount: Number(settlementRow.netAmount),
+          orderCount: settlementRow.orderCount,
+          status: settlementRow.status,
+          paidAt: settlementRow.paidAt,
+        }),
+        ...this.pagedResponse([], 0, p, l),
+      };
+    }
+
+    const where: Prisma.OrderWhereInput = {
+      merchantId,
+      status: 'DELIVERED',
+      id: { in: orderIds },
+    };
+
+    const [sharePercent, paidOrderIds, orderRows, total] = await Promise.all([
+      this.platformSettings.getMerchantFoodSharePercentForMerchant(merchantId),
+      this.settlements.getPaidOrderIds('MERCHANT', merchantId),
+      this.prisma.order.findMany({
+        where,
+        select: earningsSelect,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: l,
+      }),
+      this.prisma.order.count({ where }),
+    ]);
+
+    const items = this.buildMerchantOrderEarningsList(
+      orderRows,
+      sharePercent,
+      paidOrderIds,
+      { forAdmin: true, includePlatformFee: false },
+    ).filter((order) => order.payoutStatus === 'PAID');
+
+    return {
+      settlement: this.mapMerchantSettlementView({
+        id: settlementRow.id,
+        referenceCode: settlementRow.referenceCode,
+        periodFrom: settlementRow.periodFrom,
+        periodTo: settlementRow.periodTo,
+        grossAmount: Number(settlementRow.grossAmount),
+        netAmount: Number(settlementRow.netAmount),
+        orderCount: settlementRow.orderCount,
+        status: settlementRow.status,
+        paidAt: settlementRow.paidAt,
+      }),
+      ...this.pagedResponse(items, total, p, l),
+    };
+  }
+
   async listPaidOrdersForMerchant(
     merchantId: string,
     query: MerchantEarningsQueryDto,
@@ -1097,7 +1278,7 @@ export class OrdersService {
       orderRows,
       sharePercent,
       paidOrderIds,
-      { forAdmin: true },
+      { forAdmin: true, includePlatformFee: false },
     ).filter((order) => order.payoutStatus === 'PAID');
 
     return {

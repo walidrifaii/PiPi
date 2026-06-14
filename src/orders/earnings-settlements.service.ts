@@ -64,13 +64,13 @@ export class EarningsSettlementsService {
     return ids;
   }
 
-  async listSettlements(
+  private settlementWhere(
     participantType: EarningsParticipantType,
     participantId: string,
     from?: Date,
     to?: Date,
-  ) {
-    const where: Prisma.EarningsSettlementWhereInput = {
+  ): Prisma.EarningsSettlementWhereInput {
+    return {
       participantType,
       status: EARNINGS_SETTLEMENT_STATUS_PAID,
       ...(participantType === 'DRIVER'
@@ -85,14 +85,21 @@ export class EarningsSettlementsService {
           }
         : {}),
     };
+  }
 
-    const rows = await this.prisma.earningsSettlement.findMany({
-      where,
-      orderBy: { paidAt: 'desc' },
-      take: 50,
-    });
-
-    return rows.map((row) => ({
+  private mapSettlementRow(row: {
+    id: string;
+    referenceCode: string;
+    periodFrom: Date;
+    periodTo: Date;
+    grossAmount: { toString(): string };
+    netAmount: { toString(): string };
+    platformFee: { toString(): string };
+    orderCount: number;
+    status: string;
+    paidAt: Date;
+  }) {
+    return {
       id: row.id,
       referenceCode: row.referenceCode,
       periodFrom: row.periodFrom.toISOString(),
@@ -103,7 +110,71 @@ export class EarningsSettlementsService {
       orderCount: row.orderCount,
       status: row.status,
       paidAt: row.paidAt.toISOString(),
-    }));
+    };
+  }
+
+  async listSettlements(
+    participantType: EarningsParticipantType,
+    participantId: string,
+    from?: Date,
+    to?: Date,
+  ) {
+    const rows = await this.prisma.earningsSettlement.findMany({
+      where: this.settlementWhere(participantType, participantId, from, to),
+      orderBy: { paidAt: 'desc' },
+      take: 50,
+    });
+
+    return rows.map((row) => this.mapSettlementRow(row));
+  }
+
+  async listSettlementsPaged(
+    participantType: EarningsParticipantType,
+    participantId: string,
+    options: {
+      from?: Date;
+      to?: Date;
+      page: number;
+      limit: number;
+    },
+  ) {
+    const where = this.settlementWhere(
+      participantType,
+      participantId,
+      options.from,
+      options.to,
+    );
+    const skip = (options.page - 1) * options.limit;
+
+    const [total, rows] = await Promise.all([
+      this.prisma.earningsSettlement.count({ where }),
+      this.prisma.earningsSettlement.findMany({
+        where,
+        orderBy: { paidAt: 'desc' },
+        skip,
+        take: options.limit,
+      }),
+    ]);
+
+    return {
+      items: rows.map((row) => this.mapSettlementRow(row)),
+      total,
+    };
+  }
+
+  async findMerchantSettlement(merchantId: string, settlementId: string) {
+    const row = await this.prisma.earningsSettlement.findFirst({
+      where: {
+        id: settlementId,
+        merchantId,
+        participantType: 'MERCHANT',
+        status: EARNINGS_SETTLEMENT_STATUS_PAID,
+      },
+    });
+    if (!row) {
+      throw new NotFoundException('Settlement not found');
+    }
+    return row;
   }
 
   private parseItemsSnapshot(raw: unknown): OrderItemsSnapshot | null {
