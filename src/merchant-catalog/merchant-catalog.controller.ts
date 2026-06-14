@@ -117,7 +117,7 @@ export class MerchantCatalogController {
     operationId: 'merchantListProducts',
     summary: 'List products for your store',
     description:
-      'Paginated. Optional `categoryId` query filters to one category (must belong to your store). Omit `categoryId` to list all products.',
+      'Paginated. Optional `categoryId` query filters to one category (must belong to your store). Optional `name` filters by product name in English or Arabic (prefix match, min 2 characters). Omit both to list all products.',
   })
   @ApiQuery({
     name: 'categoryId',
@@ -125,6 +125,14 @@ export class MerchantCatalogController {
     type: String,
     format: 'uuid',
     description: 'Optional filter by category UUID',
+  })
+  @ApiQuery({
+    name: 'name',
+    required: false,
+    type: String,
+    description:
+      'Optional filter by product name (English or Arabic). Case-insensitive prefix match; minimum 2 characters.',
+    example: 'burger',
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
@@ -135,8 +143,9 @@ export class MerchantCatalogController {
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
     @Query('categoryId', new ParseUUIDPipe({ optional: true }))
     categoryId?: string,
+    @Query('name') name?: string,
   ) {
-    return this.catalog.listAllProducts(merchantId, categoryId, page, limit);
+    return this.catalog.listAllProducts(merchantId, categoryId, page, limit, name);
   }
 
   @ApiOperation({

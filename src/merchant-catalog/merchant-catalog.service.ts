@@ -70,6 +70,23 @@ export class MerchantCatalogService {
     };
   }
 
+  /** Optional prefix match on English `name` or Arabic `nameAr`. */
+  private buildProductNameWhereClause(
+    name?: string,
+  ): Prisma.ProductWhereInput | undefined {
+    const trimmed = name?.trim();
+    if (!trimmed) {
+      return undefined;
+    }
+    const term = normalizeNameSearchTerm(trimmed);
+    return {
+      OR: [
+        { name: nameStartsWithFilter(term) },
+        { nameAr: nameStartsWithFilter(term) },
+      ],
+    };
+  }
+
   /** Merchants that are manually OPEN and inside working hours (if configured). */
   private async merchantIdsOpenForBusiness(): Promise<string[]> {
     const rows = await this.prisma.merchant.findMany({
@@ -566,6 +583,7 @@ export class MerchantCatalogService {
     categoryId?: string,
     page = 1,
     limit = 20,
+    name?: string,
   ) {
     await this.assertMerchantExists(merchantId);
     return this.fetchAllProductsPaged(
@@ -574,6 +592,8 @@ export class MerchantCatalogService {
       page,
       limit,
       false,
+      false,
+      name,
     );
   }
 
@@ -584,6 +604,7 @@ export class MerchantCatalogService {
     limit: number,
     activeOptionsOnly: boolean,
     activeProductsOnly = false,
+    name?: string,
   ) {
     if (categoryId !== undefined && categoryId !== '') {
       const category = await this.prisma.merchantCategory.findFirst({
@@ -594,10 +615,12 @@ export class MerchantCatalogService {
       }
     }
 
-    const where = {
+    const nameFilter = this.buildProductNameWhereClause(name);
+    const where: Prisma.ProductWhereInput = {
       category: { merchantId },
       ...(categoryId !== undefined && categoryId !== '' ? { categoryId } : {}),
       ...(activeProductsOnly ? { isActive: true } : {}),
+      ...(nameFilter ?? {}),
     };
     const pg = this.normalizePagination(page, limit);
     const [total, rows] = await this.prisma.$transaction([
