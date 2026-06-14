@@ -579,6 +579,20 @@ export class OrdersService {
 
   private resolveMerchantEarningsPeriod(query: MerchantEarningsQueryDto) {
     const now = new Date();
+
+    if (query.last15Days) {
+      const from = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() - 14,
+        0,
+        0,
+        0,
+        0,
+      );
+      return { from, to: now };
+    }
+
     let from: Date;
     let to: Date;
 
@@ -1025,6 +1039,73 @@ export class OrdersService {
         paidOrderIds,
         { forAdmin: true },
       ),
+    };
+  }
+
+  async listPaidOrdersForMerchant(
+    merchantId: string,
+    query: MerchantEarningsQueryDto,
+    page = 1,
+    limit = 20,
+  ) {
+    const { from, to } = this.resolveMerchantEarningsPeriod(query);
+    const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
+
+    const earningsSelect = {
+      id: true,
+      checkoutRef: true,
+      createdAt: true,
+      itemsSnapshot: true,
+      subtotal: true,
+    } satisfies Prisma.OrderSelect;
+
+    const [sharePercent, paidOrderIds] = await Promise.all([
+      this.platformSettings.getMerchantFoodSharePercentForMerchant(merchantId),
+      this.settlements.getPaidOrderIds('MERCHANT', merchantId),
+    ]);
+
+    const paidIds = [...paidOrderIds];
+    if (paidIds.length === 0) {
+      return {
+        period: {
+          from: from.toISOString(),
+          to: to.toISOString(),
+        },
+        ...this.pagedResponse([], 0, p, l),
+      };
+    }
+
+    const where: Prisma.OrderWhereInput = {
+      merchantId,
+      status: 'DELIVERED',
+      id: { in: paidIds },
+      createdAt: { gte: from, lte: to },
+    };
+
+    const [orderRows, total] = await Promise.all([
+      this.prisma.order.findMany({
+        where,
+        select: earningsSelect,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: l,
+      }),
+      this.prisma.order.count({ where }),
+    ]);
+
+    const items = this.buildMerchantOrderEarningsList(
+      orderRows,
+      sharePercent,
+      paidOrderIds,
+      { forAdmin: true },
+    ).filter((order) => order.payoutStatus === 'PAID');
+
+    return {
+      period: {
+        from: from.toISOString(),
+        to: to.toISOString(),
+      },
+      ...this.pagedResponse(items, total, p, l),
     };
   }
 

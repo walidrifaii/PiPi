@@ -1,4 +1,11 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  DefaultValuePipe,
+  Get,
+  ParseIntPipe,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -30,5 +37,29 @@ export class MerchantEarningsController {
     @Query() query: MerchantEarningsQueryDto,
   ) {
     return this.ordersService.getMerchantEarnings(merchantId, query);
+  }
+
+  @ApiOperation({
+    summary:
+      'List paid (settled) orders for your store — delivered orders with payout status PAID',
+  })
+  @ApiQuery({ name: 'from', required: false, type: String })
+  @ApiQuery({ name: 'to', required: false, type: String })
+  @ApiQuery({ name: 'last15Days', required: false, type: Boolean })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @Get('paid-orders')
+  listPaidOrders(
+    @EffectiveMerchantId() merchantId: string,
+    @Query() query: MerchantEarningsQueryDto,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+  ) {
+    return this.ordersService.listPaidOrdersForMerchant(
+      merchantId,
+      query,
+      page,
+      limit,
+    );
   }
 }
