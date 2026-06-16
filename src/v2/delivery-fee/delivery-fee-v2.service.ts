@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { haversineDistanceKm } from '../../common/haversine';
 import {
   DeliveryFeeService,
   type DeliveryFeeConfigItem,
@@ -8,11 +7,9 @@ import { QuoteDeliveryFeeQueryDto } from '../../delivery-fee/dto/quote-delivery-
 import type {
   DeliveryFeeV2ActiveResponseDto,
   DeliveryFeeV2BreakdownDto,
-  DeliveryFeeV2QuoteResponseDto,
 } from './dto/delivery-fee-v2-response.dto';
 
 type V1QuoteResult = {
-  configId?: string | null;
   fixedFee: number;
   includedKm: number;
   kmUnit: number;
@@ -44,13 +41,6 @@ export class DeliveryFeeV2Service {
         maxFee: row.maxFee,
       },
     };
-  }
-
-  private billedKmFromQuote(row: V1QuoteResult, distanceKm?: number): number {
-    if (distanceKm !== undefined && Number.isFinite(distanceKm)) {
-      return Math.min(Math.max(distanceKm, 0), row.maxKm);
-    }
-    return row.maxKm;
   }
 
   private mapActiveConfig(
@@ -93,34 +83,7 @@ export class DeliveryFeeV2Service {
       .then((config) => this.mapActiveConfig(config));
   }
 
-  async quote(
-    query: QuoteDeliveryFeeQueryDto,
-  ): Promise<DeliveryFeeV2QuoteResponseDto> {
-    let distanceKm = query.distanceKm;
-
-    if (
-      distanceKm === undefined &&
-      query.fromLat !== undefined &&
-      query.fromLng !== undefined &&
-      query.toLat !== undefined &&
-      query.toLng !== undefined
-    ) {
-      distanceKm = haversineDistanceKm(
-        query.fromLat,
-        query.fromLng,
-        query.toLat,
-        query.toLng,
-      );
-    }
-
-    const result = (await this.deliveryFees.quote(query)) as V1QuoteResult;
-    const billedKm = this.billedKmFromQuote(result, distanceKm);
-
-    return {
-      apiVersion: 2,
-      configId: result.configId ?? null,
-      ...(distanceKm !== undefined ? { distanceKm } : {}),
-      quote: this.toBreakdown(result, billedKm),
-    };
+  quote(query: QuoteDeliveryFeeQueryDto) {
+    return this.deliveryFees.quote(query);
   }
 }

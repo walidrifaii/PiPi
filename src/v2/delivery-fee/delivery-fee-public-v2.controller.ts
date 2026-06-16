@@ -2,10 +2,7 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiTooManyRequestsResponse } from '@nestjs/swagger';
 import { QuoteDeliveryFeeQueryDto } from '../../delivery-fee/dto/quote-delivery-fee-query.dto';
 import { DeliveryFeeV2Service } from './delivery-fee-v2.service';
-import {
-  DeliveryFeeV2ActiveResponseDto,
-  DeliveryFeeV2QuoteResponseDto,
-} from './dto/delivery-fee-v2-response.dto';
+import { DeliveryFeeV2ActiveResponseDto } from './dto/delivery-fee-v2-response.dto';
 
 @ApiTags('Storefront V2')
 @ApiTooManyRequestsResponse({
@@ -29,12 +26,10 @@ export class DeliveryFeePublicV2Controller {
   @ApiOperation({
     summary: 'Quote delivery fee (v2)',
     description:
-      'Same query params as v1, with grouped quote breakdown and distanceKm when available.',
+      'Same query params and response shape as v1 GET /delivery-fees/quote.',
   })
   @Get('quote')
-  quote(
-    @Query() query: QuoteDeliveryFeeQueryDto,
-  ): Promise<DeliveryFeeV2QuoteResponseDto> {
+  quote(@Query() query: QuoteDeliveryFeeQueryDto) {
     return this.deliveryFeesV2.quote(query);
   }
 }

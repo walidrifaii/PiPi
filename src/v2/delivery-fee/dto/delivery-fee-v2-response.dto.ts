@@ -81,20 +81,3 @@ export class DeliveryFeeV2ActiveResponseDto {
   @ApiProperty({ type: DeliveryFeeV2ActiveConfigDto })
   config: DeliveryFeeV2ActiveConfigDto;
 }
-
-export class DeliveryFeeV2QuoteResponseDto {
-  @ApiProperty({ example: 2 })
-  apiVersion: 2;
-
-  @ApiPropertyOptional({ example: 'uuid' })
-  configId: string | null;
-
-  @ApiPropertyOptional({
-    example: 4.2,
-    description: 'Trip distance in km when quoted from coordinates or distanceKm.',
-  })
-  distanceKm?: number;
-
-  @ApiProperty({ type: DeliveryFeeV2BreakdownDto })
-  quote: DeliveryFeeV2BreakdownDto;
-}
