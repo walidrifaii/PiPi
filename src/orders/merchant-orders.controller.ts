@@ -20,6 +20,7 @@ import {
 import { EffectiveMerchantId } from '../auth/effective-merchant-id.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { MerchantJwtScopeGuard } from '../auth/merchant-jwt-scope.guard';
+import { ListMerchantOrdersHistoryQueryDto } from './dto/list-merchant-orders-history-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { OrdersService } from './orders.service';
 
@@ -44,17 +45,14 @@ export class MerchantOrdersController {
 
   @ApiOperation({
     summary:
-      'List order history for your store — DELIVERED and CANCELLED only (merchant JWT)',
+      'List order history for your store — DELIVERED and CANCELLED only (merchant JWT). Optional `search` matches order id or customer name.',
   })
-  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
-  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
   @Get('history')
   listHistory(
     @EffectiveMerchantId() merchantId: string,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query() query: ListMerchantOrdersHistoryQueryDto,
   ) {
-    return this.ordersService.listHistoryForMerchant(merchantId, page, limit);
+    return this.ordersService.listHistoryForMerchant(merchantId, query);
   }
 
   @ApiOperation({ summary: 'Get one store order by id (merchant JWT)' })
