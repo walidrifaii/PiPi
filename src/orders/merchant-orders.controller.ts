@@ -45,7 +45,7 @@ export class MerchantOrdersController {
 
   @ApiOperation({
     summary:
-      'List order history for your store — DELIVERED and CANCELLED only (merchant JWT). Optional `search` matches order id or customer name.',
+      'List order history for your store — DELIVERED and CANCELLED only (merchant JWT). Optional `status` (`Delivered` | `Cancelled`), `search` (order id or customer name).',
   })
   @Get('history')
   listHistory(

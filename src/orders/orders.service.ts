@@ -229,13 +229,29 @@ export class OrdersService {
     );
   }
 
+  private merchantHistoryStatuses(
+    query: ListMerchantOrdersHistoryQueryDto,
+  ): readonly string[] {
+    if (query.status === 'Delivered') {
+      return ['DELIVERED'];
+    }
+    if (query.status === 'Cancelled') {
+      return ['CANCELLED'];
+    }
+    return [...MERCHANT_HISTORY_ORDER_STATUSES];
+  }
+
   private async buildMerchantHistoryWhere(
     merchantId: string,
     query: ListMerchantOrdersHistoryQueryDto,
   ): Promise<Prisma.OrderWhereInput> {
+    const historyStatuses = this.merchantHistoryStatuses(query);
     const where: Prisma.OrderWhereInput = {
       merchantId,
-      status: { in: [...MERCHANT_HISTORY_ORDER_STATUSES] },
+      status:
+        historyStatuses.length === 1
+          ? historyStatuses[0]
+          : { in: [...historyStatuses] },
     };
 
     const search = query.search?.trim();
@@ -251,11 +267,10 @@ export class OrdersService {
     if (fullUuid.test(search)) {
       orderIdFilters.unshift({ id: search.toLowerCase() });
     } else if (/^[0-9a-f-]+$/i.test(search)) {
-      const historyStatuses = [...MERCHANT_HISTORY_ORDER_STATUSES];
       const matchingIds = await this.prisma.$queryRaw<{ id: string }[]>`
         SELECT id FROM orders
         WHERE merchant_id = ${merchantId}::uuid
-          AND status = ANY(${historyStatuses})
+          AND status = ANY(${[...historyStatuses]})
           AND id::text ILIKE ${`${search.toLowerCase()}%`}
       `;
       if (matchingIds.length > 0) {
