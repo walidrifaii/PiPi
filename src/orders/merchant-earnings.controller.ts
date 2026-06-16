@@ -55,15 +55,8 @@ export class MerchantEarningsController {
   listPaidOrders(
     @EffectiveMerchantId() merchantId: string,
     @Query() query: MerchantEarningsQueryDto,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
   ) {
-    return this.ordersService.listPaidOrdersForMerchant(
-      merchantId,
-      query,
-      page,
-      limit,
-    );
+    return this.ordersService.listPaidOrdersForMerchant(merchantId, query);
   }
 
   @ApiOperation({
@@ -79,15 +72,8 @@ export class MerchantEarningsController {
   listSettlements(
     @EffectiveMerchantId() merchantId: string,
     @Query() query: MerchantEarningsQueryDto,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
   ) {
-    return this.ordersService.listMerchantSettlements(
-      merchantId,
-      query,
-      page,
-      limit,
-    );
+    return this.ordersService.listMerchantSettlements(merchantId, query);
   }
 
   @ApiOperation({

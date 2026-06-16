@@ -1171,11 +1171,12 @@ export class OrdersService {
   async listMerchantSettlements(
     merchantId: string,
     query: MerchantEarningsQueryDto,
-    page = 1,
-    limit = 20,
   ) {
     const period = this.resolveOptionalSettlementsPeriod(query);
-    const { page: p, limit: l } = this.normalizePagination(page, limit);
+    const { page: p, limit: l } = this.normalizePagination(
+      query.page ?? 1,
+      query.limit ?? 20,
+    );
 
     const { items, total } = await this.settlements.listSettlementsPaged(
       'MERCHANT',
@@ -1289,11 +1290,12 @@ export class OrdersService {
   async listPaidOrdersForMerchant(
     merchantId: string,
     query: MerchantEarningsQueryDto,
-    page = 1,
-    limit = 20,
   ) {
     const { from, to } = this.resolveMerchantEarningsPeriod(query);
-    const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
+    const { page: p, limit: l, skip } = this.normalizePagination(
+      query.page ?? 1,
+      query.limit ?? 20,
+    );
 
     const earningsSelect = {
       id: true,
