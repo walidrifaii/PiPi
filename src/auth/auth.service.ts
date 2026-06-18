@@ -22,7 +22,11 @@ import { SendLoginOtpDto } from './dto/send-login-otp.dto';
 import { VerifyRegisterOtpDto } from './dto/verify-register-otp.dto';
 import { VerifyLoginOtpDto } from './dto/verify-login-otp.dto';
 import { JwtUserPayload } from './jwt-user.payload';
-import { OtpService } from '../otp/otp.service';
+import {
+  OtpService,
+  FIXED_USER_LOGIN_OTP_PHONE,
+  FIXED_DRIVER_LOGIN_OTP_PHONE,
+} from '../otp/otp.service';
 import { UsersService } from '../users/users.service';
 import { loginEligibleUserFilter } from '../users/user-account-deletion';
 import { assertPhoneAvailableAcrossUserAndDriver } from '../common/phone-account-uniqueness';
@@ -720,17 +724,25 @@ export class AuthService {
   ): Promise<'user' | 'driver' | null> {
     await this.usersService.purgeExpiredAccountDeletions();
 
+    const phoneE164 = phone.trim();
+
     const [user, driver] = await Promise.all([
       this.prisma.user.findFirst({
-        where: { phone, ...loginEligibleUserFilter() },
+        where: { phone: phoneE164, ...loginEligibleUserFilter() },
         select: { id: true },
       }),
       this.prisma.driver.findFirst({
-        where: { phone, isActive: true },
+        where: { phone: phoneE164, isActive: true },
         select: { id: true },
       }),
     ]);
 
+    if (phoneE164 === FIXED_USER_LOGIN_OTP_PHONE && user) {
+      return 'user';
+    }
+    if (phoneE164 === FIXED_DRIVER_LOGIN_OTP_PHONE && driver) {
+      return 'driver';
+    }
     if (user) {
       return 'user';
     }

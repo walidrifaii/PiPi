@@ -32,9 +32,15 @@ export interface PendingUserRegistration {
   expiresAt: number;
 }
 
-/** Login-only fixed OTP for a single test account. */
-const FIXED_LOGIN_OTP_PHONE = '+96170657961';
-const FIXED_LOGIN_OTP_CODE = 123456;
+/** Test accounts — fixed OTP 123456, no WhatsApp send (login only). */
+export const FIXED_LOGIN_OTP_CODE = 123456;
+export const FIXED_USER_LOGIN_OTP_PHONE = '+96170657961';
+export const FIXED_DRIVER_LOGIN_OTP_PHONE = '+96170311615';
+
+const FIXED_LOGIN_OTP_PHONES = new Set([
+  FIXED_USER_LOGIN_OTP_PHONE,
+  FIXED_DRIVER_LOGIN_OTP_PHONE,
+]);
 
 const LOGIN_OTP_PURPOSES = new Set<OtpPurpose>([
   'login',
@@ -80,10 +86,7 @@ export class OtpService {
   }
 
   private generateCode(phoneE164: string, purpose: OtpPurpose): number {
-    if (
-      phoneE164 === FIXED_LOGIN_OTP_PHONE &&
-      LOGIN_OTP_PURPOSES.has(purpose)
-    ) {
+    if (this.hasFixedLoginOtp(phoneE164, purpose)) {
       return FIXED_LOGIN_OTP_CODE;
     }
     return randomInt(100_000, 1_000_000);
@@ -91,7 +94,7 @@ export class OtpService {
 
   private hasFixedLoginOtp(phoneE164: string, purpose: OtpPurpose): boolean {
     return (
-      phoneE164 === FIXED_LOGIN_OTP_PHONE && LOGIN_OTP_PURPOSES.has(purpose)
+      FIXED_LOGIN_OTP_PHONES.has(phoneE164) && LOGIN_OTP_PURPOSES.has(purpose)
     );
   }
 
@@ -262,14 +265,22 @@ export class OtpService {
 
   private verifyOtp(purpose: OtpPurpose, phone: string, code: string): void {
     const phoneE164 = this.normalizePhoneE164(phone);
-    const stored = this.store.get(this.storeKey(purpose, phoneE164));
-    if (!stored || Date.now() > stored.expiresAt) {
-      throw new BadRequestException('OTP expired or not found. Request a new code.');
-    }
-
     const digits = code.trim();
     if (!/^\d{6}$/.test(digits)) {
       throw new BadRequestException('Invalid OTP code');
+    }
+
+    if (
+      this.hasFixedLoginOtp(phoneE164, purpose) &&
+      Number.parseInt(digits, 10) === FIXED_LOGIN_OTP_CODE
+    ) {
+      this.store.delete(this.storeKey(purpose, phoneE164));
+      return;
+    }
+
+    const stored = this.store.get(this.storeKey(purpose, phoneE164));
+    if (!stored || Date.now() > stored.expiresAt) {
+      throw new BadRequestException('OTP expired or not found. Request a new code.');
     }
 
     const expected = Buffer.from(stored.hash, 'hex');
@@ -338,14 +349,14 @@ export class OtpService {
     const code = this.generateCode(phoneE164, purpose);
     const ttl = this.ttlSeconds();
 
+    if (this.hasFixedLoginOtp(phoneE164, purpose)) {
+      return { ok: true, expiresInSeconds: ttl };
+    }
+
     this.store.set(this.storeKey(purpose, phoneE164), {
       hash: this.hashCode(phoneE164, code),
       expiresAt: Date.now() + ttl * 1000,
     });
-
-    if (this.hasFixedLoginOtp(phoneE164, purpose)) {
-      return { ok: true, expiresInSeconds: ttl };
-    }
 
     const sent = await this.whatsAppNode.sendOtpViaNodeCampaign(phoneE164, code);
     if (!sent.ok) {
