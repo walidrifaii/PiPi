@@ -70,6 +70,46 @@ export class MerchantCatalogService {
     };
   }
 
+  /**
+   * Storefront menu endpoints: clients often request page=1 with a modest limit.
+   * Internally load every page (max 100 per DB query) and return one combined list.
+   */
+  private async collectAllStorefrontPages<T>(
+    fetchPage: (
+      page: number,
+      limit: number,
+    ) => Promise<{
+      items: T[];
+      pagination: { total: number; totalPages: number };
+    }>,
+    pageSize = 100,
+  ) {
+    let currentPage = 1;
+    const allItems: T[] = [];
+    let total = 0;
+
+    while (true) {
+      const result = await fetchPage(currentPage, pageSize);
+      allItems.push(...result.items);
+      total = result.pagination.total;
+      if (currentPage >= result.pagination.totalPages) {
+        break;
+      }
+      currentPage++;
+    }
+
+    return {
+      items: allItems,
+      pagination: {
+        page: 1,
+        limit: allItems.length || pageSize,
+        pageTotal: allItems.length,
+        total,
+        totalPages: 1,
+      },
+    };
+  }
+
   /** Optional prefix match on English `name` or Arabic `nameAr`. */
   private buildProductNameWhereClause(
     name?: string,
@@ -401,9 +441,17 @@ export class MerchantCatalogService {
   }
 
   /** Public storefront: guest or customer; store may be CLOSED but must exist and be active. */
-  async listCategoriesForStorefront(merchantId: string, page = 1, limit = 20) {
+  async listCategoriesForStorefront(
+    merchantId: string,
+    page = 1,
+    limit = 20,
+  ) {
+    void page;
+    void limit;
     await this.assertMerchantBrowsable(merchantId);
-    return this.fetchCategoriesPaged(merchantId, page, limit);
+    return this.collectAllStorefrontPages((p, l) =>
+      this.fetchCategoriesPaged(merchantId, p, l),
+    );
   }
 
   async listCategories(merchantId: string, page = 1, limit = 20) {
@@ -494,14 +542,18 @@ export class MerchantCatalogService {
     limit = 20,
     activeProductsOnly = false,
   ) {
+    void page;
+    void limit;
     await this.assertMerchantBrowsable(merchantId);
-    return this.fetchProductsPaged(
-      merchantId,
-      categoryId,
-      page,
-      limit,
-      true,
-      activeProductsOnly,
+    return this.collectAllStorefrontPages((p, l) =>
+      this.fetchProductsPaged(
+        merchantId,
+        categoryId,
+        p,
+        l,
+        true,
+        activeProductsOnly,
+      ),
     );
   }
 
@@ -567,14 +619,18 @@ export class MerchantCatalogService {
     limit = 20,
     activeProductsOnly = false,
   ) {
+    void page;
+    void limit;
     await this.assertMerchantBrowsable(merchantId);
-    return this.fetchAllProductsPaged(
-      merchantId,
-      categoryId,
-      page,
-      limit,
-      true,
-      activeProductsOnly,
+    return this.collectAllStorefrontPages((p, l) =>
+      this.fetchAllProductsPaged(
+        merchantId,
+        categoryId,
+        p,
+        l,
+        true,
+        activeProductsOnly,
+      ),
     );
   }
 
