@@ -4,10 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import {
-  computeMerchantOpenNow,
-  workingIntervalsToWeek,
-} from '../common/merchant-open-status';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMerchantOfferAdminDto } from './dto/create-merchant-offer-admin.dto';
 import { UpdateMerchantOfferAdminDto } from './dto/update-merchant-offer-admin.dto';
@@ -205,40 +201,13 @@ export class MerchantOfferService {
     });
   }
 
-  private async merchantIdsOpenForBusiness(): Promise<string[]> {
+  /** Returns IDs of all admin-enabled merchants (regardless of OPEN/CLOSED status). */
+  private async merchantIdsEnabled(): Promise<string[]> {
     const rows = await this.prisma.merchant.findMany({
-      where: { isActive: true, isEnabled: true },
-      select: {
-        id: true,
-        isActive: true,
-        useWorkingHours: true,
-        timezone: true,
-        workingIntervals: {
-          orderBy: [
-            { weekday: Prisma.SortOrder.asc },
-            { sortOrder: Prisma.SortOrder.asc },
-          ],
-          select: {
-            weekday: true,
-            openLocal: true,
-            closeLocal: true,
-            sortOrder: true,
-          },
-        },
-      },
+      where: { isEnabled: true },
+      select: { id: true },
     });
-    return rows
-      .filter((r) => {
-        const week = workingIntervalsToWeek(r.workingIntervals);
-        const weekOrNull = week.days.length > 0 ? week : null;
-        return computeMerchantOpenNow({
-          isActive: r.isActive,
-          useWorkingHours: r.useWorkingHours,
-          timezone: r.timezone,
-          week: weekOrNull,
-        });
-      })
-      .map((r) => r.id);
+    return rows.map((r) => r.id);
   }
 
   async listAllAdmin(page = 1, limit = 20, merchantId?: string) {
@@ -438,25 +407,25 @@ export class MerchantOfferService {
     return this.mapRow(row, now, row.merchant);
   }
 
-  /** Public storefront: live display promos for open merchants. */
+  /** Public storefront: live display promos for all enabled merchants (open or closed). */
   async listPublic(page = 1, limit = 20, merchantId?: string) {
     await this.expireDueOffers();
     const now = new Date();
     const pg = this.normalizePagination(page, limit);
-    const openIds = await this.merchantIdsOpenForBusiness();
-    if (openIds.length === 0) {
+    const enabledIds = await this.merchantIdsEnabled();
+    if (enabledIds.length === 0) {
       return this.pagedResponse([], 0, pg.page, pg.limit);
     }
 
     if (merchantId?.trim()) {
-      if (!openIds.includes(merchantId.trim())) {
+      if (!enabledIds.includes(merchantId.trim())) {
         return this.pagedResponse([], 0, pg.page, pg.limit);
       }
     }
 
     const where: Prisma.MerchantOfferWhereInput = {
       ...this.liveOfferWhere(now),
-      merchantId: merchantId?.trim() ? merchantId.trim() : { in: openIds },
+      merchantId: merchantId?.trim() ? merchantId.trim() : { in: enabledIds },
     };
 
     const [total, rows] = await this.prisma.$transaction([
