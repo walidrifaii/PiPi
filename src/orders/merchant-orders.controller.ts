@@ -45,8 +45,14 @@ export class MerchantOrdersController {
 
   @ApiOperation({
     summary:
-      'List order history for your store — DELIVERED and CANCELLED only (merchant JWT). Optional `status` (`Delivered` | `Cancelled`), `search` (order id or customer name).',
+      'List order history for your store — DELIVERED and CANCELLED only (merchant JWT). Optional `status` (`Delivered` | `Cancelled`), `search` (order id or customer name), `from` / `to` (ISO date range).',
   })
+  @ApiQuery({ name: 'status', required: false, enum: ['Delivered', 'Cancelled'] })
+  @ApiQuery({ name: 'search', required: false, type: String })
+  @ApiQuery({ name: 'from', required: false, type: String })
+  @ApiQuery({ name: 'to', required: false, type: String })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
   @Get('history')
   listHistory(
     @EffectiveMerchantId() merchantId: string,

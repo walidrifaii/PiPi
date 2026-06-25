@@ -256,7 +256,7 @@ export class OrdersService {
 
     const search = query.search?.trim();
     if (!search) {
-      return where;
+      return this.applyMerchantHistoryDateFilter(where, query);
     }
 
     const fullUuid =
@@ -280,13 +280,33 @@ export class OrdersService {
       }
     }
 
-    return {
-      ...where,
-      OR: [
-        ...orderIdFilters,
-        { user: { fullName: { contains: search, mode: 'insensitive' } } },
-      ],
-    };
+    return this.applyMerchantHistoryDateFilter(
+      {
+        ...where,
+        OR: [
+          ...orderIdFilters,
+          { user: { fullName: { contains: search, mode: 'insensitive' } } },
+        ],
+      },
+      query,
+    );
+  }
+
+  private applyMerchantHistoryDateFilter(
+    where: Prisma.OrderWhereInput,
+    query: ListMerchantOrdersHistoryQueryDto,
+  ): Prisma.OrderWhereInput {
+    const createdAt: Prisma.DateTimeFilter = {};
+    if (query.from) {
+      createdAt.gte = new Date(query.from);
+    }
+    if (query.to) {
+      createdAt.lte = new Date(query.to);
+    }
+    if (Object.keys(createdAt).length === 0) {
+      return where;
+    }
+    return { ...where, createdAt };
   }
 
   async getForMerchant(merchantId: string, orderId: string) {
@@ -1043,10 +1063,18 @@ export class OrdersService {
     periodTo: Date | string;
     grossAmount: number;
     netAmount: number;
+    platformFee?: number;
     orderCount: number;
     status: string;
     paidAt: Date | string;
   }) {
+    const grossAmount = Number(settlement.grossAmount);
+    const netAmount = Number(settlement.netAmount);
+    const platformFee =
+      settlement.platformFee != null
+        ? Number(settlement.platformFee)
+        : Math.max(0, grossAmount - netAmount);
+
     return {
       id: settlement.id,
       referenceCode: settlement.referenceCode,
@@ -1058,8 +1086,9 @@ export class OrdersService {
         typeof settlement.periodTo === 'string'
           ? settlement.periodTo
           : settlement.periodTo.toISOString(),
-      grossAmount: settlement.grossAmount,
-      netAmount: settlement.netAmount,
+      grossAmount,
+      netAmount,
+      platformFee,
       orderCount: settlement.orderCount,
       status: settlement.status,
       paidAt:
@@ -1237,6 +1266,7 @@ export class OrdersService {
           periodTo: settlementRow.periodTo,
           grossAmount: Number(settlementRow.grossAmount),
           netAmount: Number(settlementRow.netAmount),
+          platformFee: Number(settlementRow.platformFee),
           orderCount: settlementRow.orderCount,
           status: settlementRow.status,
           paidAt: settlementRow.paidAt,
@@ -1279,6 +1309,7 @@ export class OrdersService {
         periodTo: settlementRow.periodTo,
         grossAmount: Number(settlementRow.grossAmount),
         netAmount: Number(settlementRow.netAmount),
+        platformFee: Number(settlementRow.platformFee),
         orderCount: settlementRow.orderCount,
         status: settlementRow.status,
         paidAt: settlementRow.paidAt,

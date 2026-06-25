@@ -160,6 +160,8 @@ model Merchant {
   longitude    Decimal?           @db.Decimal(10, 7)
   /// Store OPEN (true) vs CLOSED (false); merchant sets via PATCH /merchants/me/status.
   isActive     Boolean            @default(true) @map("is_active")
+  /// Admin-controlled kill-switch: false = completely hidden from all public responses.
+  isEnabled    Boolean            @default(true) @map("is_enabled")
   /// IANA timezone for working hours (e.g. Asia/Beirut for Lebanon). Required when useWorkingHours is true.
   timezone     String?            @db.VarChar(64)
   /// When true, customers only see the store open during merchant_working_intervals (and isActive must be true).

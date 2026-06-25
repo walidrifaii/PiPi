@@ -100,6 +100,7 @@ export class CheckoutService {
       select: {
         id: true,
         isActive: true,
+        isEnabled: true,
         useWorkingHours: true,
         timezone: true,
         workingIntervals: {
@@ -118,6 +119,10 @@ export class CheckoutService {
     });
 
     if (!merchant) {
+      throw new NotFoundException('Merchant not found');
+    }
+
+    if (!merchant.isEnabled) {
       throw new NotFoundException('Merchant not found');
     }
 

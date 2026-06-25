@@ -207,7 +207,7 @@ export class MerchantOfferService {
 
   private async merchantIdsOpenForBusiness(): Promise<string[]> {
     const rows = await this.prisma.merchant.findMany({
-      where: { isActive: true },
+      where: { isActive: true, isEnabled: true },
       select: {
         id: true,
         isActive: true,

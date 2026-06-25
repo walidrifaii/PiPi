@@ -26,6 +26,7 @@ import { MerchantAccountGuard } from './auth/merchant-account.guard';
 import { SuperAdminGuard } from './auth/super-admin.guard';
 import { JwtUserPayload } from './auth/jwt-user.payload';
 import { SetMerchantActiveDto } from './merchant/dto/set-merchant-active.dto';
+import { SetMerchantEnabledDto } from './merchant/dto/set-merchant-enabled.dto';
 import {
   merchantIsActiveFromStoreStatus,
   SetMerchantStoreStatusDto,
@@ -748,6 +749,26 @@ export class MerchantController {
     return this.merchantIntegrationService.updateMerchant(merchantId, dto, {
       allowFoodSharePercent: true,
     });
+  }
+
+  @ApiTags('Super Admin')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, SuperAdminGuard)
+  @ApiParam({ name: 'merchantId', type: String, format: 'uuid' })
+  @ApiOperation({
+    summary: 'Enable or disable a merchant (super admin only)',
+    description:
+      'When isEnabled is false the merchant is completely hidden from all public responses (list, profile, catalog, search, offers, checkout). Merchant can still log in but customers will not see them.',
+  })
+  @Patch('admin/:merchantId/enabled')
+  setMerchantEnabled(
+    @Param('merchantId') merchantId: string,
+    @Body() dto: SetMerchantEnabledDto,
+  ) {
+    return this.merchantIntegrationService.setMerchantEnabled(
+      merchantId,
+      dto.isEnabled,
+    );
   }
 
   @ApiTags('Super Admin')

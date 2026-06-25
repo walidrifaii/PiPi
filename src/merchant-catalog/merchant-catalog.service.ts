@@ -1098,6 +1098,7 @@ export class MerchantCatalogService {
       where: { id: merchantId },
       select: {
         isActive: true,
+        isEnabled: true,
         useWorkingHours: true,
         timezone: true,
         workingIntervals: {
@@ -1114,7 +1115,7 @@ export class MerchantCatalogService {
         },
       },
     });
-    if (!merchant?.isActive) {
+    if (!merchant?.isEnabled || !merchant.isActive) {
       throw new NotFoundException('Merchant not found or inactive');
     }
     const week = workingIntervalsToWeek(merchant.workingIntervals);
@@ -1140,13 +1141,13 @@ export class MerchantCatalogService {
     }
   }
 
-  /** Store exists and is not permanently deactivated (hours may still show CLOSED). */
+  /** Store exists, is admin-enabled, and is not permanently deactivated (hours may still show CLOSED). */
   private async assertMerchantBrowsable(merchantId: string): Promise<void> {
     const merchant = await this.prisma.merchant.findUnique({
       where: { id: merchantId },
-      select: { isActive: true },
+      select: { isActive: true, isEnabled: true },
     });
-    if (!merchant?.isActive) {
+    if (!merchant?.isEnabled || !merchant.isActive) {
       throw new NotFoundException('Merchant not found or inactive');
     }
   }

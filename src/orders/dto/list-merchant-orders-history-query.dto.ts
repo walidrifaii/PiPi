@@ -3,6 +3,7 @@ import { Type } from 'class-transformer';
 import {
   IsIn,
   IsInt,
+  IsISO8601,
   IsOptional,
   IsString,
   Max,
@@ -39,6 +40,22 @@ export class ListMerchantOrdersHistoryQueryDto {
   @IsString()
   @MinLength(2)
   search?: string;
+
+  @ApiPropertyOptional({
+    example: '2026-05-01T00:00:00.000Z',
+    description: 'Include orders created on or after this time (ISO).',
+  })
+  @IsOptional()
+  @IsISO8601()
+  from?: string;
+
+  @ApiPropertyOptional({
+    example: '2026-05-31T23:59:59.999Z',
+    description: 'Include orders created on or before this time (ISO).',
+  })
+  @IsOptional()
+  @IsISO8601()
+  to?: string;
 
   @ApiPropertyOptional({ default: 1, minimum: 1 })
   @IsOptional()

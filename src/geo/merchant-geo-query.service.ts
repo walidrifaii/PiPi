@@ -176,6 +176,7 @@ export class MerchantGeoQueryService {
         AND sa.is_active = true
         AND sa.boundary_geo_json IS NOT NULL
       WHERE m.city_code = ${normalized}
+        AND m.is_enabled = true
         AND m.latitude IS NOT NULL
         AND m.longitude IS NOT NULL
         AND point_in_geojson_polygon(
@@ -233,6 +234,7 @@ export class MerchantGeoQueryService {
         AND sa.is_active = true
         AND sa.boundary_geo_json IS NOT NULL
       WHERE m.city_code = ${cityCode}
+        AND m.is_enabled = true
         AND m.latitude IS NOT NULL
         AND m.longitude IS NOT NULL
         AND point_in_geojson_polygon(

@@ -47,6 +47,8 @@ export type MerchantListItem = {
   longitude: number | null;
   /** Manual OPEN/CLOSED from PATCH /merchants/me/status (stored as is_active). */
   isActive: boolean;
+  /** Admin kill-switch: false = hidden from all public responses. */
+  isEnabled: boolean;
   /** True when the store accepts customers now (manual OPEN and inside working hours if enabled). */
   isOpenNow: boolean;
   /** Customer-visible OPEN/CLOSED (same as isOpenNow). */
@@ -103,6 +105,7 @@ type MerchantRowForList = {
   imageUrl: string | null;
   coverImageUrl: string | null;
   isActive: boolean;
+  isEnabled: boolean;
   useWorkingHours: boolean;
   timezone: string | null;
   workingIntervals: Array<{
@@ -194,6 +197,7 @@ export class MerchantIntegrationService {
       latitude: this.decimalToNumber(r.latitude),
       longitude: this.decimalToNumber(r.longitude),
       isActive: r.isActive,
+      isEnabled: r.isEnabled,
       isOpenNow,
       status: isOpenNow ? MerchantStoreStatus.OPEN : MerchantStoreStatus.CLOSED,
       createdAt: r.createdAt,
@@ -218,6 +222,7 @@ export class MerchantIntegrationService {
     coverImageUrl: true,
     foodSharePercent: true,
     isActive: true,
+    isEnabled: true,
     useWorkingHours: true,
     timezone: true,
     workingIntervals: {
@@ -267,7 +272,7 @@ export class MerchantIntegrationService {
       where: { id: merchantId },
       select: this.listSelect,
     });
-    if (!row) {
+    if (!row || !(row as unknown as { isEnabled: boolean }).isEnabled) {
       throw new NotFoundException('Merchant not found');
     }
 
@@ -471,7 +476,7 @@ export class MerchantIntegrationService {
     }
 
     const rows = await this.db.merchant.findMany({
-      where: { id: { in: pageResult.ids } },
+      where: { id: { in: pageResult.ids }, isEnabled: true },
       select: this.listSelect,
     });
     const rowById = new Map(
@@ -534,7 +539,7 @@ export class MerchantIntegrationService {
       }
     }
 
-    const where: Prisma.MerchantWhereInput = {};
+    const where: Prisma.MerchantWhereInput = { isEnabled: true };
     if (merchantTypeCode) {
       where.merchantType = {
         code: merchantTypeCode.trim().toUpperCase(),
@@ -644,7 +649,7 @@ export class MerchantIntegrationService {
     }
 
     const rows = await this.db.merchant.findMany({
-      where: { cityCode: resolved.code },
+      where: { cityCode: resolved.code, isEnabled: true },
       select: { id: true, latitude: true, longitude: true },
     });
 
@@ -690,6 +695,7 @@ export class MerchantIntegrationService {
     const pg = this.normalizePagination(page, limit);
     const where: Prisma.MerchantWhereInput = {
       id: { in: scopedIds },
+      isEnabled: true,
       name: nameStartsWithFilter(term),
     };
     if (merchantTypeCode) {
@@ -966,6 +972,18 @@ export class MerchantIntegrationService {
       });
     });
     return this.getMerchantWorkingHours(merchantId);
+  }
+
+  async setMerchantEnabled(
+    merchantId: string,
+    isEnabled: boolean,
+  ): Promise<MerchantListItem> {
+    const updated = await this.db.merchant.update({
+      where: { id: merchantId },
+      data: { isEnabled },
+      select: { ...this.listSelect, foodSharePercent: true },
+    });
+    return this.rowToListItem(updated as unknown as MerchantRowForList);
   }
 
   async deleteMerchant(merchantId: string): Promise<{ message: string }> {
