@@ -48,7 +48,7 @@ export class WhatsAppNodeService {
     const campaignName = `otp_${randomUUID().replace(/-/g, '')}`;
     // Embed code in the message — Node's campaign runner JSON.parse's contact
     // variables for {code} and crashes with "Unexpected token o in JSON at position 1".
-    const message = `Your password reset code is ${code}. It expires in 5 minutes. Do not share it.`;
+    const message = `Your verification code is ${code}. It expires in 5 minutes. Do not share it with anyone.`;
 
     const create = await this.postJson(
       `${url}/api/campaigns`,
