@@ -1,6 +1,6 @@
 /**
  * Deletes every row from order_items and orders.
- *
+ *   test
  * Usage (from athar/):
  *   CONFIRM_DELETE_ALL_ORDERS=yes node scripts/delete-all-orders.mjs
  *
