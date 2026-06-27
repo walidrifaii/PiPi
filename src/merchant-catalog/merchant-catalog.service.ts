@@ -15,6 +15,7 @@ import {
   nameStartsWithFilter,
   normalizeNameSearchTerm,
 } from '../common/name-search';
+import { S3Service } from '../common/s3.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -37,6 +38,7 @@ export class MerchantCatalogService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly merchantOffers: MerchantOfferService,
+    private readonly s3: S3Service,
   ) {}
 
   private normalizePagination(page: number, limit: number) {
@@ -510,7 +512,7 @@ export class MerchantCatalogService {
     if (!existing) {
       throw new NotFoundException('Category not found');
     }
-    return this.prisma.merchantCategory.update({
+    const updated = await this.prisma.merchantCategory.update({
       where: { id: categoryId },
       data: {
         name: dto.name,
@@ -521,6 +523,14 @@ export class MerchantCatalogService {
         ...(dto.imageUrl !== undefined ? { imageUrl: dto.imageUrl } : {}),
       },
     });
+    if (
+      dto.imageUrl !== undefined &&
+      existing.imageUrl &&
+      existing.imageUrl !== dto.imageUrl
+    ) {
+      await this.s3.deleteImageByUrl(existing.imageUrl);
+    }
+    return updated;
   }
 
   async deleteCategory(merchantId: string, categoryId: string) {
@@ -532,6 +542,7 @@ export class MerchantCatalogService {
       throw new NotFoundException('Category not found');
     }
     await this.prisma.merchantCategory.delete({ where: { id: categoryId } });
+    await this.s3.deleteImageByUrl(existing.imageUrl);
     return { message: 'Category deleted' };
   }
 
@@ -998,7 +1009,17 @@ export class MerchantCatalogService {
       }
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    // Snapshot old gallery URLs before replacing them in the transaction
+    let oldGalleryUrls: string[] = [];
+    if (extraImageUrls !== undefined) {
+      const oldImages = await this.prisma.productImage.findMany({
+        where: { productId },
+        select: { url: true },
+      });
+      oldGalleryUrls = oldImages.map((img) => img.url);
+    }
+
+    const result = await this.prisma.$transaction(async (tx) => {
       if (extraImageUrls !== undefined) {
         await tx.productImage.deleteMany({ where: { productId } });
         if (extraImageUrls.length > 0) {
@@ -1049,6 +1070,18 @@ export class MerchantCatalogService {
       });
       return this.attachProductPricing(updated, false);
     });
+
+    // Delete replaced main image from S3
+    if (imageUrl !== undefined && product.imageUrl && product.imageUrl !== imageUrl) {
+      await this.s3.deleteImageByUrl(product.imageUrl);
+    }
+
+    // Delete replaced gallery images from S3
+    if (oldGalleryUrls.length > 0) {
+      await Promise.all(oldGalleryUrls.map((url) => this.s3.deleteImageByUrl(url)));
+    }
+
+    return result;
   }
 
   async deleteProduct(merchantId: string, productId: string) {
@@ -1058,11 +1091,20 @@ export class MerchantCatalogService {
         id: productId,
         category: { merchantId },
       },
+      include: { images: true },
     });
     if (!product) {
       throw new NotFoundException('Product not found');
     }
     await this.prisma.product.delete({ where: { id: productId } });
+
+    // Delete main image and all gallery images from S3
+    const urlsToDelete = [
+      product.imageUrl,
+      ...product.images.map((img) => img.url),
+    ].filter((u): u is string => Boolean(u));
+    await Promise.all(urlsToDelete.map((url) => this.s3.deleteImageByUrl(url)));
+
     return { message: 'Product deleted' };
   }
 

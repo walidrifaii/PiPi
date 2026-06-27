@@ -173,7 +173,7 @@ export class MerchantCatalogController {
         imageUrl: {
           type: 'string',
           format: 'binary',
-          description: 'Product image — choose file (uploaded to Cloudinary)',
+          description: 'Product image — choose file (uploaded to S3)',
         },
       },
       required: ['categoryId', 'name', 'price'],
