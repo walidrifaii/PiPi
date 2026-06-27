@@ -29,7 +29,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { SuperAdminGuard } from '../auth/super-admin.guard';
-import { CloudinaryService } from '../common/cloudinary.service';
+import { S3Service } from '../common/s3.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -44,7 +44,7 @@ import { MerchantCatalogService } from './merchant-catalog.service';
 export class MerchantCatalogSuperAdminController {
   constructor(
     private readonly catalog: MerchantCatalogService,
-    private readonly cloudinary: CloudinaryService,
+    private readonly cloudinary: S3Service,
   ) {}
 
   @ApiOperation({ summary: 'List categories for a merchant' })

@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CloudinaryService } from '../common/cloudinary.service';
+import { S3Service } from '../common/s3.service';
 import { AuthService } from './auth.service';
 import { LoginMerchantDto } from './dto/login-merchant.dto';
 import { RegisterMerchantDto } from './dto/register-merchant.dto';
@@ -18,7 +18,7 @@ import { RegisterMerchantDto } from './dto/register-merchant.dto';
 export class AuthMerchantController {
   constructor(
     private readonly authService: AuthService,
-    private readonly cloudinary: CloudinaryService,
+    private readonly cloudinary: S3Service,
   ) {}
 
   @ApiOperation({

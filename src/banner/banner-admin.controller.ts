@@ -22,7 +22,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { SuperAdminGuard } from '../auth/super-admin.guard';
-import { CloudinaryService } from '../common/cloudinary.service';
+import { S3Service } from '../common/s3.service';
 import { BannerService } from './banner.service';
 import { CreateBannerDto } from './dto/create-banner.dto';
 import { UpdateBannerDto } from './dto/update-banner.dto';
@@ -34,7 +34,7 @@ import { UpdateBannerDto } from './dto/update-banner.dto';
 export class BannerAdminController {
   constructor(
     private readonly bannerService: BannerService,
-    private readonly cloudinary: CloudinaryService,
+    private readonly cloudinary: S3Service,
   ) {}
 
   @ApiOperation({ summary: 'List all banners (super admin)' })
@@ -85,7 +85,7 @@ export class BannerAdminController {
 
   @ApiOperation({
     summary:
-      'Update banner image and/or status (super admin). Omit image to keep current file. Replacing the image deletes the previous file from Cloudinary.',
+      'Update banner image and/or status (super admin). Omit image to keep current file. Replacing the image deletes the previous file from S3.',
   })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -122,7 +122,7 @@ export class BannerAdminController {
 
   @ApiOperation({
     summary:
-      'Delete banner (super admin). Removes the row and deletes the image from Cloudinary when hosted on this cloud.',
+      'Delete banner (super admin). Removes the row and deletes the image from S3 when hosted on this distribution.',
   })
   @ApiParam({ name: 'id', type: String, format: 'uuid' })
   @Delete(':id')

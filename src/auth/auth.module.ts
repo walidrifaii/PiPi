@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule, type JwtSignOptions } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { CloudinaryService } from '../common/cloudinary.service';
+import { S3Service } from '../common/s3.service';
 import { OtpModule } from '../otp/otp.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { NotificationsModule } from '../notifications/notifications.module';
@@ -49,7 +49,7 @@ import { UserAccountGuard } from './user-account.guard';
   ],
   providers: [
     AuthService,
-    CloudinaryService,
+    S3Service,
     JwtStrategy,
     SuperAdminGuard,
     MerchantJwtScopeGuard,

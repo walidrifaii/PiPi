@@ -24,7 +24,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { CloudinaryService } from '../common/cloudinary.service';
+import { S3Service } from '../common/s3.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { MerchantJwtScopeGuard } from '../auth/merchant-jwt-scope.guard';
 import { EffectiveMerchantId } from '../auth/effective-merchant-id.decorator';
@@ -43,7 +43,7 @@ import { MerchantCatalogService } from './merchant-catalog.service';
 export class MerchantCatalogController {
   constructor(
     private readonly catalog: MerchantCatalogService,
-    private readonly cloudinary: CloudinaryService,
+    private readonly cloudinary: S3Service,
   ) {}
 
   @ApiOperation({ summary: 'List categories for your store (JWT merchant id)' })

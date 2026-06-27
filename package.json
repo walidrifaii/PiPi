@@ -28,6 +28,7 @@
     "delete:all-orders": "node scripts/delete-all-orders.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1075.0",
     "@neondatabase/serverless": "^0.10.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
@@ -43,7 +44,6 @@
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.4",
-    "cloudinary": "^2.9.0",
     "dotenv": "^17.4.1",
     "firebase-admin": "^13.10.0",
     "ioredis": "^5.10.1",

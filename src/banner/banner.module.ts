@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { CloudinaryService } from '../common/cloudinary.service';
+import { S3Service } from '../common/s3.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { BannerAdminController } from './banner-admin.controller';
 import { BannerController } from './banner.controller';
@@ -17,7 +17,7 @@ import {
     BannerV2Controller,
     BannerAdminV2Controller,
   ],
-  providers: [BannerService, CloudinaryService],
+  providers: [BannerService, S3Service],
   exports: [BannerService],
 })
 export class BannerModule {}

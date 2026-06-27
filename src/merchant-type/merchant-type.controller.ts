@@ -22,7 +22,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { SuperAdminGuard } from '../auth/super-admin.guard';
-import { CloudinaryService } from '../common/cloudinary.service';
+import { S3Service } from '../common/s3.service';
 import { CreateMerchantTypeDto } from './dto/create-merchant-type.dto';
 import { UpdateMerchantTypeDto } from './dto/update-merchant-type.dto';
 import { MerchantTypeService } from './merchant-type.service';
@@ -31,7 +31,7 @@ import { MerchantTypeService } from './merchant-type.service';
 export class MerchantTypeController {
   constructor(
     private readonly merchantTypeService: MerchantTypeService,
-    private readonly cloudinary: CloudinaryService,
+    private readonly cloudinary: S3Service,
   ) {}
 
   @ApiTags('Shared')
@@ -148,7 +148,7 @@ export class MerchantTypeController {
   @ApiParam({ name: 'id', type: String })
   @ApiOperation({
     summary:
-      'Delete merchant type (super admin). Removes the image from Cloudinary when present.',
+      'Delete merchant type (super admin). Removes the image from S3 when present.',
   })
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {

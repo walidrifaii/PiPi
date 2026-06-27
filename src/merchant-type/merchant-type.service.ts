@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { CloudinaryService } from '../common/cloudinary.service';
+import { S3Service } from '../common/s3.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMerchantTypeDto } from './dto/create-merchant-type.dto';
 import { UpdateMerchantTypeDto } from './dto/update-merchant-type.dto';
@@ -22,7 +22,7 @@ const publicSelect = {
 export class MerchantTypeService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly cloudinary: CloudinaryService,
+    private readonly cloudinary: S3Service,
   ) {}
 
   findAllPublic() {

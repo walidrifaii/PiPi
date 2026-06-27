@@ -4,7 +4,7 @@ import { AppController } from './app.controller';
 import { MerchantController } from './merchant.controller';
 import { AppService } from './app.service';
 import { AppRedisModule } from './common/app-redis.module';
-import { CloudinaryService } from './common/cloudinary.service';
+import { S3Service } from './common/s3.service';
 import { MerchantCatalogController } from './merchant-catalog/merchant-catalog.controller';
 import { MerchantCatalogSuperAdminController } from './merchant-catalog/merchant-catalog-super-admin.controller';
 import { MerchantCatalogService } from './merchant-catalog/merchant-catalog.service';
@@ -69,7 +69,7 @@ import { APP_V2_CONTROLLERS } from './v2/controllers/app.v2-controllers';
     AppService,
     MerchantIntegrationService,
     MerchantCatalogService,
-    CloudinaryService,
+    S3Service,
   ],
 })
 export class AppModule {}
