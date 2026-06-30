@@ -56,6 +56,7 @@ export type OrderWithRelations = {
   checkoutRef: string | null;
   itemsSnapshot: unknown;
   createdAt: Date;
+  preparationTime: number | null;
   orderItems: Array<{
     id: string;
     productId: string;
