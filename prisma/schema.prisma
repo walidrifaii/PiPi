@@ -429,6 +429,18 @@ model AppSetting {
   @@map("app_settings")
 }
 
+/// Mobile app version config — single row (id = 1).
+model AppVersion {
+  id            Int      @id @default(1)
+  latestVersion String   @default("1.0.0") @map("latest_version") @db.VarChar(20)
+  minVersion    String   @default("1.0.0") @map("min_version") @db.VarChar(20)
+  androidUrl    String?  @map("android_url") @db.Text
+  iosUrl        String?  @map("ios_url") @db.Text
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("app_version")
+}
+
 /// Delivery fee: flat fee inside includedKm, extra per km after, capped at maxFee.
 model DeliveryFeeConfig {
   id               String   @id @default(uuid()) @db.Uuid

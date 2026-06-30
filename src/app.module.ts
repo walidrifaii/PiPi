@@ -30,6 +30,7 @@ import { DeliveryFeeModule } from './delivery-fee/delivery-fee.module';
 import { GeoModule } from './geo/geo.module';
 import { V2Module } from './v2/v2.module';
 import { APP_V2_CONTROLLERS } from './v2/controllers/app.v2-controllers';
+import { AppVersionModule } from './app-version/app-version.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { APP_V2_CONTROLLERS } from './v2/controllers/app.v2-controllers';
     MerchantOfferModule,
     PlatformSettingsModule,
     DeliveryFeeModule,
+    AppVersionModule,
     V2Module,
   ],
   controllers: [
