@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsIn, IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { ORDER_STATUSES } from '../order-status.constants';
 
 export class UpdateOrderStatusDto {
@@ -11,4 +11,13 @@ export class UpdateOrderStatusDto {
   @IsString()
   @IsIn([...ORDER_STATUSES])
   status!: string;
+
+  @ApiPropertyOptional({
+    example: 15,
+    description: 'Preparation time in minutes (set by merchant when accepting)',
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  preparationTime?: number;
 }

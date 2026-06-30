@@ -364,8 +364,9 @@ model Order {
   notes           String?
   checkoutRef     String?      @map("checkout_ref") @db.VarChar(191)
   itemsSnapshot   Json?        @map("items_snapshot")
-  createdAt       DateTime     @default(now()) @map("created_at")
-  user            User         @relation(fields: [userId], references: [id], onDelete: Restrict)
+  createdAt        DateTime     @default(now()) @map("created_at")
+  preparationTime  Int?         @map("preparation_time")
+  user             User         @relation(fields: [userId], references: [id], onDelete: Restrict)
   merchant        Merchant     @relation(fields: [merchantId], references: [id], onDelete: Restrict)
   address         UserAddress? @relation(fields: [addressId], references: [id], onDelete: SetNull)
   driver          Driver?      @relation(fields: [driverId], references: [id], onDelete: SetNull)

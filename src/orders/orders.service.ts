@@ -520,6 +520,7 @@ export class OrdersService {
     return this.updateOrderStatus(orderId, dto.status, {
       merchantId,
       superAdmin: false,
+      preparationTime: dto.preparationTime,
     });
   }
 
@@ -532,7 +533,11 @@ export class OrdersService {
   private async updateOrderStatus(
     orderId: string,
     newStatusRaw: string,
-    scope: { merchantId?: string; superAdmin: boolean },
+    scope: {
+      merchantId?: string;
+      superAdmin: boolean;
+      preparationTime?: number;
+    },
   ) {
     const newStatus = normalizeOrderStatus(newStatusRaw);
 
@@ -574,7 +579,12 @@ export class OrdersService {
 
     const updated = await this.prisma.order.update({
       where: { id: orderId },
-      data: { status: newStatus },
+      data: {
+        status: newStatus,
+        ...(newStatus === 'ACCEPTED' && scope.preparationTime
+          ? { preparationTime: scope.preparationTime }
+          : {}),
+      },
       include: orderInclude,
     });
 

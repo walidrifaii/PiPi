@@ -200,6 +200,7 @@ export function mapOrderSummary(
       normalizeDeliveryTimeMinutes(snapshot?.deliveryTimeMinutes) ?? null,
     itemCount: order.orderItems.length,
     createdAt: order.createdAt,
+    preparationTime: order.preparationTime ?? null,
     ...offerFieldsForAudience(snapshot, audience),
   };
 }
@@ -267,6 +268,7 @@ export function mapOrderDetail(
     notes: order.notes,
     items,
     createdAt: order.createdAt,
+    preparationTime: order.preparationTime ?? null,
     ...offerFieldsForAudience(snapshot, audience),
     ...(order.driverId && order.driver
       ? {
