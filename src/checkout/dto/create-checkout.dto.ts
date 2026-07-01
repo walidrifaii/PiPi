@@ -118,4 +118,14 @@ export class CreateCheckoutDto {
   @IsString()
   @MaxLength(2000)
   notes?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'Optional coupon code (case-insensitive). Blocked when any cart item already has a product-level discount.',
+    example: 'SUMMER20',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  couponCode?: string;
 }

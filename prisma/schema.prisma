@@ -57,6 +57,7 @@ model User {
   orders          Order[]
   addresses       UserAddress[]
   notifications   UserNotification[]
+  couponUsages    CouponUsage[]
 
   @@map("users")
 }
@@ -366,17 +367,25 @@ model Order {
   itemsSnapshot   Json?        @map("items_snapshot")
   createdAt        DateTime     @default(now()) @map("created_at")
   preparationTime  Int?         @map("preparation_time")
+  /// Coupon applied at checkout (snapshot code kept for history even if coupon is later deleted).
+  couponId        String?      @map("coupon_id") @db.Uuid
+  couponCode      String?      @map("coupon_code") @db.VarChar(50)
+  /// Amount deducted from subtotal by the coupon (stored for audit; not re-computed from coupon row).
+  couponDiscount  Decimal?     @map("coupon_discount") @db.Decimal(10, 2)
   user             User         @relation(fields: [userId], references: [id], onDelete: Restrict)
   merchant        Merchant     @relation(fields: [merchantId], references: [id], onDelete: Restrict)
   address         UserAddress? @relation(fields: [addressId], references: [id], onDelete: SetNull)
   driver          Driver?      @relation(fields: [driverId], references: [id], onDelete: SetNull)
+  coupon          Coupon?      @relation(fields: [couponId], references: [id], onDelete: SetNull)
   orderItems      OrderItem[]
+  couponUsage     CouponUsage?
 
   @@index([userId])
   @@index([merchantId])
   @@index([driverId])
   @@index([status, driverId])
   @@index([addressId])
+  @@index([couponId])
   @@map("orders")
 }
 
@@ -439,6 +448,54 @@ model AppVersion {
   updatedAt     DateTime @updatedAt @map("updated_at")
 
   @@map("app_version")
+}
+
+/// Coupon code created by a super-admin. Applied at checkout for a percentage discount on subtotal.
+/// Blocked when any cart item already carries a product-level discountPrice.
+model Coupon {
+  id              String       @id @default(uuid()) @db.Uuid
+  /// Human-readable code customers enter (stored and matched case-insensitively, saved uppercase).
+  code            String       @unique @db.VarChar(50)
+  /// Percentage off the order subtotal (1–100).
+  discountPercent Decimal      @map("discount_percent") @db.Decimal(5, 2)
+  /// Free-text name of whoever created this coupon (e.g. "Marketing Team", "Ahmed").
+  authorName      String       @map("author_name") @db.VarChar(255)
+  isActive        Boolean      @default(true) @map("is_active")
+  /// After this timestamp the coupon is rejected; null = no expiry.
+  expiresAt       DateTime?    @map("expires_at")
+  /// Maximum total redemptions allowed; null = unlimited.
+  maxUsages       Int?         @map("max_usages")
+  /// Denormalized total redemptions counter (updated inside the checkout transaction).
+  usageCount      Int          @default(0) @map("usage_count")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+  usages          CouponUsage[]
+  orders          Order[]
+
+  @@index([code])
+  @@index([isActive, expiresAt])
+  @@map("coupons")
+}
+
+/// One redemption event: one user × one coupon × one order (each pair is unique).
+model CouponUsage {
+  id             String   @id @default(uuid()) @db.Uuid
+  couponId       String   @map("coupon_id") @db.Uuid
+  userId         String   @map("user_id") @db.Uuid
+  /// The order this coupon was redeemed on.
+  orderId        String   @unique @map("order_id") @db.Uuid
+  /// Actual money saved (coupon.discountPercent × order subtotal at redemption time).
+  discountAmount Decimal  @map("discount_amount") @db.Decimal(10, 2)
+  usedAt         DateTime @default(now()) @map("used_at")
+  coupon         Coupon   @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  user           User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  /// A user may redeem the same coupon only once.
+  @@unique([couponId, userId])
+  @@index([couponId])
+  @@index([userId])
+  @@map("coupon_usages")
 }
 
 /// Delivery fee: flat fee inside includedKm, extra per km after, capped at maxFee.

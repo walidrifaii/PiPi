@@ -31,6 +31,7 @@ import { GeoModule } from './geo/geo.module';
 import { V2Module } from './v2/v2.module';
 import { APP_V2_CONTROLLERS } from './v2/controllers/app.v2-controllers';
 import { AppVersionModule } from './app-version/app-version.module';
+import { CouponModule } from './coupon/coupon.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { AppVersionModule } from './app-version/app-version.module';
     PlatformSettingsModule,
     DeliveryFeeModule,
     AppVersionModule,
+    CouponModule,
     V2Module,
   ],
   controllers: [

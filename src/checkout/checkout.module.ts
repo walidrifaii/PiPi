@@ -5,6 +5,7 @@ import { OrderNotificationsPort } from '../notifications/notifications.port';
 import { DeliveryFeeModule } from '../delivery-fee/delivery-fee.module';
 import { MerchantOfferModule } from '../merchant-offer/merchant-offer.module';
 import { PrismaModule } from '../prisma/prisma.module';
+import { CouponModule } from '../coupon/coupon.module';
 import { CheckoutController } from './checkout.controller';
 import { CheckoutService } from './checkout.service';
 import { UserAddressController } from './user-address.controller';
@@ -20,6 +21,7 @@ import {
     NotificationsModule,
     MerchantOfferModule,
     DeliveryFeeModule,
+    CouponModule,
   ],
   controllers: [
     CheckoutController,

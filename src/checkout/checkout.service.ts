@@ -23,6 +23,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateCheckoutDto } from './dto/create-checkout.dto';
 import { MerchantOfferService } from '../merchant-offer/merchant-offer.service';
 import { resolveStorefrontProductPricing } from '../merchant-offer/merchant-offer-pricing';
+import { CouponService } from '../coupon/coupon.service';
 
 type LineItem = {
   productId: string;
@@ -48,6 +49,9 @@ export type CheckoutItemsSnapshot = {
   deliveryTimeMinutes: DeliveryTimeMinutesRange;
   merchantOfferPercent: number | null;
   customerSubtotal: number;
+  couponDiscount: number | null;
+  couponCode: string | null;
+  couponDiscountPercent: number | null;
   customerTotal: number;
   merchantSubtotal: number;
   merchantTotal: number;
@@ -88,6 +92,7 @@ export class CheckoutService {
     private readonly orderNotifications: OrderNotificationsPort,
     private readonly merchantOffers: MerchantOfferService,
     private readonly deliveryFees: DeliveryFeeService,
+    private readonly couponSvc: CouponService,
   ) {}
 
   async createOrder(
@@ -244,10 +249,45 @@ export class CheckoutService {
       lineItems.reduce((sum, line) => sum + line.merchantTotalPrice, 0),
     );
 
+    // ── Coupon validation ────────────────────────────────────────────────────
+    // A coupon is blocked when any cart item already carries a product-level
+    // discountPrice — you cannot stack coupon + product discount.
+    const anyProductHasDiscount = lineItems.some(
+      (l) => l.productDiscountPrice !== null,
+    );
+
+    let appliedCoupon: {
+      couponId: string;
+      code: string;
+      discountPercent: number;
+      discountAmount: number;
+    } | null = null;
+
+    if (dto.couponCode) {
+      const validated = await this.couponSvc.assertValidForCheckout(
+        userId,
+        dto.couponCode,
+        anyProductHasDiscount,
+      );
+      const discountAmount = this.roundMoney(
+        (customerSubtotal * validated.discountPercent) / 100,
+      );
+      appliedCoupon = {
+        couponId: validated.couponId,
+        code: validated.code,
+        discountPercent: validated.discountPercent,
+        discountAmount,
+      };
+    }
+
+    // ────────────────────────────────────────────────────────────────────────
     const feeCalc = await this.deliveryFees.computeForDistance(dto.distanceKm);
     const deliveryFee = this.roundMoney(feeCalc.deliveryFee);
 
-    const customerTotal = this.roundMoney(customerSubtotal + deliveryFee);
+    const couponDiscount = appliedCoupon?.discountAmount ?? 0;
+    const customerTotal = this.roundMoney(
+      customerSubtotal - couponDiscount + deliveryFee,
+    );
     // Merchant is paid for food only; delivery fee goes to platform/driver.
     const merchantTotal = merchantSubtotal;
 
@@ -271,6 +311,9 @@ export class CheckoutService {
       },
       merchantOfferPercent: offerPercent,
       customerSubtotal,
+      couponDiscount: appliedCoupon?.discountAmount ?? null,
+      couponCode: appliedCoupon?.code ?? null,
+      couponDiscountPercent: appliedCoupon?.discountPercent ?? null,
       customerTotal,
       merchantSubtotal,
       merchantTotal,
@@ -316,6 +359,11 @@ export class CheckoutService {
           notes: dto.notes ?? null,
           checkoutRef,
           itemsSnapshot,
+          ...(appliedCoupon && {
+            couponId: appliedCoupon.couponId,
+            couponCode: appliedCoupon.code,
+            couponDiscount: appliedCoupon.discountAmount,
+          }),
           orderItems: {
             create: lineItems.map((l) => ({
               productId: l.productId,
@@ -339,6 +387,23 @@ export class CheckoutService {
           },
         },
       });
+
+      if (appliedCoupon) {
+        // Record the redemption and increment the denormalized counter atomically.
+        await tx.couponUsage.create({
+          data: {
+            couponId: appliedCoupon.couponId,
+            userId,
+            orderId: created.id,
+            discountAmount: appliedCoupon.discountAmount,
+          },
+        });
+        await tx.coupon.update({
+          where: { id: appliedCoupon.couponId },
+          data: { usageCount: { increment: 1 } },
+        });
+      }
+
       return created;
     });
 
@@ -400,6 +465,15 @@ export class CheckoutService {
       },
       ...(snapshot.merchantOfferPercent
         ? { merchantOfferPercent: snapshot.merchantOfferPercent }
+        : {}),
+      ...(snapshot.couponCode
+        ? {
+            coupon: {
+              code: snapshot.couponCode,
+              discountPercent: snapshot.couponDiscountPercent,
+              discountAmount: snapshot.couponDiscount,
+            },
+          }
         : {}),
       items: order.orderItems.map((oi, index) => {
         const snap = snapshot.items[index];
