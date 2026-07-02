@@ -80,8 +80,8 @@ export class MerchantCatalogService {
   }
 
   /**
-   * Storefront menu endpoints: clients often request page=1 with a modest limit.
-   * Internally load every page (max 100 per DB query) and return one combined list.
+   * Storefront categories: load every page internally when a full list is needed.
+   * Product storefront endpoints use real DB pagination via fetch*Paged.
    */
   private async collectAllStorefrontPages<T>(
     fetchPage: (
@@ -624,18 +624,14 @@ export class MerchantCatalogService {
     activeProductsOnly = false,
     i18n?: I18nOptions,
   ) {
-    void page;
-    void limit;
     await this.assertMerchantBrowsable(merchantId);
-    const result = await this.collectAllStorefrontPages((p, l) =>
-      this.fetchProductsPaged(
-        merchantId,
-        categoryId,
-        p,
-        l,
-        true,
-        activeProductsOnly,
-      ),
+    const result = await this.fetchProductsPaged(
+      merchantId,
+      categoryId,
+      page,
+      limit,
+      true,
+      activeProductsOnly,
     );
     return this.localizePagedProducts(result, i18n);
   }
@@ -703,18 +699,14 @@ export class MerchantCatalogService {
     activeProductsOnly = false,
     i18n?: I18nOptions,
   ) {
-    void page;
-    void limit;
     await this.assertMerchantBrowsable(merchantId);
-    const result = await this.collectAllStorefrontPages((p, l) =>
-      this.fetchAllProductsPaged(
-        merchantId,
-        categoryId,
-        p,
-        l,
-        true,
-        activeProductsOnly,
-      ),
+    const result = await this.fetchAllProductsPaged(
+      merchantId,
+      categoryId,
+      page,
+      limit,
+      true,
+      activeProductsOnly,
     );
     return this.localizePagedProducts(result, i18n);
   }

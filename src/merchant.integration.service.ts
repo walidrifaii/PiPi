@@ -76,6 +76,12 @@ export type MerchantPublicProfile = MerchantListItem & {
   deliveryTime: { minMinutes: number; maxMinutes: number } | null;
 };
 
+/** Super-admin vendor edit form (includes credentials). */
+export type MerchantAdminDetail = MerchantListItem & {
+  email: string | null;
+  phone: string | null;
+};
+
 /** Response for GET /merchants/me/working-hours (merchant app edit screen). */
 export type MerchantWorkingHoursResponse = {
   useWorkingHours: boolean;
@@ -336,6 +342,26 @@ export class MerchantIntegrationService {
       ),
       i18n,
     );
+  }
+
+  /** Super-admin vendor edit screen (includes credentials; no working-hours payload). */
+  async getMerchantForAdmin(merchantId: string): Promise<MerchantAdminDetail> {
+    const row = await this.db.merchant.findUnique({
+      where: { id: merchantId },
+      select: { ...this.listSelect, email: true, phone: true },
+    });
+    if (!row) {
+      throw new NotFoundException('Merchant not found');
+    }
+    const typed = row as unknown as MerchantRowForList & {
+      email: string | null;
+      phone: string | null;
+    };
+    return {
+      ...this.rowToListItem(typed),
+      email: typed.email,
+      phone: typed.phone,
+    };
   }
 
   async getMerchantWorkingHours(

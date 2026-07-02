@@ -771,6 +771,16 @@ export class MerchantController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiParam({ name: 'merchantId', type: String })
+  @ApiOperation({ summary: 'Get merchant details for super-admin edit form' })
+  @Get('admin/:merchantId')
+  getMerchantAsSuperAdmin(@Param('merchantId') merchantId: string) {
+    return this.merchantIntegrationService.getMerchantForAdmin(merchantId);
+  }
+
+  @ApiTags('Super Admin')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, SuperAdminGuard)
+  @ApiParam({ name: 'merchantId', type: String })
   @ApiOperation({
     summary:
       'Edit a merchant (super admin). New stores: POST /auth/merchant/register.',
