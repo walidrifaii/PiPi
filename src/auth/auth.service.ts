@@ -350,6 +350,7 @@ export class AuthService {
     const merchant = await this.prisma.merchant.create({
       data: {
         name: dto.merchantName,
+        nameAr: dto.merchantNameAr?.trim() || null,
         merchantTypeId,
         email: dto.email,
         phone: dto.phone,

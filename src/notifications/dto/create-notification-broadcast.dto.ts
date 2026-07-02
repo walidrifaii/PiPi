@@ -16,12 +16,23 @@ export class CreateNotificationBroadcastDto {
   @MaxLength(255)
   title!: string;
 
+  @ApiPropertyOptional({ description: 'Arabic notification title' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  titleAr?: string;
+
   @ApiProperty({
     example: 'Get 25% off your next delivery with code PIPPIP25!',
   })
   @IsString()
   @MinLength(1)
   message!: string;
+
+  @ApiPropertyOptional({ description: 'Arabic notification message' })
+  @IsOptional()
+  @IsString()
+  messageAr?: string;
 
   @ApiPropertyOptional({
     enum: USER_NOTIFICATION_CATEGORIES,

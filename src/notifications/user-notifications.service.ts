@@ -1,7 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import {
+  localizeNotification,
+  withLocaleMeta,
+} from '../common/i18n/localize.mapper';
+import type { I18nOptions } from '../common/i18n/locale.types';
 import { PrismaService } from '../prisma/prisma.service';
-import { orderStatusNotificationCopy } from './order-status-notification-copy';
+import {
+  orderStatusNotificationCopy,
+  pickOrderStatusPushCopy,
+} from './order-status-notification-copy';
 import {
   type UserNotificationCategory,
   type UserNotificationChannel,
@@ -12,6 +20,8 @@ export type CreateUserNotificationParams = {
   category: UserNotificationCategory;
   title: string;
   message: string;
+  titleAr?: string | null;
+  messageAr?: string | null;
   channel?: UserNotificationChannel;
   metadata?: Record<string, unknown>;
 };
@@ -20,31 +30,41 @@ export type CreateUserNotificationParams = {
 export class UserNotificationsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  private mapItem(row: {
-    id: string;
-    category: string;
-    title: string;
-    message: string;
-    channel: string;
-    isRead: boolean;
-    readAt: Date | null;
-    metadata: unknown;
-    createdAt: Date;
-  }) {
-    return {
+  private mapItem(
+    row: {
+      id: string;
+      category: string;
+      title: string;
+      titleAr?: string | null;
+      message: string;
+      messageAr?: string | null;
+      channel: string;
+      isRead: boolean;
+      readAt: Date | null;
+      metadata: unknown;
+      createdAt: Date;
+    },
+    i18n?: I18nOptions,
+  ) {
+    const base = {
       id: row.id,
       category: row.category,
       title: row.title,
+      titleAr: row.titleAr ?? null,
       message: row.message,
+      messageAr: row.messageAr ?? null,
       channel: row.channel,
       isRead: row.isRead,
       readAt: row.readAt?.toISOString() ?? null,
       createdAt: row.createdAt.toISOString(),
       metadata:
-        row.metadata && typeof row.metadata === 'object' && !Array.isArray(row.metadata)
+        row.metadata &&
+        typeof row.metadata === 'object' &&
+        !Array.isArray(row.metadata)
           ? (row.metadata as Record<string, unknown>)
           : null,
     };
+    return localizeNotification(base, i18n);
   }
 
   async create(params: CreateUserNotificationParams) {
@@ -53,7 +73,9 @@ export class UserNotificationsService {
         userId: params.userId,
         category: params.category,
         title: params.title.trim(),
+        titleAr: params.titleAr?.trim() || null,
         message: params.message.trim(),
+        messageAr: params.messageAr?.trim() || null,
         channel: params.channel ?? 'INBOX',
         metadata:
           params.metadata === undefined
@@ -70,28 +92,43 @@ export class UserNotificationsService {
     orderId: string;
     status: string;
     merchantName?: string;
+    merchantNameAr?: string | null;
     title?: string;
     body?: string;
+    titleAr?: string;
+    messageAr?: string;
   }): Promise<{ title: string; body: string }> {
     const titleOverride = params.title?.trim() ?? '';
     const bodyOverride = params.body?.trim() ?? '';
     const copy =
       titleOverride.length > 0 && bodyOverride.length > 0
-        ? { title: titleOverride, body: bodyOverride }
-        : orderStatusNotificationCopy(params.status, params.merchantName);
+        ? {
+            title: titleOverride,
+            titleAr: params.titleAr?.trim() || titleOverride,
+            body: bodyOverride,
+            messageAr: params.messageAr?.trim() || bodyOverride,
+          }
+        : orderStatusNotificationCopy(
+            params.status,
+            params.merchantName,
+            params.merchantNameAr,
+          );
 
     await this.create({
       userId: params.userId,
       category: 'ORDER_STATUS',
       title: copy.title,
+      titleAr: copy.titleAr,
       message: copy.body,
+      messageAr: copy.messageAr,
       metadata: {
         orderId: params.orderId,
         status: String(params.status ?? '').trim().toUpperCase(),
       },
     });
 
-    return { title: copy.title, body: copy.body };
+    const push = pickOrderStatusPushCopy(copy, 'en');
+    return { title: push.title, body: push.body };
   }
 
   async createWelcome(userId: string) {
@@ -99,8 +136,11 @@ export class UserNotificationsService {
       userId,
       category: 'SECURITY_ALERT',
       title: 'Welcome to PipPip Delivery! 🚀',
+      titleAr: 'مرحباً بك في بيب بيب للتوصيل! 🚀',
       message:
         'We are thrilled to have you with us. Enjoy fast, reliable, and premium delivery services.',
+      messageAr:
+        'يسعدنا انضمامك إلينا. استمتع بخدمة توصيل سريعة وموثوقة ومميزة.',
     });
   }
 
@@ -109,6 +149,7 @@ export class UserNotificationsService {
     page: number,
     limit: number,
     channel: UserNotificationChannel,
+    i18n?: I18nOptions,
   ) {
     const where = { userId, channel };
     const skip = (page - 1) * limit;
@@ -126,13 +167,16 @@ export class UserNotificationsService {
       }),
     ]);
 
-    return {
-      unreadCount,
-      page,
-      limit,
-      total,
-      items: items.map((row) => this.mapItem(row)),
-    };
+    return withLocaleMeta(
+      {
+        unreadCount,
+        page,
+        limit,
+        total,
+        items: items.map((row) => this.mapItem(row, i18n)),
+      },
+      i18n,
+    );
   }
 
   async getUnreadCount(
@@ -145,7 +189,7 @@ export class UserNotificationsService {
     return { unreadCount, channel };
   }
 
-  async markRead(userId: string, notificationId: string) {
+  async markRead(userId: string, notificationId: string, i18n?: I18nOptions) {
     const updated = await this.prisma.userNotification.updateMany({
       where: { id: notificationId, userId },
       data: { isRead: true, readAt: new Date() },
@@ -156,7 +200,7 @@ export class UserNotificationsService {
     const row = await this.prisma.userNotification.findUniqueOrThrow({
       where: { id: notificationId },
     });
-    return this.mapItem(row);
+    return this.mapItem(row, i18n);
   }
 
   async markAllRead(userId: string, channel: UserNotificationChannel) {

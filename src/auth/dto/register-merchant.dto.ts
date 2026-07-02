@@ -56,6 +56,12 @@ export class RegisterMerchantDto {
   @Validate(MerchantTypeIdOrCodeConstraint)
   merchantName: string;
 
+  @ApiPropertyOptional({ description: 'Arabic store / business display name' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  merchantNameAr?: string;
+
   @ApiPropertyOptional({
     format: 'uuid',
     description:

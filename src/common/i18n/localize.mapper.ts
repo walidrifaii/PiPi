@@ -153,6 +153,25 @@ export function localizeBanner<T extends TitleRow & Record<string, unknown>>(
   return localized;
 }
 
+/** Notification inbox row: title + message fields. */
+export function localizeNotification<
+  T extends TitleRow & {
+    message?: string | null;
+    messageAr?: string | null;
+  } & Record<string, unknown>,
+>(row: T, i18n?: I18nOptions) {
+  const localized = {
+    ...row,
+    ...mapTextFields(row.title, row.titleAr, 'title', i18n),
+    ...mapTextFields(row.message, row.messageAr, 'message', i18n),
+  };
+  if (i18n?.locale) {
+    delete (localized as { titleAr?: string | null }).titleAr;
+    delete (localized as { messageAr?: string | null }).messageAr;
+  }
+  return localized;
+}
+
 export function localizeMerchantType<
   T extends BilingualRow & Record<string, unknown>,
 >(row: T, i18n?: I18nOptions) {

@@ -14,7 +14,7 @@ export function pickLocalized(
   return enVal ?? arVal;
 }
 
-type TextFieldKey = 'name' | 'description' | 'title';
+type TextFieldKey = 'name' | 'description' | 'title' | 'message';
 
 /** Map DB bilingual columns to API fields (localized or bilingual). */
 export function mapTextFields(
@@ -26,6 +26,9 @@ export function mapTextFields(
   if (!i18n?.locale) {
     if (field === 'title') {
       return { title: en ?? null, titleAr: ar ?? null };
+    }
+    if (field === 'message') {
+      return { message: en ?? null, messageAr: ar ?? null };
     }
     return {
       [field]: en ?? null,

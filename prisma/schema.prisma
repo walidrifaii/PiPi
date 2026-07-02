@@ -71,7 +71,9 @@ model UserNotification {
   /// ORDER_STATUS | SPECIAL_OFFER | SYSTEM_UPDATE | SECURITY_ALERT
   category  String   @db.VarChar(32)
   title     String   @db.VarChar(255)
+  titleAr   String?  @map("title_ar") @db.VarChar(255)
   message   String   @db.Text
+  messageAr String?  @map("message_ar") @db.Text
   /// INBOX (default) or DEVELOPER_LAB for test/dev notifications.
   channel   String   @default("INBOX") @db.VarChar(32)
   isRead    Boolean  @default(false) @map("is_read")
@@ -90,7 +92,9 @@ model UserNotification {
 model NotificationBroadcast {
   id               String   @id @default(uuid()) @db.Uuid
   title            String   @db.VarChar(255)
+  titleAr          String?  @map("title_ar") @db.VarChar(255)
   message          String   @db.Text
+  messageAr        String?  @map("message_ar") @db.Text
   category         String   @default("SPECIAL_OFFER") @db.VarChar(32)
   status           String   @default("IN_PROGRESS") @db.VarChar(20)
   /// Cursor: last user id included in a completed batch.

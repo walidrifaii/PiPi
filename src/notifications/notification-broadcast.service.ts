@@ -29,7 +29,9 @@ export class NotificationBroadcastService {
   private mapBroadcast(row: {
     id: string;
     title: string;
+    titleAr?: string | null;
     message: string;
+    messageAr?: string | null;
     category: string;
     status: string;
     lastUserId: string | null;
@@ -47,7 +49,9 @@ export class NotificationBroadcastService {
     return {
       id: row.id,
       title: row.title,
+      titleAr: row.titleAr ?? null,
       message: row.message,
+      messageAr: row.messageAr ?? null,
       category: row.category,
       status: row.status,
       lastUserId: row.lastUserId,
@@ -103,7 +107,9 @@ export class NotificationBroadcastService {
     const broadcast = await this.prisma.notificationBroadcast.create({
       data: {
         title: dto.title.trim(),
+        titleAr: dto.titleAr?.trim() || null,
         message: dto.message.trim(),
+        messageAr: dto.messageAr?.trim() || null,
         category,
         sendPush: dto.sendPush ?? true,
         totalUsers,
@@ -206,7 +212,9 @@ export class NotificationBroadcastService {
             userId: user.id,
             category: broadcast.category,
             title: broadcast.title,
+            titleAr: broadcast.titleAr,
             message: broadcast.message,
+            messageAr: broadcast.messageAr,
             channel: 'INBOX',
             metadata,
           },

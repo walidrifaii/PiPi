@@ -36,14 +36,14 @@ const driverOfferSelect = {
   deliveryFee: true,
   itemsSnapshot: true,
   createdAt: true,
-  merchant: { select: { name: true, latitude: true, longitude: true } },
+  merchant: { select: { id: true, name: true, nameAr: true, latitude: true, longitude: true } },
   user: { select: { fullName: true } },
   address: { select: { addressLine: true, latitude: true, longitude: true } },
 } satisfies Prisma.OrderSelect;
 
 const driverOrderInclude = {
   orderItems: { orderBy: { id: Prisma.SortOrder.asc }, take: 20 },
-  merchant: { select: { id: true, name: true, latitude: true, longitude: true } },
+  merchant: { select: { id: true, name: true, nameAr: true, latitude: true, longitude: true } },
   user: { select: { id: true, fullName: true, phone: true } },
   address: {
     select: {
@@ -613,6 +613,10 @@ export class DriverOrdersService {
     return snapshot?.merchantName ?? order.merchant.name;
   }
 
+  private merchantNameArFromOrder(order: OrderWithRelations): string | null {
+    return order.merchant.nameAr ?? null;
+  }
+
   private async notifyCustomerOrderInboxAndPush(
     order: OrderWithRelations,
     params: {
@@ -622,11 +626,13 @@ export class DriverOrdersService {
     },
   ) {
     const merchantName = this.merchantNameFromOrder(order);
+    const merchantNameAr = this.merchantNameArFromOrder(order);
     const copy = await this.userNotifications.createFromOrderStatus({
       userId: order.userId,
       orderId: order.id,
       status: params.status,
       merchantName,
+      merchantNameAr,
       title: params.title,
       body: params.body,
     });

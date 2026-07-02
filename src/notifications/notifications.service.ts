@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
-import { orderStatusNotificationCopy } from './order-status-notification-copy';
+import { orderStatusNotificationCopy, pickOrderStatusPushCopy } from './order-status-notification-copy';
 import { SendTestNotificationDto } from './dto/send-test-notification.dto';
 import { buildNewOrderFcmData } from './new-order-payload';
 import { newOrderNotificationCopy } from './new-order-notification-copy';
@@ -180,23 +180,27 @@ export class NotificationsService extends OrderNotificationsPort {
         ? String(params.body).trim()
         : '';
 
-    const copy: { title: string; body: string } =
-      titleOverride.length > 0 && bodyOverride.length > 0
-        ? { title: titleOverride, body: bodyOverride }
-        : orderStatusNotificationCopy(
-            String(params.status ?? ''),
-            params.merchantName != null
-              ? String(params.merchantName)
-              : undefined,
-          );
+    let push: { title: string; body: string };
+    if (titleOverride.length > 0 && bodyOverride.length > 0) {
+      push = { title: titleOverride, body: bodyOverride };
+    } else {
+      const bilingual = orderStatusNotificationCopy(
+        String(params.status ?? ''),
+        params.merchantName != null
+          ? String(params.merchantName)
+          : undefined,
+        params.merchantNameAr,
+      );
+      push = pickOrderStatusPushCopy(bilingual, 'en');
+    }
     const data = buildOrderStatusFcmData(params.orderId, params.status);
 
     try {
       const messageId = await messaging.send({
         token: params.fcmToken,
         notification: {
-          title: copy.title,
-          body: copy.body,
+          title: push.title,
+          body: push.body,
         },
         data,
         android: {
