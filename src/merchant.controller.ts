@@ -41,6 +41,7 @@ import {
   parseRequiredLatLng,
   parseStorefrontSearchType,
 } from './common/storefront-location';
+import { I18n, type I18nOptions } from './common/i18n';
 
 @Controller('merchants')
 export class MerchantController {
@@ -89,6 +90,13 @@ export class MerchantController {
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'ar'],
+    description:
+      'Response language. Omit for bilingual fields (name + nameAr). Use ar or en for a single localized value per field.',
+  })
   @ApiOkResponse({
     description: 'Paginated merchant list',
     schema: {
@@ -147,6 +155,7 @@ export class MerchantController {
     @Query('lat') lat?: string,
     @Query('lng') lng?: string,
     @Query('radiusKm') radiusKm?: string,
+    @I18n() i18n?: I18nOptions,
   ) {
     return this.merchantIntegrationService.getMerchants({
       merchantTypeCode: merchantType,
@@ -156,6 +165,7 @@ export class MerchantController {
       radiusKm,
       page,
       limit,
+      i18n,
     });
   }
 
@@ -229,6 +239,7 @@ export class MerchantController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
     @Query('merchantType') merchantType?: string,
+    @I18n() i18n?: I18nOptions,
   ) {
     const searchType = parseStorefrontSearchType(type);
     const { lat: userLat, lng: userLng } = parseRequiredLatLng(lat, lng);
@@ -239,7 +250,7 @@ export class MerchantController {
           name,
           page,
           limit,
-          { merchantTypeCode: merchantType, userLat, userLng },
+          { merchantTypeCode: merchantType, userLat, userLng, i18n },
         );
       return { type: searchType, ...result };
     }
@@ -253,7 +264,7 @@ export class MerchantController {
       name,
       page,
       limit,
-      { merchantTypeCode: merchantType, scopeMerchantIds },
+      { merchantTypeCode: merchantType, scopeMerchantIds, i18n },
     );
     return { type: searchType, ...result };
   }
@@ -283,6 +294,7 @@ export class MerchantController {
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
     @Query('lat') lat: string,
     @Query('lng') lng: string,
+    @I18n() i18n?: I18nOptions,
   ) {
     const { lat: userLat, lng: userLng } = parseRequiredLatLng(lat, lng);
     const scopeMerchantIds =
@@ -294,6 +306,8 @@ export class MerchantController {
       page,
       limit,
       scopeMerchantIds,
+      false,
+      i18n,
     );
   }
 
@@ -317,8 +331,9 @@ export class MerchantController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
     @Query('merchantId') merchantId?: string,
+    @I18n() i18n?: I18nOptions,
   ) {
-    return this.merchantOfferService.listPublic(page, limit, merchantId);
+    return this.merchantOfferService.listPublic(page, limit, merchantId, i18n);
   }
 
   @ApiTags('Storefront · Menu')
@@ -370,8 +385,15 @@ export class MerchantController {
     },
   })
   @Get('products/:productId')
-  getStorefrontProduct(@Param('productId', ParseUUIDPipe) productId: string) {
-    return this.merchantCatalogService.getProductForStorefront(productId);
+  getStorefrontProduct(
+    @Param('productId', ParseUUIDPipe) productId: string,
+    @I18n() i18n?: I18nOptions,
+  ) {
+    return this.merchantCatalogService.getProductForStorefront(
+      productId,
+      false,
+      i18n,
+    );
   }
 
   @ApiTags('Storefront · Menu')
@@ -468,12 +490,15 @@ export class MerchantController {
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
     @Query('categoryId', new ParseUUIDPipe({ optional: true }))
     categoryId?: string,
+    @I18n() i18n?: I18nOptions,
   ) {
     return this.merchantCatalogService.listAllProductsForStorefront(
       merchantId,
       categoryId,
       page,
       limit,
+      false,
+      i18n,
     );
   }
 
@@ -482,11 +507,13 @@ export class MerchantController {
     @Param('merchantId', ParseUuidMerchantIdPipe) merchantId: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @I18n() i18n?: I18nOptions,
   ) {
     return this.merchantCatalogService.listCategoriesForStorefront(
       merchantId,
       page,
       limit,
+      i18n,
     );
   }
 
@@ -545,12 +572,15 @@ export class MerchantController {
     @Param('categoryId', ParseUUIDPipe) categoryId: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @I18n() i18n?: I18nOptions,
   ) {
     return this.merchantCatalogService.listProductsForStorefront(
       merchantId,
       categoryId,
       page,
       limit,
+      false,
+      i18n,
     );
   }
 
@@ -599,8 +629,12 @@ export class MerchantController {
   @Get(':merchantId')
   getMerchantProfile(
     @Param('merchantId', ParseUuidMerchantIdPipe) merchantId: string,
+    @I18n() i18n?: I18nOptions,
   ) {
-    return this.merchantIntegrationService.getMerchantPublicProfile(merchantId);
+    return this.merchantIntegrationService.getMerchantPublicProfile(
+      merchantId,
+      i18n,
+    );
   }
 
   @ApiTags('Merchant')

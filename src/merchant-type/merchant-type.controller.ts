@@ -18,6 +18,7 @@ import {
   ApiConsumes,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -26,6 +27,7 @@ import { S3Service } from '../common/s3.service';
 import { CreateMerchantTypeDto } from './dto/create-merchant-type.dto';
 import { UpdateMerchantTypeDto } from './dto/update-merchant-type.dto';
 import { MerchantTypeService } from './merchant-type.service';
+import { I18n, type I18nOptions } from '../common/i18n';
 
 @Controller('merchant-types')
 export class MerchantTypeController {
@@ -36,9 +38,15 @@ export class MerchantTypeController {
 
   @ApiTags('Shared')
   @ApiOperation({ summary: 'List active merchant types (for dropdowns)' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'ar'],
+    description: 'Response language (en or ar). Omit for bilingual fields.',
+  })
   @Get()
-  findAllPublic() {
-    return this.merchantTypeService.findAllPublic();
+  findAllPublic(@I18n() i18n?: I18nOptions) {
+    return this.merchantTypeService.findAllPublic(i18n);
   }
 
   @ApiTags('Super Admin')

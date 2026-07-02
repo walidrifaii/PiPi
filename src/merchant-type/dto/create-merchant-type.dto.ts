@@ -34,6 +34,15 @@ export class CreateMerchantTypeDto {
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   name: string;
 
+  @ApiPropertyOptional({ example: 'مخبز' })
+  @IsOptional()
+  @Transform(({ value }) =>
+    typeof value === 'string' && value.trim() === '' ? undefined : value,
+  )
+  @IsString()
+  @MaxLength(255)
+  nameAr?: string;
+
   @ApiPropertyOptional()
   @IsOptional()
   @Transform(({ value }) =>
@@ -42,6 +51,15 @@ export class CreateMerchantTypeDto {
   @IsString()
   @MaxLength(2000)
   description?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Transform(({ value }) =>
+    typeof value === 'string' && value.trim() === '' ? undefined : value,
+  )
+  @IsString()
+  @MaxLength(2000)
+  descriptionAr?: string;
 
   @ApiPropertyOptional()
   @IsOptional()

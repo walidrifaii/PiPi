@@ -4,6 +4,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import {
+  localizeOffer,
+  type I18nOptions,
+  withLocaleMeta,
+} from '../common/i18n';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMerchantOfferAdminDto } from './dto/create-merchant-offer-admin.dto';
 import { UpdateMerchantOfferAdminDto } from './dto/update-merchant-offer-admin.dto';
@@ -17,6 +22,7 @@ export type MerchantOfferView = {
   id: string;
   merchantId: string;
   title: string | null;
+  titleAr?: string | null;
   /** Display badge only — checkout uses product list/discount prices. */
   discountPercent: number;
   /** Merchant cover image, then logo — not a separate offer upload. */
@@ -43,6 +49,7 @@ export type PublicMerchantOfferView = MerchantOfferView & {
   merchant: {
     id: string;
     name: string;
+    nameAr?: string | null;
     logoUrl: string | null;
     coverImageUrl: string | null;
   };
@@ -132,6 +139,7 @@ export class MerchantOfferService {
       id: string;
       merchantId: string;
       title: string | null;
+      titleAr?: string | null;
       discountPercent: { toString(): string };
       isActive: boolean;
       startsAt: Date;
@@ -148,6 +156,7 @@ export class MerchantOfferService {
       id: row.id,
       merchantId: row.merchantId,
       title: row.title,
+      titleAr: row.titleAr ?? null,
       discountPercent: Number(row.discountPercent),
       imageUrl: merchant ? this.resolveDisplayImageUrl(merchant) : null,
       isActive: row.isActive && !isExpired && !isNotStarted,
@@ -224,7 +233,13 @@ export class MerchantOfferService {
         where,
         include: {
           merchant: {
-            select: { id: true, name: true, imageUrl: true, coverImageUrl: true },
+            select: {
+              id: true,
+              name: true,
+              nameAr: true,
+              imageUrl: true,
+              coverImageUrl: true,
+            },
           },
         },
         orderBy: { createdAt: 'desc' },
@@ -285,6 +300,7 @@ export class MerchantOfferService {
       data: {
         merchantId: dto.merchantId,
         title: dto.title?.trim() || null,
+        titleAr: dto.titleAr?.trim() || null,
         discountPercent: new Prisma.Decimal(dto.discountPercent),
         isActive,
         startsAt,
@@ -332,6 +348,9 @@ export class MerchantOfferService {
         ...(dto.merchantId !== undefined ? { merchantId: dto.merchantId } : {}),
         ...(dto.title !== undefined
           ? { title: dto.title.trim() || null }
+          : {}),
+        ...(dto.titleAr !== undefined
+          ? { titleAr: dto.titleAr.trim() || null }
           : {}),
         ...(dto.discountPercent !== undefined
           ? { discountPercent: new Prisma.Decimal(dto.discountPercent) }
@@ -408,7 +427,12 @@ export class MerchantOfferService {
   }
 
   /** Public storefront: live display promos for all enabled merchants (open or closed). */
-  async listPublic(page = 1, limit = 20, merchantId?: string) {
+  async listPublic(
+    page = 1,
+    limit = 20,
+    merchantId?: string,
+    i18n?: I18nOptions,
+  ) {
     await this.expireDueOffers();
     const now = new Date();
     const pg = this.normalizePagination(page, limit);
@@ -434,7 +458,13 @@ export class MerchantOfferService {
         where,
         include: {
           merchant: {
-            select: { id: true, name: true, imageUrl: true, coverImageUrl: true },
+            select: {
+              id: true,
+              name: true,
+              nameAr: true,
+              imageUrl: true,
+              coverImageUrl: true,
+            },
           },
         },
         orderBy: { createdAt: 'desc' },
@@ -443,16 +473,25 @@ export class MerchantOfferService {
       }),
     ]);
 
-    const items: PublicMerchantOfferView[] = rows.map((r) => ({
-      ...this.mapRow(r, now, r.merchant),
-      merchant: {
-        id: r.merchant.id,
-        name: r.merchant.name,
-        ...this.mapMerchantImages(r.merchant),
-      },
-    }));
+    const items: PublicMerchantOfferView[] = rows.map((r) =>
+      localizeOffer(
+        {
+          ...this.mapRow(r, now, r.merchant),
+          merchant: {
+            id: r.merchant.id,
+            name: r.merchant.name,
+            nameAr: r.merchant.nameAr,
+            ...this.mapMerchantImages(r.merchant),
+          },
+        },
+        i18n,
+      ),
+    );
 
-    return this.pagedResponse(items, total, pg.page, pg.limit);
+    return withLocaleMeta(
+      this.pagedResponse(items, total, pg.page, pg.limit),
+      i18n,
+    );
   }
 
   /** Active promo percent for storefront pricing, or null if none / expired. */

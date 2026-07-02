@@ -27,6 +27,12 @@ export class CreateMerchantOfferAdminDto {
   @MaxLength(255)
   title?: string;
 
+  @ApiPropertyOptional({ example: 'تخفيضات الصيف' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  titleAr?: string;
+
   @ApiProperty({
     description:
       'Badge label only (e.g. 10 = show "10% off"). Does NOT change product prices at checkout.',

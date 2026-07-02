@@ -16,6 +16,7 @@ import {
   parseRequiredLatLng,
   parseStorefrontSearchType,
 } from '../../common/storefront-location';
+import { I18n, type I18nOptions } from '../../common/i18n';
 
 /**
  * V2 storefront: inactive products are hidden from customers.
@@ -44,6 +45,7 @@ export class MerchantStorefrontV2Controller extends MerchantController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
     @Query('merchantType') merchantType?: string,
+    @I18n() i18n?: I18nOptions,
   ) {
     const searchType = parseStorefrontSearchType(type);
     const { lat: userLat, lng: userLng } = parseRequiredLatLng(lat, lng);
@@ -54,7 +56,7 @@ export class MerchantStorefrontV2Controller extends MerchantController {
           name,
           page,
           limit,
-          { merchantTypeCode: merchantType, userLat, userLng },
+          { merchantTypeCode: merchantType, userLat, userLng, i18n },
         );
       return { type: searchType, ...result };
     }
@@ -72,6 +74,7 @@ export class MerchantStorefrontV2Controller extends MerchantController {
         merchantTypeCode: merchantType,
         scopeMerchantIds,
         activeProductsOnly: true,
+        i18n,
       },
     );
     return { type: searchType, ...result };
@@ -83,6 +86,7 @@ export class MerchantStorefrontV2Controller extends MerchantController {
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
     @Query('lat') lat: string,
     @Query('lng') lng: string,
+    @I18n() i18n?: I18nOptions,
   ) {
     const { lat: userLat, lng: userLng } = parseRequiredLatLng(lat, lng);
     const scopeMerchantIds =
@@ -95,12 +99,20 @@ export class MerchantStorefrontV2Controller extends MerchantController {
       limit,
       scopeMerchantIds,
       true,
+      i18n,
     );
   }
 
   @Get('products/:productId')
-  getStorefrontProduct(@Param('productId', ParseUUIDPipe) productId: string) {
-    return this.merchantCatalogService.getProductForStorefront(productId, true);
+  getStorefrontProduct(
+    @Param('productId', ParseUUIDPipe) productId: string,
+    @I18n() i18n?: I18nOptions,
+  ) {
+    return this.merchantCatalogService.getProductForStorefront(
+      productId,
+      true,
+      i18n,
+    );
   }
 
   @Get(':merchantId/products')
@@ -110,6 +122,7 @@ export class MerchantStorefrontV2Controller extends MerchantController {
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
     @Query('categoryId', new ParseUUIDPipe({ optional: true }))
     categoryId?: string,
+    @I18n() i18n?: I18nOptions,
   ) {
     return this.merchantCatalogService.listAllProductsForStorefront(
       merchantId,
@@ -117,6 +130,7 @@ export class MerchantStorefrontV2Controller extends MerchantController {
       page,
       limit,
       true,
+      i18n,
     );
   }
 
@@ -126,6 +140,7 @@ export class MerchantStorefrontV2Controller extends MerchantController {
     @Param('categoryId', ParseUUIDPipe) categoryId: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @I18n() i18n?: I18nOptions,
   ) {
     return this.merchantCatalogService.listProductsForStorefront(
       merchantId,
@@ -133,6 +148,7 @@ export class MerchantStorefrontV2Controller extends MerchantController {
       page,
       limit,
       true,
+      i18n,
     );
   }
 }

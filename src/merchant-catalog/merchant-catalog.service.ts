@@ -23,6 +23,13 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { MerchantOfferService } from '../merchant-offer/merchant-offer.service';
 import { resolveStorefrontProductPricing } from '../merchant-offer/merchant-offer-pricing';
+import {
+  localizeCategory,
+  localizeProduct,
+  type I18nOptions,
+  withLocaleMeta,
+  withLocaleValue,
+} from '../common/i18n';
 
 const OPTION_GROUPS_INCLUDE = {
   optionGroups: {
@@ -318,8 +325,57 @@ export class MerchantCatalogService {
     };
   }
 
+  private localizePagedProducts<T extends Record<string, unknown>>(
+    response: {
+      items: T[];
+      pagination: {
+        page: number;
+        limit: number;
+        pageTotal: number;
+        total: number;
+        totalPages: number;
+      };
+    },
+    i18n?: I18nOptions,
+  ) {
+    return withLocaleMeta(
+      {
+        ...response,
+        items: response.items.map((item) =>
+          localizeProduct(item as unknown as Parameters<typeof localizeProduct>[0], i18n),
+        ),
+      },
+      i18n,
+    );
+  }
+
+  private localizePagedCategories<T extends Record<string, unknown>>(
+    response: {
+      items: T[];
+      pagination: {
+        page: number;
+        limit: number;
+        pageTotal: number;
+        total: number;
+        totalPages: number;
+      };
+    },
+    i18n?: I18nOptions,
+  ) {
+    return withLocaleMeta(
+      {
+        ...response,
+        items: response.items.map((item) =>
+          localizeCategory(item as unknown as Parameters<typeof localizeCategory>[0], i18n),
+        ),
+      },
+      i18n,
+    );
+  }
+
   async getUnifiedProductsForMerchant(
     merchantId: string,
+    i18n?: I18nOptions,
   ): Promise<UnifiedProduct[]> {
     await this.assertMerchantActive(merchantId);
 
@@ -335,24 +391,27 @@ export class MerchantCatalogService {
 
     return rows.map((p) => {
       const priced = this.attachProductPricing(p, true);
-      return {
-        id: p.id,
-        name: p.name,
-        nameAr: p.nameAr,
-        description: p.description,
-        descriptionAr: p.descriptionAr,
-        price: priced.price,
-        discountPrice: priced.discountPrice,
-        hasDiscount: priced.hasDiscount,
-        effectivePrice: priced.effectivePrice,
-        category: p.category.name,
-        categoryAr: p.category.nameAr,
-        images: this.collectImageUrls(
-          p.imageUrl,
-          p.images.map((i) => i.url),
-        ),
-        optionGroups: priced.optionGroups,
-      };
+      return localizeProduct(
+        {
+          id: p.id,
+          name: p.name,
+          nameAr: p.nameAr,
+          description: p.description,
+          descriptionAr: p.descriptionAr,
+          price: priced.price,
+          discountPrice: priced.discountPrice,
+          hasDiscount: priced.hasDiscount,
+          effectivePrice: priced.effectivePrice,
+          category: p.category.name,
+          categoryAr: p.category.nameAr,
+          images: this.collectImageUrls(
+            p.imageUrl,
+            p.images.map((i) => i.url),
+          ),
+          optionGroups: priced.optionGroups,
+        },
+        i18n,
+      );
     });
   }
 
@@ -360,6 +419,7 @@ export class MerchantCatalogService {
   async getProductForStorefront(
     productId: string,
     activeProductsOnly = false,
+    i18n?: I18nOptions,
   ) {
     const row = await this.prisma.product.findUnique({
       where: { id: productId },
@@ -377,6 +437,7 @@ export class MerchantCatalogService {
               select: {
                 id: true,
                 name: true,
+                nameAr: true,
                 imageUrl: true,
                 isActive: true,
                 deliveryTime: {
@@ -403,43 +464,50 @@ export class MerchantCatalogService {
     const priced = this.attachProductPricing(row, true, offerPercent);
     const merchant = row.category.merchant;
 
-    return {
-      id: row.id,
-      isActive: row.isActive,
-      categoryId: row.categoryId,
-      name: row.name,
-      nameAr: row.nameAr,
-      description: row.description,
-      descriptionAr: row.descriptionAr,
-      price: priced.price,
-      discountPrice: priced.discountPrice,
-      imageUrl: row.imageUrl,
-      hasDiscount: priced.hasDiscount,
-      effectivePrice: priced.effectivePrice,
-      merchantOfferPercent: offerPercent,
-      optionGroups: priced.optionGroups,
-      images: row.images,
-      createdAt: row.createdAt,
-      updatedAt: row.updatedAt,
-      category: {
-        id: row.category.id,
-        name: row.category.name,
-        nameAr: row.category.nameAr,
-        description: row.category.description,
-        descriptionAr: row.category.descriptionAr,
-      },
-      merchant: {
-        id: merchant.id,
-        name: merchant.name,
-        logoUrl: merchant.imageUrl,
-        deliveryTime: merchant.deliveryTime
-          ? {
-              minMinutes: merchant.deliveryTime.minMinutes,
-              maxMinutes: merchant.deliveryTime.maxMinutes,
-            }
-          : null,
-      },
-    };
+    return withLocaleValue(
+      localizeProduct(
+        {
+          id: row.id,
+          isActive: row.isActive,
+          categoryId: row.categoryId,
+          name: row.name,
+          nameAr: row.nameAr,
+          description: row.description,
+          descriptionAr: row.descriptionAr,
+          price: priced.price,
+          discountPrice: priced.discountPrice,
+          imageUrl: row.imageUrl,
+          hasDiscount: priced.hasDiscount,
+          effectivePrice: priced.effectivePrice,
+          merchantOfferPercent: offerPercent,
+          optionGroups: priced.optionGroups,
+          images: row.images,
+          createdAt: row.createdAt,
+          updatedAt: row.updatedAt,
+          category: {
+            id: row.category.id,
+            name: row.category.name,
+            nameAr: row.category.nameAr,
+            description: row.category.description,
+            descriptionAr: row.category.descriptionAr,
+          },
+          merchant: {
+            id: merchant.id,
+            name: merchant.name,
+            nameAr: merchant.nameAr,
+            logoUrl: merchant.imageUrl,
+            deliveryTime: merchant.deliveryTime
+              ? {
+                  minMinutes: merchant.deliveryTime.minMinutes,
+                  maxMinutes: merchant.deliveryTime.maxMinutes,
+                }
+              : null,
+          },
+        },
+        i18n,
+      ),
+      i18n,
+    );
   }
 
   /** Public storefront: guest or customer; store may be CLOSED but must exist and be active. */
@@ -447,13 +515,15 @@ export class MerchantCatalogService {
     merchantId: string,
     page = 1,
     limit = 20,
+    i18n?: I18nOptions,
   ) {
     void page;
     void limit;
     await this.assertMerchantBrowsable(merchantId);
-    return this.collectAllStorefrontPages((p, l) =>
+    const result = await this.collectAllStorefrontPages((p, l) =>
       this.fetchCategoriesPaged(merchantId, p, l),
     );
+    return this.localizePagedCategories(result, i18n);
   }
 
   async listCategories(merchantId: string, page = 1, limit = 20) {
@@ -552,11 +622,12 @@ export class MerchantCatalogService {
     page = 1,
     limit = 20,
     activeProductsOnly = false,
+    i18n?: I18nOptions,
   ) {
     void page;
     void limit;
     await this.assertMerchantBrowsable(merchantId);
-    return this.collectAllStorefrontPages((p, l) =>
+    const result = await this.collectAllStorefrontPages((p, l) =>
       this.fetchProductsPaged(
         merchantId,
         categoryId,
@@ -566,6 +637,7 @@ export class MerchantCatalogService {
         activeProductsOnly,
       ),
     );
+    return this.localizePagedProducts(result, i18n);
   }
 
   async listProducts(
@@ -629,11 +701,12 @@ export class MerchantCatalogService {
     page = 1,
     limit = 20,
     activeProductsOnly = false,
+    i18n?: I18nOptions,
   ) {
     void page;
     void limit;
     await this.assertMerchantBrowsable(merchantId);
-    return this.collectAllStorefrontPages((p, l) =>
+    const result = await this.collectAllStorefrontPages((p, l) =>
       this.fetchAllProductsPaged(
         merchantId,
         categoryId,
@@ -643,6 +716,7 @@ export class MerchantCatalogService {
         activeProductsOnly,
       ),
     );
+    return this.localizePagedProducts(result, i18n);
   }
 
   async listAllProducts(
@@ -727,6 +801,7 @@ export class MerchantCatalogService {
     limit = 20,
     scopeMerchantIds: string[] = [],
     activeProductsOnly = false,
+    i18n?: I18nOptions,
   ) {
     const pg = this.normalizePagination(page, limit);
 
@@ -792,7 +867,7 @@ export class MerchantCatalogService {
             name: true,
             nameAr: true,
             merchantId: true,
-            merchant: { select: { id: true, name: true } },
+            merchant: { select: { id: true, name: true, nameAr: true } },
           },
         },
         images: { orderBy: { sortOrder: 'asc' } },
@@ -814,10 +889,14 @@ export class MerchantCatalogService {
       merchant: {
         id: p.category.merchant.id,
         name: p.category.merchant.name,
+        nameAr: p.category.merchant.nameAr,
       },
     }));
 
-    return this.pagedResponse(items, total, pg.page, pg.limit);
+    return this.localizePagedProducts(
+      this.pagedResponse(items, total, pg.page, pg.limit),
+      i18n,
+    );
   }
 
   /**
@@ -833,6 +912,7 @@ export class MerchantCatalogService {
       /** Merchants whose GPS lies inside the polygon that contains the user. */
       scopeMerchantIds: string[];
       activeProductsOnly?: boolean;
+      i18n?: I18nOptions;
     },
   ) {
     const term = normalizeNameSearchTerm(name);
@@ -887,7 +967,7 @@ export class MerchantCatalogService {
               name: true,
               nameAr: true,
               merchantId: true,
-              merchant: { select: { id: true, name: true } },
+              merchant: { select: { id: true, name: true, nameAr: true } },
             },
           },
           images: { orderBy: { sortOrder: 'asc' } },
@@ -909,10 +989,14 @@ export class MerchantCatalogService {
       merchant: {
         id: p.category.merchant.id,
         name: p.category.merchant.name,
+        nameAr: p.category.merchant.nameAr,
       },
     }));
 
-    return this.pagedResponse(items, total, pg.page, pg.limit);
+    return this.localizePagedProducts(
+      this.pagedResponse(items, total, pg.page, pg.limit),
+      filters.i18n,
+    );
   }
 
   async createProduct(

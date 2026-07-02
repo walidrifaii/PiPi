@@ -34,10 +34,17 @@ import {
 import { MerchantGeoQueryService } from './geo/merchant-geo-query.service';
 import { PrismaService } from './prisma/prisma.service';
 import { ServiceAreaService } from './service-area/service-area.service';
+import {
+  localizeMerchant,
+  type I18nOptions,
+  withLocaleMeta,
+  withLocaleValue,
+} from './common/i18n';
 
 export type MerchantListItem = {
   id: string;
   name: string;
+  nameAr?: string | null;
   merchantTypeId: string;
   merchantType: string;
   logoUrl: string | null;
@@ -85,6 +92,7 @@ export type GetMerchantsQuery = {
   radiusKm?: string;
   page?: number;
   limit?: number;
+  i18n?: I18nOptions;
 };
 
 export type PagedMerchantsResponse = {
@@ -101,6 +109,7 @@ export type PagedMerchantsResponse = {
 type MerchantRowForList = {
   id: string;
   name: string;
+  nameAr?: string | null;
   merchantTypeId: string;
   imageUrl: string | null;
   coverImageUrl: string | null;
@@ -189,6 +198,7 @@ export class MerchantIntegrationService {
     return {
       id: r.id,
       name: r.name,
+      nameAr: r.nameAr ?? null,
       merchantTypeId: r.merchantTypeId,
       merchantType: r.merchantType.code,
       logoUrl: r.imageUrl,
@@ -217,6 +227,7 @@ export class MerchantIntegrationService {
   private listSelect = {
     id: true,
     name: true,
+    nameAr: true,
     merchantTypeId: true,
     imageUrl: true,
     coverImageUrl: true,
@@ -265,9 +276,30 @@ export class MerchantIntegrationService {
     },
   };
 
+  private localizeListItem(
+    item: MerchantListItem,
+    i18n?: I18nOptions,
+  ): MerchantListItem {
+    return localizeMerchant(item, i18n);
+  }
+
+  private localizePagedMerchants(
+    response: PagedMerchantsResponse,
+    i18n?: I18nOptions,
+  ) {
+    return withLocaleMeta(
+      {
+        ...response,
+        items: response.items.map((item) => this.localizeListItem(item, i18n)),
+      },
+      i18n,
+    );
+  }
+
   async getMerchantPublicProfile(
     merchantId: string,
-  ): Promise<MerchantPublicProfile> {
+    i18n?: I18nOptions,
+  ): Promise<MerchantPublicProfile & { locale?: string }> {
     const row = await this.db.merchant.findUnique({
       where: { id: merchantId },
       select: this.listSelect,
@@ -284,20 +316,26 @@ export class MerchantIntegrationService {
       typed as { deliveryTime?: { minMinutes: number; maxMinutes: number } | null }
     ).deliveryTime;
 
-    return {
-      ...this.rowToListItem(typed),
-      useWorkingHours: typed.useWorkingHours,
-      timezone: typed.timezone,
-      workingHoursSchedule: typed.useWorkingHours
-        ? buildFullWeekSchedule(weekOrNull)
-        : null,
-      deliveryTime: deliveryTimeRow
-        ? {
-            minMinutes: deliveryTimeRow.minMinutes,
-            maxMinutes: deliveryTimeRow.maxMinutes,
-          }
-        : null,
-    };
+    return withLocaleValue(
+      localizeMerchant(
+        {
+          ...this.rowToListItem(typed),
+          useWorkingHours: typed.useWorkingHours,
+          timezone: typed.timezone,
+          workingHoursSchedule: typed.useWorkingHours
+            ? buildFullWeekSchedule(weekOrNull)
+            : null,
+          deliveryTime: deliveryTimeRow
+            ? {
+                minMinutes: deliveryTimeRow.minMinutes,
+                maxMinutes: deliveryTimeRow.maxMinutes,
+              }
+            : null,
+        },
+        i18n,
+      ),
+      i18n,
+    );
   }
 
   async getMerchantWorkingHours(
@@ -320,23 +358,11 @@ export class MerchantIntegrationService {
 
   async getMerchants(
     q: GetMerchantsQuery = {},
-  ): Promise<PagedMerchantsResponse> {
+  ): Promise<PagedMerchantsResponse & { locale?: string }> {
     const pg = this.normalizePagination(q.page ?? 1, q.limit ?? 20);
     const parsed = this.parseGetMerchantsQuery(q);
 
-    // TEMP: ignore lat/lng and service-area filters — list all merchants.
-    // Old location-based routing (restore when re-enabling geo):
-    // if (
-    //   parsed.hasLat &&
-    //   parsed.userLat !== undefined &&
-    //   parsed.userLng !== undefined &&
-    //   (await this.geoQuery.isGeoSqlReady())
-    // ) {
-    //   return this.getMerchantsWithGeoSql(parsed, pg);
-    // }
-    // return this.getMerchantsLegacy(parsed, pg);
-
-    return this.getMerchantsLegacy(
+    const response = await this.getMerchantsLegacy(
       {
         ...parsed,
         hasLat: false,
@@ -347,6 +373,7 @@ export class MerchantIntegrationService {
       },
       pg,
     );
+    return this.localizePagedMerchants(response, q.i18n);
   }
 
   private parseGetMerchantsQuery(q: GetMerchantsQuery) {
@@ -667,8 +694,9 @@ export class MerchantIntegrationService {
       merchantTypeCode?: string;
       userLat: number;
       userLng: number;
+      i18n?: I18nOptions;
     },
-  ): Promise<PagedMerchantsResponse> {
+  ): Promise<PagedMerchantsResponse & { locale?: string }> {
     const term = normalizeNameSearchTerm(name);
 
     const merchantTypeCode = filters.merchantTypeCode;
@@ -696,7 +724,10 @@ export class MerchantIntegrationService {
     const where: Prisma.MerchantWhereInput = {
       id: { in: scopedIds },
       isEnabled: true,
-      name: nameStartsWithFilter(term),
+      OR: [
+        { name: nameStartsWithFilter(term) },
+        { nameAr: nameStartsWithFilter(term) },
+      ],
     };
     if (merchantTypeCode) {
       where.merchantType = {
@@ -715,7 +746,10 @@ export class MerchantIntegrationService {
     );
     const total = items.length;
     const pageItems = items.slice(pg.skip, pg.skip + pg.limit);
-    return this.pagedResponse(pageItems, total, pg.page, pg.limit);
+    return this.localizePagedMerchants(
+      this.pagedResponse(pageItems, total, pg.page, pg.limit),
+      filters.i18n,
+    );
   }
 
   private async assertUniqueMerchantCredentials(
@@ -853,6 +887,7 @@ export class MerchantIntegrationService {
       where: { id: merchantId },
       data: {
         ...(dto.name !== undefined ? { name: dto.name } : {}),
+        ...(dto.nameAr !== undefined ? { nameAr: dto.nameAr } : {}),
         ...(dto.merchantTypeId !== undefined
           ? { merchantTypeId: dto.merchantTypeId }
           : {}),

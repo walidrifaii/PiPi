@@ -25,6 +25,12 @@ export class UpdateMerchantOfferAdminDto {
   @MaxLength(255)
   title?: string;
 
+  @ApiPropertyOptional({ example: 'عرض نهاية الأسبوع' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  titleAr?: string;
+
   @ApiPropertyOptional({
     description: 'Badge label only; does not change checkout prices',
     example: 15,

@@ -4,6 +4,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import {
+  localizeMerchantType,
+  type I18nOptions,
+  withLocaleValue,
+} from '../common/i18n';
 import { S3Service } from '../common/s3.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMerchantTypeDto } from './dto/create-merchant-type.dto';
@@ -13,7 +18,9 @@ const publicSelect = {
   id: true,
   code: true,
   name: true,
+  nameAr: true,
   description: true,
+  descriptionAr: true,
   imageUrl: true,
   sortOrder: true,
 } as const;
@@ -25,12 +32,15 @@ export class MerchantTypeService {
     private readonly cloudinary: S3Service,
   ) {}
 
-  findAllPublic() {
-    return this.prisma.merchantType.findMany({
+  async findAllPublic(i18n?: I18nOptions) {
+    const rows = await this.prisma.merchantType.findMany({
       where: { isActive: true },
       orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
       select: publicSelect,
     });
+    return rows.map((row) =>
+      withLocaleValue(localizeMerchantType(row, i18n), i18n),
+    );
   }
 
   findAllAdmin() {
@@ -55,7 +65,9 @@ export class MerchantTypeService {
         data: {
           code: dto.code,
           name: dto.name,
+          nameAr: dto.nameAr,
           description: dto.description,
+          descriptionAr: dto.descriptionAr,
           imageUrl,
           isActive: dto.isActive ?? true,
           sortOrder: dto.sortOrder ?? 0,
@@ -82,8 +94,12 @@ export class MerchantTypeService {
         data: {
           ...(dto.code !== undefined ? { code: dto.code } : {}),
           ...(dto.name !== undefined ? { name: dto.name } : {}),
+          ...(dto.nameAr !== undefined ? { nameAr: dto.nameAr } : {}),
           ...(dto.description !== undefined
             ? { description: dto.description }
+            : {}),
+          ...(dto.descriptionAr !== undefined
+            ? { descriptionAr: dto.descriptionAr }
             : {}),
           ...(dto.isActive !== undefined ? { isActive: dto.isActive } : {}),
           ...(dto.sortOrder !== undefined ? { sortOrder: dto.sortOrder } : {}),

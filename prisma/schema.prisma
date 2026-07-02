@@ -26,10 +26,12 @@ model ServiceArea {
 }
 
 model MerchantType {
-  id          String     @id @default(uuid()) @db.Uuid
-  code        String     @unique @db.VarChar(64)
-  name        String     @db.VarChar(255)
-  description String?    @db.Text
+  id            String     @id @default(uuid()) @db.Uuid
+  code          String     @unique @db.VarChar(64)
+  name          String     @db.VarChar(255)
+  nameAr        String?    @map("name_ar") @db.VarChar(255)
+  description   String?    @db.Text
+  descriptionAr String?    @map("description_ar") @db.Text
   imageUrl    String?    @map("image_url") @db.VarChar(500)
   isActive    Boolean    @default(true) @map("is_active")
   sortOrder   Int        @default(0) @map("sort_order")
@@ -146,6 +148,7 @@ model Driver {
 model Merchant {
   id              String       @id @default(uuid()) @db.Uuid
   name            String       @db.VarChar(255)
+  nameAr          String?      @map("name_ar") @db.VarChar(255)
   merchantTypeId  String       @map("merchant_type_id") @db.Uuid
   merchantType    MerchantType @relation(fields: [merchantTypeId], references: [id], onDelete: Restrict)
   email           String?      @unique @db.VarChar(255)
@@ -190,6 +193,7 @@ model MerchantOffer {
   id              String   @id @default(uuid()) @db.Uuid
   merchantId      String   @map("merchant_id") @db.Uuid
   title           String?  @db.VarChar(255)
+  titleAr         String?  @map("title_ar") @db.VarChar(255)
   /// Percentage off list price (e.g. 10 = 10% off).
   discountPercent Decimal  @map("discount_percent") @db.Decimal(5, 2)
   /// Legacy optional upload; API display image comes from merchant cover/logo.
@@ -326,6 +330,8 @@ model ProductImage {
 /// Home / promo carousel image managed by super admin.
 model Banner {
   id        String   @id @default(uuid()) @db.Uuid
+  title     String?  @db.VarChar(255)
+  titleAr   String?  @map("title_ar") @db.VarChar(255)
   imageUrl  String   @map("image_url") @db.VarChar(500)
   isActive  Boolean  @default(true) @map("is_active")
   sortOrder Int      @default(0) @map("sort_order")

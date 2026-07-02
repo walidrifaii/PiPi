@@ -3,6 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import {
+  localizeBanner,
+  type I18nOptions,
+  withLocaleValue,
+} from '../common/i18n';
 import { S3Service } from '../common/s3.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateBannerDto } from './dto/create-banner.dto';
@@ -12,6 +17,8 @@ export type BannerStatus = 'ACTIVE' | 'INACTIVE';
 
 export type BannerItem = {
   id: string;
+  title: string | null;
+  titleAr: string | null;
   imageUrl: string;
   status: BannerStatus;
   isActive: boolean;
@@ -29,6 +36,8 @@ export class BannerService {
 
   private mapRow(row: {
     id: string;
+    title: string | null;
+    titleAr: string | null;
     imageUrl: string;
     isActive: boolean;
     sortOrder: number;
@@ -37,6 +46,8 @@ export class BannerService {
   }): BannerItem {
     return {
       id: row.id,
+      title: row.title,
+      titleAr: row.titleAr,
       imageUrl: row.imageUrl,
       isActive: row.isActive,
       status: row.isActive ? 'ACTIVE' : 'INACTIVE',
@@ -46,13 +57,17 @@ export class BannerService {
     };
   }
 
-  findActivePublic(): Promise<BannerItem[]> {
+  findActivePublic(i18n?: I18nOptions): Promise<(BannerItem & { locale?: string })[]> {
     return this.prisma.banner
       .findMany({
         where: { isActive: true },
         orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
       })
-      .then((rows) => rows.map((r) => this.mapRow(r)));
+      .then((rows) =>
+        rows.map((r) =>
+          withLocaleValue(localizeBanner(this.mapRow(r), i18n), i18n),
+        ),
+      );
   }
 
   findAllAdmin(): Promise<BannerItem[]> {
@@ -74,6 +89,8 @@ export class BannerService {
   async create(dto: CreateBannerDto, imageUrl: string): Promise<BannerItem> {
     const row = await this.prisma.banner.create({
       data: {
+        title: dto.title?.trim() || null,
+        titleAr: dto.titleAr?.trim() || null,
         imageUrl,
         isActive: dto.isActive ?? true,
         sortOrder: dto.sortOrder ?? 0,
@@ -96,6 +113,10 @@ export class BannerService {
       where: { id },
       data: {
         ...(imageUrl !== undefined ? { imageUrl } : {}),
+        ...(dto.title !== undefined ? { title: dto.title.trim() || null } : {}),
+        ...(dto.titleAr !== undefined
+          ? { titleAr: dto.titleAr.trim() || null }
+          : {}),
         ...(dto.isActive !== undefined ? { isActive: dto.isActive } : {}),
         ...(dto.sortOrder !== undefined ? { sortOrder: dto.sortOrder } : {}),
       },

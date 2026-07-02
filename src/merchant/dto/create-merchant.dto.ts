@@ -18,6 +18,15 @@ export class CreateMerchantDto {
   @IsString()
   name: string;
 
+  @ApiPropertyOptional({ description: 'Arabic store name' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  @Transform(({ value }) =>
+    typeof value === 'string' && value.trim() === '' ? undefined : value,
+  )
+  nameAr?: string;
+
   @ApiProperty({
     format: 'uuid',
     description: 'Merchant type id (see GET /merchant-types)',
