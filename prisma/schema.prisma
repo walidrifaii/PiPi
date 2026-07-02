@@ -185,6 +185,7 @@ model Merchant {
   workingIntervals MerchantWorkingInterval[]
   deliveryTime MerchantDeliveryTime?
   offers       MerchantOffer[]
+  bundles      MerchantBundle[]
   earningsSettlements EarningsSettlement[]
 
   @@index([merchantTypeId])
@@ -214,6 +215,27 @@ model MerchantOffer {
   @@index([merchantId])
   @@index([isActive, startsAt, endsAt])
   @@map("merchant_offers")
+}
+
+/// Merchant product bundle (combo deal) with fixed price and image.
+model MerchantBundle {
+  id            String   @id @default(uuid()) @db.Uuid
+  merchantId    String   @map("merchant_id") @db.Uuid
+  title         String   @db.VarChar(255)
+  titleAr       String?  @map("title_ar") @db.VarChar(255)
+  description   String?  @db.Text
+  descriptionAr String?  @map("description_ar") @db.Text
+  price         Decimal  @db.Decimal(10, 2)
+  imageUrl      String   @map("image_url") @db.VarChar(500)
+  isActive      Boolean  @default(true) @map("is_active")
+  sortOrder     Int      @default(0) @map("sort_order")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  merchant      Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@index([merchantId])
+  @@index([isActive, sortOrder])
+  @@map("merchant_bundles")
 }
 
 /// One open/close interval in the merchant's local timezone (see merchants.timezone). Weekday 1=Mon … 7=Sun.

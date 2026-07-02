@@ -32,6 +32,12 @@ import { V2Module } from './v2/v2.module';
 import { APP_V2_CONTROLLERS } from './v2/controllers/app.v2-controllers';
 import { AppVersionModule } from './app-version/app-version.module';
 import { CouponModule } from './coupon/coupon.module';
+import { BundleModule } from './bundle/bundle.module';
+import { BundleAdminController } from './bundle/bundle-admin.controller';
+import {
+  BundlePublicController,
+  BundleMerchantPublicController,
+} from './bundle/bundle-public.controller';
 
 @Module({
   imports: [
@@ -56,6 +62,7 @@ import { CouponModule } from './coupon/coupon.module';
     DeliveryFeeModule,
     AppVersionModule,
     CouponModule,
+    BundleModule,
     V2Module,
   ],
   controllers: [
@@ -64,7 +71,10 @@ import { CouponModule } from './coupon/coupon.module';
     MerchantCatalogController,
     // Before MerchantOfferPublicController so `/merchants/admin/offers` is not captured as `:merchantId=admin`.
     MerchantOfferAdminController,
+    BundleAdminController,
     MerchantOfferPublicController,
+    BundlePublicController,
+    BundleMerchantPublicController,
     MerchantController,
     MerchantCatalogSuperAdminController,
     ...APP_V2_CONTROLLERS,

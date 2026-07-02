@@ -3,6 +3,8 @@ import { MerchantCatalogController } from '../../merchant-catalog/merchant-catal
 import { MerchantCatalogSuperAdminController } from '../../merchant-catalog/merchant-catalog-super-admin.controller';
 import { MerchantOfferAdminController } from '../../merchant-offer/merchant-offer-admin.controller';
 import { MerchantOfferPublicController } from '../../merchant-offer/merchant-offer-public.controller';
+import { BundleAdminController } from '../../bundle/bundle-admin.controller';
+import { BundlePublicController } from '../../bundle/bundle-public.controller';
 import { createV2Controller } from './create-v2-controller';
 import { MerchantStorefrontV2Controller } from './merchant-storefront.v2-controller';
 
@@ -19,6 +21,14 @@ export const MerchantOfferPublicV2Controller = createV2Controller(
   MerchantOfferPublicController,
   'merchants',
 );
+export const BundleAdminV2Controller = createV2Controller(
+  BundleAdminController,
+  'merchants/admin/bundles',
+);
+export const BundlePublicV2Controller = createV2Controller(
+  BundlePublicController,
+  'bundles',
+);
 export const MerchantV2Controller = MerchantStorefrontV2Controller;
 export const MerchantCatalogSuperAdminV2Controller = createV2Controller(
   MerchantCatalogSuperAdminController,
@@ -30,7 +40,9 @@ export const APP_V2_CONTROLLERS = [
   AppV2Controller,
   MerchantCatalogV2Controller,
   MerchantOfferAdminV2Controller,
+  BundleAdminV2Controller,
   MerchantOfferPublicV2Controller,
+  BundlePublicV2Controller,
   MerchantV2Controller,
   MerchantCatalogSuperAdminV2Controller,
 ];
