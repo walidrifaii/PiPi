@@ -657,6 +657,41 @@ export class MerchantController {
     );
   }
 
+  @ApiTags('Merchant')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, MerchantAccountGuard)
+  @ApiOperation({
+    summary: 'Get your store profile (merchant login only)',
+    description:
+      'Returns the logged-in merchant profile including `merchantType` code (e.g. SUPERMARKET). Must be registered before `GET /merchants/:merchantId`.',
+  })
+  @ApiOkResponse({
+    description: 'Logged-in merchant profile',
+    schema: {
+      example: {
+        id: '11111111-1111-1111-1111-111111111111',
+        name: 'Fresh Basket Market',
+        merchantTypeId: 'a0000000-0000-4000-8000-000000000001',
+        merchantType: 'SUPERMARKET',
+        email: 'store@example.com',
+        phone: '+96170123456',
+        logoUrl: 'https://example.com/merchant-logo.jpg',
+        coverImageUrl: 'https://example.com/merchant-cover.jpg',
+        isActive: true,
+        isOpenNow: true,
+        status: 'OPEN',
+      },
+    },
+  })
+  @Get('me')
+  getMyMerchant(@Req() req: { user?: JwtUserPayload }) {
+    const user = req.user;
+    if (!user || user.role !== 'MERCHANT') {
+      throw new BadRequestException('Merchant account required');
+    }
+    return this.merchantIntegrationService.getMerchantForAdmin(user.merchantId);
+  }
+
   @ApiTags('Storefront', 'Customer')
   @ApiOperation({
     summary: 'Get merchant store profile (public)',
