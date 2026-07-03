@@ -174,14 +174,14 @@ export class MerchantController {
     operationId: 'storefrontSearch',
     summary: 'Search merchants or products by name (public)',
     description:
-      'No auth required. **Required:** `lat`, `lng`, and `type` (`merchant` or `product`). If the user coordinates are outside every active service-area polygon, returns an empty list. Otherwise only stores whose GPS is inside that same polygon are included. Names must **start with** the search term (case-insensitive). Minimum 2 characters. Optional `merchantType` filters results.',
+      'No auth required. **Required:** `lat`, `lng`, and `type` (`merchant` or `product`). If the user coordinates are outside every active service-area polygon, returns an empty list. Otherwise only stores whose GPS is inside that same polygon are included. Names are matched as a **substring** (case-insensitive), e.g. `burger` matches "Cheese Burger". With `?lang=ar` searches Arabic names only; with `?lang=en` searches English names only. Minimum 2 characters. Optional `merchantType` filters results.',
   })
   @ApiQuery({
     name: 'name',
     required: true,
     example: 'walid',
     description:
-      'Search term (at least 2 characters; store/product name must start with this)',
+      'Search term (at least 2 characters; matched anywhere in the store/product name)',
   })
   @ApiQuery({
     name: 'type',

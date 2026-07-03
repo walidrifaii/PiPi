@@ -1,4 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
+import type { AppLocale } from './i18n/locale.types';
 
 /** Minimum characters so a query like "w" does not match every name containing that letter. */
 export const MIN_NAME_SEARCH_LENGTH = 2;
@@ -19,7 +20,28 @@ export function normalizeNameSearchTerm(raw: string): string {
   return term;
 }
 
-/** Case-insensitive prefix match: "walid" matches "Walid" and "Walidruf", not names that only contain "w" elsewhere. */
-export function nameStartsWithFilter(term: string) {
-  return { startsWith: term, mode: 'insensitive' as const };
+/** Case-insensitive substring match: "burger" matches "Cheese Burger" and "Extra Burger". */
+export function nameContainsFilter(term: string) {
+  return { contains: term, mode: 'insensitive' as const };
+}
+
+/**
+ * Locale-aware name search:
+ * - `ar` → Arabic `nameAr` only
+ * - `en` → English `name` only
+ * - no locale → both fields (bilingual response mode)
+ */
+export function buildNameSearchWhere(term: string, locale?: AppLocale) {
+  if (locale === 'ar') {
+    return { nameAr: nameContainsFilter(term) };
+  }
+  if (locale === 'en') {
+    return { name: nameContainsFilter(term) };
+  }
+  return {
+    OR: [
+      { name: nameContainsFilter(term) },
+      { nameAr: nameContainsFilter(term) },
+    ],
+  };
 }

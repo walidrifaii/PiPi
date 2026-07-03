@@ -241,7 +241,7 @@ export class BundleService {
       this.prisma.merchantBundle.findMany({
         where,
         include: this.merchantInclude,
-        orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
+        orderBy: [{ createdAt: 'desc' }],
         skip: pg.skip,
         take: pg.limit,
       }),

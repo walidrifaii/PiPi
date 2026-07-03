@@ -12,7 +12,7 @@ import { UnifiedProduct } from '../merchant/catalog.types';
 import type { ProductOptionGroupView } from '../merchant/product-option.types';
 import { ProductOptionGroupDto } from './dto/product-option.dto';
 import {
-  nameStartsWithFilter,
+  buildNameSearchWhere,
   normalizeNameSearchTerm,
 } from '../common/name-search';
 import { S3Service } from '../common/s3.service';
@@ -119,7 +119,7 @@ export class MerchantCatalogService {
     };
   }
 
-  /** Optional prefix match on English `name` or Arabic `nameAr`. */
+  /** Optional substring match on English `name` or Arabic `nameAr`. */
   private buildProductNameWhereClause(
     name?: string,
   ): Prisma.ProductWhereInput | undefined {
@@ -128,12 +128,7 @@ export class MerchantCatalogService {
       return undefined;
     }
     const term = normalizeNameSearchTerm(trimmed);
-    return {
-      OR: [
-        { name: nameStartsWithFilter(term) },
-        { nameAr: nameStartsWithFilter(term) },
-      ],
-    };
+    return buildNameSearchWhere(term);
   }
 
   /** Merchants that are manually OPEN and inside working hours (if configured). */
@@ -892,8 +887,8 @@ export class MerchantCatalogService {
   }
 
   /**
-   * Public storefront: search products by name (English or Arabic) across active
-   * merchants in the user's service area. Guest or logged-in customer; no auth required.
+   * Public storefront: search products by name across active merchants in the
+   * user's service area. Locale (`?lang=ar|en`) selects Arabic or English name field.
    */
   async searchProductsByName(
     name: string,
@@ -928,10 +923,7 @@ export class MerchantCatalogService {
     }
 
     const where: Prisma.ProductWhereInput = {
-      OR: [
-        { name: nameStartsWithFilter(term) },
-        { nameAr: nameStartsWithFilter(term) },
-      ],
+      ...buildNameSearchWhere(term, filters.i18n?.locale),
       ...(filters.activeProductsOnly ? { isActive: true } : {}),
       category: {
         merchant: {

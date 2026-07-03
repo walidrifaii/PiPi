@@ -28,7 +28,7 @@ import { MerchantStoreStatus } from './merchant/dto/set-merchant-store-status.dt
 import { UpsertMerchantWorkingHoursDto } from './merchant/dto/upsert-merchant-working-hours.dto';
 import { UpdateMerchantDto } from './merchant/dto/update-merchant.dto';
 import {
-  nameStartsWithFilter,
+  buildNameSearchWhere,
   normalizeNameSearchTerm,
 } from './common/name-search';
 import { MerchantGeoQueryService } from './geo/merchant-geo-query.service';
@@ -750,10 +750,7 @@ export class MerchantIntegrationService {
     const where: Prisma.MerchantWhereInput = {
       id: { in: scopedIds },
       isEnabled: true,
-      OR: [
-        { name: nameStartsWithFilter(term) },
-        { nameAr: nameStartsWithFilter(term) },
-      ],
+      ...buildNameSearchWhere(term, filters.i18n?.locale),
     };
     if (merchantTypeCode) {
       where.merchantType = {
