@@ -10,15 +10,28 @@ import {
   MaxLength,
   Min,
   Validate,
+  ValidateIf,
 } from 'class-validator';
 import { DiscountNotGreaterThanPriceConstraint } from '../../merchant-catalog/validators/discount-not-greater-than-price.constraint';
 
 export class CheckoutItemDto {
-  @ApiProperty({ format: 'uuid' })
+  @ApiPropertyOptional({
+    format: 'uuid',
+    description: 'Product line item (omit when bundleId is set)',
+  })
+  @ValidateIf((o: CheckoutItemDto) => !o.bundleId)
   @IsUUID()
-  productId: string;
+  productId?: string;
 
-  @ApiProperty({ description: 'Product name shown on the order (from client)' })
+  @ApiPropertyOptional({
+    format: 'uuid',
+    description: 'Bundle line item (omit when productId is set)',
+  })
+  @ValidateIf((o: CheckoutItemDto) => !o.productId)
+  @IsUUID()
+  bundleId?: string;
+
+  @ApiProperty({ description: 'Line item name shown on the order (from client)' })
   @IsString()
   @MaxLength(255)
   productName: string;

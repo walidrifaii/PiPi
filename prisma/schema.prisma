@@ -232,6 +232,7 @@ model MerchantBundle {
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
   merchant      Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  orderItems    OrderItem[]
 
   @@index([merchantId])
   @@index([isActive, sortOrder])
@@ -422,16 +423,19 @@ model Order {
 }
 
 model OrderItem {
-  id          String   @id @default(uuid()) @db.Uuid
-  orderId     String   @map("order_id") @db.Uuid
-  productId   String   @map("product_id") @db.Uuid
-  productName String   @map("product_name") @db.VarChar(255)
+  id          String          @id @default(uuid()) @db.Uuid
+  orderId     String          @map("order_id") @db.Uuid
+  productId   String?         @map("product_id") @db.Uuid
+  bundleId    String?         @map("bundle_id") @db.Uuid
+  productName String          @map("product_name") @db.VarChar(255)
   quantity    Int
-  unitPrice   Decimal  @map("unit_price") @db.Decimal(10, 2)
-  totalPrice  Decimal  @map("total_price") @db.Decimal(10, 2)
-  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  unitPrice   Decimal         @map("unit_price") @db.Decimal(10, 2)
+  totalPrice  Decimal         @map("total_price") @db.Decimal(10, 2)
+  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  bundle      MerchantBundle? @relation(fields: [bundleId], references: [id], onDelete: Restrict)
 
   @@index([orderId])
+  @@index([bundleId])
   @@map("order_items")
 }
 

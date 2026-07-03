@@ -26,7 +26,8 @@ import { resolveStorefrontProductPricing } from '../merchant-offer/merchant-offe
 import { CouponService } from '../coupon/coupon.service';
 
 type LineItem = {
-  productId: string;
+  productId: string | null;
+  bundleId: string | null;
   productName: string;
   imageUrl: string | null;
   quantity: number;
@@ -67,7 +68,8 @@ export type CheckoutItemsSnapshot = {
     configId: string | null;
   };
   items: Array<{
-    productId: string;
+    productId: string | null;
+    bundleId?: string | null;
     productName: string;
     imageUrl: string | null;
     quantity: number;
@@ -143,34 +145,46 @@ export class CheckoutService {
       }
     }
 
-    const productIds = [...new Set(dto.items.map((i) => i.productId))];
-    const products = await this.prisma.product.findMany({
-      where: {
-        id: { in: productIds },
-        category: { merchantId: dto.merchantId },
-        ...(opts?.requireActiveProducts ? { isActive: true } : {}),
-      },
-      select: {
-        id: true,
-        price: true,
-        discountPrice: true,
-        imageUrl: true,
-        images: {
-          orderBy: { sortOrder: 'asc' },
-          take: 1,
-          select: { url: true },
-        },
-        optionGroups: {
-          orderBy: { sortOrder: 'asc' },
-          include: {
-            choices: {
-              where: { isActive: true },
-              orderBy: { sortOrder: 'asc' },
+    const productItems = dto.items.filter((i) => i.productId);
+    const bundleItems = dto.items.filter((i) => i.bundleId);
+
+    if (productItems.length + bundleItems.length !== dto.items.length) {
+      throw new BadRequestException(
+        'Each line item must include either productId or bundleId',
+      );
+    }
+
+    const productIds = [...new Set(productItems.map((i) => i.productId!))];
+    const products =
+      productIds.length > 0
+        ? await this.prisma.product.findMany({
+            where: {
+              id: { in: productIds },
+              category: { merchantId: dto.merchantId },
+              ...(opts?.requireActiveProducts ? { isActive: true } : {}),
             },
-          },
-        },
-      },
-    });
+            select: {
+              id: true,
+              price: true,
+              discountPrice: true,
+              imageUrl: true,
+              images: {
+                orderBy: { sortOrder: 'asc' },
+                take: 1,
+                select: { url: true },
+              },
+              optionGroups: {
+                orderBy: { sortOrder: 'asc' },
+                include: {
+                  choices: {
+                    where: { isActive: true },
+                    orderBy: { sortOrder: 'asc' },
+                  },
+                },
+              },
+            },
+          })
+        : [];
 
     if (products.length !== productIds.length) {
       throw new BadRequestException(
@@ -180,11 +194,37 @@ export class CheckoutService {
 
     const productById = new Map(products.map((p) => [p.id, p]));
 
+    const bundleIds = [...new Set(bundleItems.map((i) => i.bundleId!))];
+    const bundles =
+      bundleIds.length > 0
+        ? await this.prisma.merchantBundle.findMany({
+            where: {
+              id: { in: bundleIds },
+              merchantId: dto.merchantId,
+              isActive: true,
+            },
+            select: {
+              id: true,
+              title: true,
+              price: true,
+              imageUrl: true,
+            },
+          })
+        : [];
+
+    if (bundles.length !== bundleIds.length) {
+      throw new BadRequestException(
+        'One or more bundles are invalid or belong to a different merchant',
+      );
+    }
+
+    const bundleById = new Map(bundles.map((b) => [b.id, b]));
+
     const offerPercent =
       await this.merchantOffers.getLiveOfferPercentForMerchant(dto.merchantId);
 
-    const lineItems: LineItem[] = dto.items.map((item) => {
-      const catalog = productById.get(item.productId);
+    const productLineItems: LineItem[] = productItems.map((item) => {
+      const catalog = productById.get(item.productId!);
       if (!catalog) {
         throw new BadRequestException('Invalid product');
       }
@@ -226,7 +266,8 @@ export class CheckoutService {
       const productName = formatProductNameWithOptions(baseName, selected);
 
       return {
-        productId: item.productId,
+        productId: item.productId!,
+        bundleId: null,
         productName,
         imageUrl: resolveProductDisplayImage(catalog),
         quantity: item.quantity,
@@ -241,6 +282,36 @@ export class CheckoutService {
         selectedOptions: selected,
       };
     });
+
+    const bundleLineItems: LineItem[] = bundleItems.map((item) => {
+      const bundle = bundleById.get(item.bundleId!);
+      if (!bundle) {
+        throw new BadRequestException('Invalid bundle');
+      }
+
+      const listPrice = Number(bundle.price);
+      const unitPrice = listPrice;
+      const productName = item.productName.trim() || bundle.title.trim();
+
+      return {
+        productId: null,
+        bundleId: item.bundleId!,
+        productName,
+        imageUrl: bundle.imageUrl,
+        quantity: item.quantity,
+        unitPrice,
+        totalPrice: unitPrice * item.quantity,
+        listPrice,
+        discountPrice: null,
+        productDiscountPrice: null,
+        merchantUnitPrice: unitPrice,
+        merchantTotalPrice: unitPrice * item.quantity,
+        message: item.message?.trim() || null,
+        selectedOptions: [],
+      };
+    });
+
+    const lineItems: LineItem[] = [...productLineItems, ...bundleLineItems];
 
     const customerSubtotal = this.roundMoney(
       lineItems.reduce((sum, line) => sum + line.totalPrice, 0),
@@ -330,6 +401,7 @@ export class CheckoutService {
       },
       items: lineItems.map((l) => ({
         productId: l.productId,
+        bundleId: l.bundleId,
         productName: l.productName,
         imageUrl: l.imageUrl,
         quantity: l.quantity,
@@ -366,7 +438,8 @@ export class CheckoutService {
           }),
           orderItems: {
             create: lineItems.map((l) => ({
-              productId: l.productId,
+              ...(l.productId ? { productId: l.productId } : {}),
+              ...(l.bundleId ? { bundleId: l.bundleId } : {}),
               productName: l.productName,
               quantity: l.quantity,
               unitPrice: l.unitPrice,
@@ -480,6 +553,7 @@ export class CheckoutService {
         return {
           id: oi.id,
           productId: oi.productId,
+          bundleId: oi.bundleId,
           productName: oi.productName,
           imageUrl: snap?.imageUrl ?? null,
           quantity: oi.quantity,
