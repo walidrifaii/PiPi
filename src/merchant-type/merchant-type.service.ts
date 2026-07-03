@@ -59,7 +59,7 @@ export class MerchantTypeService {
     return row;
   }
 
-  async create(dto: CreateMerchantTypeDto, imageUrl?: string) {
+  async create(dto: CreateMerchantTypeDto) {
     try {
       return await this.prisma.merchantType.create({
         data: {
@@ -68,7 +68,7 @@ export class MerchantTypeService {
           nameAr: dto.nameAr,
           description: dto.description,
           descriptionAr: dto.descriptionAr,
-          imageUrl,
+          imageUrl: dto.imageUrl,
           isActive: dto.isActive ?? true,
           sortOrder: dto.sortOrder ?? 0,
         },
@@ -86,7 +86,7 @@ export class MerchantTypeService {
     }
   }
 
-  async update(id: string, dto: UpdateMerchantTypeDto, imageUrl?: string) {
+  async update(id: string, dto: UpdateMerchantTypeDto) {
     const existing = await this.findOne(id);
     try {
       const updated = await this.prisma.merchantType.update({
@@ -103,13 +103,13 @@ export class MerchantTypeService {
             : {}),
           ...(dto.isActive !== undefined ? { isActive: dto.isActive } : {}),
           ...(dto.sortOrder !== undefined ? { sortOrder: dto.sortOrder } : {}),
-          ...(imageUrl !== undefined ? { imageUrl } : {}),
+          ...(dto.imageUrl !== undefined ? { imageUrl: dto.imageUrl } : {}),
         },
       });
       if (
-        imageUrl !== undefined &&
+        dto.imageUrl !== undefined &&
         existing.imageUrl &&
-        existing.imageUrl !== imageUrl
+        existing.imageUrl !== dto.imageUrl
       ) {
         await this.cloudinary.deleteImageByUrl(existing.imageUrl);
       }

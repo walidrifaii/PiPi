@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -29,6 +30,8 @@ import { UpdateMerchantTypeDto } from './dto/update-merchant-type.dto';
 import { MerchantTypeService } from './merchant-type.service';
 import { I18n, type I18nOptions } from '../common/i18n';
 
+const MERCHANT_TYPE_IMAGE_MAX_BYTES = 2 * 1024 * 1024;
+
 @Controller('merchant-types')
 export class MerchantTypeController {
   constructor(
@@ -58,6 +61,39 @@ export class MerchantTypeController {
     return this.merchantTypeService.findAllAdmin();
   }
 
+  @ApiTags('Super Admin')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, SuperAdminGuard)
+  @ApiOperation({
+    summary: 'Upload merchant type icon (super admin). Returns imageUrl for JSON create/update.',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['image'],
+      properties: {
+        image: { type: 'string', format: 'binary' },
+      },
+    },
+  })
+  @Post('upload-image')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      limits: { fileSize: MERCHANT_TYPE_IMAGE_MAX_BYTES },
+    }),
+  )
+  async uploadImage(@UploadedFile() file?: Express.Multer.File) {
+    if (!file?.buffer?.length) {
+      throw new BadRequestException('image file is required');
+    }
+    const imageUrl = await this.cloudinary.uploadImage(
+      file.buffer,
+      'athar/merchant-types',
+    );
+    return { imageUrl };
+  }
+
   @ApiTags('Shared')
   @ApiOperation({ summary: 'Get one merchant type by id' })
   @ApiParam({ name: 'id', type: String })
@@ -70,41 +106,11 @@ export class MerchantTypeController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiOperation({
-    summary: 'Create merchant type (super admin, optional image upload)',
-  })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      required: ['code', 'name'],
-      properties: {
-        code: { type: 'string', example: 'BAKERY' },
-        name: { type: 'string', example: 'Bakery' },
-        description: { type: 'string' },
-        isActive: { type: 'boolean' },
-        sortOrder: { type: 'integer', minimum: 0 },
-        image: {
-          type: 'string',
-          format: 'binary',
-          description: 'Type icon / image',
-        },
-      },
-    },
+    summary: 'Create merchant type (super admin, JSON body)',
   })
   @Post()
-  @UseInterceptors(FileInterceptor('image'))
-  async create(
-    @Body() dto: CreateMerchantTypeDto,
-    @UploadedFile() file?: Express.Multer.File,
-  ) {
-    let imageUrl: string | undefined;
-    if (file?.buffer?.length) {
-      imageUrl = await this.cloudinary.uploadImage(
-        file.buffer,
-        'athar/merchant-types',
-      );
-    }
-    return this.merchantTypeService.create(dto, imageUrl);
+  create(@Body() dto: CreateMerchantTypeDto) {
+    return this.merchantTypeService.create(dto);
   }
 
   @ApiTags('Super Admin')
@@ -112,42 +118,14 @@ export class MerchantTypeController {
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiParam({ name: 'id', type: String })
   @ApiOperation({
-    summary:
-      'Update merchant type (super admin). Optional image replaces the previous file on Cloudinary.',
-  })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        code: { type: 'string' },
-        name: { type: 'string' },
-        description: { type: 'string' },
-        isActive: { type: 'boolean' },
-        sortOrder: { type: 'integer', minimum: 0 },
-        image: {
-          type: 'string',
-          format: 'binary',
-          description: 'New type icon / image (optional)',
-        },
-      },
-    },
+    summary: 'Update merchant type (super admin, JSON body)',
   })
   @Patch(':id')
-  @UseInterceptors(FileInterceptor('image'))
-  async update(
+  update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateMerchantTypeDto,
-    @UploadedFile() file?: Express.Multer.File,
   ) {
-    let imageUrl: string | undefined;
-    if (file?.buffer?.length) {
-      imageUrl = await this.cloudinary.uploadImage(
-        file.buffer,
-        'athar/merchant-types',
-      );
-    }
-    return this.merchantTypeService.update(id, dto, imageUrl);
+    return this.merchantTypeService.update(id, dto);
   }
 
   @ApiTags('Super Admin')

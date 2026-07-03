@@ -91,15 +91,49 @@ export class MerchantCatalogController {
     return this.catalog.createCategory(merchantId, dto, imageUrl);
   }
 
-  @ApiOperation({ summary: 'Update category' })
+  @ApiOperation({
+    summary:
+      'Update category (JSON or multipart). Send `file` for a new category image.',
+  })
+  @ApiConsumes('application/json', 'multipart/form-data')
   @ApiParam({ name: 'categoryId', type: String })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        nameAr: { type: 'string' },
+        descriptionAr: { type: 'string' },
+        sortOrder: { type: 'integer' },
+        imageUrl: {
+          type: 'string',
+          nullable: true,
+          description: 'Set null to clear image (JSON only)',
+        },
+        file: { type: 'string', format: 'binary' },
+      },
+    },
+  })
   @Patch('categories/:categoryId')
-  updateCategory(
+  @UseInterceptors(FileInterceptor('file'))
+  async updateCategory(
     @EffectiveMerchantId() merchantId: string,
     @Param('categoryId') categoryId: string,
     @Body() dto: UpdateCategoryDto,
+    @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.catalog.updateCategory(merchantId, categoryId, dto);
+    let uploadedImageUrl: string | undefined;
+    if (file?.buffer) {
+      uploadedImageUrl = await this.cloudinary.uploadImage(
+        file.buffer,
+        'athar/categories',
+      );
+    }
+    return this.catalog.updateCategory(merchantId, categoryId, {
+      ...dto,
+      ...(uploadedImageUrl !== undefined ? { imageUrl: uploadedImageUrl } : {}),
+    });
   }
 
   @ApiOperation({ summary: 'Delete category' })

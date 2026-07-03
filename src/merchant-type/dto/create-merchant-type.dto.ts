@@ -92,4 +92,16 @@ export class CreateMerchantTypeDto {
   @IsInt()
   @Min(0)
   sortOrder?: number;
+
+  @ApiPropertyOptional({
+    description:
+      'Public image URL (from POST /merchant-types/upload-image). Omit when no icon.',
+  })
+  @IsOptional()
+  @Transform(({ value }) =>
+    typeof value === 'string' && value.trim() === '' ? undefined : value,
+  )
+  @IsString()
+  @MaxLength(500)
+  imageUrl?: string;
 }
