@@ -983,6 +983,71 @@ export class MerchantCatalogService {
     );
   }
 
+  /**
+   * Public storefront: search products by name within one merchant.
+   * Locale (`?lang=ar|en`) selects Arabic or English name field.
+   */
+  async searchProductsInMerchant(
+    merchantId: string,
+    name: string,
+    page = 1,
+    limit = 20,
+    filters: {
+      categoryId?: string;
+      activeProductsOnly?: boolean;
+      i18n?: I18nOptions;
+    } = {},
+  ) {
+    await this.assertMerchantBrowsable(merchantId);
+
+    const term = normalizeNameSearchTerm(name);
+    const categoryId = filters.categoryId?.trim();
+
+    if (categoryId) {
+      const category = await this.prisma.merchantCategory.findFirst({
+        where: { id: categoryId, merchantId },
+      });
+      if (!category) {
+        throw new NotFoundException('Category not found');
+      }
+    }
+
+    const pg = this.normalizePagination(page, limit);
+    const where: Prisma.ProductWhereInput = {
+      ...buildNameSearchWhere(term, filters.i18n?.locale),
+      category: { merchantId },
+      ...(categoryId ? { categoryId } : {}),
+      ...(filters.activeProductsOnly ? { isActive: true } : {}),
+    };
+
+    const [total, rows] = await this.prisma.$transaction([
+      this.prisma.product.count({ where }),
+      this.prisma.product.findMany({
+        where,
+        include: {
+          category: { select: { id: true, name: true, nameAr: true } },
+          images: { orderBy: { sortOrder: 'asc' } },
+          ...OPTION_GROUPS_INCLUDE,
+        },
+        orderBy: [{ name: 'asc' }],
+        skip: pg.skip,
+        take: pg.limit,
+      }),
+    ]);
+
+    const offerPercent =
+      await this.merchantOffers.getLiveOfferPercentForMerchant(merchantId);
+    const items = rows.map((p) => ({
+      ...this.attachProductPricing(p, true, offerPercent),
+      category: p.category,
+    }));
+
+    return this.localizePagedProducts(
+      this.pagedResponse(items, total, pg.page, pg.limit),
+      filters.i18n,
+    );
+  }
+
   async createProduct(
     merchantId: string,
     categoryId: string,

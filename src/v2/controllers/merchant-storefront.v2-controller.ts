@@ -134,6 +134,25 @@ export class MerchantStorefrontV2Controller extends MerchantController {
     );
   }
 
+  @Get(':merchantId/products/search')
+  searchStorefrontProductsInMerchant(
+    @Param('merchantId', ParseUuidMerchantIdPipe) merchantId: string,
+    @Query('name') name: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query('categoryId', new ParseUUIDPipe({ optional: true }))
+    categoryId?: string,
+    @I18n() i18n?: I18nOptions,
+  ) {
+    return this.merchantCatalogService.searchProductsInMerchant(
+      merchantId,
+      name,
+      page,
+      limit,
+      { categoryId, activeProductsOnly: true, i18n },
+    );
+  }
+
   @Get(':merchantId/categories/:categoryId/products')
   listStorefrontCategoryProducts(
     @Param('merchantId', ParseUuidMerchantIdPipe) merchantId: string,

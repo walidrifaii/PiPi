@@ -437,6 +437,79 @@ export class MerchantController {
   })
   @ApiTags('Storefront · Menu')
   @ApiOperation({
+    operationId: 'storefrontSearchMerchantProducts',
+    summary: 'Search products in a store (public)',
+    description:
+      'No auth required. Substring match on product names within one merchant. With `?lang=ar` searches Arabic names only; with `?lang=en` searches English names only. Optional `categoryId` limits to one category. Minimum 2 characters.',
+  })
+  @ApiParam({ name: 'merchantId', type: String, format: 'uuid' })
+  @ApiQuery({
+    name: 'name',
+    required: true,
+    type: String,
+    example: 'burger',
+    description:
+      'Search term (at least 2 characters; matched anywhere in the product name)',
+  })
+  @ApiQuery({
+    name: 'categoryId',
+    required: false,
+    type: String,
+    format: 'uuid',
+    description: 'Optional filter by category UUID',
+  })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @ApiOkResponse({
+    description: 'Paginated products matching the search term',
+    schema: {
+      example: {
+        items: [
+          {
+            id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+            categoryId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+            name: 'Cheese Burger',
+            price: 12.5,
+            discountPrice: 10,
+            hasDiscount: true,
+            effectivePrice: 10,
+            category: {
+              id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+              name: 'Burgers',
+            },
+          },
+        ],
+        pagination: {
+          page: 1,
+          limit: 20,
+          pageTotal: 1,
+          total: 1,
+          totalPages: 1,
+        },
+      },
+    },
+  })
+  @Get(':merchantId/products/search')
+  searchStorefrontProductsInMerchant(
+    @Param('merchantId', ParseUuidMerchantIdPipe) merchantId: string,
+    @Query('name') name: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query('categoryId', new ParseUUIDPipe({ optional: true }))
+    categoryId?: string,
+    @I18n() i18n?: I18nOptions,
+  ) {
+    return this.merchantCatalogService.searchProductsInMerchant(
+      merchantId,
+      name,
+      page,
+      limit,
+      { categoryId, activeProductsOnly: false, i18n },
+    );
+  }
+
+  @ApiTags('Storefront · Menu')
+  @ApiOperation({
     operationId: 'storefrontListMerchantProducts',
     summary: 'List products for a store (public)',
     description:
