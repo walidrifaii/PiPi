@@ -28,7 +28,8 @@ function roundMoney(n: number): number {
 
 type MappedOrderItem = {
   id: string;
-  productId: string;
+  productId: string | null;
+  bundleId?: string | null;
   productName: string;
   imageUrl: string | null;
   quantity: number;
@@ -51,7 +52,8 @@ function mapOrderItem(
   const modifiers =
     snap?.selectedOptions?.map((o) => Number(o.priceModifier)) ?? [];
   const imageUrl =
-    snap?.imageUrl ?? productImages?.get(oi.productId) ?? null;
+    snap?.imageUrl ??
+    (oi.productId ? productImages?.get(oi.productId) ?? null : null);
 
   if (audience === 'merchant') {
     const productDiscount =
@@ -70,6 +72,7 @@ function mapOrderItem(
     return {
       id: oi.id,
       productId: oi.productId,
+      bundleId: oi.bundleId ?? snap?.bundleId ?? null,
       productName: oi.productName,
       imageUrl,
       quantity: oi.quantity,
@@ -85,6 +88,7 @@ function mapOrderItem(
   return {
     id: oi.id,
     productId: oi.productId,
+    bundleId: oi.bundleId ?? snap?.bundleId ?? null,
     productName: oi.productName,
     imageUrl,
     quantity: oi.quantity,

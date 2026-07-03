@@ -20,7 +20,8 @@ export type OrderItemsSnapshot = {
   merchantTotal?: number;
   deliveryFee?: number;
   items: Array<{
-    productId: string;
+    productId: string | null;
+    bundleId?: string | null;
     productName: string;
     quantity: number;
     listPrice: number;
@@ -59,7 +60,8 @@ export type OrderWithRelations = {
   preparationTime: number | null;
   orderItems: Array<{
     id: string;
-    productId: string;
+    productId: string | null;
+    bundleId?: string | null;
     productName: string;
     quantity: number;
     unitPrice: { toString(): string };

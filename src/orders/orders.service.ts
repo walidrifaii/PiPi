@@ -318,7 +318,13 @@ export class OrdersService {
       throw new NotFoundException('Order not found');
     }
     const row = order as OrderWithRelations;
-    const productIds = [...new Set(row.orderItems.map((i) => i.productId))];
+    const productIds = [
+      ...new Set(
+        row.orderItems
+          .map((i) => i.productId)
+          .filter((id): id is string => typeof id === 'string' && id.length > 0),
+      ),
+    ];
     const products =
       productIds.length > 0
         ? await this.prisma.product.findMany({
