@@ -106,10 +106,25 @@ export class MerchantTypeController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiOperation({
-    summary: 'Create merchant type (super admin, JSON body)',
+    summary: 'Create merchant type (super admin, JSON or multipart form fields)',
   })
+  @ApiConsumes('application/json', 'multipart/form-data')
   @Post()
-  create(@Body() dto: CreateMerchantTypeDto) {
+  @UseInterceptors(
+    FileInterceptor('image', {
+      limits: { fileSize: MERCHANT_TYPE_IMAGE_MAX_BYTES },
+    }),
+  )
+  async create(
+    @Body() dto: CreateMerchantTypeDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    if (file?.buffer?.length) {
+      dto.imageUrl = await this.cloudinary.uploadImage(
+        file.buffer,
+        'athar/merchant-types',
+      );
+    }
     return this.merchantTypeService.create(dto);
   }
 
@@ -118,13 +133,26 @@ export class MerchantTypeController {
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiParam({ name: 'id', type: String })
   @ApiOperation({
-    summary: 'Update merchant type (super admin, JSON body)',
+    summary: 'Update merchant type (super admin, JSON or multipart form fields)',
   })
+  @ApiConsumes('application/json', 'multipart/form-data')
   @Patch(':id')
-  update(
+  @UseInterceptors(
+    FileInterceptor('image', {
+      limits: { fileSize: MERCHANT_TYPE_IMAGE_MAX_BYTES },
+    }),
+  )
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateMerchantTypeDto,
+    @UploadedFile() file?: Express.Multer.File,
   ) {
+    if (file?.buffer?.length) {
+      dto.imageUrl = await this.cloudinary.uploadImage(
+        file.buffer,
+        'athar/merchant-types',
+      );
+    }
     return this.merchantTypeService.update(id, dto);
   }
 

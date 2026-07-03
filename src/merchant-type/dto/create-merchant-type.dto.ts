@@ -10,28 +10,27 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
+import { normalizeMerchantTypeCode } from './merchant-type-code.util';
 
 export class CreateMerchantTypeDto {
   @ApiProperty({
     description: 'Stable uppercase identifier, e.g. SUPERMARKET',
     example: 'BAKERY',
   })
+  @Transform(({ value }) => normalizeMerchantTypeCode(value))
   @IsString()
   @MinLength(2)
   @MaxLength(64)
   @Matches(/^[A-Z][A-Z0-9_]*$/, {
-    message: 'code must be UPPER_SNAKE style (starts with letter)',
+    message: 'code must be UPPER_SNAKE style (e.g. SUPERMARKET, PHARMACY)',
   })
-  @Transform(({ value }) =>
-    typeof value === 'string' ? value.trim().toUpperCase() : value,
-  )
   code: string;
 
   @ApiProperty({ example: 'Bakery' })
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
   @MinLength(1)
   @MaxLength(255)
-  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   name: string;
 
   @ApiPropertyOptional({ example: 'مخبز' })
