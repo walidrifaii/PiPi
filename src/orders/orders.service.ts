@@ -18,11 +18,11 @@ import {
   roundMoney,
 } from '../platform-settings/driver-delivery-share';
 import { ListOrdersAdminQueryDto } from './dto/list-orders-admin-query.dto';
+import { ListAdminOrderQueueQueryDto } from './dto/list-admin-order-queue-query.dto';
 import { ListMerchantOrdersHistoryQueryDto } from './dto/list-merchant-orders-history-query.dto';
 import { ListMerchantOrdersQueryDto } from './dto/list-merchant-orders-query.dto';
 import { MerchantEarningsQueryDto } from './dto/merchant-earnings-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
-import { DriverOrdersService } from './driver-orders.service';
 import { mapOrderDetail, mapOrderSummary } from './order.mapper';
 import { resolveProductDisplayImage } from '../common/product-display-image';
 import { PlatformSettingsService } from '../platform-settings/platform-settings.service';
@@ -33,6 +33,7 @@ import {
   canSuperAdminTransition,
   isCustomerTrackableStatus,
   isTerminalOrderStatus,
+  ADMIN_QUEUE_ORDER_STATUSES,
   MERCHANT_HISTORY_ORDER_STATUSES,
   normalizeOrderStatus,
 } from './order-status.constants';
@@ -72,7 +73,6 @@ export class OrdersService {
     private readonly driverOffersLive: DriverOffersLiveService,
     private readonly platformSettings: PlatformSettingsService,
     private readonly settlements: EarningsSettlementsService,
-    private readonly driverOrders: DriverOrdersService,
   ) {}
 
   private normalizePagination(page: number, limit: number) {
@@ -433,18 +433,10 @@ export class OrdersService {
       where.user = userWhere;
     }
 
-    const statusIn = query.statusIn?.filter(Boolean);
-    if (statusIn?.length) {
-      where.status =
-        statusIn.length === 1 ? statusIn[0] : { in: statusIn };
-    } else if (query.status === 'LIVE') {
+    if (query.status === 'LIVE') {
       where.status = { notIn: [...MERCHANT_HISTORY_ORDER_STATUSES] };
     } else if (query.status) {
       where.status = query.status;
-    }
-
-    if (query.unassignedOnly) {
-      where.driverId = null;
     }
 
     return this.applyCreatedAtRangeFilter(where, query);
@@ -456,14 +448,15 @@ export class OrdersService {
       ...summary,
       userId: o.userId,
       driverId: o.driverId,
-      driver: o.driver
-        ? {
-            id: o.driver.id,
-            fullName: o.driver.fullName,
-            phone: o.driver.phone,
-            vehicleType: o.driver.vehicleType,
-          }
-        : null,
+      driver:
+        o.driverId && o.driver
+          ? {
+              id: o.driver.id,
+              fullName: o.driver.fullName,
+              phone: o.driver.phone,
+              vehicleType: o.driver.vehicleType,
+            }
+          : null,
       customer: o.user
         ? {
             id: o.user.id,
@@ -476,18 +469,6 @@ export class OrdersService {
         name: o.merchant.name,
       },
     };
-  }
-
-  async assignDriverForSuperAdmin(orderId: string, driverId: string) {
-    await this.driverOrders.assignOrderByAdmin(orderId, driverId);
-    const order = await this.prisma.order.findFirst({
-      where: { id: orderId },
-      include: orderInclude,
-    });
-    if (!order) {
-      throw new NotFoundException('Order not found');
-    }
-    return this.mapAdminOrderRow(order as OrderWithRelations);
   }
 
   private parseSnapshot(raw: unknown): OrderItemsSnapshot | null {
@@ -673,10 +654,14 @@ export class OrdersService {
       throw new BadRequestException(`Order is already ${current}`);
     }
 
+    const preAssignedDriverId =
+      newStatus === 'ACCEPTED' && order.driverId ? order.driverId : null;
+    const effectiveStatus = preAssignedDriverId ? 'DELIVERING' : newStatus;
+
     const updated = await this.prisma.order.update({
       where: { id: orderId },
       data: {
-        status: newStatus,
+        status: effectiveStatus,
         ...(newStatus === 'ACCEPTED' && scope.preparationTime
           ? { preparationTime: scope.preparationTime }
           : {}),
@@ -685,15 +670,22 @@ export class OrdersService {
     });
 
     const row = updated as OrderWithRelations;
-    await this.notifyCustomerOrderStatus(row, newStatus);
+    await this.notifyCustomerOrderStatus(row, effectiveStatus);
 
     if (newStatus === 'ACCEPTED') {
-      void this.notifyDriversNewOffer(row);
+      if (preAssignedDriverId) {
+        void this.clearDriverOfferLive(orderId);
+        void this.tracking
+          .syncOrderMeta(orderId, row.userId, preAssignedDriverId)
+          .catch(() => undefined);
+      } else {
+        void this.notifyDriversNewOffer(row);
+      }
     } else {
       void this.clearDriverOfferLive(orderId);
     }
 
-    if (newStatus === 'DELIVERING' && row.driverId) {
+    if (effectiveStatus === 'DELIVERING' && row.driverId && !preAssignedDriverId) {
       void this.tracking
         .syncOrderMeta(orderId, row.userId, row.driverId)
         .catch(() => undefined);
@@ -707,6 +699,61 @@ export class OrdersService {
           ? 'merchant'
           : 'customer',
     });
+  }
+
+  private buildAdminOrderQueueWhere(
+    query: ListAdminOrderQueueQueryDto,
+  ): Prisma.OrderWhereInput {
+    const where: Prisma.OrderWhereInput = {
+      status: { in: [...ADMIN_QUEUE_ORDER_STATUSES] },
+    };
+
+    if (query.merchantId) {
+      where.merchantId = query.merchantId;
+    }
+    if (query.orderId) {
+      where.id = query.orderId;
+    }
+
+    const userName = query.userName?.trim();
+    const phone = query.number?.trim();
+    if (userName || phone) {
+      const userWhere: Prisma.UserWhereInput = {};
+      if (userName) {
+        userWhere.fullName = { contains: userName, mode: 'insensitive' };
+      }
+      if (phone) {
+        userWhere.phone = { contains: phone };
+      }
+      where.user = userWhere;
+    }
+
+    return where;
+  }
+
+  async listQueueForSuperAdmin(query: ListAdminOrderQueueQueryDto) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 20;
+    const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
+    const where = this.buildAdminOrderQueueWhere(query);
+
+    const [rows, total] = await Promise.all([
+      this.prisma.order.findMany({
+        where,
+        include: orderInclude,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: l,
+      }),
+      this.prisma.order.count({ where }),
+    ]);
+
+    return this.pagedResponse(
+      rows.map((o) => this.mapAdminOrderRow(o as OrderWithRelations)),
+      total,
+      p,
+      l,
+    );
   }
 
   async listForSuperAdmin(query: ListOrdersAdminQueryDto) {

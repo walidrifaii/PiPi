@@ -5,7 +5,6 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
-  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -18,8 +17,10 @@ import {
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { SuperAdminGuard } from '../auth/super-admin.guard';
 import { AssignOrderDriverDto } from './dto/assign-order-driver.dto';
+import { ListAdminOrderQueueQueryDto } from './dto/list-admin-order-queue-query.dto';
 import { ListOrdersAdminQueryDto } from './dto/list-orders-admin-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
+import { DriverOrdersService } from './driver-orders.service';
 import { OrdersService } from './orders.service';
 
 @ApiTags('Super Admin')
@@ -27,11 +28,23 @@ import { OrdersService } from './orders.service';
 @UseGuards(JwtAuthGuard, SuperAdminGuard)
 @Controller('admin/orders')
 export class AdminOrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(
+    private readonly ordersService: OrdersService,
+    private readonly driverOrdersService: DriverOrdersService,
+  ) {}
 
   @ApiOperation({
     summary:
-      'List all orders (super admin). Optional filters: merchantId, orderId, userName, number (phone), status (`LIVE` or a specific status), statusIn (comma-separated), unassignedOnly, from / to (ISO date range).',
+      'List order queue (PENDING + ACCEPTED only). Indexed status filter for fast driver-assignment workflow.',
+  })
+  @Get('queue')
+  listQueue(@Query() query: ListAdminOrderQueueQueryDto) {
+    return this.ordersService.listQueueForSuperAdmin(query);
+  }
+
+  @ApiOperation({
+    summary:
+      'List all orders (super admin). Optional filters: merchantId, orderId, userName, number (phone), status (`LIVE` or a specific status), from / to (ISO date range).',
   })
   @Get()
   list(@Query() query: ListOrdersAdminQueryDto) {
@@ -40,15 +53,15 @@ export class AdminOrdersController {
 
   @ApiOperation({
     summary:
-      'Assign any active driver to an unassigned PENDING or ACCEPTED order (super admin).',
+      'Assign an unassigned PENDING or ACCEPTED order to a driver. ACCEPTED orders start delivery immediately.',
   })
   @ApiParam({ name: 'orderId', type: String })
-  @Post(':orderId/assign-driver')
+  @Patch(':orderId/assign-driver')
   assignDriver(
     @Param('orderId', ParseUUIDPipe) orderId: string,
     @Body() dto: AssignOrderDriverDto,
   ) {
-    return this.ordersService.assignDriverForSuperAdmin(orderId, dto.driverId);
+    return this.driverOrdersService.assignOrderByAdmin(orderId, dto.driverId);
   }
 
   @ApiOperation({
