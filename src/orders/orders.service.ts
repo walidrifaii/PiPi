@@ -22,6 +22,7 @@ import { ListMerchantOrdersHistoryQueryDto } from './dto/list-merchant-orders-hi
 import { ListMerchantOrdersQueryDto } from './dto/list-merchant-orders-query.dto';
 import { MerchantEarningsQueryDto } from './dto/merchant-earnings-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
+import { DriverOrdersService } from './driver-orders.service';
 import { mapOrderDetail, mapOrderSummary } from './order.mapper';
 import { resolveProductDisplayImage } from '../common/product-display-image';
 import { PlatformSettingsService } from '../platform-settings/platform-settings.service';
@@ -71,6 +72,7 @@ export class OrdersService {
     private readonly driverOffersLive: DriverOffersLiveService,
     private readonly platformSettings: PlatformSettingsService,
     private readonly settlements: EarningsSettlementsService,
+    private readonly driverOrders: DriverOrdersService,
   ) {}
 
   private normalizePagination(page: number, limit: number) {
@@ -431,10 +433,18 @@ export class OrdersService {
       where.user = userWhere;
     }
 
-    if (query.status === 'LIVE') {
+    const statusIn = query.statusIn?.filter(Boolean);
+    if (statusIn?.length) {
+      where.status =
+        statusIn.length === 1 ? statusIn[0] : { in: statusIn };
+    } else if (query.status === 'LIVE') {
       where.status = { notIn: [...MERCHANT_HISTORY_ORDER_STATUSES] };
     } else if (query.status) {
       where.status = query.status;
+    }
+
+    if (query.unassignedOnly) {
+      where.driverId = null;
     }
 
     return this.applyCreatedAtRangeFilter(where, query);
@@ -445,6 +455,15 @@ export class OrdersService {
     return {
       ...summary,
       userId: o.userId,
+      driverId: o.driverId,
+      driver: o.driver
+        ? {
+            id: o.driver.id,
+            fullName: o.driver.fullName,
+            phone: o.driver.phone,
+            vehicleType: o.driver.vehicleType,
+          }
+        : null,
       customer: o.user
         ? {
             id: o.user.id,
@@ -457,6 +476,18 @@ export class OrdersService {
         name: o.merchant.name,
       },
     };
+  }
+
+  async assignDriverForSuperAdmin(orderId: string, driverId: string) {
+    await this.driverOrders.assignOrderByAdmin(orderId, driverId);
+    const order = await this.prisma.order.findFirst({
+      where: { id: orderId },
+      include: orderInclude,
+    });
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+    return this.mapAdminOrderRow(order as OrderWithRelations);
   }
 
   private parseSnapshot(raw: unknown): OrderItemsSnapshot | null {

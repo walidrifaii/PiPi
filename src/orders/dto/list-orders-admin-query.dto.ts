@@ -1,6 +1,8 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
+  IsArray,
+  IsBoolean,
   IsIn,
   IsInt,
   IsISO8601,
@@ -10,7 +12,23 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { ORDER_STATUSES } from '../order-status.constants';
+import {
+  ORDER_STATUSES,
+  type OrderStatus,
+} from '../order-status.constants';
+
+function parseCsvQuery(value: unknown): string[] | undefined {
+  if (value === undefined || value === null || value === '') {
+    return undefined;
+  }
+  if (Array.isArray(value)) {
+    return value.map(String).filter(Boolean);
+  }
+  return String(value)
+    .split(',')
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
 
 /** Query values for `GET /admin/orders` status filter. `LIVE` = not delivered or cancelled. */
 export const ADMIN_ORDER_STATUS_FILTERS = ['LIVE', ...ORDER_STATUSES] as const;
@@ -60,6 +78,26 @@ export class ListOrdersAdminQueryDto {
   @IsOptional()
   @IsIn([...ADMIN_ORDER_STATUS_FILTERS])
   status?: AdminOrderStatusFilter;
+
+  @ApiPropertyOptional({
+    description:
+      'Filter by multiple statuses (comma-separated). Example: `PENDING,ACCEPTED`.',
+    example: 'PENDING,ACCEPTED',
+  })
+  @IsOptional()
+  @Transform(({ value }) => parseCsvQuery(value))
+  @IsArray()
+  @IsIn([...ORDER_STATUSES], { each: true })
+  statusIn?: OrderStatus[];
+
+  @ApiPropertyOptional({
+    description: 'When true, only orders with no assigned driver (`driverId` is null).',
+    example: true,
+  })
+  @IsOptional()
+  @Transform(({ value }) => value === true || value === 'true')
+  @IsBoolean()
+  unassignedOnly?: boolean;
 
   @ApiPropertyOptional({
     example: '2026-05-01T00:00:00.000Z',

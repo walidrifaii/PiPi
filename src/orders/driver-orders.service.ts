@@ -484,6 +484,55 @@ export class DriverOrdersService {
     return mapDriverOrderDetail(order as OrderWithRelations, sharePercent);
   }
 
+  /** Super admin may assign any active driver, including from PENDING. */
+  private static readonly ADMIN_ASSIGNABLE_STATUSES = [
+    'PENDING',
+    'ACCEPTED',
+  ] as const;
+
+  /**
+   * Super admin assigns a driver to an unassigned PENDING or ACCEPTED order.
+   * Skips driver batch limits so dispatch can override in any case.
+   */
+  async assignOrderByAdmin(orderId: string, driverId: string) {
+    await this.assertDriverActive(driverId);
+
+    const updated = await this.prisma.order.updateMany({
+      where: {
+        id: orderId,
+        driverId: null,
+        status: { in: [...DriverOrdersService.ADMIN_ASSIGNABLE_STATUSES] },
+      },
+      data: { driverId, status: 'DELIVERING' },
+    });
+
+    if (updated.count === 0) {
+      const existing = await this.prisma.order.findUnique({
+        where: { id: orderId },
+        select: { driverId: true, status: true },
+      });
+      if (!existing) {
+        throw new NotFoundException('Order not found');
+      }
+      if (existing.driverId) {
+        throw new ConflictException('Order already assigned to a driver');
+      }
+      const status = normalizeOrderStatus(existing.status);
+      throw new BadRequestException(
+        `Order cannot be assigned in status ${status}`,
+      );
+    }
+
+    const order = await this.prisma.order.findFirst({
+      where: { id: orderId, driverId },
+      include: driverOrderInclude,
+    });
+    const row = order! as OrderWithRelations;
+    await this.notifyCustomerDelivering(row);
+    await this.tracking.syncOrderMeta(orderId, row.userId, driverId);
+    void this.driverOffersLive.removeOffer(orderId).catch(() => undefined);
+  }
+
   /**
    * Atomically claim an unassigned offer. One DB round-trip via updateMany guard.
    */
