@@ -849,11 +849,33 @@ export class DriverOrdersService {
 
     const status = normalizeOrderStatus(existing.status);
     if (status === 'ACCEPTED') {
+      const busy = await this.prisma.order.count({
+        where: {
+          driverId,
+          status: { in: [...DRIVER_ACTIVE_STATUSES] },
+        },
+      });
+      if (busy > 0) {
+        throw new BadRequestException(
+          'Driver is already on an active delivery',
+        );
+      }
       const result = await this.acceptOrder(driverId, orderId);
       await this.notifyDriverAdminAssignment(orderId, driverId);
       return result;
     }
     if (status === 'PENDING') {
+      const busy = await this.prisma.order.count({
+        where: {
+          driverId,
+          status: { in: [...DRIVER_ACTIVE_STATUSES] },
+        },
+      });
+      if (busy > 0) {
+        throw new BadRequestException(
+          'Driver is already on an active delivery',
+        );
+      }
       const updated = await this.prisma.order.updateMany({
         where: {
           id: orderId,

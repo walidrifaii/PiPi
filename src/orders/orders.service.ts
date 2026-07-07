@@ -34,6 +34,7 @@ import {
   isCustomerTrackableStatus,
   isTerminalOrderStatus,
   ADMIN_QUEUE_ORDER_STATUSES,
+  DRIVER_ACTIVE_STATUSES,
   MERCHANT_HISTORY_ORDER_STATUSES,
   normalizeOrderStatus,
 } from './order-status.constants';
@@ -703,10 +704,25 @@ export class OrdersService {
 
   private buildAdminOrderQueueWhere(
     query: ListAdminOrderQueueQueryDto,
+    busyDriverIds: string[] = [],
   ): Prisma.OrderWhereInput {
+    const pendingVisibility: Prisma.OrderWhereInput[] = [{ driverId: null }];
+    if (busyDriverIds.length > 0) {
+      pendingVisibility.push({ driverId: { notIn: busyDriverIds } });
+    } else {
+      pendingVisibility.push({ driverId: { not: null } });
+    }
+
+    const [pendingStatus, deliveringStatus] = ADMIN_QUEUE_ORDER_STATUSES;
+
     const where: Prisma.OrderWhereInput = {
-      status: { in: [...ADMIN_QUEUE_ORDER_STATUSES] },
-      driverId: { not: null },
+      OR: [
+        { status: deliveringStatus },
+        {
+          status: pendingStatus,
+          OR: pendingVisibility,
+        },
+      ],
     };
 
     if (query.merchantId) {
@@ -732,11 +748,29 @@ export class OrdersService {
     return where;
   }
 
+  async getBusyDriverIdsForAdmin(): Promise<{ driverIds: string[] }> {
+    const rows = await this.prisma.order.findMany({
+      where: {
+        driverId: { not: null },
+        status: { in: [...DRIVER_ACTIVE_STATUSES] },
+      },
+      select: { driverId: true },
+      distinct: ['driverId'],
+    });
+    return {
+      driverIds: rows
+        .map((row) => row.driverId)
+        .filter((id): id is string => typeof id === 'string' && id.length > 0),
+    };
+  }
+
   async listQueueForSuperAdmin(query: ListAdminOrderQueueQueryDto) {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
     const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
-    const where = this.buildAdminOrderQueueWhere(query);
+    const { driverIds: busyDriverIds } = await this.getBusyDriverIdsForAdmin();
+    const where = this.buildAdminOrderQueueWhere(query, busyDriverIds);
+    const busyDriverIdSet = new Set(busyDriverIds);
 
     const [rows, total] = await Promise.all([
       this.prisma.order.findMany({
@@ -750,7 +784,21 @@ export class OrdersService {
     ]);
 
     return this.pagedResponse(
-      rows.map((o) => this.mapAdminOrderRow(o as OrderWithRelations)),
+      rows.map((o) => {
+        const row = o as OrderWithRelations;
+        const summary = this.mapAdminOrderRow(row);
+        const status = normalizeOrderStatus(row.status);
+        const driverIsOnDelivery =
+          status === 'DELIVERING' || status === 'DISPATCHED';
+        const driverIsBusyElsewhere =
+          !!row.driverId &&
+          !driverIsOnDelivery &&
+          busyDriverIdSet.has(row.driverId);
+        return {
+          ...summary,
+          driverIsBusy: driverIsOnDelivery || driverIsBusyElsewhere,
+        };
+      }),
       total,
       p,
       l,

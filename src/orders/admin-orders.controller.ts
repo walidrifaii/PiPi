@@ -35,11 +35,20 @@ export class AdminOrdersController {
 
   @ApiOperation({
     summary:
-      'List order queue (PENDING + DELIVERING with an assigned driver only).',
+      'List order queue (PENDING + DELIVERING). Hides pending orders whose assigned driver is busy on another delivery.',
   })
   @Get('queue')
   listQueue(@Query() query: ListAdminOrderQueueQueryDto) {
     return this.ordersService.listQueueForSuperAdmin(query);
+  }
+
+  @ApiOperation({
+    summary:
+      'Driver ids currently on an active delivery (DELIVERING / DISPATCHED).',
+  })
+  @Get('busy-driver-ids')
+  listBusyDriverIds() {
+    return this.ordersService.getBusyDriverIdsForAdmin();
   }
 
   @ApiOperation({
