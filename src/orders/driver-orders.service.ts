@@ -766,6 +766,69 @@ export class DriverOrdersService {
     return order;
   }
 
+  private async notifyDriverAdminAssignment(
+    orderId: string,
+    driverId: string,
+  ) {
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+      select: {
+        id: true,
+        merchantId: true,
+        deliveryFee: true,
+        itemsSnapshot: true,
+        merchant: { select: { name: true } },
+      },
+    });
+    if (!order) {
+      return;
+    }
+
+    const driver = await this.prisma.driver.findUnique({
+      where: { id: driverId },
+      select: { fcmToken: true },
+    });
+    const token = driver?.fcmToken?.trim();
+    if (!token) {
+      return;
+    }
+
+    const snapshot = this.parseSnapshot(order.itemsSnapshot);
+    const merchantName = snapshot?.merchantName ?? order.merchant.name;
+    const deliveryFee =
+      order.deliveryFee != null ? Number(order.deliveryFee) : undefined;
+
+    try {
+      await this.driverOffersLive.publishOffer({
+        orderId: order.id,
+        merchantId: order.merchantId,
+        merchantName,
+        status: 'ACCEPTED',
+        ...(deliveryFee != null && Number.isFinite(deliveryFee)
+          ? { deliveryFee }
+          : {}),
+      });
+    } catch (err) {
+      this.log.warn(
+        `Driver assignment RTDB publish failed for ${orderId}: ${err instanceof Error ? err.message : err}`,
+      );
+    }
+
+    const result = await this.notifications.sendDriverOfferAlert({
+      tokens: [token],
+      orderId: order.id,
+      merchantId: order.merchantId,
+      merchantName,
+      deliveryFee,
+    });
+
+    if (!result.sent) {
+      this.log.debug(
+        `Driver assignment push for ${orderId} not sent: ${result.reason ?? 'unknown'}`,
+      );
+    }
+  }
+
   /**
    * Super admin manually assigns a driver to an unassigned PENDING or ACCEPTED order.
    * ACCEPTED orders follow the same delivery-start flow as driver self-accept.
@@ -786,7 +849,9 @@ export class DriverOrdersService {
 
     const status = normalizeOrderStatus(existing.status);
     if (status === 'ACCEPTED') {
-      return this.acceptOrder(driverId, orderId);
+      const result = await this.acceptOrder(driverId, orderId);
+      await this.notifyDriverAdminAssignment(orderId, driverId);
+      return result;
     }
     if (status === 'PENDING') {
       const updated = await this.prisma.order.updateMany({
@@ -800,6 +865,7 @@ export class DriverOrdersService {
       if (updated.count === 0) {
         throw new ConflictException('Order is no longer available for assignment');
       }
+      await this.notifyDriverAdminAssignment(orderId, driverId);
       return {
         assigned: true as const,
         preAssigned: true as const,

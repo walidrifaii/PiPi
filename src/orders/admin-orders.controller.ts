@@ -35,7 +35,7 @@ export class AdminOrdersController {
 
   @ApiOperation({
     summary:
-      'List order queue (PENDING + ACCEPTED only). Indexed status filter for fast driver-assignment workflow.',
+      'List order queue (PENDING + DELIVERING with an assigned driver only).',
   })
   @Get('queue')
   listQueue(@Query() query: ListAdminOrderQueueQueryDto) {

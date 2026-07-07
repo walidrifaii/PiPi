@@ -16,8 +16,8 @@ const TERMINAL: ReadonlySet<string> = new Set(['DELIVERED', 'CANCELLED']);
 /** Merchant order history — completed or cancelled orders only. */
 export const MERCHANT_HISTORY_ORDER_STATUSES = ['DELIVERED', 'CANCELLED'] as const;
 
-/** Super-admin queue — orders awaiting merchant accept or driver assignment. */
-export const ADMIN_QUEUE_ORDER_STATUSES = ['PENDING', 'ACCEPTED'] as const;
+/** Super-admin order history queue — new orders and active deliveries. */
+export const ADMIN_QUEUE_ORDER_STATUSES = ['PENDING', 'DELIVERING'] as const;
 
 /** Merchant may only accept or cancel new orders; accepted orders leave their queue. */
 const MERCHANT_TRANSITIONS: Record<string, readonly string[]> = {

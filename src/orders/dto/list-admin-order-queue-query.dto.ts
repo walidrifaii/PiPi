@@ -9,7 +9,7 @@ import {
   Min,
 } from 'class-validator';
 
-/** Lean query for `GET /admin/orders/queue` (PENDING + ACCEPTED only). */
+/** Lean query for `GET /admin/orders/queue` (PENDING + DELIVERING, driver assigned). */
 export class ListAdminOrderQueueQueryDto {
   @ApiPropertyOptional({
     description: 'Filter by store (merchant) id',

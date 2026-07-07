@@ -706,6 +706,7 @@ export class OrdersService {
   ): Prisma.OrderWhereInput {
     const where: Prisma.OrderWhereInput = {
       status: { in: [...ADMIN_QUEUE_ORDER_STATUSES] },
+      driverId: { not: null },
     };
 
     if (query.merchantId) {
