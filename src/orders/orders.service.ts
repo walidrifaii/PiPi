@@ -19,6 +19,7 @@ import {
 } from '../platform-settings/driver-delivery-share';
 import { ListOrdersAdminQueryDto } from './dto/list-orders-admin-query.dto';
 import { ListMerchantOrdersHistoryQueryDto } from './dto/list-merchant-orders-history-query.dto';
+import { ListMerchantOrdersQueryDto } from './dto/list-merchant-orders-query.dto';
 import { MerchantEarningsQueryDto } from './dto/merchant-earnings-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { mapOrderDetail, mapOrderSummary } from './order.mapper';
@@ -180,9 +181,14 @@ export class OrdersService {
     );
   }
 
-  async listForMerchant(merchantId: string, page = 1, limit = 20) {
+  async listForMerchant(
+    merchantId: string,
+    query: ListMerchantOrdersQueryDto = {},
+  ) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 20;
     const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
-    const where = { merchantId };
+    const where = await this.buildMerchantOrdersWhere(merchantId, query);
     const [rows, total] = await Promise.all([
       this.prisma.order.findMany({
         where,
@@ -200,6 +206,23 @@ export class OrdersService {
       p,
       l,
     );
+  }
+
+  private async buildMerchantOrdersWhere(
+    merchantId: string,
+    query: ListMerchantOrdersQueryDto,
+  ): Promise<Prisma.OrderWhereInput> {
+    const where: Prisma.OrderWhereInput = { merchantId };
+    const search = query.search?.trim();
+    if (!search) {
+      return where;
+    }
+
+    const searchOr = await this.buildMerchantOrderSearchOr(
+      merchantId,
+      search,
+    );
+    return { ...where, OR: searchOr };
   }
 
   async listHistoryForMerchant(
@@ -259,6 +282,26 @@ export class OrdersService {
       return this.applyMerchantHistoryDateFilter(where, query);
     }
 
+    const searchOr = await this.buildMerchantOrderSearchOr(
+      merchantId,
+      search,
+      historyStatuses,
+    );
+
+    return this.applyMerchantHistoryDateFilter(
+      {
+        ...where,
+        OR: searchOr,
+      },
+      query,
+    );
+  }
+
+  private async buildMerchantOrderSearchOr(
+    merchantId: string,
+    search: string,
+    statusFilter?: readonly string[],
+  ): Promise<Prisma.OrderWhereInput[]> {
     const fullUuid =
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     const orderIdFilters: Prisma.OrderWhereInput[] = [
@@ -267,12 +310,18 @@ export class OrdersService {
     if (fullUuid.test(search)) {
       orderIdFilters.unshift({ id: search.toLowerCase() });
     } else if (/^[0-9a-f-]+$/i.test(search)) {
-      const matchingIds = await this.prisma.$queryRaw<{ id: string }[]>`
-        SELECT id FROM orders
-        WHERE merchant_id = ${merchantId}::uuid
-          AND status = ANY(${[...historyStatuses]})
-          AND id::text ILIKE ${`${search.toLowerCase()}%`}
-      `;
+      const matchingIds = statusFilter
+        ? await this.prisma.$queryRaw<{ id: string }[]>`
+            SELECT id FROM orders
+            WHERE merchant_id = ${merchantId}::uuid
+              AND status = ANY(${[...statusFilter]})
+              AND id::text ILIKE ${`${search.toLowerCase()}%`}
+          `
+        : await this.prisma.$queryRaw<{ id: string }[]>`
+            SELECT id FROM orders
+            WHERE merchant_id = ${merchantId}::uuid
+              AND id::text ILIKE ${`${search.toLowerCase()}%`}
+          `;
       if (matchingIds.length > 0) {
         orderIdFilters.unshift({
           id: { in: matchingIds.map((row) => row.id) },
@@ -280,16 +329,11 @@ export class OrdersService {
       }
     }
 
-    return this.applyMerchantHistoryDateFilter(
-      {
-        ...where,
-        OR: [
-          ...orderIdFilters,
-          { user: { fullName: { contains: search, mode: 'insensitive' } } },
-        ],
-      },
-      query,
-    );
+    return [
+      ...orderIdFilters,
+      { user: { fullName: { contains: search, mode: 'insensitive' } } },
+      { user: { phone: { contains: search, mode: 'insensitive' } } },
+    ];
   }
 
   private applyMerchantHistoryDateFilter(

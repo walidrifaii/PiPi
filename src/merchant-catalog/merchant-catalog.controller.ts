@@ -28,6 +28,8 @@ import { S3Service } from '../common/s3.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { MerchantJwtScopeGuard } from '../auth/merchant-jwt-scope.guard';
 import { EffectiveMerchantId } from '../auth/effective-merchant-id.decorator';
+import { I18n } from '../common/i18n/locale.decorator';
+import type { I18nOptions } from '../common/i18n/locale.types';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CreateProductMerchantMultipartDto } from './dto/create-product-merchant-multipart.dto';
 import { parseOptionGroupsJson } from './parse-option-groups-json';
@@ -150,7 +152,7 @@ export class MerchantCatalogController {
     operationId: 'merchantListProducts',
     summary: 'List products for your store',
     description:
-      'Paginated. Optional `categoryId` query filters to one category (must belong to your store). Optional `name` filters by product name in English or Arabic (prefix match, min 2 characters). Omit both to list all products.',
+      'Paginated. Optional `categoryId` query filters to one category (must belong to your store). Optional `name` filters by product name (locale-aware via `lang`). Optional `lang=ar|en` localizes names in the response.',
   })
   @ApiQuery({
     name: 'categoryId',
@@ -167,6 +169,13 @@ export class MerchantCatalogController {
       'Optional filter by product name (English or Arabic). Case-insensitive prefix match; minimum 2 characters.',
     example: 'burger',
   })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['ar', 'en'],
+    description:
+      'Optional locale. `ar` returns Arabic names; `en` returns English. Omit for bilingual fields.',
+  })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
   @Get('products')
@@ -177,8 +186,16 @@ export class MerchantCatalogController {
     @Query('categoryId', new ParseUUIDPipe({ optional: true }))
     categoryId?: string,
     @Query('name') name?: string,
+    @I18n() i18n?: I18nOptions,
   ) {
-    return this.catalog.listAllProducts(merchantId, categoryId, page, limit, name);
+    return this.catalog.listAllProducts(
+      merchantId,
+      categoryId,
+      page,
+      limit,
+      name,
+      i18n,
+    );
   }
 
   @ApiOperation({

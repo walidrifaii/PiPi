@@ -119,16 +119,17 @@ export class MerchantCatalogService {
     };
   }
 
-  /** Optional substring match on English `name` or Arabic `nameAr`. */
+  /** Optional substring match on product name; locale selects Arabic or English field. */
   private buildProductNameWhereClause(
     name?: string,
+    locale?: I18nOptions['locale'],
   ): Prisma.ProductWhereInput | undefined {
     const trimmed = name?.trim();
     if (!trimmed) {
       return undefined;
     }
     const term = normalizeNameSearchTerm(trimmed);
-    return buildNameSearchWhere(term);
+    return buildNameSearchWhere(term, locale);
   }
 
   /** Merchants that are manually OPEN and inside working hours (if configured). */
@@ -712,9 +713,10 @@ export class MerchantCatalogService {
     page = 1,
     limit = 20,
     name?: string,
+    i18n?: I18nOptions,
   ) {
     await this.assertMerchantExists(merchantId);
-    return this.fetchAllProductsPaged(
+    const result = await this.fetchAllProductsPaged(
       merchantId,
       categoryId,
       page,
@@ -722,7 +724,9 @@ export class MerchantCatalogService {
       false,
       false,
       name,
+      i18n?.locale,
     );
+    return this.localizePagedProducts(result, i18n);
   }
 
   private async fetchAllProductsPaged(
@@ -733,6 +737,7 @@ export class MerchantCatalogService {
     activeOptionsOnly: boolean,
     activeProductsOnly = false,
     name?: string,
+    searchLocale?: I18nOptions['locale'],
   ) {
     if (categoryId !== undefined && categoryId !== '') {
       const category = await this.prisma.merchantCategory.findFirst({
@@ -743,7 +748,7 @@ export class MerchantCatalogService {
       }
     }
 
-    const nameFilter = this.buildProductNameWhereClause(name);
+    const nameFilter = this.buildProductNameWhereClause(name, searchLocale);
     const where: Prisma.ProductWhereInput = {
       category: { merchantId },
       ...(categoryId !== undefined && categoryId !== '' ? { categoryId } : {}),

@@ -1,10 +1,8 @@
 import {
   Body,
   Controller,
-  DefaultValuePipe,
   Get,
   Param,
-  ParseIntPipe,
   ParseUUIDPipe,
   Patch,
   Query,
@@ -21,6 +19,7 @@ import { EffectiveMerchantId } from '../auth/effective-merchant-id.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { MerchantJwtScopeGuard } from '../auth/merchant-jwt-scope.guard';
 import { ListMerchantOrdersHistoryQueryDto } from './dto/list-merchant-orders-history-query.dto';
+import { ListMerchantOrdersQueryDto } from './dto/list-merchant-orders-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { OrdersService } from './orders.service';
 
@@ -31,21 +30,24 @@ import { OrdersService } from './orders.service';
 export class MerchantOrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @ApiOperation({ summary: 'List orders for your store (merchant JWT)' })
+  @ApiOperation({
+    summary:
+      'List orders for your store (merchant JWT). Optional `search` (order id, checkout ref, customer name, or phone).',
+  })
+  @ApiQuery({ name: 'search', required: false, type: String })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
   @Get()
   list(
     @EffectiveMerchantId() merchantId: string,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query() query: ListMerchantOrdersQueryDto,
   ) {
-    return this.ordersService.listForMerchant(merchantId, page, limit);
+    return this.ordersService.listForMerchant(merchantId, query);
   }
 
   @ApiOperation({
     summary:
-      'List order history for your store — DELIVERED and CANCELLED only (merchant JWT). Optional `status` (`Delivered` | `Cancelled`), `search` (order id or customer name), `from` / `to` (ISO date range).',
+      'List order history for your store — DELIVERED and CANCELLED only (merchant JWT). Optional `status` (`Delivered` | `Cancelled`), `search` (order id, customer name, or phone), `from` / `to` (ISO date range).',
   })
   @ApiQuery({ name: 'status', required: false, enum: ['Delivered', 'Cancelled'] })
   @ApiQuery({ name: 'search', required: false, type: String })

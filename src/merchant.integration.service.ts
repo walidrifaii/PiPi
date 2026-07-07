@@ -388,17 +388,19 @@ export class MerchantIntegrationService {
     const pg = this.normalizePagination(q.page ?? 1, q.limit ?? 20);
     const parsed = this.parseGetMerchantsQuery(q);
 
-    const response = await this.getMerchantsLegacy(
-      {
-        ...parsed,
-        hasLat: false,
-        userLat: undefined,
-        userLng: undefined,
-        radiusKm: undefined,
-        normalizedCity: undefined,
-      },
-      pg,
-    );
+    let response: PagedMerchantsResponse;
+
+    if (
+      parsed.hasLat &&
+      parsed.userLat !== undefined &&
+      parsed.userLng !== undefined &&
+      (await this.geoQuery.isGeoSqlReady())
+    ) {
+      response = await this.getMerchantsWithGeoSql(parsed, pg);
+    } else {
+      response = await this.getMerchantsLegacy(parsed, pg);
+    }
+
     return this.localizePagedMerchants(response, q.i18n);
   }
 
