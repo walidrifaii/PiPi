@@ -29,7 +29,7 @@ export class AdminOrdersController {
 
   @ApiOperation({
     summary:
-      'List all orders (super admin). Optional filters: merchantId, orderId, userName, number (phone).',
+      'List all orders (super admin). Optional filters: merchantId, orderId, userName, number (phone), status (`LIVE` or a specific status), from / to (ISO date range).',
   })
   @Get()
   list(@Query() query: ListOrdersAdminQueryDto) {

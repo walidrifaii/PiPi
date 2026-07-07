@@ -336,21 +336,28 @@ export class OrdersService {
     ];
   }
 
-  private applyMerchantHistoryDateFilter(
+  private applyCreatedAtRangeFilter(
     where: Prisma.OrderWhereInput,
-    query: ListMerchantOrdersHistoryQueryDto,
+    range: { from?: string; to?: string },
   ): Prisma.OrderWhereInput {
     const createdAt: Prisma.DateTimeFilter = {};
-    if (query.from) {
-      createdAt.gte = new Date(query.from);
+    if (range.from) {
+      createdAt.gte = new Date(range.from);
     }
-    if (query.to) {
-      createdAt.lte = new Date(query.to);
+    if (range.to) {
+      createdAt.lte = new Date(range.to);
     }
     if (Object.keys(createdAt).length === 0) {
       return where;
     }
     return { ...where, createdAt };
+  }
+
+  private applyMerchantHistoryDateFilter(
+    where: Prisma.OrderWhereInput,
+    query: ListMerchantOrdersHistoryQueryDto,
+  ): Prisma.OrderWhereInput {
+    return this.applyCreatedAtRangeFilter(where, query);
   }
 
   async getForMerchant(merchantId: string, orderId: string) {
@@ -424,7 +431,13 @@ export class OrdersService {
       where.user = userWhere;
     }
 
-    return where;
+    if (query.status === 'LIVE') {
+      where.status = { notIn: [...MERCHANT_HISTORY_ORDER_STATUSES] };
+    } else if (query.status) {
+      where.status = query.status;
+    }
+
+    return this.applyCreatedAtRangeFilter(where, query);
   }
 
   private mapAdminOrderRow(o: OrderWithRelations) {
