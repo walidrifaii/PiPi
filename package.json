@@ -25,6 +25,7 @@
     "prisma:push": "prisma db push",
     "prisma:repair-checksums": "node scripts/repair-migration-checksum.mjs",
     "seed:minieh-merchants": "node scripts/seed-minieh-merchants.mjs",
+    "seed:hayat-donur-catalog": "node scripts/seed-hayat-donur-catalog.mjs",
     "delete:all-orders": "node scripts/delete-all-orders.mjs",
     "seed:app-version": "ts-node prisma/seed.ts"
   },

@@ -1,0 +1,908 @@
+{
+  "merchantId": "ab3f4172-16e4-48d8-af03-4352421337c5",
+  "merchantName": "Hayat Donar",
+  "categories": [
+    {
+      "name": "Salads & Shakers",
+      "nameAr": "السلطات والشيكرز",
+      "sortOrder": 1
+    },
+    {
+      "name": "Appetizers",
+      "nameAr": "المقبلات",
+      "sortOrder": 2
+    },
+    {
+      "name": "Kumpir (Baked Potato)",
+      "nameAr": "كومبير (بطاطا مشوية)",
+      "sortOrder": 3
+    },
+    {
+      "name": "Doner & Shawarma",
+      "nameAr": "دونر وشاورما",
+      "sortOrder": 4
+    },
+    {
+      "name": "Light Menu",
+      "nameAr": "القائمة الخفيفة",
+      "sortOrder": 5
+    },
+    {
+      "name": "Burger",
+      "nameAr": "برغر",
+      "sortOrder": 6
+    },
+    {
+      "name": "Platters & Family Boxes",
+      "nameAr": "الوجبات والصناديق العائلية",
+      "sortOrder": 7
+    },
+    {
+      "name": "Kids Meal",
+      "nameAr": "وجبات الأطفال",
+      "sortOrder": 8
+    },
+    {
+      "name": "Dessert",
+      "nameAr": "الحلويات",
+      "sortOrder": 9
+    },
+    {
+      "name": "Cold Drinks",
+      "nameAr": "المشروبات الباردة",
+      "sortOrder": 10
+    },
+    {
+      "name": "Hot Drinks",
+      "nameAr": "المشروبات الساخنة",
+      "sortOrder": 11
+    },
+    {
+      "name": "Soft Drink",
+      "nameAr": "المشروبات الغازية",
+      "sortOrder": 12
+    }
+  ],
+  "products": [
+    {
+      "name": "Chicken Shawarma Shaker",
+      "nameAr": "Chicken Shawarma Shaker",
+      "description": "Chicken shawarma, Chips coleslaw iceberg, pickles , Caesar sauce.",
+      "descriptionAr": "Chicken shawarma, Chips coleslaw iceberg, pickles , Caesar sauce.",
+      "price": 6.12,
+      "categoryName": "Salads & Shakers"
+    },
+    {
+      "name": "Beef Shawarma Shaker",
+      "nameAr": "Beef Shawarma Shaker",
+      "description": "Beef Shawarma, Biwaz, Chips , Tomato Confit, Pickles, Pomegranate Seeds, Tarator Sauce.",
+      "descriptionAr": "Beef Shawarma, Biwaz, Chips , Tomato Confit, Pickles, Pomegranate Seeds, Tarator Sauce.",
+      "price": 8.33,
+      "categoryName": "Salads & Shakers"
+    },
+    {
+      "name": "Tabboule Quinoa Salad",
+      "nameAr": "Tabboule Quinoa Salad",
+      "description": "Parsley, mint, tomato, onion, pomegranate seeds, quinoa.",
+      "descriptionAr": "Parsley, mint, tomato, onion, pomegranate seeds, quinoa.",
+      "price": 5,
+      "categoryName": "Salads & Shakers"
+    },
+    {
+      "name": "HD Salad",
+      "nameAr": "HD Salad",
+      "description": "Chicken shawarma, romaine lettuce, red kidney beans, charred corn, cherry tomatoes, fresca, guacamole, cheddar cheese, coriander, baked tortilla bread. Dressing: Tex-Mex ranch sauce",
+      "descriptionAr": "Chicken shawarma, romaine lettuce, red kidney beans, charred corn, cherry tomatoes, fresca, guacamole, cheddar cheese, coriander, baked tortilla bread. Dressing: Tex-Mex ranch sauce",
+      "price": 6.66,
+      "categoryName": "Salads & Shakers"
+    },
+    {
+      "name": "Fattoush",
+      "nameAr": "Fattoush",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Salads & Shakers"
+    },
+    {
+      "name": "Turkish Salad",
+      "nameAr": "Turkish Salad",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Salads & Shakers"
+    },
+    {
+      "name": "Caesar Salad with Shawarma",
+      "nameAr": "Caesar Salad with Shawarma",
+      "description": "Iceberg Lettuce, Parmesan Cheese, Croutons, Shawarma Chicken, served With Special Caesar Sauce.",
+      "descriptionAr": "Iceberg Lettuce, Parmesan Cheese, Croutons, Shawarma Chicken, served With Special Caesar Sauce.",
+      "price": 6.12,
+      "categoryName": "Salads & Shakers"
+    },
+    {
+      "name": "Hummus",
+      "nameAr": "Hummus",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.16,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Hummus With Shawarma",
+      "nameAr": "Hummus With Shawarma",
+      "description": "Hummus, Topped With Beef Shawarma, Biwaz, Pickles, Grilled Tomatoes, With a Drizzle Of Pomegranate Molasses.",
+      "descriptionAr": "Hummus, Topped With Beef Shawarma, Biwaz, Pickles, Grilled Tomatoes, With a Drizzle Of Pomegranate Molasses.",
+      "price": 7.22,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "French Fries",
+      "nameAr": "French Fries",
+      "description": "Crispy Golden Fries",
+      "descriptionAr": "Crispy Golden Fries",
+      "price": 3.11,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Beef Samboussek",
+      "nameAr": "Beef Samboussek",
+      "description": "Our Signature Samboussek Filled With our Special Beef Shawarma Mix. Served With a Dip of Pomegranate Molasses.",
+      "descriptionAr": "Our Signature Samboussek Filled With our Special Beef Shawarma Mix. Served With a Dip of Pomegranate Molasses.",
+      "price": 4.45,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Chicken Samboussek",
+      "nameAr": "Chicken Samboussek",
+      "description": "Our Signature Samboussek Filled With Our Special Chicken Shawarma Mix. Served With A Dip of Pomegranate Molasses.",
+      "descriptionAr": "Our Signature Samboussek Filled With Our Special Chicken Shawarma Mix. Served With A Dip of Pomegranate Molasses.",
+      "price": 4.45,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Shawarma Cheese Rolls",
+      "nameAr": "Shawarma Cheese Rolls",
+      "description": "Shawarma Cheese Rolls, Served With Our Signature Sauce.",
+      "descriptionAr": "Shawarma Cheese Rolls, Served With Our Signature Sauce.",
+      "price": 5,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Turkish Kebbeh",
+      "nameAr": "Turkish Kebbeh",
+      "description": "Turkish Kebbeh Filled With Shawarma Beef Mixed And Nuts. Pomegranate Molasses Drizzled On The Top.",
+      "descriptionAr": "Turkish Kebbeh Filled With Shawarma Beef Mixed And Nuts. Pomegranate Molasses Drizzled On The Top.",
+      "price": 7.22,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Shawarma Rolls & Kebbe",
+      "nameAr": "Shawarma Rolls & Kebbe",
+      "description": "Plate Of 2 Turkish Kebbe And 2 Shawarma Rolls.",
+      "descriptionAr": "Plate Of 2 Turkish Kebbe And 2 Shawarma Rolls.",
+      "price": 6.12,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Loaded Fries",
+      "nameAr": "Loaded Fries",
+      "description": "Crispy Golden Fries Topped With Melted Cheddar Cheese, Red Kidney Beans, Pickled Red Cabbage, Jalapenos, Served With Our Signature Red And White Sauce.",
+      "descriptionAr": "Crispy Golden Fries Topped With Melted Cheddar Cheese, Red Kidney Beans, Pickled Red Cabbage, Jalapenos, Served With Our Signature Red And White Sauce.",
+      "price": 4.45,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Chicken Loaded Fries",
+      "nameAr": "Chicken Loaded Fries",
+      "description": "Crispy Golden Fries Topped With Shawarma Chicken, Melted Cheddar Cheese, Red Kidney Beans, Pickled Red Cabbage, Jalapenos, Served With Our Signature Red And White Sauce.",
+      "descriptionAr": "Crispy Golden Fries Topped With Shawarma Chicken, Melted Cheddar Cheese, Red Kidney Beans, Pickled Red Cabbage, Jalapenos, Served With Our Signature Red And White Sauce.",
+      "price": 5.84,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Beef Loaded Fries",
+      "nameAr": "Beef Loaded Fries",
+      "description": "Crispy Golden Fries Topped With Shawarma Beef, Melted Cheddar Cheese, Red Kidney Beans, Pickled Red Cabbage, Jalapenos, Served With Our Signature Red And White Sauce.",
+      "descriptionAr": "Crispy Golden Fries Topped With Shawarma Beef, Melted Cheddar Cheese, Red Kidney Beans, Pickled Red Cabbage, Jalapenos, Served With Our Signature Red And White Sauce.",
+      "price": 7.78,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Mac & Cheese",
+      "nameAr": "Mac & Cheese",
+      "description": "Macaroni Pasta, Enveloped In A Creamy Sauce And A Mix of 4 Cheese.",
+      "descriptionAr": "Macaroni Pasta, Enveloped In A Creamy Sauce And A Mix of 4 Cheese.",
+      "price": 5.56,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Mac & Cheese Chicken",
+      "nameAr": "Mac & Cheese Chicken",
+      "description": "Macaroni Pasta, Envelopped In A Creamy Sauce And A Mix of 4 Cheese. Topped With Layers Of Chicken Shawarma.",
+      "descriptionAr": "Macaroni Pasta, Envelopped In A Creamy Sauce And A Mix of 4 Cheese. Topped With Layers Of Chicken Shawarma.",
+      "price": 6.89,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Mac & Cheese Beef",
+      "nameAr": "Mac & Cheese Beef",
+      "description": "Macaroni Pasta, Envelopped In A Creamy Sauce And A Mix of 4 Cheese. Topped With Layers Of Beef Shawarma.",
+      "descriptionAr": "Macaroni Pasta, Envelopped In A Creamy Sauce And A Mix of 4 Cheese. Topped With Layers Of Beef Shawarma.",
+      "price": 8.89,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Kumpir with Vegies",
+      "nameAr": "Kumpir with Vegies",
+      "description": "بطاطا مشوية على نار هادئة مع خلطة مميزة من المكونات، ذرة، زيتون مقطع، سلطة ملفوف بالمايونيز، مخلل، صوص الأعشاب مع صوص الأحمر التركي",
+      "descriptionAr": "بطاطا مشوية على نار هادئة مع خلطة مميزة من المكونات، ذرة، زيتون مقطع، سلطة ملفوف بالمايونيز، مخلل، صوص الأعشاب مع صوص الأحمر التركي",
+      "price": 6.38,
+      "categoryName": "Kumpir (Baked Potato)"
+    },
+    {
+      "name": "Kumpir with Chicken Shawarma",
+      "nameAr": "Kumpir with Chicken Shawarma",
+      "description": "شرائح شاورما الدجاج الذهبية مغطاة فوق البطاطا مشوية على نار هادئة مع خلطة مميزة من المكونات، ذرة، زيتون مقطع، سلطة ملفوف بالمايونيز، مخلل، صوص الأعشاب مع صوص الأحمر التركي",
+      "descriptionAr": "شرائح شاورما الدجاج الذهبية مغطاة فوق البطاطا مشوية على نار هادئة مع خلطة مميزة من المكونات، ذرة، زيتون مقطع، سلطة ملفوف بالمايونيز، مخلل، صوص الأعشاب مع صوص الأحمر التركي",
+      "price": 7.78,
+      "categoryName": "Kumpir (Baked Potato)"
+    },
+    {
+      "name": "Kumpir with Beef Shawarma",
+      "nameAr": "Kumpir with Beef Shawarma",
+      "description": "شرائح شاورما اللحمة الذهبية مغطاة فوق البطاطا مشوية على نار هادئة مع خلطة مميزة من المكونات، ذرة، زيتون مقطع، سلطة ملفوف بالمايونيز، مخلل، صوص الأعشاب مع صوص الأحمر التركي",
+      "descriptionAr": "شرائح شاورما اللحمة الذهبية مغطاة فوق البطاطا مشوية على نار هادئة مع خلطة مميزة من المكونات، ذرة، زيتون مقطع، سلطة ملفوف بالمايونيز، مخلل، صوص الأعشاب مع صوص الأحمر التركي",
+      "price": 10.28,
+      "categoryName": "Kumpir (Baked Potato)"
+    },
+    {
+      "name": "Kumpir with Mixed Shawarma",
+      "nameAr": "Kumpir with Mixed Shawarma",
+      "description": "شرائح شاورما الدجاج واللحمة الذهبية مغطاة فوق البطاطا مشوية على نار هادئة مع خلطة مميزة من المكونات، ذرة، زيتون مقطع، سلطة ملفوف بالمايونيز، مخلل، صوص الأعشاب مع صوص الأحمر التركي",
+      "descriptionAr": "شرائح شاورما الدجاج واللحمة الذهبية مغطاة فوق البطاطا مشوية على نار هادئة مع خلطة مميزة من المكونات، ذرة، زيتون مقطع، سلطة ملفوف بالمايونيز، مخلل، صوص الأعشاب مع صوص الأحمر التركي",
+      "price": 9.73,
+      "categoryName": "Kumpir (Baked Potato)"
+    },
+    {
+      "name": "Plain Baked Potato",
+      "nameAr": "Plain Baked Potato",
+      "description": "Fluffy baked potato mashed with garlic-herb infused butter.",
+      "descriptionAr": "Fluffy baked potato mashed with garlic-herb infused butter.",
+      "price": 4.45,
+      "categoryName": "Kumpir (Baked Potato)"
+    },
+    {
+      "name": "Three Cheese Baked Potato",
+      "nameAr": "Three Cheese Baked Potato",
+      "description": "Fluffy baked potato mashed with garlic-herb infused butter and melted three cheeses,",
+      "descriptionAr": "Fluffy baked potato mashed with garlic-herb infused butter and melted three cheeses,",
+      "price": 5.56,
+      "categoryName": "Kumpir (Baked Potato)"
+    },
+    {
+      "name": "Fajita Chicken Baked Potato",
+      "nameAr": "Fajita Chicken Baked Potato",
+      "description": "Fluffy baked potato mashed with garlic-herb infused butter and Emmental cheese, stuffed with sautéed mushrooms & capsicums, caramelized onions, and cream cheese. Topped with chicken shawarma",
+      "descriptionAr": "Fluffy baked potato mashed with garlic-herb infused butter and Emmental cheese, stuffed with sautéed mushrooms & capsicums, caramelized onions, and cream cheese. Topped with chicken shawarma",
+      "price": 8.33,
+      "categoryName": "Kumpir (Baked Potato)"
+    },
+    {
+      "name": "Philly Beef Baked Potato",
+      "nameAr": "Philly Beef Baked Potato",
+      "description": "Fluffy baked potato mashed with garlic-herb infused butter and melted Emmental cheese, stuffed with sautéed mushrooms & capsicums, caramelized onions, cream cheese. Topped with beef shawarma",
+      "descriptionAr": "Fluffy baked potato mashed with garlic-herb infused butter and melted Emmental cheese, stuffed with sautéed mushrooms & capsicums, caramelized onions, cream cheese. Topped with beef shawarma",
+      "price": 10.55,
+      "categoryName": "Kumpir (Baked Potato)"
+    },
+    {
+      "name": "Chicken Caesar Baked Potato",
+      "nameAr": "Chicken Caesar Baked Potato",
+      "description": "Fluffy baked potato mashed with garlic-herb infused butter and melted three cheese, filled with chicken shawarma, shredded iceberg, Caesar sauce, loaded Parmesan cheese, and pita croutons.",
+      "descriptionAr": "Fluffy baked potato mashed with garlic-herb infused butter and melted three cheese, filled with chicken shawarma, shredded iceberg, Caesar sauce, loaded Parmesan cheese, and pita croutons.",
+      "price": 8.33,
+      "categoryName": "Kumpir (Baked Potato)"
+    },
+    {
+      "name": "Tex Mex Beef HD Baked Potato",
+      "nameAr": "Tex Mex Beef HD Baked Potato",
+      "description": "Fluffy baked potato mashed with garlic-herb infused butter and melted three cheese, red kidney beans, corn, cheddar cheese, pico de gallo, guacamole, jalapenos, sour cream, coriander, lime &",
+      "descriptionAr": "Fluffy baked potato mashed with garlic-herb infused butter and melted three cheese, red kidney beans, corn, cheddar cheese, pico de gallo, guacamole, jalapenos, sour cream, coriander, lime &",
+      "price": 10.55,
+      "categoryName": "Kumpir (Baked Potato)"
+    },
+    {
+      "name": "Tex Mex Chicken HD Baked Potato",
+      "nameAr": "Tex Mex Chicken HD Baked Potato",
+      "description": "Fluffy baked potato mashed with garlic-herb infused butter and melted three cheese, red kidney beans, corn, cheddar cheese, pico de gallo, guacamole, jalapenos, sour cream, coriander, lime &",
+      "descriptionAr": "Fluffy baked potato mashed with garlic-herb infused butter and melted three cheese, red kidney beans, corn, cheddar cheese, pico de gallo, guacamole, jalapenos, sour cream, coriander, lime &",
+      "price": 8.89,
+      "categoryName": "Kumpir (Baked Potato)"
+    },
+    {
+      "name": "Chicken Doner",
+      "nameAr": "Chicken Doner",
+      "description": "شاورما دجاج بالتتبيلة السرية مع خيارك من جوانح البصل الشهية، مخلل ملفوف، طماطة، خس آيسبرغ، صوص الأعشاب، صوص الأحمر التركي على خبز الدونر",
+      "descriptionAr": "شاورما دجاج بالتتبيلة السرية مع خيارك من جوانح البصل الشهية، مخلل ملفوف، طماطة، خس آيسبرغ، صوص الأعشاب، صوص الأحمر التركي على خبز الدونر",
+      "price": 7.22,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Beef Doner",
+      "nameAr": "Beef Doner",
+      "description": "شاورما لحمة بالتتبيلة المميزة مع خيارك من جوانح البصل، طماطة، كبيس ملفوف، خس آيسبرغ، صوص الأعشاب، صوص الأحمر التركي على خبز الدونر",
+      "descriptionAr": "شاورما لحمة بالتتبيلة المميزة مع خيارك من جوانح البصل، طماطة، كبيس ملفوف، خس آيسبرغ، صوص الأعشاب، صوص الأحمر التركي على خبز الدونر",
+      "price": 8.89,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Doner Mix",
+      "nameAr": "Doner Mix",
+      "description": "١ شاورما بالدجاج واللحمة بالتتبيلة السرية مع خيارك من جوانح البصل الشهية، مخلل ملفوف، طماطة، خس آيسبرغ، صوص الأعشاب، صوص الأحمر التركي على خبز الدونر",
+      "descriptionAr": "١ شاورما بالدجاج واللحمة بالتتبيلة السرية مع خيارك من جوانح البصل الشهية، مخلل ملفوف، طماطة، خس آيسبرغ، صوص الأعشاب، صوص الأحمر التركي على خبز الدونر",
+      "price": 8.33,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Lebanese Chicken Shawarma",
+      "nameAr": "Lebanese Chicken Shawarma",
+      "description": "شاورما دجاج بالتتبيلة اللبنانية مع ثوم، مخلل، بطاطا مقلية على خبز لبناني",
+      "descriptionAr": "شاورما دجاج بالتتبيلة اللبنانية مع ثوم، مخلل، بطاطا مقلية على خبز لبناني",
+      "price": 3.33,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Lebanese Beef Shawarma",
+      "nameAr": "Lebanese Beef Shawarma",
+      "description": "شاورما لحمة بالتتبيلة اللبنانية، مخلل، طراطور مع سلطة بواز عالخبز اللبناني",
+      "descriptionAr": "شاورما لحمة بالتتبيلة اللبنانية، مخلل، طراطور مع سلطة بواز عالخبز اللبناني",
+      "price": 4.72,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Lebanese Shawarma Chicken Large",
+      "nameAr": "Lebanese Shawarma Chicken Large",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.72,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Lebanese Shawarma Beef Large",
+      "nameAr": "Lebanese Shawarma Beef Large",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.66,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Markouk Shawarma Chicken",
+      "nameAr": "Markouk Shawarma Chicken",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Markouk Shawarma Beef",
+      "nameAr": "Markouk Shawarma Beef",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Chicken Quesdillas",
+      "nameAr": "Chicken Quesdillas",
+      "description": "Chicken shawarma, signature white sauce, caramelized onions, sautéed mushrooms, capsicum marmalade, cheese mix folded in Doner bread. Dip sauce: Guacamole , Sour cream , Pico de Gallo & our H",
+      "descriptionAr": "Chicken shawarma, signature white sauce, caramelized onions, sautéed mushrooms, capsicum marmalade, cheese mix folded in Doner bread. Dip sauce: Guacamole , Sour cream , Pico de Gallo & our H",
+      "price": 8.33,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Beef Quesadillas",
+      "nameAr": "Beef Quesadillas",
+      "description": "Beef shawarma, signature red sauce, onion, sautéed mushrooms, capsicum marmalade, cheese mix folded in Doner bread. Dip sauce: Guacamole , Sour cream , Pico de Gallo & our HD signature sauce",
+      "descriptionAr": "Beef shawarma, signature red sauce, onion, sautéed mushrooms, capsicum marmalade, cheese mix folded in Doner bread. Dip sauce: Guacamole , Sour cream , Pico de Gallo & our HD signature sauce",
+      "price": 10.83,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Mexican Chicken Shawarma",
+      "nameAr": "Mexican Chicken Shawarma",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.66,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Truffle Beef Shawarma",
+      "nameAr": "Truffle Beef Shawarma",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Chicken Tortilla",
+      "nameAr": "Chicken Tortilla",
+      "description": "شاورما دجاج متبلة عالأصول على خبزة تورتيا مع صوص الأعشاب والصوص الأحمر النركي، مخلل ملفوف، جوانح بصل، طماطة مع خس آيسبرغ.",
+      "descriptionAr": "شاورما دجاج متبلة عالأصول على خبزة تورتيا مع صوص الأعشاب والصوص الأحمر النركي، مخلل ملفوف، جوانح بصل، طماطة مع خس آيسبرغ.",
+      "price": 5.89,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Beef Tortilla",
+      "nameAr": "Beef Tortilla",
+      "description": "شاورما لحمة، جوانح بصل، بندورة، خس آيسبرغ، صوص الأعشاب بالمايونيز، صوص الأحمر التركي، كبيس ملفوف على خبزة تورتيا",
+      "descriptionAr": "شاورما لحمة، جوانح بصل، بندورة، خس آيسبرغ، صوص الأعشاب بالمايونيز، صوص الأحمر التركي، كبيس ملفوف على خبزة تورتيا",
+      "price": 7.78,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Tortilla Turkish Mix",
+      "nameAr": "Tortilla Turkish Mix",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Shawarmax",
+      "nameAr": "Shawarmax",
+      "description": "شاورما دجاج متبلة عالأصول على خبزة تورتيا مع صوص الأعشاب وصوص الباربكيو، تشيبس، جبنة الموزاريلا، مع خس آيسبرغ.",
+      "descriptionAr": "شاورما دجاج متبلة عالأصول على خبزة تورتيا مع صوص الأعشاب وصوص الباربكيو، تشيبس، جبنة الموزاريلا، مع خس آيسبرغ.",
+      "price": 5,
+      "categoryName": "Doner & Shawarma"
+    },
+    {
+      "name": "Light Chicken Doner (620-630Kcal)",
+      "nameAr": "Light Chicken Doner (620-630Kcal)",
+      "description": "Chicken Shawarma, Layered With Onion, Pickled Red Cabbage, Tomato , Iceberg, With Yogurt Garlic Sauce , Served In Home Made Brown Doner Bread. It Comes With Signature Red Sauce On The Side.",
+      "descriptionAr": "Chicken Shawarma, Layered With Onion, Pickled Red Cabbage, Tomato , Iceberg, With Yogurt Garlic Sauce , Served In Home Made Brown Doner Bread. It Comes With Signature Red Sauce On The Side.",
+      "price": 7.22,
+      "categoryName": "Light Menu"
+    },
+    {
+      "name": "Light Beef Doner (600 - 630Kcal)",
+      "nameAr": "Light Beef Doner (600 - 630Kcal)",
+      "description": "Beef Shawarma, Layered With Onion, Tomato, Pickled Red Cabbage, Iceberg. With Yogurt Tahini Sauce . Wrapped In Our Home Made Brown Doner Bread. Served With Our Signature Red Sauce.",
+      "descriptionAr": "Beef Shawarma, Layered With Onion, Tomato, Pickled Red Cabbage, Iceberg. With Yogurt Tahini Sauce . Wrapped In Our Home Made Brown Doner Bread. Served With Our Signature Red Sauce.",
+      "price": 8.89,
+      "categoryName": "Light Menu"
+    },
+    {
+      "name": "Light Doner Mix (625 - 630Kcal)",
+      "nameAr": "Light Doner Mix (625 - 630Kcal)",
+      "description": "Mix Of Beef & Chicken Shawarma , Layered With Onion, Tomato, Pickled Red Cabbage, Iceberg, With Yogurt Garlic Sauce And Tahini. Wrapped In Our Home Made Brown Doner Bread. Served With Our Signature Red Sauce On The Side.",
+      "descriptionAr": "Mix Of Beef & Chicken Shawarma , Layered With Onion, Tomato, Pickled Red Cabbage, Iceberg, With Yogurt Garlic Sauce And Tahini. Wrapped In Our Home Made Brown Doner Bread. Served With Our Signature Red Sauce On The Side.",
+      "price": 8.33,
+      "categoryName": "Light Menu"
+    },
+    {
+      "name": "Light Lebanese Chicken (450-460Kcal)",
+      "nameAr": "Light Lebanese Chicken (450-460Kcal)",
+      "description": "Chicken Shawarma, Pickles, With Yoghurt Garlic Sauce . Wrapped In Brown Lebanese Bread.",
+      "descriptionAr": "Chicken Shawarma, Pickles, With Yoghurt Garlic Sauce . Wrapped In Brown Lebanese Bread.",
+      "price": 3.33,
+      "categoryName": "Light Menu"
+    },
+    {
+      "name": "Light Lebanese Beef (350 - 360Kcal)",
+      "nameAr": "Light Lebanese Beef (350 - 360Kcal)",
+      "description": "Beef Shawarma, Pickles, Tomato , Biwaz, With Yoghurt Tahini Sauce . Wrapped In Brown Lebanese Bread.",
+      "descriptionAr": "Beef Shawarma, Pickles, Tomato , Biwaz, With Yoghurt Tahini Sauce . Wrapped In Brown Lebanese Bread.",
+      "price": 4.72,
+      "categoryName": "Light Menu"
+    },
+    {
+      "name": "Light Chicken Shawarma Shaker (489-495Kcal)",
+      "nameAr": "Light Chicken Shawarma Shaker (489-495Kcal)",
+      "description": "Chicken Shawarma, Iceberg, Pickles, Potato Sticks, Served In Yogurt Garlic Sauce.",
+      "descriptionAr": "Chicken Shawarma, Iceberg, Pickles, Potato Sticks, Served In Yogurt Garlic Sauce.",
+      "price": 6.12,
+      "categoryName": "Light Menu"
+    },
+    {
+      "name": "Light Beef Shawarma Shaker (594 - 610Kcal)",
+      "nameAr": "Light Beef Shawarma Shaker (594 - 610Kcal)",
+      "description": "Beef Shawarma, Biwaz, Iceberg, Tomato Confit, Pickles, Potato Sticks. Served With Yoghurt Tahini Sauce.",
+      "descriptionAr": "Beef Shawarma, Biwaz, Iceberg, Tomato Confit, Pickles, Potato Sticks. Served With Yoghurt Tahini Sauce.",
+      "price": 8.33,
+      "categoryName": "Light Menu"
+    },
+    {
+      "name": "خبز برغر مع تتبيلة البرغر التركية، صوص الأحمر التركي مع صوص الأعشاب، طماطة مشوية مع جوانح البصل المشوية مع قطعة الجبنة المقرمشة",
+      "nameAr": "خبز برغر مع تتبيلة البرغر التركية، صوص الأحمر التركي مع صوص الأعشاب، طماطة مشوية مع جوانح البصل المشوية مع قطعة الجبنة المقرمشة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.66,
+      "categoryName": "Burger"
+    },
+    {
+      "name": "Combo",
+      "nameAr": "Combo",
+      "description": "خبز برغر مع تتبيلة البرغر التركية، صوص الأحمر التركي مع صوص الأعشاب، طماطة مشوية مع جوانح البصل المشوية مع قطعة الجبنة المقرمشة مع بطاطا فنكر",
+      "descriptionAr": "خبز برغر مع تتبيلة البرغر التركية، صوص الأحمر التركي مع صوص الأعشاب، طماطة مشوية مع جوانح البصل المشوية مع قطعة الجبنة المقرمشة مع بطاطا فنكر",
+      "price": 9.45,
+      "categoryName": "Burger"
+    },
+    {
+      "name": "خبز برغر مع لحمة البرغر بالتتبيلة اللبنانية مع شرائح من البصل والطماطة وسلطة المايونيز وصوص الكاتشب وبطاطا فنكر",
+      "nameAr": "خبز برغر مع لحمة البرغر بالتتبيلة اللبنانية مع شرائح من البصل والطماطة وسلطة المايونيز وصوص الكاتشب وبطاطا فنكر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Burger"
+    },
+    {
+      "name": "Combo",
+      "nameAr": "Combo",
+      "description": "خبز برغر مع لحمة البرغر بالتتبيلة اللبنانية مع شرائح من البصل والطماطة وسلطة المايونيز وصوص الكاتشب وبطاطا فنكر",
+      "descriptionAr": "خبز برغر مع لحمة البرغر بالتتبيلة اللبنانية مع شرائح من البصل والطماطة وسلطة المايونيز وصوص الكاتشب وبطاطا فنكر",
+      "price": 8.05,
+      "categoryName": "Burger"
+    },
+    {
+      "name": "Gathering Box",
+      "nameAr": "Gathering Box",
+      "description": "Mini Doner Chicken, Lebanese Shawarma Chicken, Markouk Shawarma Chicken with French Fries, and Sauces.",
+      "descriptionAr": "Mini Doner Chicken, Lebanese Shawarma Chicken, Markouk Shawarma Chicken with French Fries, and Sauces.",
+      "price": 21.88,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "Mini Gathering Box",
+      "nameAr": "Mini Gathering Box",
+      "description": "Mini Doner Chicken, Lebanese Shawarma Chicken, Markouk Shawarma Chicken, and Sauces.",
+      "descriptionAr": "Mini Doner Chicken, Lebanese Shawarma Chicken, Markouk Shawarma Chicken, and Sauces.",
+      "price": 11.93,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "Chicken Lebanese plate",
+      "nameAr": "Chicken Lebanese plate",
+      "description": "شاورما دجاج، مخلل ، ثوم وخبز",
+      "descriptionAr": "شاورما دجاج، مخلل ، ثوم وخبز",
+      "price": 11.11,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "Beef Lebanese plate",
+      "nameAr": "Beef Lebanese plate",
+      "description": "شاورما لحمة، طرطور، بيواز، خبزة، مخلل و طماطة",
+      "descriptionAr": "شاورما لحمة، طرطور، بيواز، خبزة، مخلل و طماطة",
+      "price": 13.34,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "Lebanese Mix Plate",
+      "nameAr": "Lebanese Mix Plate",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "Chicken Turkish Plate",
+      "nameAr": "Chicken Turkish Plate",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.66,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "Beef Turkish plate",
+      "nameAr": "Beef Turkish plate",
+      "description": "شاورما تركية مع خيارك من صوص الأعشاب بالمايونيز، صوص الأحمر التركي، خس آيسبرغ، جوانح بصل، بندورة,، ملفوف ملفوف، تقدم مع خبز الدونر",
+      "descriptionAr": "شاورما تركية مع خيارك من صوص الأعشاب بالمايونيز، صوص الأحمر التركي، خس آيسبرغ، جوانح بصل، بندورة,، ملفوف ملفوف، تقدم مع خبز الدونر",
+      "price": 14.45,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "Turkish Mix Plate",
+      "nameAr": "Turkish Mix Plate",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.66,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "Markouk Shawarma Chicken Plate",
+      "nameAr": "Markouk Shawarma Chicken Plate",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.11,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "Markouk Shawarma Beef Plate",
+      "nameAr": "Markouk Shawarma Beef Plate",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "1/2 Chicken Shawarma",
+      "nameAr": "1/2 Chicken Shawarma",
+      "description": "Chicken shawarma, garlic paste, pickles, choice of fries or rice & bread.",
+      "descriptionAr": "Chicken shawarma, garlic paste, pickles, choice of fries or rice & bread.",
+      "price": 16.67,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "1 Kg Chicken Shawarma",
+      "nameAr": "1 Kg Chicken Shawarma",
+      "description": "Chicken shawarma, garlic paste, pickles, choice of fries or rice & bread.",
+      "descriptionAr": "Chicken shawarma, garlic paste, pickles, choice of fries or rice & bread.",
+      "price": 33.33,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "1/2 Beef Shawarma",
+      "nameAr": "1/2 Beef Shawarma",
+      "description": "Beef shawarma, biwaz, tomato confit, pickles, tarator sauce, choice of fries or rice & bread.",
+      "descriptionAr": "Beef shawarma, biwaz, tomato confit, pickles, tarator sauce, choice of fries or rice & bread.",
+      "price": 27.77,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "1 Kg Beef Shawarma",
+      "nameAr": "1 Kg Beef Shawarma",
+      "description": "Beef shawarma, biwaz, tomato confit, pickles, tarator sauce, choice of fries or rice & bread.",
+      "descriptionAr": "Beef shawarma, biwaz, tomato confit, pickles, tarator sauce, choice of fries or rice & bread.",
+      "price": 55.56,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "1/2 Kg Turkish Chicken",
+      "nameAr": "1/2 Kg Turkish Chicken",
+      "description": null,
+      "descriptionAr": null,
+      "price": 17.78,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "1 Kg Chicken Turkish Shawarma",
+      "nameAr": "1 Kg Chicken Turkish Shawarma",
+      "description": null,
+      "descriptionAr": null,
+      "price": 35.55,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "1/2 Turkish Beef Shawarma",
+      "nameAr": "1/2 Turkish Beef Shawarma",
+      "description": null,
+      "descriptionAr": null,
+      "price": 28.89,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "1 Kg Turkish Beef",
+      "nameAr": "1 Kg Turkish Beef",
+      "description": null,
+      "descriptionAr": null,
+      "price": 57.78,
+      "categoryName": "Platters & Family Boxes"
+    },
+    {
+      "name": "Kids Chicken Meal",
+      "nameAr": "Kids Chicken Meal",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Kids Meal"
+    },
+    {
+      "name": "Mac & Cheese Kids",
+      "nameAr": "Mac & Cheese Kids",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.84,
+      "categoryName": "Kids Meal"
+    },
+    {
+      "name": "Kids Beef Meal",
+      "nameAr": "Kids Beef Meal",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.84,
+      "categoryName": "Kids Meal"
+    },
+    {
+      "name": "Chicken Tenders",
+      "nameAr": "Chicken Tenders",
+      "description": "4 pcs Chicken Tenders , served with juice and crispy fries",
+      "descriptionAr": "4 pcs Chicken Tenders , served with juice and crispy fries",
+      "price": 5,
+      "categoryName": "Kids Meal"
+    },
+    {
+      "name": "Chicken Nuggets",
+      "nameAr": "Chicken Nuggets",
+      "description": "قطع من دجاج النغتس المقرمشة مع بطاطا فنكر وعصير",
+      "descriptionAr": "قطع من دجاج النغتس المقرمشة مع بطاطا فنكر وعصير",
+      "price": 5,
+      "categoryName": "Kids Meal"
+    },
+    {
+      "name": "Kunefe",
+      "nameAr": "Kunefe",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Dessert"
+    },
+    {
+      "name": "Mhalabyeh",
+      "nameAr": "Mhalabyeh",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.67,
+      "categoryName": "Dessert"
+    },
+    {
+      "name": "Dondurma Scoop",
+      "nameAr": "Dondurma Scoop",
+      "description": "1 Scoop of your choice from our Traditional Turkish Ice Cream",
+      "descriptionAr": "1 Scoop of your choice from our Traditional Turkish Ice Cream",
+      "price": 2,
+      "categoryName": "Dessert"
+    },
+    {
+      "name": "Dondurma Knefe",
+      "nameAr": "Dondurma Knefe",
+      "description": "Knefe dessert with your choice of Dondurma flavor",
+      "descriptionAr": "Knefe dessert with your choice of Dondurma flavor",
+      "price": 7.56,
+      "categoryName": "Dessert"
+    },
+    {
+      "name": "Dondurma Baklawa",
+      "nameAr": "Dondurma Baklawa",
+      "description": "Baklawa dessert adding on top of it your flavor of Dondurma",
+      "descriptionAr": "Baklawa dessert adding on top of it your flavor of Dondurma",
+      "price": 4.5,
+      "categoryName": "Dessert"
+    },
+    {
+      "name": "Sultana Huyam",
+      "nameAr": "Sultana Huyam",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.77,
+      "categoryName": "Dessert"
+    },
+    {
+      "name": "Minted Lemonade",
+      "nameAr": "Minted Lemonade",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.89,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Ayran",
+      "nameAr": "Ayran",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.33,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Boom Boom",
+      "nameAr": "Boom Boom",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Laban Ana",
+      "nameAr": "Laban Ana",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.78,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Lemonade",
+      "nameAr": "Lemonade",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.89,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Ice Tea",
+      "nameAr": "Ice Tea",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.55,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Kids Juice",
+      "nameAr": "Kids Juice",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.84,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Orange Juice",
+      "nameAr": "Orange Juice",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.89,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Zee Cola",
+      "nameAr": "Zee Cola",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.78,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Turkish Coffee",
+      "nameAr": "Turkish Coffee",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.94,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "7up Diet",
+      "nameAr": "7up Diet",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.33,
+      "categoryName": "Soft Drink"
+    },
+    {
+      "name": "7up",
+      "nameAr": "7up",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.33,
+      "categoryName": "Soft Drink"
+    },
+    {
+      "name": "Pespi",
+      "nameAr": "Pespi",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.33,
+      "categoryName": "Soft Drink"
+    },
+    {
+      "name": "Pepsi Diet",
+      "nameAr": "Pepsi Diet",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.33,
+      "categoryName": "Soft Drink"
+    },
+    {
+      "name": "Sparkling Water",
+      "nameAr": "Sparkling Water",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.55,
+      "categoryName": "Soft Drink"
+    },
+    {
+      "name": "Miranda",
+      "nameAr": "Miranda",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.33,
+      "categoryName": "Soft Drink"
+    }
+  ]
+}
