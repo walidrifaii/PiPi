@@ -1,0 +1,654 @@
+{
+  "merchantId": "46674fb3-7615-4592-acfb-4ebf0f01afbc",
+  "merchantName": "Abou Shaker",
+  "categories": [
+    {
+      "name": "Salads",
+      "nameAr": "سلطات",
+      "sortOrder": 1
+    },
+    {
+      "name": "Shawarma",
+      "nameAr": "شاورما",
+      "sortOrder": 2
+    },
+    {
+      "name": "Snacks & Fast Food",
+      "nameAr": "سندويش ووجبات سريعة",
+      "sortOrder": 3
+    },
+    {
+      "name": "Seafood",
+      "nameAr": "مأكولات بحرية",
+      "sortOrder": 4
+    },
+    {
+      "name": "Grilled Chicken",
+      "nameAr": "فروج",
+      "sortOrder": 5
+    },
+    {
+      "name": "Drinks",
+      "nameAr": "مشروبات",
+      "sortOrder": 6
+    }
+  ],
+  "products": [
+    {
+      "name": "Green Salad",
+      "nameAr": "سلطة خضراء",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Fattoush",
+      "nameAr": "فتوش",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Large Markouk Chicken Shawarma",
+      "nameAr": "شاورما دجاج مرقوق كبير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Small Chicken Shawarma",
+      "nameAr": "شاورما دجاج صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Extra Markouk Chicken Shawarma",
+      "nameAr": "شاورما دجاج مرقوق اكسترا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Medium Markouk Beef Shawarma",
+      "nameAr": "شاورما لحمة مرقوق وسط",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Small Beef Shawarma",
+      "nameAr": "شاورما لحمة صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Extra Markouk Beef Shawarma",
+      "nameAr": "شاورما لحمة مرقوق اكسترا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Lebanese Chicken Shawarma Meal",
+      "nameAr": "وجبة شاورما دجاج لبناني",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Large Arabic Chicken Shawarma Meal",
+      "nameAr": "وجبة شاورما دجاج عربي كبير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Small Arabic Chicken Shawarma Meal",
+      "nameAr": "وجبة شاورما دجاج عربي صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Lebanese Beef Shawarma Meal",
+      "nameAr": "وجبة شاورما لحمة لبناني",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Large Arabic Beef Shawarma Meal",
+      "nameAr": "وجبة شاورما لحمة عربي كبير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Small Arabic Beef Shawarma Meal",
+      "nameAr": "وجبة شاورما لحمة عربي صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Turkish Chicken Shawarma / Doner",
+      "nameAr": "شاورما دجاج تركي / دونر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Turkish Beef Shawarma / Doner",
+      "nameAr": "شاورما لحمة تركي / دونر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Italian Shawarma Meal",
+      "nameAr": "وجبة شاورما إيطالي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.33,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Mexican Shawarma Sandwich",
+      "nameAr": "سندويش شاورما مكسيكي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Mexican Shawarma Meal",
+      "nameAr": "وجبة شاورما مكسيكي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Chicken Shawarma Fatteh",
+      "nameAr": "فتة شاورما دجاج",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Tawook Sandwich",
+      "nameAr": "سندويش طاووق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Grilled Tawook Meal",
+      "nameAr": "وجبة طاووق (فحم)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Mexican Tawook Sandwich",
+      "nameAr": "سندويش طاووق مكسيكي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Mexican Tawook Meal",
+      "nameAr": "وجبة طاووق مكسيكي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Escalope Sandwich",
+      "nameAr": "سندويش اسكالوب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Escalope Meal",
+      "nameAr": "وجبة اسكالوب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Crispy Sandwich",
+      "nameAr": "سندويش كريسبي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Crispy Meal",
+      "nameAr": "وجبة كريسبي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Fajita",
+      "nameAr": "فاهيتا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Fajita Meal",
+      "nameAr": "وجبة فاهيتا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Chinese",
+      "nameAr": "تشينيز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Chinese Meal",
+      "nameAr": "وجبة تشينيز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Chicken Sub",
+      "nameAr": "تشيكن ساب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Chicken Sub Meal",
+      "nameAr": "وجبة تشيكن ساب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Chicken Sub Meal",
+      "nameAr": "وجبة تشيكن ساب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Francisco",
+      "nameAr": "فرنسيسكو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Francisco Meal",
+      "nameAr": "وجبة فرنسيسكو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Mexicana",
+      "nameAr": "مكسيكانا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Mexicana Meal",
+      "nameAr": "وجبة مكسيكانا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Sujuk",
+      "nameAr": "سجق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Sujuk Meal",
+      "nameAr": "وجبة سجق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Chicken Liver",
+      "nameAr": "سودة دجاج",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Chicken Liver Plate",
+      "nameAr": "صحن سودة دجاج",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Sausage Sandwich",
+      "nameAr": "سندويش نقانق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Sausage Plate",
+      "nameAr": "صحن نقانق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Classic Burger",
+      "nameAr": "كلاسيك برغر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Cheese Burger",
+      "nameAr": "تشيز برغر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Chicken Burger",
+      "nameAr": "تشيكن برغر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Cheese Chicken Burger",
+      "nameAr": "تشيز تشيكن برغر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Crispy Burger",
+      "nameAr": "كريسبي برغر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Fries Sandwich",
+      "nameAr": "سندويش بطاطا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Small Fries Box",
+      "nameAr": "علبة بطاطا صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Medium Fries Plate",
+      "nameAr": "صحن بطاطا وسط",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Large Fries Plate",
+      "nameAr": "صحن بطاطا كبير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Falafel Sandwich",
+      "nameAr": "سندويش فلافل",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.67,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Dozen Falafel",
+      "nameAr": "دزينة فلافل",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Hummus with Tahini Plate",
+      "nameAr": "صحن حمص بطحينة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Hummus with Tahini Box (1/2 Kg)",
+      "nameAr": "علبة حمص بطحينة (1/2 كيلو)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Snacks & Fast Food"
+    },
+    {
+      "name": "Spicy Fish Sandwich",
+      "nameAr": "سندويش سمكة حرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Seafood"
+    },
+    {
+      "name": "Spicy Fish Plate",
+      "nameAr": "صحن سمكة حرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Seafood"
+    },
+    {
+      "name": "Shrimp Sandwich",
+      "nameAr": "سندويش قريدس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.22,
+      "categoryName": "Seafood"
+    },
+    {
+      "name": "Shrimp Plate",
+      "nameAr": "صحن قريدس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Seafood"
+    },
+    {
+      "name": "Lobster Sandwich",
+      "nameAr": "سندويش كركند",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Seafood"
+    },
+    {
+      "name": "Lobster Plate",
+      "nameAr": "صحن كركند",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Seafood"
+    },
+    {
+      "name": "Seafood Sandwich",
+      "nameAr": "سندويش ثمار البحر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Seafood"
+    },
+    {
+      "name": "Seafood Plate",
+      "nameAr": "صحن ثمار البحر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Seafood"
+    },
+    {
+      "name": "Gas-Grilled Chicken",
+      "nameAr": "فروج مشوي غاز",
+      "description": "Kabsa rice, garlic sauce, and pickles.",
+      "descriptionAr": "رز كبسة + توم + كبيس",
+      "price": 11.11,
+      "categoryName": "Grilled Chicken"
+    },
+    {
+      "name": "Charcoal-Grilled Chicken",
+      "nameAr": "فروج مشوي فحم",
+      "description": "Spicy bread, garlic sauce, and pickles.",
+      "descriptionAr": "خبزة حرّة + توم + كبيس",
+      "price": 11.11,
+      "categoryName": "Grilled Chicken"
+    },
+    {
+      "name": "Gas-Grilled Chicken (Table Service)",
+      "nameAr": "فروج مشوي غاز (طاولة)",
+      "description": "Kabsa rice, garlic sauce, and a serving of pickles.",
+      "descriptionAr": "رز كبسة + توم + سرفيس كبيس",
+      "price": 13.33,
+      "categoryName": "Grilled Chicken"
+    },
+    {
+      "name": "Charcoal-Grilled Chicken (Table Service)",
+      "nameAr": "فروج مشوي فحم (طاولة)",
+      "description": "Spicy bread, garlic sauce, and a serving of pickles.",
+      "descriptionAr": "خبزة حرّة + توم + سرفيس كبيس",
+      "price": 12.22,
+      "categoryName": "Grilled Chicken"
+    },
+    {
+      "name": "Soft Drink",
+      "nameAr": "مشروب غازي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Ayran",
+      "nameAr": "عيران",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.67,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Ayran",
+      "nameAr": "عيران",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.67,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Energy Drink",
+      "nameAr": "مشروب طاقة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Zee Cola",
+      "nameAr": "زي كولا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.56,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Small Water",
+      "nameAr": "مياه صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.56,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Large Water",
+      "nameAr": "مياه كبير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Drinks"
+    }
+  ]
+}
