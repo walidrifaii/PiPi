@@ -28,6 +28,7 @@
     "seed:merchant-catalog": "node scripts/seed-merchant-catalog.mjs",
     "seed:hayat-donur-catalog": "node scripts/seed-hayat-donur-catalog.mjs",
     "seed:abou-shaker-catalog": "node scripts/seed-abou-shaker-catalog.mjs",
+    "seed:crunchyz-catalog": "node scripts/seed-crunchyz-catalog.mjs",
     "delete:all-orders": "node scripts/delete-all-orders.mjs",
     "seed:app-version": "ts-node prisma/seed.ts"
   },

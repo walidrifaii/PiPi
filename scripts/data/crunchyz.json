@@ -1,0 +1,614 @@
+{
+  "merchantId": "cf24dc42-29a5-42a4-908d-cf4196357f5d",
+  "merchantName": "Crushies",
+  "categories": [
+    {
+      "name": "Meals",
+      "nameAr": "الوجبات",
+      "sortOrder": 1
+    },
+    {
+      "name": "Burgers and Wraps",
+      "nameAr": "البرغر والراب",
+      "sortOrder": 2
+    },
+    {
+      "name": "Vegetarian",
+      "nameAr": "نباتي",
+      "sortOrder": 3
+    },
+    {
+      "name": "Mini Meals",
+      "nameAr": "وجبات صغيرة",
+      "sortOrder": 4
+    },
+    {
+      "name": "Sides and Sauces",
+      "nameAr": "الأطباق الجانبية والصوصات",
+      "sortOrder": 5
+    },
+    {
+      "name": "Drinks",
+      "nameAr": "المشروبات",
+      "sortOrder": 6
+    }
+  ],
+  "products": [
+    {
+      "name": "Original Grilled Chicken Wrap Meal",
+      "nameAr": "وجبة راب الدجاج المشوي الأصلي",
+      "description": "Tortilla bread, grilled chicken fillet pieces, lettuce, pickles, your choice of sauce, regular-sized fries, and a soft drink.",
+      "descriptionAr": "خبز تورتيلا، قطع فيليه دجاج مشوي، خس، مخلل، صوص من اختيارك، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 8.33,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Lebanese Beef Burger Meal",
+      "nameAr": "وجبة برغر لحم لبناني",
+      "description": "Grilled beef patty, fresh tomatoes and onions, coleslaw, French fries, cheddar cheese slice, ketchup, regular-sized fries, and a soft drink.",
+      "descriptionAr": "قطعة لحم بقري مشوية، طماطم وبصل طازج، كولسلو، بطاطا مقلية، شريحة جبنة شيدر، كاتشب، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 6.67,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Lebanese Chicken Fillet Meal",
+      "nameAr": "وجبة فيليه دجاج لبناني",
+      "description": "Breaded pure chicken breast, coleslaw, fresh tomatoes, French fries, cheddar cheese slice, ketchup, regular-sized fries, and a soft drink.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، كولسلو، طماطم طازجة، بطاطا مقلية، شريحة جبنة شيدر، كاتشب، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 6.67,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Chipz N Cheez Chicken Wrap Meal",
+      "nameAr": "وجبة راب دجاج تشيبز أند تشيز",
+      "description": "3 pieces of pure crispy chicken breast strips, lettuce, chips, mayo, cheddar cheese sauce, with your choice of BBQ, Buffalo, or Honey Mustard sauce, regular-sized fries, and a soft drink.",
+      "descriptionAr": "3 قطع من شرائح صدر الدجاج الصافي والمقرمش، خس، شيبس، مايونيز، صوص جبنة شيدر، مع اختيارك من صوص الباربكيو أو البافالو أو العسل والخردل، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 8.33,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "All Cheese Meal",
+      "nameAr": "وجبة أول تشيز",
+      "description": "Your choice of breaded four-cheese patty, fresh tomatoes, shredded lettuce, and mayo, with regular-sized fries and a soft drink.",
+      "descriptionAr": "قطعة جبنة مقلية بخليط أربع أنواع من الجبنة، طماطم طازجة، خس مفروم، ومايونيز، مع بطاطا مقلية حجم عادي ومشروب غازي.",
+      "price": 5.56,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Original Crispy Chicken Wrap Meal",
+      "nameAr": "وجبة راب الدجاج الكريسبي الأصلي",
+      "description": "3 pieces of pure crispy chicken breast strips, lettuce, tomato, your choice of sauce, cheddar cheese slice, regular-sized fries, and a soft drink.",
+      "descriptionAr": "3 قطع من شرائح صدر الدجاج الصافي والمقرمش، خس، طماطم، صوص من اختيارك، شريحة جبنة شيدر، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 7.22,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "French Fry Burger Meal",
+      "nameAr": "وجبة برغر البطاطا المقلية",
+      "description": "French fries, fresh tomatoes, fresh onion, lettuce, cheddar cheese sauce, mayo, ketchup, regular-sized fries, and a soft drink.",
+      "descriptionAr": "بطاطا مقلية، طماطم طازجة، بصل طازج، خس، صوص جبنة شيدر، مايونيز، كاتشب، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 5.56,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Chicky Fillet Bites (6 pcs)",
+      "nameAr": "قطع فيليه تشيكي (6 قطع)",
+      "description": "6 pieces of breaded pure chicken breast bites with your choice of dipping sauce, regular-sized fries, and a soft drink.",
+      "descriptionAr": "6 قطع من لقيمات صدر الدجاج الصافي والمغطاة بالبقسماط، مع صوص تغميس من اختيارك، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 5.56,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Crispy Chicky Tenders (6 pcs)",
+      "nameAr": "تندرز تشيكي كريسبي (6 قطع)",
+      "description": "6 pieces of breaded pure chicken tenders, dipped in Buffalo, BBQ, or Honey Mustard sauce, with regular fries and a soft drink.",
+      "descriptionAr": "6 قطع من تندرز الدجاج الصافي والمغطاة بالبقسماط، مغمسة بصوص البافالو أو الباربكيو أو العسل والخردل، مع بطاطا مقلية حجم عادي ومشروب غازي.",
+      "price": 8.33,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Crispy Chicky Strips (6 pcs)",
+      "nameAr": "ستريبس تشيكي كريسبي (6 قطع)",
+      "description": "6 pieces of breaded pure chicken strips with your choice of dipping sauce, regular fries, a bun, and a soft drink.",
+      "descriptionAr": "6 قطع من شرائح الدجاج الصافي والمغطاة بالبقسماط، مع صوص تغميس من اختيارك، بطاطا مقلية حجم عادي، خبزة، ومشروب غازي.",
+      "price": 8.33,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Crispy Chicky Wings (10 pcs)",
+      "nameAr": "أجنحة تشيكي كريسبي (10 قطع)",
+      "description": "10 pieces of breaded chicken wings with regular fries, side sauce, and a soft drink.",
+      "descriptionAr": "10 قطع من أجنحة الدجاج المقرمشة والمغطاة بالبقسماط، مع بطاطا مقلية حجم عادي، صوص جانبي، ومشروب غازي.",
+      "price": 8.33,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Deluxe Chicken Fillet Meal",
+      "nameAr": "وجبة فيليه دجاج ديلوكس",
+      "description": "Breaded pure chicken breast, fresh tomatoes, shredded lettuce, cheddar cheese slice, mayo or Deluxe sauce, regular-sized fries, and a soft drink.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، طماطم طازجة، خس مفروم، شريحة جبنة شيدر، مايونيز أو صوص ديلوكس، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 6.67,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Classic Chicken Fillet Meal",
+      "nameAr": "وجبة فيليه دجاج كلاسيك",
+      "description": "Breaded pure chicken breast, shredded lettuce, mayonnaise, regular-sized fries, and a soft drink.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، خس مفروم، مايونيز، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 6.11,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Double Chicken Fillet Meal",
+      "nameAr": "وجبة فيليه دجاج دبل",
+      "description": "2 breaded pure chicken breasts, fresh tomatoes, shredded lettuce, 2 cheddar cheese slices, mayo or Deluxe sauce, regular-sized fries, and a soft drink.",
+      "descriptionAr": "قطعتان من صدر الدجاج الصافي والمغطى بالبقسماط، طماطم طازجة، خس مفروم، شريحتان من جبنة الشيدر، مايونيز أو صوص ديلوكس، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 8.33,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Grand Cheezy Chicken Fillet Meal",
+      "nameAr": "وجبة فيليه دجاج غراند تشيزي",
+      "description": "Breaded pure chicken breast, breaded cheese mix, fresh tomatoes, shredded lettuce, mayo or garlic mayo, and your choice of BBQ or Buffalo sauce, regular-sized fries, and a soft drink.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، خليط جبنة مقلية، طماطم طازجة، خس مفروم، مايونيز أو مايونيز بالثوم، مع اختيارك من صوص الباربكيو أو البافالو، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 8.33,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Mexican Chicken Fillet Meal",
+      "nameAr": "وجبة فيليه دجاج مكسيكي",
+      "description": "Breaded pure chicken breast, shredded lettuce, Mexican chicken mix, 2 Swiss cheese slices, mayo, regular-sized fries, and a soft drink.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، خس مفروم، خلطة دجاج مكسيكية، شريحتان من الجبنة السويسرية، مايونيز، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 8.33,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Cheddary Chicken Fillet Meal",
+      "nameAr": "وجبة فيليه دجاج تشيدري",
+      "description": "Breaded pure chicken breast, fresh tomatoes, shredded lettuce, potato chips, cheddar sauce, mayo, regular-sized fries, and a soft drink.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، طماطم طازجة، خس مفروم، شيبس بطاطا، صوص شيدر، مايونيز، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 7.22,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Truffle Aioli Chicken Fillet Meal",
+      "nameAr": "وجبة فيليه دجاج ترافل أيولي",
+      "description": "Breaded pure chicken breast, shredded lettuce, mushroom and onion mix, 2 Swiss cheese slices, truffle aioli sauce, regular-sized fries, and a soft drink.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، خس مفروم، خلطة فطر وبصل، شريحتان من الجبنة السويسرية، صوص ترافل أيولي، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 7.78,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Honey Turkey Chicken Fillet Meal",
+      "nameAr": "وجبة فيليه دجاج هاني تركي",
+      "description": "Breaded pure chicken breast, fresh tomatoes, shredded lettuce, grilled turkey slice, cheddar cheese slice, mayo, honey mustard sauce, regular-sized fries, and a soft drink.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، طماطم طازجة، خس مفروم، شريحة حبش مشوية، شريحة جبنة شيدر، مايونيز، صوص العسل والخردل، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 7.22,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Trio Tender N Cheddar Meal",
+      "nameAr": "وجبة تريو تندر أند شيدر",
+      "description": "3 breaded pure chicken tenders, classic or dipped in Buffalo, BBQ, or Honey Mustard sauce, cheddar cheese patty, fresh tomatoes, shredded lettuce, mayo, regular-sized fries, and a soft drink.",
+      "descriptionAr": "3 قطع تندرز دجاج صافي ومغطاة بالبقسماط، كلاسيك أو مغمسة بصوص البافالو أو الباربكيو أو العسل والخردل، قطعة جبنة شيدر، طماطم طازجة، خس مفروم، مايونيز، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 8.33,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Deluxe Beef Burger Meal",
+      "nameAr": "وجبة برغر لحم ديلوكس",
+      "description": "Grilled beef patty, fresh tomatoes and onions, shredded lettuce, pickles, cheddar cheese slice, ketchup, mayo or Deluxe sauce, regular-sized fries, and a soft drink.",
+      "descriptionAr": "قطعة لحم بقري مشوية، طماطم وبصل طازج، خس مفروم، مخلل، شريحة جبنة شيدر، كاتشب، مايونيز أو صوص ديلوكس، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 6.67,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Classic Beef Burger Meal",
+      "nameAr": "وجبة برغر لحم كلاسيك",
+      "description": "Grilled beef patty, fresh onions, pickles, ketchup, regular-sized fries, and a soft drink.",
+      "descriptionAr": "قطعة لحم بقري مشوية، بصل طازج، مخلل، كاتشب، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 6.11,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Grand Cheezy Beef Burger Meal",
+      "nameAr": "وجبة برغر لحم غراند تشيزي",
+      "description": "Grilled beef patty, breaded cheese mix, fresh tomatoes and onions, shredded lettuce, pickles, mayo, and your choice of BBQ or Buffalo sauce, regular-sized fries, and a soft drink.",
+      "descriptionAr": "قطعة لحم بقري مشوية، خليط جبنة مقلية، طماطم وبصل طازج، خس مفروم، مخلل، مايونيز، مع اختيارك من صوص الباربكيو أو البافالو، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 8.33,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Philly Cheese Steak Burger Meal",
+      "nameAr": "وجبة برغر فيلي تشيز ستيك",
+      "description": "Grilled beef patty, shredded lettuce, Philly steak mix, 2 Swiss cheese slices, mayo, regular-sized fries, and a soft drink.",
+      "descriptionAr": "قطعة لحم بقري مشوية، خس مفروم، خلطة فيلي ستيك، شريحتان من الجبنة السويسرية، مايونيز، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 8.33,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Cheddary Beef Burger Meal",
+      "nameAr": "وجبة برغر لحم تشيدري",
+      "description": "Grilled beef patty, fresh tomatoes and onions, shredded lettuce, pickles, potato chips, cheddar sauce, mayo, regular-sized fries, and a soft drink.",
+      "descriptionAr": "قطعة لحم بقري مشوية، طماطم وبصل طازج، خس مفروم، مخلل، شيبس بطاطا، صوص شيدر، مايونيز، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 7.22,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Truffle Aioli Beef Burger Meal",
+      "nameAr": "وجبة برغر لحم ترافل أيولي",
+      "description": "Grilled beef patty, shredded lettuce, mushroom and onion mix, 2 Swiss cheese slices, truffle aioli sauce, regular-sized fries, and a soft drink.",
+      "descriptionAr": "قطعة لحم بقري مشوية، خس مفروم، خلطة فطر وبصل، شريحتان من الجبنة السويسرية، صوص ترافل أيولي، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 7.78,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Double Grilled Beef Burger Meal",
+      "nameAr": "وجبة برغر لحم مشوي دبل",
+      "description": "2 grilled beef patties (100 g each), fresh tomatoes and onions, shredded lettuce, cheddar cheese slice, ketchup and mayo or Deluxe sauce, regular-sized fries, and a soft drink.",
+      "descriptionAr": "قطعتان من اللحم البقري المشوي (100 غرام لكل قطعة)، طماطم وبصل طازج، خس مفروم، شريحة جبنة شيدر، كاتشب ومايونيز أو صوص ديلوكس، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 8.33,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Original Grilled Chicken Wrap",
+      "nameAr": "راب الدجاج المشوي الأصلي",
+      "description": "Tortilla bread, grilled chicken fillet pieces, lettuce, pickles, and your choice of sauce.",
+      "descriptionAr": "خبز تورتيلا، قطع فيليه دجاج مشوي، خس، مخلل، وصوص من اختيارك.",
+      "price": 6.67,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Lebanese Beef Burger",
+      "nameAr": "برغر لحم لبناني",
+      "description": "Grilled beef patty, fresh tomatoes and onions, coleslaw, French fries, cheddar cheese slice, and ketchup.",
+      "descriptionAr": "قطعة لحم بقري مشوية، طماطم وبصل طازج، كولسلو، بطاطا مقلية، شريحة جبنة شيدر، وكاتشب.",
+      "price": 5,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Lebanese Chicken Fillet Burger",
+      "nameAr": "برغر فيليه دجاج لبناني",
+      "description": "Breaded pure chicken breast, coleslaw, fresh tomatoes, French fries, cheddar cheese slice, and ketchup.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، كولسلو، طماطم طازجة، بطاطا مقلية، شريحة جبنة شيدر، وكاتشب.",
+      "price": 5,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Chipz N Cheez Chicken Wrap",
+      "nameAr": "راب دجاج تشيبز أند تشيز",
+      "description": "3 pieces of pure crispy chicken breast strips, lettuce, chips, mayo, cheddar cheese sauce, with your choice of BBQ, Buffalo, or Honey Mustard sauce.",
+      "descriptionAr": "3 قطع من شرائح صدر الدجاج الصافي والمقرمش، خس، شيبس، مايونيز، صوص جبنة شيدر، مع اختيارك من صوص الباربكيو أو البافالو أو العسل والخردل.",
+      "price": 6.67,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "All Cheese Burger",
+      "nameAr": "برغر أول تشيز",
+      "description": "Your choice of breaded four-cheese patty, fresh tomatoes, shredded lettuce, and mayo.",
+      "descriptionAr": "قطعة جبنة مقلية بخليط أربع أنواع من الجبنة، طماطم طازجة، خس مفروم، ومايونيز.",
+      "price": 3.89,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Original Crispy Chicken Wrap",
+      "nameAr": "راب الدجاج الكريسبي الأصلي",
+      "description": "3 pieces of pure crispy chicken breast strips, lettuce, tomato, your choice of sauce, and a cheddar cheese slice.",
+      "descriptionAr": "3 قطع من شرائح صدر الدجاج الصافي والمقرمش، خس، طماطم، صوص من اختيارك، وشريحة جبنة شيدر.",
+      "price": 5.56,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "French Fry Burger",
+      "nameAr": "برغر البطاطا المقلية",
+      "description": "French fries, fresh tomatoes, fresh onion, lettuce, cheddar cheese sauce, mayo, and ketchup.",
+      "descriptionAr": "بطاطا مقلية، طماطم طازجة، بصل طازج، خس، صوص جبنة شيدر، مايونيز، وكاتشب.",
+      "price": 3.89,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Classic Chicken Fillet Burger",
+      "nameAr": "برغر فيليه دجاج كلاسيك",
+      "description": "Breaded pure chicken breast, shredded lettuce, and mayonnaise.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، خس مفروم، ومايونيز.",
+      "price": 4.44,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Deluxe Chicken Fillet Burger",
+      "nameAr": "برغر فيليه دجاج ديلوكس",
+      "description": "Breaded pure chicken breast, fresh tomatoes, shredded lettuce, cheddar cheese slice, and mayo or Deluxe sauce.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، طماطم طازجة، خس مفروم، شريحة جبنة شيدر، ومايونيز أو صوص ديلوكس.",
+      "price": 5,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Double Chicken Fillet Burger",
+      "nameAr": "برغر فيليه دجاج دبل",
+      "description": "2 breaded pure chicken breasts, fresh tomatoes, shredded lettuce, 2 cheddar cheese slices, and mayo or Deluxe sauce.",
+      "descriptionAr": "قطعتان من صدر الدجاج الصافي والمغطى بالبقسماط، طماطم طازجة، خس مفروم، شريحتان من جبنة الشيدر، ومايونيز أو صوص ديلوكس.",
+      "price": 6.67,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Grand Cheezy Chicken Fillet Burger",
+      "nameAr": "برغر فيليه دجاج غراند تشيزي",
+      "description": "Breaded pure chicken breast, breaded cheese mix, fresh tomatoes, shredded lettuce, mayo or garlic mayo, and your choice of BBQ or Buffalo sauce.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، خليط جبنة مقلية، طماطم طازجة، خس مفروم، مايونيز أو مايونيز بالثوم، مع اختيارك من صوص الباربكيو أو البافالو.",
+      "price": 6.67,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Mexican Chicken Fillet Burger",
+      "nameAr": "برغر فيليه دجاج مكسيكي",
+      "description": "Breaded pure chicken breast, shredded lettuce, Mexican chicken mix, 2 Swiss cheese slices, and mayo.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، خس مفروم، خلطة دجاج مكسيكية، شريحتان من الجبنة السويسرية، ومايونيز.",
+      "price": 6.67,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Truffle Aioli Chicken Fillet Burger",
+      "nameAr": "برغر فيليه دجاج ترافل أيولي",
+      "description": "Breaded pure chicken breast patty, shredded lettuce, mushroom and onion mix, 2 Swiss cheese slices, and truffle aioli sauce.",
+      "descriptionAr": "قطعة صدر دجاج صافي ومغطاة بالبقسماط، خس مفروم، خلطة فطر وبصل، شريحتان من الجبنة السويسرية، وصوص ترافل أيولي.",
+      "price": 6.11,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Cheddary Chicken Fillet Burger",
+      "nameAr": "برغر فيليه دجاج تشيدري",
+      "description": "Breaded pure chicken breast, fresh tomatoes, shredded lettuce, potato chips, cheddar sauce, and mayo.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، طماطم طازجة، خس مفروم، شيبس بطاطا، صوص شيدر، ومايونيز.",
+      "price": 5.56,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Honey Turkey Chicken Fillet Burger",
+      "nameAr": "برغر فيليه دجاج هاني تركي",
+      "description": "Breaded pure chicken breast, fresh tomatoes, shredded lettuce, grilled turkey slice, cheddar cheese slice, mayo, and honey mustard sauce.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، طماطم طازجة، خس مفروم، شريحة حبش مشوية، شريحة جبنة شيدر، مايونيز، وصوص العسل والخردل.",
+      "price": 5.56,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Trio Tender N Cheddar Burger",
+      "nameAr": "برغر تريو تندر أند شيدر",
+      "description": "3 breaded pure chicken tenders, classic or dipped in Buffalo, BBQ, or Honey Mustard sauce, cheddar cheese patty, fresh tomatoes, shredded lettuce, and mayo.",
+      "descriptionAr": "3 قطع تندرز دجاج صافي ومغطاة بالبقسماط، كلاسيك أو مغمسة بصوص البافالو أو الباربكيو أو العسل والخردل، قطعة جبنة شيدر، طماطم طازجة، خس مفروم، ومايونيز.",
+      "price": 6.67,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Deluxe Beef Burger",
+      "nameAr": "برغر لحم ديلوكس",
+      "description": "Grilled beef patty, fresh tomatoes and onions, shredded lettuce, pickles, cheddar cheese slice, ketchup, and mayo or Deluxe sauce.",
+      "descriptionAr": "قطعة لحم بقري مشوية، طماطم وبصل طازج، خس مفروم، مخلل، شريحة جبنة شيدر، كاتشب، ومايونيز أو صوص ديلوكس.",
+      "price": 5,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Classic Beef Burger",
+      "nameAr": "برغر لحم كلاسيك",
+      "description": "Grilled beef patty, fresh onions, pickles, and ketchup.",
+      "descriptionAr": "قطعة لحم بقري مشوية، بصل طازج، مخلل، وكاتشب.",
+      "price": 4.44,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Grand Cheezy Beef Burger",
+      "nameAr": "برغر لحم غراند تشيزي",
+      "description": "Grilled beef patty, breaded cheese mix, fresh tomatoes and onions, shredded lettuce, pickles, mayo, and your choice of BBQ or Buffalo sauce.",
+      "descriptionAr": "قطعة لحم بقري مشوية، خليط جبنة مقلية، طماطم وبصل طازج، خس مفروم، مخلل، مايونيز، مع اختيارك من صوص الباربكيو أو البافالو.",
+      "price": 6.67,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Philly Cheese Steak Burger",
+      "nameAr": "برغر فيلي تشيز ستيك",
+      "description": "Grilled beef patty, shredded lettuce, Philly steak mix, 2 Swiss cheese slices, and mayo.",
+      "descriptionAr": "قطعة لحم بقري مشوية، خس مفروم، خلطة فيلي ستيك، شريحتان من الجبنة السويسرية، ومايونيز.",
+      "price": 6.67,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Cheddary Beef Burger",
+      "nameAr": "برغر لحم تشيدري",
+      "description": "Grilled beef patty, fresh tomatoes and onions, shredded lettuce, pickles, potato chips, cheddar sauce, and mayo.",
+      "descriptionAr": "قطعة لحم بقري مشوية، طماطم وبصل طازج، خس مفروم، مخلل، شيبس بطاطا، صوص شيدر، ومايونيز.",
+      "price": 5.56,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Truffle Aioli Beef Burger",
+      "nameAr": "برغر لحم ترافل أيولي",
+      "description": "Grilled beef patty, shredded lettuce, mushroom and onion mix, 2 Swiss cheese slices, and truffle aioli sauce.",
+      "descriptionAr": "قطعة لحم بقري مشوية، خس مفروم، خلطة فطر وبصل، شريحتان من الجبنة السويسرية، وصوص ترافل أيولي.",
+      "price": 6.11,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Double Grilled Beef Burger",
+      "nameAr": "برغر لحم مشوي دبل",
+      "description": "2 grilled beef patties (100 g each), fresh tomatoes and onions, shredded lettuce, cheddar cheese slice, ketchup and mayo for Classic, or Deluxe sauce for Deluxe.",
+      "descriptionAr": "قطعتان من اللحم البقري المشوي (100 غرام لكل قطعة)، طماطم وبصل طازج، خس مفروم، شريحة جبنة شيدر، كاتشب ومايونيز للكلاسيك، أو صوص ديلوكس للديلوكس.",
+      "price": 6.67,
+      "categoryName": "Burgers and Wraps"
+    },
+    {
+      "name": "Cheezy Bites (4 pcs)",
+      "nameAr": "قطع تشيزي (4 قطع)",
+      "description": "4 pieces of breaded cheese mix bites.",
+      "descriptionAr": "4 قطع من لقيمات خليط الجبنة المغطاة بالبقسماط.",
+      "price": 2.78,
+      "categoryName": "Vegetarian"
+    },
+    {
+      "name": "French Fry Burger Meal",
+      "nameAr": "وجبة برغر البطاطا المقلية",
+      "description": "French fries, fresh tomatoes, fresh onion, lettuce, cheddar cheese sauce, mayo, ketchup, regular-sized fries, and a soft drink.",
+      "descriptionAr": "بطاطا مقلية، طماطم طازجة، بصل طازج، خس، صوص جبنة شيدر، مايونيز، كاتشب، بطاطا مقلية حجم عادي، ومشروب غازي.",
+      "price": 5.56,
+      "categoryName": "Vegetarian"
+    },
+    {
+      "name": "French Fry Burger",
+      "nameAr": "برغر البطاطا المقلية",
+      "description": "French fries, fresh tomatoes, fresh onion, lettuce, cheddar cheese sauce, mayo, and ketchup.",
+      "descriptionAr": "بطاطا مقلية، طماطم طازجة، بصل طازج، خس، صوص جبنة شيدر، مايونيز، وكاتشب.",
+      "price": 3.89,
+      "categoryName": "Vegetarian"
+    },
+    {
+      "name": "All Cheese Meal",
+      "nameAr": "وجبة أول تشيز",
+      "description": "Your choice of breaded four-cheese patty, fresh tomatoes, shredded lettuce, and mayo, with regular-sized fries and a soft drink.",
+      "descriptionAr": "قطعة جبنة مقلية بخليط أربع أنواع من الجبنة، طماطم طازجة، خس مفروم، ومايونيز، مع بطاطا مقلية حجم عادي ومشروب غازي.",
+      "price": 5.56,
+      "categoryName": "Vegetarian"
+    },
+    {
+      "name": "All Cheese Burger",
+      "nameAr": "برغر أول تشيز",
+      "description": "Your choice of breaded four-cheese patty, fresh tomatoes, shredded lettuce, and mayo.",
+      "descriptionAr": "قطعة جبنة مقلية بخليط أربع أنواع من الجبنة، طماطم طازجة، خس مفروم، ومايونيز.",
+      "price": 3.89,
+      "categoryName": "Vegetarian"
+    },
+    {
+      "name": "Beef Burger Mini Meal",
+      "nameAr": "وجبة ميني برغر لحم",
+      "description": "Grilled beef patty, onions, ketchup, French fries, and juice.",
+      "descriptionAr": "قطعة لحم بقري مشوية، بصل، كاتشب، بطاطا مقلية، وعصير.",
+      "price": 4.44,
+      "categoryName": "Mini Meals"
+    },
+    {
+      "name": "Chicken Fillet Burger Mini Meal",
+      "nameAr": "وجبة ميني برغر فيليه دجاج",
+      "description": "Breaded pure chicken breast, shredded lettuce, mayo, French fries, and juice.",
+      "descriptionAr": "صدر دجاج صافي ومغطى بالبقسماط، خس مفروم، مايونيز، بطاطا مقلية، وعصير.",
+      "price": 4.44,
+      "categoryName": "Mini Meals"
+    },
+    {
+      "name": "Chicky Fillet Bites Mini Meal",
+      "nameAr": "وجبة ميني قطع فيليه تشيكي",
+      "description": "5 pieces of breaded pure chicken breast bites with your choice of dipping sauce, French fries, and juice.",
+      "descriptionAr": "5 قطع من لقيمات صدر الدجاج الصافي والمغطاة بالبقسماط، مع صوص تغميس من اختيارك، بطاطا مقلية، وعصير.",
+      "price": 4.44,
+      "categoryName": "Mini Meals"
+    },
+    {
+      "name": "Crispy Chicky Strips (3 pcs)",
+      "nameAr": "ستريبس تشيكي كريسبي (3 قطع)",
+      "description": "3 pieces of breaded pure crispy chicken breast strips with your choice of dipping sauce.",
+      "descriptionAr": "3 قطع من شرائح صدر الدجاج الصافي والمقرمش والمغطاة بالبقسماط، مع صوص تغميس من اختيارك.",
+      "price": 3.33,
+      "categoryName": "Sides and Sauces"
+    },
+    {
+      "name": "Crispy Chicky Tenders (3 pcs)",
+      "nameAr": "تندرز تشيكي كريسبي (3 قطع)",
+      "description": "3 pieces of breaded pure chicken tenders dipped in Buffalo, BBQ, or Honey Mustard sauce.",
+      "descriptionAr": "3 قطع من تندرز الدجاج الصافي والمغطاة بالبقسماط، مغمسة بصوص البافالو أو الباربكيو أو العسل والخردل.",
+      "price": 3.33,
+      "categoryName": "Sides and Sauces"
+    },
+    {
+      "name": "Cheezy Bites (4 pcs)",
+      "nameAr": "قطع تشيزي (4 قطع)",
+      "description": "4 pieces of breaded cheese mix bites.",
+      "descriptionAr": "4 قطع من لقيمات خليط الجبنة المغطاة بالبقسماط.",
+      "price": 2.78,
+      "categoryName": "Sides and Sauces"
+    },
+    {
+      "name": "Mini Beef Burger",
+      "nameAr": "ميني برغر لحم",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Sides and Sauces"
+    },
+    {
+      "name": "Mini Chicken Fillet Burger",
+      "nameAr": "ميني برغر فيليه دجاج",
+      "description": "Mini breaded pure chicken breast, shredded lettuce, and mayo.",
+      "descriptionAr": "صدر دجاج صافي صغير ومغطى بالبقسماط، خس مفروم، ومايونيز.",
+      "price": 2.22,
+      "categoryName": "Sides and Sauces"
+    },
+    {
+      "name": "Chicky Fillet Bites (5 pcs)",
+      "nameAr": "قطع فيليه تشيكي (5 قطع)",
+      "description": "5 pieces of breaded pure chicken breast bites with your choice of dipping sauce.",
+      "descriptionAr": "5 قطع من لقيمات صدر الدجاج الصافي والمغطاة بالبقسماط، مع صوص تغميس من اختيارك.",
+      "price": 3.33,
+      "categoryName": "Sides and Sauces"
+    },
+    {
+      "name": "Fries",
+      "nameAr": "بطاطا مقلية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.67,
+      "categoryName": "Sides and Sauces"
+    },
+    {
+      "name": "Dipping Sauce",
+      "nameAr": "صوص للتغميس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0,
+      "categoryName": "Sides and Sauces"
+    },
+    {
+      "name": "Diet 7Up",
+      "nameAr": "سفن أب دايت",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Pepsi",
+      "nameAr": "بيبسي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Diet Pepsi",
+      "nameAr": "بيبسي دايت",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Mirinda",
+      "nameAr": "ميرندا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "7Up",
+      "nameAr": "سفن أب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Lipton Ice Tea",
+      "nameAr": "ليبتون آيس تي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0,
+      "categoryName": "Drinks"
+    }
+  ]
+}
