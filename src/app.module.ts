@@ -34,6 +34,7 @@ import { AppVersionModule } from './app-version/app-version.module';
 import { CouponModule } from './coupon/coupon.module';
 import { BundleModule } from './bundle/bundle.module';
 import { BundleAdminController } from './bundle/bundle-admin.controller';
+import { BundleMerchantController } from './bundle/bundle-merchant.controller';
 import {
   BundlePublicController,
   BundleMerchantPublicController,
@@ -75,7 +76,8 @@ import {
     BundleAdminController,
     MerchantOfferPublicController,
     BundlePublicController,
-    // After BundleModule's `merchants/me/bundles` (imported above).
+    // Static `me/bundles` before public `:merchantId/bundles` (same controller prefix).
+    BundleMerchantController,
     BundleMerchantPublicController,
     MerchantController,
     MerchantCatalogSuperAdminController,

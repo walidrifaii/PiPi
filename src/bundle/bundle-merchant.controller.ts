@@ -32,9 +32,14 @@ import { BundleService } from './bundle.service';
 import { CreateBundleMerchantDto } from './dto/create-bundle-merchant.dto';
 import { UpdateBundleMerchantDto } from './dto/update-bundle-merchant.dto';
 
+/**
+ * Must use `@Controller('merchants')` + `me/bundles` (not `merchants/me/bundles`)
+ * so Nest registers a static path sibling to public `:merchantId/bundles`.
+ * Register this controller before BundleMerchantPublicController in AppModule.
+ */
 @ApiTags('Merchant')
 @ApiBearerAuth()
-@Controller('merchants/me/bundles')
+@Controller('merchants')
 @UseGuards(JwtAuthGuard, MerchantJwtScopeGuard)
 export class BundleMerchantController {
   constructor(
@@ -48,7 +53,7 @@ export class BundleMerchantController {
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
-  @Get()
+  @Get('me/bundles')
   listMine(
     @EffectiveMerchantId() merchantId: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -59,7 +64,7 @@ export class BundleMerchantController {
 
   @ApiOperation({ summary: 'Get one of your bundles by id' })
   @ApiParam({ name: 'bundleId', type: String, format: 'uuid' })
-  @Get(':bundleId')
+  @Get('me/bundles/:bundleId')
   getOne(
     @EffectiveMerchantId() merchantId: string,
     @Param('bundleId', ParseUUIDPipe) bundleId: string,
@@ -88,7 +93,7 @@ export class BundleMerchantController {
       },
     },
   })
-  @Post()
+  @Post('me/bundles')
   @UseInterceptors(FileInterceptor('image'))
   async create(
     @EffectiveMerchantId() merchantId: string,
@@ -120,7 +125,7 @@ export class BundleMerchantController {
     },
   })
   @ApiParam({ name: 'bundleId', type: String, format: 'uuid' })
-  @Patch(':bundleId')
+  @Patch('me/bundles/:bundleId')
   @UseInterceptors(FileInterceptor('image'))
   async update(
     @EffectiveMerchantId() merchantId: string,
@@ -142,7 +147,7 @@ export class BundleMerchantController {
 
   @ApiOperation({ summary: 'Delete your bundle' })
   @ApiParam({ name: 'bundleId', type: String, format: 'uuid' })
-  @Delete(':bundleId')
+  @Delete('me/bundles/:bundleId')
   remove(
     @EffectiveMerchantId() merchantId: string,
     @Param('bundleId', ParseUUIDPipe) bundleId: string,
