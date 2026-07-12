@@ -4,7 +4,10 @@ import { MerchantCatalogSuperAdminController } from '../../merchant-catalog/merc
 import { MerchantOfferAdminController } from '../../merchant-offer/merchant-offer-admin.controller';
 import { MerchantOfferPublicController } from '../../merchant-offer/merchant-offer-public.controller';
 import { BundleAdminController } from '../../bundle/bundle-admin.controller';
-import { BundlePublicController } from '../../bundle/bundle-public.controller';
+import {
+  BundleMerchantPublicController,
+  BundlePublicController,
+} from '../../bundle/bundle-public.controller';
 import { createV2Controller } from './create-v2-controller';
 import { MerchantStorefrontV2Controller } from './merchant-storefront.v2-controller';
 
@@ -25,6 +28,10 @@ export const BundleAdminV2Controller = createV2Controller(
   BundleAdminController,
   'merchants/admin/bundles',
 );
+export const BundleMerchantPublicV2Controller = createV2Controller(
+  BundleMerchantPublicController,
+  'merchants',
+);
 export const BundlePublicV2Controller = createV2Controller(
   BundlePublicController,
   'bundles',
@@ -42,6 +49,7 @@ export const APP_V2_CONTROLLERS = [
   MerchantOfferAdminV2Controller,
   BundleAdminV2Controller,
   MerchantOfferPublicV2Controller,
+  BundleMerchantPublicV2Controller,
   BundlePublicV2Controller,
   MerchantV2Controller,
   MerchantCatalogSuperAdminV2Controller,

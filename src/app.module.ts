@@ -69,11 +69,13 @@ import {
     AppController,
     // Before MerchantController so `/merchants/me/*` and `/merchants/:id/offers` are not captured by `:merchantId`.
     MerchantCatalogController,
-    // Before MerchantOfferPublicController so `/merchants/admin/offers` is not captured as `:merchantId=admin`.
+    // Before MerchantOfferPublicController / BundleMerchantPublicController so
+    // `/merchants/admin/*` is not captured as `:merchantId=admin` (and `me` similarly).
     MerchantOfferAdminController,
     BundleAdminController,
     MerchantOfferPublicController,
     BundlePublicController,
+    // After BundleModule's `merchants/me/bundles` (imported above).
     BundleMerchantPublicController,
     MerchantController,
     MerchantCatalogSuperAdminController,

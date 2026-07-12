@@ -8,7 +8,6 @@ import { DriversController } from '../../drivers/drivers.controller';
 import { MerchantDeliveryTimeController } from '../../merchant-delivery-time/merchant-delivery-time.controller';
 import { MerchantOfferMerchantController } from '../../merchant-offer/merchant-offer-merchant.controller';
 import { BundleMerchantController } from '../../bundle/bundle-merchant.controller';
-import { BundleMerchantPublicController } from '../../bundle/bundle-public.controller';
 import { MerchantTypeController } from '../../merchant-type/merchant-type.controller';
 import { NotificationBroadcastAdminController } from '../../notifications/notification-broadcast-admin.controller';
 import { NotificationsController } from '../../notifications/notifications.controller';
@@ -115,8 +114,4 @@ export const MerchantOfferMerchantV2Controller = createV2Controller(
 export const BundleMerchantV2Controller = createV2Controller(
   BundleMerchantController,
   'merchants/me/bundles',
-);
-export const BundleMerchantPublicV2Controller = createV2Controller(
-  BundleMerchantPublicController,
-  'merchants',
 );

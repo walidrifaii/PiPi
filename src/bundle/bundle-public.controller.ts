@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   DefaultValuePipe,
   Get,
@@ -9,6 +8,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ParseUuidMerchantIdPipe } from '../common/parse-uuid-merchant-id.pipe';
 import { BundleService } from './bundle.service';
 
 @ApiTags('Storefront')
@@ -63,7 +63,7 @@ export class BundleMerchantPublicController {
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
   @Get(':merchantId/bundles')
   listForMerchant(
-    @Param('merchantId', ParseUUIDPipe) merchantId: string,
+    @Param('merchantId', ParseUuidMerchantIdPipe) merchantId: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
   ) {
