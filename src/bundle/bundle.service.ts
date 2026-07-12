@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -347,6 +348,32 @@ export class BundleService {
     return this.mapRow(row, row.merchant);
   }
 
+  /**
+   * Order items keep a name/price snapshot but Restrict the bundle FK.
+   * Clear `bundleId` on those rows first so the bundle row can be removed.
+   */
+  private async deleteBundleRow(bundleId: string) {
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        await tx.orderItem.updateMany({
+          where: { bundleId },
+          data: { bundleId: null },
+        });
+        await tx.merchantBundle.delete({ where: { id: bundleId } });
+      });
+    } catch (e) {
+      if (
+        e instanceof Prisma.PrismaClientKnownRequestError &&
+        e.code === 'P2003'
+      ) {
+        throw new ConflictException(
+          'Cannot delete this bundle while it is referenced by other records',
+        );
+      }
+      throw e;
+    }
+  }
+
   async removeForMerchant(merchantId: string, bundleId: string) {
     const existing = await this.prisma.merchantBundle.findFirst({
       where: { id: bundleId, merchantId },
@@ -355,7 +382,7 @@ export class BundleService {
       throw new NotFoundException('Bundle not found');
     }
 
-    await this.prisma.merchantBundle.delete({ where: { id: bundleId } });
+    await this.deleteBundleRow(bundleId);
     await this.deleteBundleImage(existing.imageUrl);
 
     return { message: 'Bundle deleted' };
@@ -434,7 +461,7 @@ export class BundleService {
   async removeForAdmin(bundleId: string) {
     const existing = await this.findBundleOrThrow(bundleId);
 
-    await this.prisma.merchantBundle.delete({ where: { id: bundleId } });
+    await this.deleteBundleRow(bundleId);
     await this.deleteBundleImage(existing.imageUrl);
 
     return { message: 'Bundle deleted' };
