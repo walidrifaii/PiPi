@@ -1,0 +1,857 @@
+{
+  "merchantId": "1e6e8630-ac59-4b70-93dc-d1c681fbee3d",
+  "merchantName": "Menu Separated",
+  "categories": [
+    {
+      "name": "Cold Appetizers",
+      "nameAr": "مقبلات باردة",
+      "sortOrder": 1
+    },
+    {
+      "name": "Hot Appetizers",
+      "nameAr": "مقبلات سخنة",
+      "sortOrder": 2
+    },
+    {
+      "name": "Salads",
+      "nameAr": "سلطات",
+      "sortOrder": 3
+    },
+    {
+      "name": "Sandwiches",
+      "nameAr": "سندويشات",
+      "sortOrder": 4
+    },
+    {
+      "name": "Burgers",
+      "nameAr": "برغر",
+      "sortOrder": 5
+    },
+    {
+      "name": "Platters",
+      "nameAr": "أطباق",
+      "sortOrder": 6
+    },
+    {
+      "name": "Mansaf",
+      "nameAr": "منسف",
+      "sortOrder": 7
+    },
+    {
+      "name": "Shawarma",
+      "nameAr": "الشاورما",
+      "sortOrder": 8
+    },
+    {
+      "name": "Crispy Meals",
+      "nameAr": "وجبات كريسبي",
+      "sortOrder": 9
+    },
+    {
+      "name": "Chicken",
+      "nameAr": "فروج",
+      "sortOrder": 10
+    },
+    {
+      "name": "Grills",
+      "nameAr": "المشاوي",
+      "sortOrder": 11
+    },
+    {
+      "name": "Sauces",
+      "nameAr": "صوصات",
+      "sortOrder": 12
+    },
+    {
+      "name": "Add-ons",
+      "nameAr": "إضافات",
+      "sortOrder": 13
+    }
+  ],
+  "products": [
+    {
+      "name": "Hummus Plate",
+      "nameAr": "صحن حمص",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Cold Appetizers"
+    },
+    {
+      "name": "Stuffed Grape Leaves Plate",
+      "nameAr": "صحن ورق عنب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Cold Appetizers"
+    },
+    {
+      "name": "Hummus with Chicken Shawarma",
+      "nameAr": "صحن حمص مع شاورما دجاج",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Cold Appetizers"
+    },
+    {
+      "name": "Chicken Liver Plate",
+      "nameAr": "صحن سودة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Hot Appetizers"
+    },
+    {
+      "name": "Cheese Rolls",
+      "nameAr": "رولز جبنة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Hot Appetizers"
+    },
+    {
+      "name": "Meat Kibbeh Plate",
+      "nameAr": "صحن كبة لحمة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Hot Appetizers"
+    },
+    {
+      "name": "Large Fries Plate",
+      "nameAr": "صحن بطاطا كبير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Hot Appetizers"
+    },
+    {
+      "name": "Small Fries Box",
+      "nameAr": "علبة بطاطا صغيرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Hot Appetizers"
+    },
+    {
+      "name": "Tabbouleh",
+      "nameAr": "تبولة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Fattoush",
+      "nameAr": "فتوش",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Large Coleslaw",
+      "nameAr": "سلطة ملفوف كبيرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Small Coleslaw",
+      "nameAr": "سلطة ملفوف صغيرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.67,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Fajita Sandwich",
+      "nameAr": "سندويش فاهيتا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Chicken Sub Sandwich",
+      "nameAr": "سندويش شيكن ساب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Gas-Grilled Chicken Sandwich",
+      "nameAr": "سندويش دجاج عالغاز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Chicken Liver Sandwich",
+      "nameAr": "سندويش سودة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.17,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Fries Sandwich",
+      "nameAr": "سندويش بطاطا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Turkish Kebab Sandwich",
+      "nameAr": "سندويش كباب تركي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Shish Tawook Sandwich",
+      "nameAr": "سندويش طاووق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Crispy Chicken Sandwich",
+      "nameAr": "سندويش كريسبي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Steak Sub Sandwich",
+      "nameAr": "سندويش ستيك ساب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Charcoal-Grilled Chicken Sandwich",
+      "nameAr": "سندويش دجاج فحم",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Twister Sandwich",
+      "nameAr": "سندويش تويستر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Cauliflower Sandwich",
+      "nameAr": "سندويش قرنبيط",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Eggplant Sandwich",
+      "nameAr": "سندويش باذنجان",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Beef Burger",
+      "nameAr": "برغر لحمة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Burgers"
+    },
+    {
+      "name": "Royal Honey Mustard",
+      "nameAr": "رويال هاني ماسترد",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Burgers"
+    },
+    {
+      "name": "Royal Dynamite",
+      "nameAr": "رويال دايناميت",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Burgers"
+    },
+    {
+      "name": "Chicken Burger",
+      "nameAr": "برغر دجاج",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Burgers"
+    },
+    {
+      "name": "Boul D'Or Burger",
+      "nameAr": "برغر بول دور",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Burgers"
+    },
+    {
+      "name": "Royal Zinger",
+      "nameAr": "رويال زينجر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Burgers"
+    },
+    {
+      "name": "Paris Burger",
+      "nameAr": "برغر باريس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Burgers"
+    },
+    {
+      "name": "Classic Zinger",
+      "nameAr": "كلاسيك زينجر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Burgers"
+    },
+    {
+      "name": "Shawarma Kaiser",
+      "nameAr": "شاورما كايزر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.56,
+      "categoryName": "Burgers"
+    },
+    {
+      "name": "Mix Burger",
+      "nameAr": "ميكس برغر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.5,
+      "categoryName": "Burgers"
+    },
+    {
+      "name": "Fish Burger",
+      "nameAr": "برغر سمك",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Burgers"
+    },
+    {
+      "name": "Fajita Platter",
+      "nameAr": "طبق فاهيتا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Platters"
+    },
+    {
+      "name": "Chicken Sub Platter",
+      "nameAr": "طبق شيكن ساب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Platters"
+    },
+    {
+      "name": "Beef Burger Platter",
+      "nameAr": "طبق برغر لحمة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Platters"
+    },
+    {
+      "name": "Chicken Burger Platter",
+      "nameAr": "طبق برغر دجاج",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Platters"
+    },
+    {
+      "name": "Crazy Boneless",
+      "nameAr": "كريزي بونلس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.56,
+      "categoryName": "Platters"
+    },
+    {
+      "name": "Large Mansaf with Chicken Shawarma",
+      "nameAr": "منسف مع شاورما دجاج كبير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10,
+      "categoryName": "Mansaf"
+    },
+    {
+      "name": "Mansaf with Half Charcoal Chicken",
+      "nameAr": "منسف مع نصف فروج فحم",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.22,
+      "categoryName": "Mansaf"
+    },
+    {
+      "name": "Mansaf with Half Gas-Grilled Chicken",
+      "nameAr": "منسف مع نصف فروج غاز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Mansaf"
+    },
+    {
+      "name": "Rice Mansaf",
+      "nameAr": "منسف رز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Mansaf"
+    },
+    {
+      "name": "Kebab Rizo",
+      "nameAr": "ريزو كباب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Mansaf"
+    },
+    {
+      "name": "Large Rice Mansaf",
+      "nameAr": "منسف رز كبير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Mansaf"
+    },
+    {
+      "name": "Shawarma Rizo",
+      "nameAr": "ريزو شاورما",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Mansaf"
+    },
+    {
+      "name": "Crispy Chicken Rizo",
+      "nameAr": "ريزو كريسبي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Mansaf"
+    },
+    {
+      "name": "Shish Tawook Rizo",
+      "nameAr": "ريزو طاووق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Mansaf"
+    },
+    {
+      "name": "Fajita Rizo",
+      "nameAr": "ريزو فاهيتا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Mansaf"
+    },
+    {
+      "name": "Mansaf with 8 Kebab Skewers",
+      "nameAr": "منسف مع 8 أسياخ كباب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Mansaf"
+    },
+    {
+      "name": "Small Chicken Shawarma",
+      "nameAr": "شاورما دجاج صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Turkish Shawarma",
+      "nameAr": "شاورما تركي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Shawarma Meal",
+      "nameAr": "وجبة شاورما",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Greek Shawarma",
+      "nameAr": "شاورما يوناني",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Chicken Shawarma Plate",
+      "nameAr": "صحن شاورما فرط",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "1 kg Shawarma",
+      "nameAr": "كيلو شاورما",
+      "description": null,
+      "descriptionAr": null,
+      "price": 27.78,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Half kg Chicken Shawarma",
+      "nameAr": "نصف كيلو شاورما دجاج",
+      "description": null,
+      "descriptionAr": null,
+      "price": 15.56,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Crunchy Shawarma",
+      "nameAr": "شاورما كرنشي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Crunchy Shawarma",
+      "nameAr": "شاورما كرنشي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Shawarma"
+    },
+    {
+      "name": "Royal Dynamite",
+      "nameAr": "رويال دايناميت",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Crispy Meals"
+    },
+    {
+      "name": "Crispy Chicken 3 Pieces",
+      "nameAr": "كريسبي 3 قطع",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Crispy Meals"
+    },
+    {
+      "name": "Crispy Chicken 5 Pieces",
+      "nameAr": "كريسبي 5 قطع",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Crispy Meals"
+    },
+    {
+      "name": "Crispy Chicken 20 Pieces",
+      "nameAr": "كريسبي 20 قطعة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 24.44,
+      "categoryName": "Crispy Meals"
+    },
+    {
+      "name": "Whole Charcoal-Grilled Chicken",
+      "nameAr": "فروج فحم",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Chicken"
+    },
+    {
+      "name": "Half Gas-Grilled Chicken",
+      "nameAr": "نصف فروج غاز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Chicken"
+    },
+    {
+      "name": "Half Broasted Chicken",
+      "nameAr": "نصف فروج بروستد",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.33,
+      "categoryName": "Chicken"
+    },
+    {
+      "name": "Whole Gas-Grilled Chicken",
+      "nameAr": "فروج غاز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Chicken"
+    },
+    {
+      "name": "Half Charcoal-Grilled Chicken",
+      "nameAr": "نصف فروج فحم",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Chicken"
+    },
+    {
+      "name": "Whole Broasted Chicken",
+      "nameAr": "فروج بروستد",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Chicken"
+    },
+    {
+      "name": "1 kg Grilled Shish Tawook",
+      "nameAr": "كيلو طاووق مشوي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 24.44,
+      "categoryName": "Grills"
+    },
+    {
+      "name": "Half kg Grilled Shish Tawook",
+      "nameAr": "نصف كيلو طاووق مشوي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Grills"
+    },
+    {
+      "name": "Half kg Kebab",
+      "nameAr": "نصف كيلو كباب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Grills"
+    },
+    {
+      "name": "Shish Tawook Plate",
+      "nameAr": "صحن طاووق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Grills"
+    },
+    {
+      "name": "1 kg Kebab",
+      "nameAr": "كيلو كباب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13.33,
+      "categoryName": "Grills"
+    },
+    {
+      "name": "Large Sumac Sauce",
+      "nameAr": "صوص سماق كبير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.67,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Small Sumac Sauce",
+      "nameAr": "صوص سماق صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.56,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Medium Cheddar Sauce",
+      "nameAr": "علبة شيدر وسط",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.33,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Large Cheddar Sauce",
+      "nameAr": "علبة شيدر كبيرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Small Dynamite Sauce",
+      "nameAr": "صوص دايناميت صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.67,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Small Garlic Sauce",
+      "nameAr": "علبة توم صغيرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.28,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Medium Garlic Sauce",
+      "nameAr": "علبة توم وسط",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.67,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Large Garlic Sauce",
+      "nameAr": "علبة توم كبيرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.22,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Medium Sumac Sauce",
+      "nameAr": "صوص سماق وسط",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Small Island Sauce",
+      "nameAr": "صوص آيلاند صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.33,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Medium Island Sauce",
+      "nameAr": "صوص آيلاند وسط",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.78,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Large Island Sauce",
+      "nameAr": "صوص آيلاند كبير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.67,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Extra Small Arabic Bread",
+      "nameAr": "خبز عربي صغير إضافي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.44,
+      "categoryName": "Add-ons"
+    },
+    {
+      "name": "Extra Large Arabic Bread",
+      "nameAr": "خبز عربي كبير إضافي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.56,
+      "categoryName": "Add-ons"
+    },
+    {
+      "name": "Extra Pickles Bag",
+      "nameAr": "كيس كبيس إضافي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.56,
+      "categoryName": "Add-ons"
+    },
+    {
+      "name": "Extra Shish Tawook Skewer",
+      "nameAr": "شيش طاووق إضافي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Add-ons"
+    },
+    {
+      "name": "Extra French Bread",
+      "nameAr": "خبز فرنجي إضافي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.61,
+      "categoryName": "Add-ons"
+    },
+    {
+      "name": "Extra Spicy Bread",
+      "nameAr": "خبزة حرة إضافية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.61,
+      "categoryName": "Add-ons"
+    },
+    {
+      "name": "Extra Shawarma",
+      "nameAr": "شاورما إضافية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Add-ons"
+    },
+    {
+      "name": "Extra Crispy Chicken",
+      "nameAr": "كريسبي إضافي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Add-ons"
+    },
+    {
+      "name": "Extra Fajita",
+      "nameAr": "فاهيتا إضافية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Add-ons"
+    },
+    {
+      "name": "Service",
+      "nameAr": "سرفيس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Add-ons"
+    }
+  ]
+}
