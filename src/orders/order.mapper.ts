@@ -26,6 +26,43 @@ function roundMoney(n: number): number {
   return Math.round(n * 100) / 100;
 }
 
+/**
+ * Match snapshot lines to DB orderItems by product/bundle (not array index).
+ * Prisma include order is not guaranteed to match create order, so index
+ * matching swaps merchantUnitPrice/merchantTotalPrice across lines.
+ */
+export function findSnapshotItem(
+  oi: OrderWithRelations['orderItems'][number],
+  snapshotItems: OrderItemsSnapshot['items'] | undefined,
+  usedIndexes: Set<number>,
+): OrderItemsSnapshot['items'][number] | undefined {
+  if (!snapshotItems?.length) return undefined;
+
+  const take = (predicate: (s: OrderItemsSnapshot['items'][number]) => boolean) => {
+    for (let i = 0; i < snapshotItems.length; i++) {
+      if (usedIndexes.has(i)) continue;
+      if (!predicate(snapshotItems[i])) continue;
+      usedIndexes.add(i);
+      return snapshotItems[i];
+    }
+    return undefined;
+  };
+
+  const sameCatalog = (s: OrderItemsSnapshot['items'][number]) =>
+    (oi.productId != null && s.productId === oi.productId) ||
+    (oi.bundleId != null && s.bundleId === oi.bundleId);
+
+  return (
+    take((s) => sameCatalog(s) && s.quantity === oi.quantity) ??
+    take((s) => sameCatalog(s)) ??
+    take(
+      (s) =>
+        s.productName === oi.productName && s.quantity === oi.quantity,
+    ) ??
+    take((s) => s.productName === oi.productName)
+  );
+}
+
 type MappedOrderItem = {
   id: string;
   productId: string | null;
@@ -66,8 +103,12 @@ function mapOrderItem(
     const merchantUnit =
       snap?.merchantUnitPrice ??
       resolveUnitPriceWithOptions(listPrice, productDiscount, modifiers);
+    const expectedTotal = roundMoney(merchantUnit * oi.quantity);
+    const snapTotal = snap?.merchantTotalPrice;
     const merchantTotal =
-      snap?.merchantTotalPrice ?? roundMoney(merchantUnit * oi.quantity);
+      snapTotal != null && Math.abs(snapTotal - expectedTotal) < 0.02
+        ? snapTotal
+        : expectedTotal;
 
     return {
       id: oi.id,
@@ -178,8 +219,14 @@ export function mapOrderSummary(
   merchantFoodSharePercent?: number,
 ) {
   const snapshot = parseSnapshot(order.itemsSnapshot);
-  const items = order.orderItems.map((oi, index) =>
-    mapOrderItem(oi, snapshot?.items[index], snapshot, audience),
+  const usedSnapIndexes = new Set<number>();
+  const items = order.orderItems.map((oi) =>
+    mapOrderItem(
+      oi,
+      findSnapshotItem(oi, snapshot?.items, usedSnapIndexes),
+      snapshot,
+      audience,
+    ),
   );
   const totals = resolveOrderTotals(
     order,
@@ -222,10 +269,11 @@ export function mapOrderDetail(
   const snapshot = parseSnapshot(order.itemsSnapshot);
   const merchantCoords = resolveMerchantCoordinates(order);
   const customerCoords = resolveCustomerCoordinates(order);
-  const items = order.orderItems.map((oi, index) =>
+  const usedSnapIndexes = new Set<number>();
+  const items = order.orderItems.map((oi) =>
     mapOrderItem(
       oi,
-      snapshot?.items[index],
+      findSnapshotItem(oi, snapshot?.items, usedSnapIndexes),
       snapshot,
       audience,
       options.productImages,

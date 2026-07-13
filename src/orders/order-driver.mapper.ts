@@ -4,6 +4,7 @@ import {
   resolveMerchantCoordinates,
 } from './order-coordinates';
 import { computeDriverEarningsFromDeliveryFee } from '../platform-settings/driver-delivery-share';
+import { findSnapshotItem } from './order.mapper';
 import { OrderItemsSnapshot, OrderWithRelations } from './order.types';
 
 function parseSnapshot(raw: unknown): OrderItemsSnapshot | null {
@@ -127,13 +128,22 @@ export function mapDriverOrderDetail(
     driverSharePercent,
   });
   const snapshot = parseSnapshot(order.itemsSnapshot);
-  const items = order.orderItems.map((oi, index) => {
-    const snap = snapshot?.items[index];
+  const usedSnapIndexes = new Set<number>();
+  const items = order.orderItems.map((oi) => {
+    const snap = findSnapshotItem(oi, snapshot?.items, usedSnapIndexes);
+    const unitPrice = snap?.unitPrice ?? Number(oi.unitPrice);
+    const expectedTotal =
+      Math.round(unitPrice * oi.quantity * 100) / 100;
+    const snapTotal = snap?.totalPrice;
+    const totalPrice =
+      snapTotal != null && Math.abs(snapTotal - expectedTotal) < 0.02
+        ? snapTotal
+        : expectedTotal;
     return {
       productName: oi.productName,
       quantity: oi.quantity,
-      unitPrice: snap?.unitPrice ?? Number(oi.unitPrice),
-      totalPrice: snap?.totalPrice ?? Number(oi.totalPrice),
+      unitPrice,
+      totalPrice,
     };
   });
 

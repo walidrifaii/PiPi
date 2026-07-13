@@ -24,6 +24,8 @@ import { CreateCheckoutDto } from './dto/create-checkout.dto';
 import { MerchantOfferService } from '../merchant-offer/merchant-offer.service';
 import { resolveStorefrontProductPricing } from '../merchant-offer/merchant-offer-pricing';
 import { CouponService } from '../coupon/coupon.service';
+import { findSnapshotItem } from '../orders/order.mapper';
+import type { OrderItemsSnapshot } from '../orders/order.types';
 
 type LineItem = {
   productId: string | null;
@@ -548,25 +550,32 @@ export class CheckoutService {
             },
           }
         : {}),
-      items: order.orderItems.map((oi, index) => {
-        const snap = snapshot.items[index];
-        return {
-          id: oi.id,
-          productId: oi.productId,
-          bundleId: oi.bundleId,
-          productName: oi.productName,
-          imageUrl: snap?.imageUrl ?? null,
-          quantity: oi.quantity,
-          price: snap?.listPrice ?? Number(oi.unitPrice),
-          discountPrice: snap?.discountPrice ?? null,
-          unitPrice: Number(oi.unitPrice),
-          totalPrice: Number(oi.totalPrice),
-          merchantUnitPrice: snap?.merchantUnitPrice ?? null,
-          merchantTotalPrice: snap?.merchantTotalPrice ?? null,
-          message: snap?.message ?? null,
-          selectedOptions: snap?.selectedOptions ?? [],
-        };
-      }),
+      items: (() => {
+        const usedSnapIndexes = new Set<number>();
+        return order.orderItems.map((oi) => {
+          const snap = findSnapshotItem(
+            oi,
+            snapshot.items as OrderItemsSnapshot['items'],
+            usedSnapIndexes,
+          );
+          return {
+            id: oi.id,
+            productId: oi.productId,
+            bundleId: oi.bundleId,
+            productName: oi.productName,
+            imageUrl: snap?.imageUrl ?? null,
+            quantity: oi.quantity,
+            price: snap?.listPrice ?? Number(oi.unitPrice),
+            discountPrice: snap?.discountPrice ?? null,
+            unitPrice: Number(oi.unitPrice),
+            totalPrice: Number(oi.totalPrice),
+            merchantUnitPrice: snap?.merchantUnitPrice ?? null,
+            merchantTotalPrice: snap?.merchantTotalPrice ?? null,
+            message: snap?.message ?? null,
+            selectedOptions: snap?.selectedOptions ?? [],
+          };
+        });
+      })(),
       createdAt: order.createdAt,
     };
   }
