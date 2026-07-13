@@ -93,22 +93,13 @@ function mapOrderItem(
     (oi.productId ? productImages?.get(oi.productId) ?? null : null);
 
   if (audience === 'merchant') {
-    const productDiscount =
-      snap?.productDiscountPrice !== undefined
-        ? snap.productDiscountPrice
-        : snapshot?.merchantOfferPercent
-          ? null
-          : (snap?.discountPrice ?? null);
-
-    const merchantUnit =
-      snap?.merchantUnitPrice ??
-      resolveUnitPriceWithOptions(listPrice, productDiscount, modifiers);
-    const expectedTotal = roundMoney(merchantUnit * oi.quantity);
-    const snapTotal = snap?.merchantTotalPrice;
-    const merchantTotal =
-      snapTotal != null && Math.abs(snapTotal - expectedTotal) < 0.02
-        ? snapTotal
-        : expectedTotal;
+    // Merchants always see catalog list price + options (no product/store discount).
+    const merchantUnit = resolveUnitPriceWithOptions(
+      listPrice,
+      null,
+      modifiers,
+    );
+    const merchantTotal = roundMoney(merchantUnit * oi.quantity);
 
     return {
       id: oi.id,
@@ -118,7 +109,7 @@ function mapOrderItem(
       imageUrl,
       quantity: oi.quantity,
       price: listPrice,
-      discountPrice: productDiscount,
+      discountPrice: null,
       unitPrice: merchantUnit,
       totalPrice: merchantTotal,
       message: snap?.message ?? null,
@@ -158,15 +149,10 @@ function resolveOrderTotals(
 
   if (audience === 'merchant') {
     const share = merchantFoodSharePercent ?? 100;
-    let grossSubtotal: number;
-
-    if (snapshot?.merchantSubtotal !== undefined) {
-      grossSubtotal = snapshot.merchantSubtotal;
-    } else {
-      grossSubtotal = roundMoney(
-        items.reduce((sum, item) => sum + item.totalPrice, 0),
-      );
-    }
+    // Match displayed line items (undiscounted list + options).
+    const grossSubtotal = roundMoney(
+      items.reduce((sum, item) => sum + item.totalPrice, 0),
+    );
 
     const subtotal = computeMerchantEarningsFromFoodSubtotal(
       grossSubtotal,

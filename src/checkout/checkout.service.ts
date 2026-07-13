@@ -258,9 +258,10 @@ export class CheckoutService {
         catalogDiscount,
         modifiers,
       );
+      // Merchant view: full list price + options (no product or store discount).
       const merchantUnitPrice = resolveUnitPriceWithOptions(
         listPrice,
-        productDiscountPrice,
+        null,
         modifiers,
       );
 
