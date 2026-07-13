@@ -1,6 +1,5 @@
 import { resolveUnitPriceWithOptions } from '../common/product-option-pricing';
 import { normalizeDeliveryTimeMinutes } from '../common/delivery-time-range';
-import { computeMerchantEarningsFromFoodSubtotal } from '../platform-settings/driver-delivery-share';
 import {
   resolveCustomerCoordinates,
   resolveMerchantCoordinates,
@@ -148,21 +147,29 @@ function resolveOrderTotals(
       : deliveryFeeFromOrder;
 
   if (audience === 'merchant') {
-    const share = merchantFoodSharePercent ?? 100;
-    // Match displayed line items (undiscounted list + options).
-    const grossSubtotal = roundMoney(
+    // Full catalog total (list + options), no product/store discount.
+    let grossSubtotal = roundMoney(
       items.reduce((sum, item) => sum + item.totalPrice, 0),
     );
 
-    const subtotal = computeMerchantEarningsFromFoodSubtotal(
-      grossSubtotal,
-      share,
-    );
+    // Fallback when orderItems were not loaded: sum snapshot list prices.
+    if (grossSubtotal <= 0 && snapshot?.items?.length) {
+      grossSubtotal = roundMoney(
+        snapshot.items.reduce((sum, line) => {
+          const unit = resolveUnitPriceWithOptions(
+            Number(line.listPrice),
+            null,
+            (line.selectedOptions ?? []).map((o) => Number(o.priceModifier)),
+          );
+          return sum + unit * Number(line.quantity);
+        }, 0),
+      );
+    }
 
     return {
-      subtotal,
+      subtotal: grossSubtotal,
       deliveryFee: null,
-      total: subtotal,
+      total: grossSubtotal,
     };
   }
 
