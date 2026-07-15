@@ -153,5 +153,6 @@ export function mapDriverOrderDetail(
     deliveryTimeMinutes:
       normalizeDeliveryTimeMinutes(snapshot?.deliveryTimeMinutes) ?? null,
     customerPhone: order.user?.phone ?? null,
+    notes: order.notes ?? null,
   };
 }
