@@ -60,7 +60,7 @@ export class DriverOrdersController {
   }
 
   @ApiOperation({
-    summary: 'All your active deliveries (same-merchant batch)',
+    summary: 'All your active deliveries (any merchant)',
   })
   @Get('active/all')
   getActiveAll(@Req() req: { user: JwtUserPayload }) {

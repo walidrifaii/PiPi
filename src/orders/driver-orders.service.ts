@@ -117,20 +117,7 @@ export class DriverOrdersService {
     }
   }
 
-  /** Distinct merchant ids of the driver's current active deliveries. */
-  private async activeMerchantIds(driverId: string): Promise<string[]> {
-    const rows = await this.prisma.order.findMany({
-      where: {
-        driverId,
-        status: { in: [...DRIVER_ACTIVE_STATUSES] },
-      },
-      select: { merchantId: true },
-      distinct: ['merchantId'],
-    });
-    return rows.map((r) => r.merchantId);
-  }
-
-  /** Unassigned orders ready for pickup (indexed filter, lean select). */
+  /** Unassigned orders ready for pickup from any merchant (indexed filter, lean select). */
   async listAvailable(driverId: string, page = 1, limit = 20) {
     await this.assertDriverActive(driverId);
 
@@ -141,14 +128,6 @@ export class DriverOrdersService {
       status: { in: [...DRIVER_OFFER_STATUSES] },
       createdAt: { gte: new Date(Date.now() - offerMaxAgeMs) },
     };
-
-    // If the driver already has an active delivery, only surface offers from
-    // the SAME merchant (same pickup). Offers from other merchants stay hidden
-    // until the current delivery is finished.
-    const activeMerchants = await this.activeMerchantIds(driverId);
-    if (activeMerchants.length > 0) {
-      where.merchantId = { in: activeMerchants };
-    }
 
     const [rows, total] = await Promise.all([
       this.prisma.order.findMany({
@@ -200,7 +179,7 @@ export class DriverOrdersService {
     };
   }
 
-  /** All in-progress deliveries for this driver (same-merchant batch). */
+  /** All in-progress deliveries for this driver (any merchant). */
   async listActiveAssignments(driverId: string) {
     await this.assertDriverActive(driverId);
 
@@ -491,41 +470,20 @@ export class DriverOrdersService {
     await this.assertDriverActive(driverId);
 
     // Orders the driver is already delivering (excluding this one).
+    // Drivers may accept from any merchant while already on other deliveries.
     const activeOrders = await this.prisma.order.findMany({
       where: {
         driverId,
         status: { in: [...DRIVER_ACTIVE_STATUSES] },
       },
-      select: { id: true, merchantId: true },
+      select: { id: true },
     });
-    const otherActive = activeOrders.filter((o) => o.id !== orderId);
+    const otherActiveCount = activeOrders.filter((o) => o.id !== orderId).length;
 
-    if (otherActive.length > 0) {
-      const target = await this.prisma.order.findUnique({
-        where: { id: orderId },
-        select: { merchantId: true },
-      });
-      if (!target) {
-        throw new NotFoundException('Order not found');
-      }
-
-      // Only same-merchant orders can be batched together (single pickup point).
-      const sameMerchant = otherActive.every(
-        (o) => o.merchantId === target.merchantId,
+    if (otherActiveCount + 1 > MAX_DRIVER_BATCH_ORDERS) {
+      throw new BadRequestException(
+        `You can carry at most ${MAX_DRIVER_BATCH_ORDERS} orders at once`,
       );
-      if (!sameMerchant) {
-        throw new BadRequestException(
-          'You can only take additional orders from the same merchant. ' +
-            'Finish your current delivery before accepting orders from a different store.',
-        );
-      }
-
-      // Cap how many orders can be carried in one batch.
-      if (otherActive.length + 1 > MAX_DRIVER_BATCH_ORDERS) {
-        throw new BadRequestException(
-          `You can carry at most ${MAX_DRIVER_BATCH_ORDERS} orders at once`,
-        );
-      }
     }
 
     const updated = await this.prisma.order.updateMany({
@@ -849,17 +807,7 @@ export class DriverOrdersService {
 
     const status = normalizeOrderStatus(existing.status);
     if (status === 'ACCEPTED') {
-      const busy = await this.prisma.order.count({
-        where: {
-          driverId,
-          status: { in: [...DRIVER_ACTIVE_STATUSES] },
-        },
-      });
-      if (busy > 0) {
-        throw new BadRequestException(
-          'Driver is already on an active delivery',
-        );
-      }
+      // acceptOrder enforces MAX_DRIVER_BATCH_ORDERS across merchants
       const result = await this.acceptOrder(driverId, orderId);
       await this.notifyDriverAdminAssignment(orderId, driverId);
       return result;
@@ -871,9 +819,9 @@ export class DriverOrdersService {
           status: { in: [...DRIVER_ACTIVE_STATUSES] },
         },
       });
-      if (busy > 0) {
+      if (busy >= MAX_DRIVER_BATCH_ORDERS) {
         throw new BadRequestException(
-          'Driver is already on an active delivery',
+          `Driver already has ${MAX_DRIVER_BATCH_ORDERS} active deliveries`,
         );
       }
       const updated = await this.prisma.order.updateMany({
