@@ -123,7 +123,12 @@ export class WhatsAppNodeService {
 
   /** Node expects digits-only phone (e.g. 96171970408), not +961…. */
   private phoneForNode(phoneE164: string): string {
-    return phoneE164.replace(/\D/g, '');
+    // Defense in depth: drop Lebanon trunk 0 if still present (+9610…).
+    let e164 = phoneE164.trim();
+    while (e164.startsWith('+9610') && e164.length > '+9610'.length) {
+      e164 = `+961${e164.slice('+9610'.length)}`;
+    }
+    return e164.replace(/\D/g, '');
   }
 
   /**

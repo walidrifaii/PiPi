@@ -6,6 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { createHmac, randomInt, timingSafeEqual } from 'crypto';
+import { toE164Phone } from '../common/phone-e164';
 import { WhatsAppNodeService } from './whatsapp-node.service';
 
 type OtpPurpose =
@@ -392,15 +393,12 @@ export class OtpService {
   }
 
   private normalizePhoneE164(phone: string): string {
-    const trimmed = phone.trim();
-    if (!trimmed) {
-      throw new BadRequestException('Phone is required');
+    try {
+      return toE164Phone(phone);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Phone must be in E.164 format';
+      throw new BadRequestException(message);
     }
-    if (!trimmed.startsWith('+')) {
-      throw new BadRequestException(
-        'Phone must be in E.164 format (e.g. +96170123456)',
-      );
-    }
-    return trimmed;
   }
 }

@@ -29,7 +29,8 @@ import {
 } from '../otp/otp.service';
 import { UsersService } from '../users/users.service';
 import { loginEligibleUserFilter } from '../users/user-account-deletion';
-import { assertPhoneAvailableAcrossUserAndDriver } from '../common/phone-account-uniqueness';
+import { assertPhoneAvailableAcrossUserAndDriver, normalizePhoneForStorage } from '../common/phone-account-uniqueness';
+import { phoneMatchVariants } from '../common/phone-e164';
 import { UserNotificationsService } from '../notifications/user-notifications.service';
 import { normalizeFcmToken } from './fcm-token.util';
 import {
@@ -578,12 +579,13 @@ export class AuthService {
     await this.assertUserRegistrationAvailable(dto.phone);
 
     const fcmToken = normalizeFcmToken(dto.fcmToken);
+    const phone = normalizePhoneForStorage(dto.phone);
 
     const user = await this.prisma.user.create({
       data: {
         fullName: dto.fullName,
         dateOfBirth: new Date(`${dto.dateOfBirth}T00:00:00.000Z`),
-        phone: dto.phone,
+        phone,
         ...(fcmToken ? { fcmToken } : {}),
       },
       select: {
@@ -673,11 +675,12 @@ export class AuthService {
     await this.assertDriverRegistrationAvailable(dto.phone, dto.email);
 
     const passwordHash = await bcrypt.hash(randomBytes(32).toString('hex'), 10);
+    const phone = normalizePhoneForStorage(dto.phone);
 
     const driver = await this.prisma.driver.create({
       data: {
         fullName: dto.fullName,
-        phone: dto.phone,
+        phone,
         email: dto.email,
         vehicleType: dto.vehicleType,
         passwordHash,
@@ -725,15 +728,22 @@ export class AuthService {
   ): Promise<'user' | 'driver' | null> {
     await this.usersService.purgeExpiredAccountDeletions();
 
-    const phoneE164 = phone.trim();
+    let phoneVariants: string[];
+    let phoneE164: string;
+    try {
+      phoneVariants = phoneMatchVariants(phone);
+      phoneE164 = normalizePhoneForStorage(phone);
+    } catch {
+      return null;
+    }
 
     const [user, driver] = await Promise.all([
       this.prisma.user.findFirst({
-        where: { phone: phoneE164, ...loginEligibleUserFilter() },
+        where: { phone: { in: phoneVariants }, ...loginEligibleUserFilter() },
         select: { id: true },
       }),
       this.prisma.driver.findFirst({
-        where: { phone: phoneE164, isActive: true },
+        where: { phone: { in: phoneVariants }, isActive: true },
         select: { id: true },
       }),
     ]);
@@ -782,8 +792,9 @@ export class AuthService {
     }
 
     if (pending.accountType === 'driver') {
+      const phoneVariants = phoneMatchVariants(dto.phone);
       const driver = await this.prisma.driver.findFirst({
-        where: { phone: dto.phone, isActive: true },
+        where: { phone: { in: phoneVariants }, isActive: true },
         select: {
           id: true,
           fullName: true,
@@ -812,8 +823,9 @@ export class AuthService {
 
     await this.usersService.purgeExpiredAccountDeletions();
 
+    const phoneVariants = phoneMatchVariants(dto.phone);
     const appUser = await this.prisma.user.findFirst({
-      where: { phone: dto.phone, ...loginEligibleUserFilter() },
+      where: { phone: { in: phoneVariants }, ...loginEligibleUserFilter() },
       select: {
         id: true,
         fullName: true,
