@@ -65,7 +65,7 @@ export class MerchantOfferAdminController {
   @ApiOperation({
     summary: 'Create merchant promo (super admin, pick merchant)',
     description:
-      'Promo card uses the merchant cover image (or logo). Product prices at checkout are unchanged unless the merchant set per-product discount_price.',
+      'Promo card uses the merchant cover image (or logo). Live offers apply a percent off product list prices at checkout.',
   })
   @ApiBody({ type: CreateMerchantOfferAdminDto })
   @Post()

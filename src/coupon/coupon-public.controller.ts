@@ -24,10 +24,6 @@ Checks that the coupon:
 - has not already been used by this user
 
 Returns \`{ valid: true, discountPercent, ... }\` or \`{ valid: false, reason }\`.
-
-**Note:** The rule that coupons are blocked when cart items already carry a
-product-level discount is enforced at checkout time (not here), because the cart
-is not available at validation time.
     `.trim(),
   })
   validate(

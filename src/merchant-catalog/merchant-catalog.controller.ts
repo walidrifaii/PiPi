@@ -213,7 +213,6 @@ export class MerchantCatalogController {
         price: { type: 'number' },
         description: { type: 'string' },
         descriptionAr: { type: 'string', description: 'Arabic description' },
-        discountPrice: { type: 'number' },
         optionGroupsJson: {
           type: 'string',
           description:
@@ -255,7 +254,6 @@ export class MerchantCatalogController {
         description: dto.description,
         nameAr: dto.nameAr,
         descriptionAr: dto.descriptionAr,
-        discountPrice: dto.discountPrice,
         isActive: dto.isActive,
         optionGroups,
       },
@@ -280,7 +278,6 @@ export class MerchantCatalogController {
         price: { type: 'number' },
         description: { type: 'string' },
         descriptionAr: { type: 'string' },
-        discountPrice: { type: 'number', nullable: true },
         isActive: { type: 'boolean' },
         imageUrl: { type: 'string', format: 'binary' },
       },
@@ -315,9 +312,6 @@ export class MerchantCatalogController {
         ? { descriptionAr: dto.descriptionAr }
         : {}),
       ...(dto.price !== undefined ? { price: dto.price } : {}),
-      ...(dto.discountPrice !== undefined
-        ? { discountPrice: dto.discountPrice }
-        : {}),
       ...(dto.isActive !== undefined ? { isActive: dto.isActive } : {}),
       ...(optionGroups !== undefined ? { optionGroups } : {}),
       ...(uploadedImageUrl !== undefined ? { imageUrl: uploadedImageUrl } : {}),

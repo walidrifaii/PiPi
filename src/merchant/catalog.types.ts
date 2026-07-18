@@ -8,10 +8,11 @@ export type UnifiedProduct = {
   description: string | null;
   descriptionAr: string | null;
   price: number;
+  /** Computed sale price from merchant offer, when active */
   discountPrice: number | null;
-  /** True when `discountPrice` is set and lower than `price` */
+  /** True when a merchant offer lowers the charged price below list `price` */
   hasDiscount: boolean;
-  /** Price charged at checkout: `discountPrice` when on sale, otherwise `price` */
+  /** Price charged at checkout: offer price when on sale, otherwise `price` */
   effectivePrice: number;
   images: string[];
   category: string;

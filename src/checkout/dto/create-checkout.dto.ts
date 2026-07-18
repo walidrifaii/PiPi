@@ -121,7 +121,7 @@ export class CreateCheckoutDto {
 
   @ApiPropertyOptional({
     description:
-      'Optional coupon code (case-insensitive). Blocked when any cart item already has a product-level discount.',
+      'Optional coupon code (case-insensitive).',
     example: 'SUMMER20',
   })
   @IsOptional()

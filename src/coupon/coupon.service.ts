@@ -117,9 +117,6 @@ export class CouponService {
   /**
    * Validates that a coupon code is usable by the given user RIGHT NOW
    * (active, not expired, not over usage limit, user hasn't used it before).
-   *
-   * NOTE: The "no product-level discounts" rule is enforced at checkout time
-   * because the cart contents are not available here.
    */
   async validateForUser(
     userId: string,
@@ -176,8 +173,7 @@ export class CouponService {
    * Called inside the checkout transaction to apply the coupon.
    * Returns the validated coupon data or throws if invalid at that instant.
    *
-   * lineItemsHaveProductDiscount: true when at least one cart item has
-   * a product-level discountPrice — coupons are blocked in that case.
+   * @param lineItemsHaveProductDiscount Legacy flag (always false); kept for call-site compatibility.
    */
   async assertValidForCheckout(
     userId: string,

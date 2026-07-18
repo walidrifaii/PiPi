@@ -168,7 +168,6 @@ export class CheckoutService {
             select: {
               id: true,
               price: true,
-              discountPrice: true,
               imageUrl: true,
               images: {
                 orderBy: { sortOrder: 'asc' },
@@ -232,20 +231,9 @@ export class CheckoutService {
       }
 
       const listPrice = Number(catalog.price);
-      const storedDiscount =
-        catalog.discountPrice !== null ? Number(catalog.discountPrice) : null;
-      const pricing = resolveStorefrontProductPricing(
-        listPrice,
-        storedDiscount,
-        offerPercent,
-      );
+      const pricing = resolveStorefrontProductPricing(listPrice, offerPercent);
       const catalogDiscount = pricing.discountPrice;
-      const merchantPricing = resolveStorefrontProductPricing(
-        listPrice,
-        storedDiscount,
-        null,
-      );
-      const productDiscountPrice = merchantPricing.discountPrice;
+      const productDiscountPrice = null;
 
       const { selected } = validateProductOptionSelections(
         catalog.optionGroups,
@@ -258,7 +246,7 @@ export class CheckoutService {
         catalogDiscount,
         modifiers,
       );
-      // Merchant view: full list price + options (no product or store discount).
+      // Merchant view: full list price + options (no store discount).
       const merchantUnitPrice = resolveUnitPriceWithOptions(
         listPrice,
         null,
@@ -324,12 +312,6 @@ export class CheckoutService {
     );
 
     // ── Coupon validation ────────────────────────────────────────────────────
-    // A coupon is blocked when any cart item already carries a product-level
-    // discountPrice — you cannot stack coupon + product discount.
-    const anyProductHasDiscount = lineItems.some(
-      (l) => l.productDiscountPrice !== null,
-    );
-
     let appliedCoupon: {
       couponId: string;
       code: string;
@@ -341,7 +323,7 @@ export class CheckoutService {
       const validated = await this.couponSvc.assertValidForCheckout(
         userId,
         dto.couponCode,
-        anyProductHasDiscount,
+        false,
       );
       const discountAmount = this.roundMoney(
         (customerSubtotal * validated.discountPercent) / 100,

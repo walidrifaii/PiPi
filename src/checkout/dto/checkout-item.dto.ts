@@ -9,10 +9,8 @@ import {
   IsUUID,
   MaxLength,
   Min,
-  Validate,
   ValidateIf,
 } from 'class-validator';
-import { DiscountNotGreaterThanPriceConstraint } from '../../merchant-catalog/validators/discount-not-greater-than-price.constraint';
 
 export class CheckoutItemDto {
   @ApiPropertyOptional({
@@ -48,13 +46,13 @@ export class CheckoutItemDto {
   @Min(0)
   price: number;
 
-  @ApiPropertyOptional({ description: 'Discounted unit price when on sale' })
+  /** @deprecated Ignored. Per-product discountPrice was removed. */
+  @ApiPropertyOptional({
+    deprecated: true,
+    description: 'Ignored — per-product discount price was removed',
+  })
   @IsOptional()
-  @Type(() => Number)
-  @IsNumber({ maxDecimalPlaces: 2 })
-  @Min(0)
-  @Validate(DiscountNotGreaterThanPriceConstraint)
-  discountPrice?: number;
+  discountPrice?: unknown;
 
   @ApiPropertyOptional({
     description: 'Optional note for this line (e.g. no onions)',

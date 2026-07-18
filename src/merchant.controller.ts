@@ -315,7 +315,7 @@ export class MerchantController {
   @ApiOperation({
     summary: 'List active store promos (paginated, one image per promo)',
     description:
-      'Marketing cards for customers. Checkout uses each product list price or its own discount_price — not this promo percent.',
+      'Marketing cards for customers. Live offers also reduce product list prices at checkout.',
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })

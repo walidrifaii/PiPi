@@ -177,7 +177,6 @@ export class MerchantCatalogSuperAdminController {
         price: { type: 'number' },
         description: { type: 'string' },
         descriptionAr: { type: 'string', description: 'Arabic description' },
-        discountPrice: { type: 'number' },
         file: { type: 'string', format: 'binary' },
         gallery: {
           type: 'array',

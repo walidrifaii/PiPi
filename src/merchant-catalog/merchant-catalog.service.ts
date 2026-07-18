@@ -281,15 +281,13 @@ export class MerchantCatalogService {
     }
   }
 
-  private attachProductPricing<T extends { price: unknown; discountPrice: unknown }>(
+  private attachProductPricing<T extends { price: unknown }>(
     row: T & { optionGroups?: Parameters<MerchantCatalogService['mapOptionGroups']>[0] },
     activeOnly = false,
     /** When set (including null), applies live merchant promo to storefront pricing. */
     storefrontOfferPercent?: number | null,
   ) {
     const price = Number(row.price);
-    const storedDiscount =
-      row.discountPrice !== null ? Number(row.discountPrice) : null;
     const optionGroups = row.optionGroups
       ? this.mapOptionGroups(row.optionGroups, activeOnly)
       : [];
@@ -297,7 +295,6 @@ export class MerchantCatalogService {
     if (storefrontOfferPercent !== undefined) {
       const pricing = resolveStorefrontProductPricing(
         price,
-        storedDiscount,
         storefrontOfferPercent,
       );
       return {
@@ -311,12 +308,11 @@ export class MerchantCatalogService {
       };
     }
 
-    const discountPrice = storedDiscount;
     return {
       ...row,
       price,
-      discountPrice,
-      ...this.discountPresentation(price, discountPrice),
+      discountPrice: null,
+      ...this.discountPresentation(price, null),
       optionGroups,
     };
   }
@@ -785,8 +781,8 @@ export class MerchantCatalogService {
   }
 
   /**
-   * Discounted products from active merchants in the user's service area
-   * (`discount_price` set and strictly below `price`). Pagination is applied in the database.
+   * Products from active merchants that currently have a live store offer.
+   * Pagination is applied in the database.
    */
   async listDiscountedProductsAcrossMerchants(
     page = 1,
@@ -817,15 +813,23 @@ export class MerchantCatalogService {
       ? Prisma.sql`AND p.is_active = true`
       : Prisma.empty;
 
+    const now = new Date();
+
     const countRows = await this.prisma.$queryRaw<{ count: bigint }[]>`
       SELECT COUNT(*)::bigint AS count
       FROM products p
       INNER JOIN merchant_categories mc ON mc.id = p.category_id
       INNER JOIN merchants m ON m.id = mc.merchant_id
-      WHERE p.discount_price IS NOT NULL
-        AND p.discount_price < p.price
-        AND m.is_active = true
+      WHERE m.is_active = true
         AND m.id IN (${openIdList})
+        AND EXISTS (
+          SELECT 1
+          FROM merchant_offers mo
+          WHERE mo.merchant_id = m.id
+            AND mo.is_active = true
+            AND mo.starts_at <= ${now}
+            AND mo.ends_at > ${now}
+        )
         ${activeProductSql}
     `;
     const total = Number(countRows[0]?.count ?? 0);
@@ -835,10 +839,16 @@ export class MerchantCatalogService {
       FROM products p
       INNER JOIN merchant_categories mc ON mc.id = p.category_id
       INNER JOIN merchants m ON m.id = mc.merchant_id
-      WHERE p.discount_price IS NOT NULL
-        AND p.discount_price < p.price
-        AND m.is_active = true
+      WHERE m.is_active = true
         AND m.id IN (${openIdList})
+        AND EXISTS (
+          SELECT 1
+          FROM merchant_offers mo
+          WHERE mo.merchant_id = m.id
+            AND mo.is_active = true
+            AND mo.starts_at <= ${now}
+            AND mo.ends_at > ${now}
+        )
         ${activeProductSql}
       ORDER BY p.updated_at DESC
       LIMIT ${pg.limit}
@@ -871,19 +881,33 @@ export class MerchantCatalogService {
       .map((id) => byId.get(id))
       .filter((row): row is (typeof rows)[number] => row !== undefined);
 
-    const items = ordered.map((p) => ({
-      ...this.attachProductPricing(p, true),
-      category: {
-        id: p.category.id,
-        name: p.category.name,
-        nameAr: p.category.nameAr,
-      },
-      merchant: {
-        id: p.category.merchant.id,
-        name: p.category.merchant.name,
-        nameAr: p.category.merchant.nameAr,
-      },
-    }));
+    const offerByMerchant = new Map<string, number | null>();
+    for (const p of ordered) {
+      const mid = p.category.merchant.id;
+      if (!offerByMerchant.has(mid)) {
+        offerByMerchant.set(
+          mid,
+          await this.merchantOffers.getLiveOfferPercentForMerchant(mid),
+        );
+      }
+    }
+
+    const items = ordered.map((p) => {
+      const offerPercent = offerByMerchant.get(p.category.merchant.id) ?? null;
+      return {
+        ...this.attachProductPricing(p, true, offerPercent),
+        category: {
+          id: p.category.id,
+          name: p.category.name,
+          nameAr: p.category.nameAr,
+        },
+        merchant: {
+          id: p.category.merchant.id,
+          name: p.category.merchant.name,
+          nameAr: p.category.merchant.nameAr,
+        },
+      };
+    });
 
     return this.localizePagedProducts(
       this.pagedResponse(items, total, pg.page, pg.limit),
@@ -1068,7 +1092,6 @@ export class MerchantCatalogService {
       throw new NotFoundException('Category not found');
     }
 
-    this.assertDiscountNotAbovePrice(dto.price, dto.discountPrice);
     this.assertOptionGroupsValid(dto.optionGroups);
 
     const created = await this.prisma.product.create({
@@ -1080,10 +1103,6 @@ export class MerchantCatalogService {
         descriptionAr: dto.descriptionAr,
         price: new Prisma.Decimal(dto.price),
         isActive: dto.isActive ?? true,
-        discountPrice:
-          dto.discountPrice !== undefined
-            ? new Prisma.Decimal(Number(dto.discountPrice))
-            : undefined,
         imageUrl: mainImageUrl,
         images: {
           create: galleryUrls.map((url, sortOrder) => ({ url, sortOrder })),
@@ -1120,17 +1139,6 @@ export class MerchantCatalogService {
       throw new NotFoundException('Product not found');
     }
 
-    const effectivePrice =
-      dto.price !== undefined ? Number(dto.price) : Number(product.price);
-    let effectiveDiscount: number | null;
-    if (dto.discountPrice !== undefined) {
-      effectiveDiscount =
-        dto.discountPrice === null ? null : Number(dto.discountPrice);
-    } else {
-      effectiveDiscount =
-        product.discountPrice !== null ? Number(product.discountPrice) : null;
-    }
-    this.assertDiscountNotAbovePrice(effectivePrice, effectiveDiscount);
     if (dto.optionGroups !== undefined) {
       this.assertOptionGroupsValid(dto.optionGroups);
     }
@@ -1191,14 +1199,6 @@ export class MerchantCatalogService {
           ...(rest.price !== undefined
             ? { price: new Prisma.Decimal(rest.price) }
             : {}),
-          ...(rest.discountPrice !== undefined
-            ? {
-                discountPrice:
-                  rest.discountPrice === null
-                    ? null
-                    : new Prisma.Decimal(Number(rest.discountPrice)),
-              }
-            : {}),
           ...(imageUrl !== undefined ? { imageUrl } : {}),
         },
         include: {
@@ -1244,20 +1244,6 @@ export class MerchantCatalogService {
     await Promise.all(urlsToDelete.map((url) => this.s3.deleteImageByUrl(url)));
 
     return { message: 'Product deleted' };
-  }
-
-  private assertDiscountNotAbovePrice(
-    price: number,
-    discountPrice?: number | null,
-  ): void {
-    if (discountPrice === undefined || discountPrice === null) {
-      return;
-    }
-    if (Number(discountPrice) > Number(price)) {
-      throw new BadRequestException(
-        'discountPrice cannot be greater than price',
-      );
-    }
   }
 
   private collectImageUrls(main: string | null, extras: string[]): string[] {

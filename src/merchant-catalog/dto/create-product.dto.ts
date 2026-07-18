@@ -12,7 +12,6 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { ProductOptionGroupDto } from './product-option.dto';
-import { ValidateDiscountNotAbovePrice } from '../validators/discount-not-greater-than-price.constraint';
 
 export class CreateProductDto {
   @ApiProperty()
@@ -42,15 +41,13 @@ export class CreateProductDto {
   @IsString()
   descriptionAr?: string;
 
+  /** @deprecated Ignored. Per-product discountPrice was removed; use merchant offers. */
   @ApiPropertyOptional({
-    description: 'Discounted price shown to customers',
+    deprecated: true,
+    description: 'Ignored — per-product discount price was removed',
   })
   @IsOptional()
-  @Type(() => Number)
-  @IsNumber({ maxDecimalPlaces: 2 })
-  @Min(0)
-  @ValidateDiscountNotAbovePrice()
-  discountPrice?: number;
+  discountPrice?: unknown;
 
   @ApiPropertyOptional({
     description:

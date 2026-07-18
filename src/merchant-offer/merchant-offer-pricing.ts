@@ -9,12 +9,10 @@ export function computeOfferDiscountPrice(
 
 /**
  * Storefront/checkout price with optional merchant promo.
- * - Active offer: apply offer % to product discount_price when set, else to list price.
- * - No offer: use product discount_price when set, else list price.
+ * Active offer: apply offer % to list price. Otherwise charge list price.
  */
 export function resolveStorefrontProductPricing(
   listPrice: number,
-  storedDiscountPrice: number | null,
   merchantOfferPercent: number | null,
 ): {
   price: number;
@@ -24,17 +22,9 @@ export function resolveStorefrontProductPricing(
   merchantOfferPercent: number | null;
 } {
   const price = Number(listPrice);
-  const productSale =
-    storedDiscountPrice !== null && storedDiscountPrice < price
-      ? Number(storedDiscountPrice)
-      : null;
 
   if (merchantOfferPercent !== null && merchantOfferPercent > 0) {
-    const offerBase = productSale !== null ? productSale : price;
-    const offerApplied = computeOfferDiscountPrice(
-      offerBase,
-      merchantOfferPercent,
-    );
+    const offerApplied = computeOfferDiscountPrice(price, merchantOfferPercent);
     const hasDiscount = offerApplied < price;
     return {
       price,
@@ -45,12 +35,11 @@ export function resolveStorefrontProductPricing(
     };
   }
 
-  const hasDiscount = productSale !== null;
   return {
     price,
-    discountPrice: productSale,
-    hasDiscount,
-    effectivePrice: hasDiscount ? productSale! : price,
+    discountPrice: null,
+    hasDiscount: false,
+    effectivePrice: price,
     merchantOfferPercent: null,
   };
 }
@@ -58,12 +47,8 @@ export function resolveStorefrontProductPricing(
 /** Effective unit sale price before option modifiers. */
 export function resolveStorefrontUnitBasePrice(
   listPrice: number,
-  storedDiscountPrice: number | null,
   merchantOfferPercent: number | null,
 ): number {
-  return resolveStorefrontProductPricing(
-    listPrice,
-    storedDiscountPrice,
-    merchantOfferPercent,
-  ).effectivePrice;
+  return resolveStorefrontProductPricing(listPrice, merchantOfferPercent)
+    .effectivePrice;
 }

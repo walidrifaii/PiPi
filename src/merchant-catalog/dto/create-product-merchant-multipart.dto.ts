@@ -9,7 +9,6 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
-import { ValidateDiscountNotAbovePrice } from '../validators/discount-not-greater-than-price.constraint';
 
 /** Form fields for `POST /merchants/me/products` (multipart text fields; binary upload field name `imageUrl`). */
 export class CreateProductMerchantMultipartDto {
@@ -44,13 +43,13 @@ export class CreateProductMerchantMultipartDto {
   @IsString()
   descriptionAr?: string;
 
-  @ApiPropertyOptional({ type: Number })
+  /** @deprecated Ignored. Per-product discountPrice was removed; use merchant offers. */
+  @ApiPropertyOptional({
+    deprecated: true,
+    description: 'Ignored — per-product discount price was removed',
+  })
   @IsOptional()
-  @Type(() => Number)
-  @IsNumber({ maxDecimalPlaces: 2 })
-  @Min(0)
-  @ValidateDiscountNotAbovePrice()
-  discountPrice?: number;
+  discountPrice?: unknown;
 
   @ApiPropertyOptional({
     description: 'When false, product is hidden from v2 customer storefront.',
