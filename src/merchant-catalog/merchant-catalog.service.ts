@@ -369,7 +369,7 @@ export class MerchantCatalogService {
     merchantId: string,
     i18n?: I18nOptions,
   ): Promise<UnifiedProduct[]> {
-    await this.assertMerchantActive(merchantId);
+    await this.assertMerchantBrowsable(merchantId);
 
     const rows = await this.prisma.product.findMany({
       where: { category: { merchantId } },
@@ -433,7 +433,7 @@ export class MerchantCatalogService {
                 name: true,
                 nameAr: true,
                 imageUrl: true,
-                isActive: true,
+                isEnabled: true,
                 deliveryTime: {
                   select: { minMinutes: true, maxMinutes: true },
                 },
@@ -444,7 +444,7 @@ export class MerchantCatalogService {
       },
     });
 
-    if (!row || !row.category.merchant.isActive) {
+    if (!row || !row.category.merchant.isEnabled) {
       throw new NotFoundException('Product not found');
     }
     if (activeProductsOnly && !row.isActive) {
@@ -953,7 +953,7 @@ export class MerchantCatalogService {
       category: {
         merchant: {
           id: { in: filters.scopeMerchantIds },
-          isActive: true,
+          isEnabled: true,
           ...(merchantTypeCode
             ? {
                 merchantType: {
@@ -1255,42 +1255,9 @@ export class MerchantCatalogService {
     return out;
   }
 
+  /** @deprecated Prefer assertMerchantBrowsable — open-for-orders is checkout-only. */
   private async assertMerchantActive(merchantId: string): Promise<void> {
-    const merchant = await this.prisma.merchant.findUnique({
-      where: { id: merchantId },
-      select: {
-        isActive: true,
-        isEnabled: true,
-        useWorkingHours: true,
-        timezone: true,
-        workingIntervals: {
-          orderBy: [
-            { weekday: Prisma.SortOrder.asc },
-            { sortOrder: Prisma.SortOrder.asc },
-          ],
-          select: {
-            weekday: true,
-            openLocal: true,
-            closeLocal: true,
-            sortOrder: true,
-          },
-        },
-      },
-    });
-    if (!merchant?.isEnabled || !merchant.isActive) {
-      throw new NotFoundException('Merchant not found or inactive');
-    }
-    const week = workingIntervalsToWeek(merchant.workingIntervals);
-    const weekOrNull = week.days.length > 0 ? week : null;
-    const open = computeMerchantOpenNow({
-      isActive: merchant.isActive,
-      useWorkingHours: merchant.useWorkingHours,
-      timezone: merchant.timezone,
-      week: weekOrNull,
-    });
-    if (!open) {
-      throw new NotFoundException('Merchant not found or inactive');
-    }
+    await this.assertMerchantBrowsable(merchantId);
   }
 
   private async assertMerchantExists(merchantId: string): Promise<void> {
@@ -1303,13 +1270,13 @@ export class MerchantCatalogService {
     }
   }
 
-  /** Store exists, is admin-enabled, and is not permanently deactivated (hours may still show CLOSED). */
+  /** Store exists and is admin-enabled. Manual CLOSED / outside hours still allow menu browse. */
   private async assertMerchantBrowsable(merchantId: string): Promise<void> {
     const merchant = await this.prisma.merchant.findUnique({
       where: { id: merchantId },
-      select: { isActive: true, isEnabled: true },
+      select: { isEnabled: true },
     });
-    if (!merchant?.isEnabled || !merchant.isActive) {
+    if (!merchant?.isEnabled) {
       throw new NotFoundException('Merchant not found or inactive');
     }
   }

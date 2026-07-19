@@ -578,12 +578,6 @@ export class CheckoutService {
       sortOrder: number;
     }>;
   }) {
-    if (!merchant.isActive) {
-      throw new BadRequestException(
-        'This store is closed and not accepting orders',
-      );
-    }
-
     const week = workingIntervalsToWeek(merchant.workingIntervals);
     const weekOrNull = week.days.length > 0 ? week : null;
     const isOpen = computeMerchantOpenNow({
@@ -595,7 +589,7 @@ export class CheckoutService {
 
     if (!isOpen) {
       throw new BadRequestException(
-        'This store is outside working hours. Please try again later.',
+        'This store is closed and not accepting orders',
       );
     }
   }
