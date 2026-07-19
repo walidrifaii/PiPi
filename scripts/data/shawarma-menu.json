@@ -1,0 +1,289 @@
+{
+  "merchantId": "4cd49325-8ed9-40d0-9a90-f4736e954cae",
+  "merchantName": "Shawarma",
+  "categories": [
+    {
+      "name": "Meals",
+      "nameAr": "وجبات",
+      "sortOrder": 1
+    },
+    {
+      "name": "Appetizers",
+      "nameAr": "مقبلات",
+      "sortOrder": 2
+    },
+    {
+      "name": "Sauces",
+      "nameAr": "صلصات",
+      "sortOrder": 3
+    },
+    {
+      "name": "Sandwiches",
+      "nameAr": "ساندويش",
+      "sortOrder": 4
+    },
+    {
+      "name": "Drinks",
+      "nameAr": "مشروبات",
+      "sortOrder": 5
+    }
+  ],
+  "products": [
+    {
+      "name": "Half Kilo Shawarma Meal",
+      "nameAr": "وجبة شاورما نصف كيلو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "One Kilo Shawarma Meal",
+      "nameAr": "وجبة شاورما كيلو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 22.22,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Tawook Meal",
+      "nameAr": "وجبة طاووق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Crispy Meal",
+      "nameAr": "وجبة كريسبي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Small Fries Plate",
+      "nameAr": "صحن بطاطا صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.67,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Medium Fries Plate",
+      "nameAr": "صحن بطاطا وسط",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Large Fries Plate",
+      "nameAr": "صحن بطاطا كبير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Garlic Sauce",
+      "nameAr": "علبة ثوم",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.56,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Coleslaw",
+      "nameAr": "علبة كولسلو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Mayonnaise Sauce",
+      "nameAr": "علبة مايونيز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.56,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Ketchup Pack",
+      "nameAr": "علبة كاتشب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.89,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Pickle Pack",
+      "nameAr": "علبة كبيس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.56,
+      "categoryName": "Sauces"
+    },
+    {
+      "name": "Shawarma Sandwich",
+      "nameAr": "ساندويش شاورما",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Tawook Sandwich",
+      "nameAr": "ساندويش طاووق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.45,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Fries Sandwich",
+      "nameAr": "ساندويش بطاطا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Crispy Sandwich",
+      "nameAr": "ساندويش كريسبي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.0,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Grilled Chicken Sandwich",
+      "nameAr": "ساندويش دجاج عالغاز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Pepsi",
+      "nameAr": "بيبسي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.0,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "7UP",
+      "nameAr": "سفن أب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.0,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Mirinda",
+      "nameAr": "ميرندا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.0,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Ayran",
+      "nameAr": "عيران",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.0,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Pepsi 1.25L",
+      "nameAr": "بيبسي 1.25 لتر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.67,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Mirinda 1.25L",
+      "nameAr": "ميرندا 1.25 لتر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.67,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "7UP 1.25L",
+      "nameAr": "سفن أب 1.25 لتر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.67,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Pepsi Can",
+      "nameAr": "بيبسي تنك",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Mirinda Can",
+      "nameAr": "ميرندا تنك",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "7UP Can",
+      "nameAr": "سفن أب تنك",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Small Plastic Pepsi",
+      "nameAr": "بيبسي بلاستيك صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.89,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Small Plastic Mirinda",
+      "nameAr": "ميرندا بلاستيك صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.89,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Small Plastic 7UP",
+      "nameAr": "سفن أب بلاستيك صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.89,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Small Water",
+      "nameAr": "مياه صغيرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.44,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Large Water",
+      "nameAr": "مياه كبيرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.67,
+      "categoryName": "Drinks"
+    }
+  ]
+}
