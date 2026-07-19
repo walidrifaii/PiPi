@@ -166,7 +166,7 @@ export class AuthService {
         throw new UnauthorizedException('Invalid refresh token');
       }
       const merchant = await this.prisma.merchant.findFirst({
-        where: { id: sub, isActive: true },
+        where: { id: sub, isEnabled: true },
         select: { id: true, email: true },
       });
       if (!merchant?.email) {
@@ -467,10 +467,11 @@ export class AuthService {
   }
 
   async loginMerchant(dto: LoginMerchantDto) {
+    // Do NOT filter by isActive (OPEN/CLOSED). Closed stores must still log in.
+    // isEnabled is checked after password match so CLOSED ≠ invalid credentials.
     const merchant = await this.prisma.merchant.findFirst({
       where: {
         OR: [{ email: dto.identifier }, { phone: dto.identifier }],
-        isActive: true,
         passwordHash: { not: null },
       },
       select: {
@@ -483,6 +484,8 @@ export class AuthService {
         passwordHash: true,
         imageUrl: true,
         coverImageUrl: true,
+        isActive: true,
+        isEnabled: true,
       },
     });
 
@@ -495,6 +498,12 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    if (!merchant.isEnabled) {
+      throw new UnauthorizedException(
+        'This merchant account is disabled. Contact support.',
+      );
+    }
+
     const fcmToken = normalizeFcmToken(dto.fcmToken);
     if (fcmToken) {
       await this.prisma.merchant.update({
@@ -503,9 +512,14 @@ export class AuthService {
       });
     }
 
+    const emailForToken = merchant.email ?? merchant.phone;
+    if (!emailForToken) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
     const { accessToken, refreshToken } = await this.issueTokenPair({
       sub: merchant.id,
-      email: merchant.email!,
+      email: emailForToken,
       role: 'MERCHANT',
       merchantId: merchant.id,
     });
@@ -522,6 +536,8 @@ export class AuthService {
         phone: merchant.phone,
         logoUrl: merchant.imageUrl,
         coverImageUrl: merchant.coverImageUrl,
+        isActive: merchant.isActive,
+        status: merchant.isActive ? 'OPEN' : 'CLOSED',
         role: MERCHANT_ACCOUNT_ROLE,
       },
     };
