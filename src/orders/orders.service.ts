@@ -344,7 +344,6 @@ export class OrdersService {
     return [
       ...orderIdFilters,
       { user: { fullName: { contains: search, mode: 'insensitive' } } },
-      { user: { phone: { contains: search, mode: 'insensitive' } } },
     ];
   }
 

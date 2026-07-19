@@ -326,14 +326,17 @@ export function mapOrderDetail(
       : {}),
     ...(options.includeCustomer && order.user
       ? {
-          customer: {
-            id: order.user.id,
-            fullName: order.user.fullName,
-            // Merchants must not see customer phone (driver-only).
-            ...(audience === 'merchant'
-              ? {}
-              : { phone: order.user.phone }),
-          },
+          customer:
+            audience === 'merchant'
+              ? {
+                  id: order.user.id,
+                  fullName: order.user.fullName,
+                }
+              : {
+                  id: order.user.id,
+                  fullName: order.user.fullName,
+                  phone: order.user.phone,
+                },
         }
       : {}),
   };

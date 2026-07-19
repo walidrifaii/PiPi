@@ -12,7 +12,7 @@ import {
 export class ListMerchantOrdersQueryDto {
   @ApiPropertyOptional({
     description:
-      'Search by order id (full UUID, short display id, or checkout ref), customer name, or phone (partial, case-insensitive). Minimum 2 characters.',
+      'Search by order id (full UUID, short display id, or checkout ref), or customer name (partial, case-insensitive). Minimum 2 characters. Customer phone is not searchable and is never returned.',
     example: '347a5c58',
   })
   @IsOptional()
