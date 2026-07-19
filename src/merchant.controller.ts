@@ -877,6 +877,29 @@ export class MerchantController {
   @ApiTags('Super Admin')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
+  @ApiOperation({
+    summary: 'Set all merchants OPEN or CLOSED (super admin only)',
+    description:
+      'Bulk-updates store status via `isActive` for every merchant (OPEN = true, CLOSED = false). ' +
+      'Does **not** change `isEnabled` — use PATCH /merchants/admin/:merchantId/enabled to hide/deactivate a store. ' +
+      'CLOSED stores remain visible in lists with closed status; disabled (`isEnabled=false`) stores stay hidden.',
+  })
+  @ApiOkResponse({
+    description: 'Bulk store status applied',
+    schema: {
+      example: { status: 'CLOSED', updatedCount: 42 },
+    },
+  })
+  @Patch('admin/store-status')
+  setAllMerchantsStoreStatus(@Body() dto: SetMerchantStoreStatusDto) {
+    return this.merchantIntegrationService.setAllMerchantsStoreStatus(
+      merchantIsActiveFromStoreStatus(dto.status),
+    );
+  }
+
+  @ApiTags('Super Admin')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @ApiParam({ name: 'merchantId', type: String })
   @ApiOperation({ summary: 'Get merchant details for super-admin edit form' })
   @Get('admin/:merchantId')

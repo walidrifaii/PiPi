@@ -962,6 +962,22 @@ export class MerchantIntegrationService {
     return this.rowToListItem(updated as unknown as MerchantRowForList);
   }
 
+  /**
+   * Bulk OPEN/CLOSED for every merchant via `isActive` only.
+   * Does not change `isEnabled` (inactive / kill-switch).
+   */
+  async setAllMerchantsStoreStatus(
+    isActive: boolean,
+  ): Promise<{ status: 'OPEN' | 'CLOSED'; updatedCount: number }> {
+    const result = await this.db.merchant.updateMany({
+      data: { isActive },
+    });
+    return {
+      status: isActive ? 'OPEN' : 'CLOSED',
+      updatedCount: result.count,
+    };
+  }
+
   private buildWorkingIntervalCreates(
     merchantId: string,
     week: MerchantWorkingHoursWeek,
