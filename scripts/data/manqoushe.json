@@ -1,0 +1,2750 @@
+{
+  "merchantId": "c8c82cf1-b87b-4ab9-bf18-1bea26870c7e",
+  "merchantName": "Manqoushe",
+  "categories": [
+    {
+      "name": "Manqoushe",
+      "nameAr": "منقوش",
+      "sortOrder": 1
+    },
+    {
+      "name": "Safaieh",
+      "nameAr": "صفايح",
+      "sortOrder": 2
+    },
+    {
+      "name": "Pizza",
+      "nameAr": "بيتزا",
+      "sortOrder": 3
+    },
+    {
+      "name": "Kaake",
+      "nameAr": "كعكة",
+      "sortOrder": 4
+    },
+    {
+      "name": "Soiree",
+      "nameAr": "سواريه",
+      "sortOrder": 5
+    },
+    {
+      "name": "Drinks",
+      "nameAr": "مشروبات",
+      "sortOrder": 6
+    }
+  ],
+  "products": [
+    {
+      "name": "Zaatar",
+      "nameAr": "زعتر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.78,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Zaatar with Vegetables",
+      "nameAr": "زعتر مع خضار",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.33,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Zaatar Topped with Cheese",
+      "nameAr": "زعتر على وجه جبنه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.67,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Zaatar Vegetables Cheese",
+      "nameAr": "زعتر خضار جبنه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.89,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Half Zaatar Half Cheese",
+      "nameAr": "نص زعتر نص جبنه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.67,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Cheese",
+      "nameAr": "جبنه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Mozzarella Cheese",
+      "nameAr": "جبنه موزيرلا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Cheese Vegetables Sausage",
+      "nameAr": "جبنه خضار سجق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Cheese Sausage",
+      "nameAr": "جبنه سجق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Cheese Pepperoni",
+      "nameAr": "جبنه ببيروني",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.67,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Cheese Mortadella",
+      "nameAr": "جبنه مرتادل",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.67,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Qareesh",
+      "nameAr": "قريش",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Qareesh Cheese",
+      "nameAr": "قريش جبنه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.56,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Turkey",
+      "nameAr": "تركيه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.44,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Meat",
+      "nameAr": "لحمه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Meat Cheese",
+      "nameAr": "لحمه جبنه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Labneh Vegetables",
+      "nameAr": "لبنه خضار",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Labneh Vegetables Mortadella",
+      "nameAr": "لبنه خضار مرتدل",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Mixed",
+      "nameAr": "مشكله",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Cheese and Turkey",
+      "nameAr": "جبنة و حبش",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Sliced Cheese",
+      "nameAr": "جبنة مشروحة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Small Cheese",
+      "nameAr": "جبنة صغيرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.11,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Cheese with Sliced Arish",
+      "nameAr": "جبنة مع اريش مشروحة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Cheese with Extra Turkey",
+      "nameAr": "جبنة مع حبش اكسترا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.78,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Cheese with Greens",
+      "nameAr": "جبن مع خضرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.67,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Cheese Vegetables Mortadella",
+      "nameAr": "جبنه خضار مارتاديلا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.22,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Tawook Cheese",
+      "nameAr": "جبنة طاووق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Zaatar with Cheese and Greens",
+      "nameAr": "زعتر مع جبنة و خضرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.89,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Cheese and Corn",
+      "nameAr": "جبنة و ذرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.44,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Harhoura",
+      "nameAr": "حرحورة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.67,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Small Bread",
+      "nameAr": "خبز صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.22,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Sliced Zaatar",
+      "nameAr": "زعتر مشروحة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.33,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Fajita Manqoushe",
+      "nameAr": "منقوشة فاهيتا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Duplex Manqoushe",
+      "nameAr": "منقوشة دوبلكس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.67,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Mortadella and Turkey",
+      "nameAr": "مارتاديلا وحبش",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Mortadella and Pepperoni",
+      "nameAr": "مارتاديلا و بيبيروني",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Half Sausage Half Fajita",
+      "nameAr": "نص سجق نص فاهيتا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Half Pepperoni Half Mortadella",
+      "nameAr": "نص بيبيروني نص مارتاديلا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.89,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Half Arish Half Cheese",
+      "nameAr": "نص أريش نص جبنة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Sliced Fajita Manqoushe",
+      "nameAr": "منقوشة فاهيتا مشروحة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Half Tawook Half Sausage",
+      "nameAr": "نص طاووق نص سجق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Labneh without Vegetables",
+      "nameAr": "لبنة بلا خضرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "4 Cheese Manqoushe",
+      "nameAr": "منقوشة 4 cheese",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Sliced Meat with Cheese",
+      "nameAr": "لحمة مع جبنة مشروحة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Sliced Meat",
+      "nameAr": "لحمة مشروحة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Labneh Mortadella",
+      "nameAr": "لبنة مارتاديل",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Labneh with Turkey",
+      "nameAr": "لبنة مع حبش",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Duplex Cheese",
+      "nameAr": "جبنة دوبلكس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Extra Cheese",
+      "nameAr": "جبنة اكسترا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.61,
+      "categoryName": "Manqoushe"
+    },
+    {
+      "name": "Meat Safaieh",
+      "nameAr": "صفايح لحمة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.44,
+      "categoryName": "Safaieh"
+    },
+    {
+      "name": "Sausage Safaieh",
+      "nameAr": "صفايح سجق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.67,
+      "categoryName": "Safaieh"
+    },
+    {
+      "name": "Kefta Safaieh",
+      "nameAr": "صفايح كفتة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Safaieh"
+    },
+    {
+      "name": "Tripoli Safihe",
+      "nameAr": "صفيحة طرابلسية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.78,
+      "categoryName": "Safaieh"
+    },
+    {
+      "name": "Vegetable Pizza (Small)",
+      "nameAr": "بيتزا خضار (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Vegetable Pizza (Medium)",
+      "nameAr": "بيتزا خضار (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Vegetable Pizza (Large)",
+      "nameAr": "بيتزا خضار (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10.56,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Vegetable Pizza (Family)",
+      "nameAr": "بيتزا خضار (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13.33,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Pepperoni Pizza (Small)",
+      "nameAr": "بيتزا بيبيروني (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Pepperoni Pizza (Medium)",
+      "nameAr": "بيتزا بيبيروني (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Pepperoni Pizza (Large)",
+      "nameAr": "بيتزا بيبيروني (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Pepperoni Pizza (Family)",
+      "nameAr": "بيتزا بيبيروني (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Turkey Pizza (Small)",
+      "nameAr": "بيتزا حبش (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Turkey Pizza (Medium)",
+      "nameAr": "بيتزا حبش (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.22,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Turkey Pizza (Large)",
+      "nameAr": "بيتزا حبش (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Turkey Pizza (Family)",
+      "nameAr": "بيتزا حبش (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13.33,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Sausage Pizza (Small)",
+      "nameAr": "بيتزا سجق (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Sausage Pizza (Medium)",
+      "nameAr": "بيتزا سجق (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.33,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Sausage Pizza (Large)",
+      "nameAr": "بيتزا سجق (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Sausage Pizza (Family)",
+      "nameAr": "بيتزا سجق (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13.33,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Mortadella Pizza (Small)",
+      "nameAr": "بيتزا مارتاديل (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Mortadella Pizza (Medium)",
+      "nameAr": "بيتزا مارتاديل (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.33,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Mortadella Pizza (Large)",
+      "nameAr": "بيتزا مارتاديل (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Mortadella Pizza (Family)",
+      "nameAr": "بيتزا مارتاديل (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Fajita Pizza (Small)",
+      "nameAr": "بيتزا فاهيتا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Fajita Pizza (Medium)",
+      "nameAr": "بيتزا فاهيتا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Fajita Pizza (Large)",
+      "nameAr": "بيتزا فاهيتا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.22,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Fajita Pizza (Family)",
+      "nameAr": "بيتزا فاهيتا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 15,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Margherita Pizza (Small)",
+      "nameAr": "بيتزا ماركاريتا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Margherita Pizza (Medium)",
+      "nameAr": "بيتزا ماركاريتا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Margherita Pizza (Large)",
+      "nameAr": "بيتزا ماركاريتا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10.56,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Margherita Pizza (Family)",
+      "nameAr": "بيتزا ماركاريتا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13.33,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Vegetables (Small)",
+      "nameAr": "نص بيبيروني نص خضار (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Vegetables (Medium)",
+      "nameAr": "نص بيبيروني نص خضار (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.33,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Vegetables (Large)",
+      "nameAr": "نص بيبيروني نص خضار (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Vegetables (Family)",
+      "nameAr": "نص بيبيروني نص خضار (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Mortadella Half Turkey (Small)",
+      "nameAr": "نص مارتاديلا نص حبش (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Mortadella Half Turkey (Medium)",
+      "nameAr": "نص مارتاديلا نص حبش (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Mortadella Half Turkey (Large)",
+      "nameAr": "نص مارتاديلا نص حبش (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Mortadella Half Turkey (Family)",
+      "nameAr": "نص مارتاديلا نص حبش (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Mixed Pizza (Small)",
+      "nameAr": "بيتزا مشكلة (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Mixed Pizza (Medium)",
+      "nameAr": "بيتزا مشكلة (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Mixed Pizza (Large)",
+      "nameAr": "بيتزا مشكلة (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.22,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Mixed Pizza (Family)",
+      "nameAr": "بيتزا مشكلة (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 16.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Mexicana Pizza (Small)",
+      "nameAr": "بيتزا مكسيكانا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Mexicana Pizza (Medium)",
+      "nameAr": "بيتزا مكسيكانا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Mexicana Pizza (Large)",
+      "nameAr": "بيتزا مكسيكانا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.22,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Mexicana Pizza (Family)",
+      "nameAr": "بيتزا مكسيكانا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 15,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Mexicana (Small)",
+      "nameAr": "نص سجق نص ميكسيكانا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Mexicana (Medium)",
+      "nameAr": "نص سجق نص ميكسيكانا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Mexicana (Large)",
+      "nameAr": "نص سجق نص ميكسيكانا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.22,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Mexicana (Family)",
+      "nameAr": "نص سجق نص ميكسيكانا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 15,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Tawook (Small)",
+      "nameAr": "نص سجق نص طاووق (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Tawook (Medium)",
+      "nameAr": "نص سجق نص طاووق (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Tawook (Large)",
+      "nameAr": "نص سجق نص طاووق (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.22,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Tawook (Family)",
+      "nameAr": "نص سجق نص طاووق (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 15,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Mortadella (Small)",
+      "nameAr": "نص سجق نص مارتاديلا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Mortadella (Medium)",
+      "nameAr": "نص سجق نص مارتاديلا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Mortadella (Large)",
+      "nameAr": "نص سجق نص مارتاديلا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Mortadella (Family)",
+      "nameAr": "نص سجق نص مارتاديلا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Margherita (Small)",
+      "nameAr": "نص سجق نص مارغاريتا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Margherita (Medium)",
+      "nameAr": "نص سجق نص مارغاريتا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Margherita (Large)",
+      "nameAr": "نص سجق نص مارغاريتا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Margherita (Family)",
+      "nameAr": "نص سجق نص مارغاريتا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Pepperoni (Small)",
+      "nameAr": "نص حبش نص بيبيروني (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Pepperoni (Medium)",
+      "nameAr": "نص حبش نص بيبيروني (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Pepperoni (Large)",
+      "nameAr": "نص حبش نص بيبيروني (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Pepperoni (Family)",
+      "nameAr": "نص حبش نص بيبيروني (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Tawook (Small)",
+      "nameAr": "نص حبش نص طاووق (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Tawook (Medium)",
+      "nameAr": "نص حبش نص طاووق (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Tawook (Large)",
+      "nameAr": "نص حبش نص طاووق (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Tawook (Family)",
+      "nameAr": "نص حبش نص طاووق (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Margherita (Small)",
+      "nameAr": "نص حبش نص مارغاريتا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Margherita (Medium)",
+      "nameAr": "نص حبش نص مارغاريتا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.33,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Margherita (Large)",
+      "nameAr": "نص حبش نص مارغاريتا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Margherita (Family)",
+      "nameAr": "نص حبش نص مارغاريتا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half BBQ (Small)",
+      "nameAr": "نص حبش نص باربكيو (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half BBQ (Medium)",
+      "nameAr": "نص حبش نص باربكيو (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half BBQ (Large)",
+      "nameAr": "نص حبش نص باربكيو (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half BBQ (Family)",
+      "nameAr": "نص حبش نص باربكيو (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Mexicana (Small)",
+      "nameAr": "نص حبش نص ماكسيكانا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Mexicana (Medium)",
+      "nameAr": "نص حبش نص ماكسيكانا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Mexicana (Large)",
+      "nameAr": "نص حبش نص ماكسيكانا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Mexicana (Family)",
+      "nameAr": "نص حبش نص ماكسيكانا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Sausage (Small)",
+      "nameAr": "نص فاهيتا نص سجق (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Sausage (Medium)",
+      "nameAr": "نص فاهيتا نص سجق (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Sausage (Large)",
+      "nameAr": "نص فاهيتا نص سجق (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.22,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Sausage (Family)",
+      "nameAr": "نص فاهيتا نص سجق (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 15,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Turkey (Small)",
+      "nameAr": "نص فاهيتا نص حبش (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Turkey (Medium)",
+      "nameAr": "نص فاهيتا نص حبش (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Turkey (Large)",
+      "nameAr": "نص فاهيتا نص حبش (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Turkey (Family)",
+      "nameAr": "نص فاهيتا نص حبش (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half BBQ (Small)",
+      "nameAr": "نص فاهيتا نص باربكيو (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half BBQ (Medium)",
+      "nameAr": "نص فاهيتا نص باربكيو (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half BBQ (Large)",
+      "nameAr": "نص فاهيتا نص باربكيو (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.22,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half BBQ (Family)",
+      "nameAr": "نص فاهيتا نص باربكيو (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 15,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Mortadella (Small)",
+      "nameAr": "نص فاهيتا نص مارتاديلا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Mortadella (Medium)",
+      "nameAr": "نص فاهيتا نص مارتاديلا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Mortadella (Large)",
+      "nameAr": "نص فاهيتا نص مارتاديلا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Mortadella (Family)",
+      "nameAr": "نص فاهيتا نص مارتاديلا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Margherita (Small)",
+      "nameAr": "نص فاهيتا نص مارغاريتا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Margherita (Medium)",
+      "nameAr": "نص فاهيتا نص مارغاريتا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Margherita (Large)",
+      "nameAr": "نص فاهيتا نص مارغاريتا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Margherita (Family)",
+      "nameAr": "نص فاهيتا نص مارغاريتا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Mexicana (Small)",
+      "nameAr": "نص فاهيتا نص ماكسيكانا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Mexicana (Medium)",
+      "nameAr": "نص فاهيتا نص ماكسيكانا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Mexicana (Large)",
+      "nameAr": "نص فاهيتا نص ماكسيكانا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.22,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Mexicana (Family)",
+      "nameAr": "نص فاهيتا نص ماكسيكانا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 15,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Turkey (Small)",
+      "nameAr": "نص سجق نص حبش (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Turkey (Medium)",
+      "nameAr": "نص سجق نص حبش (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Turkey (Large)",
+      "nameAr": "نص سجق نص حبش (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Turkey (Family)",
+      "nameAr": "نص سجق نص حبش (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Pepperoni (Small)",
+      "nameAr": "نص فاهيتا نص بيبيروني (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Pepperoni (Medium)",
+      "nameAr": "نص فاهيتا نص بيبيروني (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Pepperoni (Large)",
+      "nameAr": "نص فاهيتا نص بيبيروني (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Pepperoni (Family)",
+      "nameAr": "نص فاهيتا نص بيبيروني (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Tawook (Small)",
+      "nameAr": "نص فاهيتا نص طاووق (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Tawook (Medium)",
+      "nameAr": "نص فاهيتا نص طاووق (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Tawook (Large)",
+      "nameAr": "نص فاهيتا نص طاووق (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.22,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Fajita Half Tawook (Family)",
+      "nameAr": "نص فاهيتا نص طاووق (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 15,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Pepperoni (Small)",
+      "nameAr": "نص سجق نص بيبيروني (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Pepperoni (Medium)",
+      "nameAr": "نص سجق نص بيبيروني (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Pepperoni (Large)",
+      "nameAr": "نص سجق نص بيبيروني (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half Pepperoni (Family)",
+      "nameAr": "نص سجق نص بيبيروني (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half BBQ (Small)",
+      "nameAr": "نص سجق نص باربيكيو (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half BBQ (Medium)",
+      "nameAr": "نص سجق نص باربيكيو (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half BBQ (Large)",
+      "nameAr": "نص سجق نص باربيكيو (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.22,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Sausage Half BBQ (Family)",
+      "nameAr": "نص سجق نص باربيكيو (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 15,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Pepperoni (Small)",
+      "nameAr": "نص باربكيو نص بيبيروني (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Pepperoni (Medium)",
+      "nameAr": "نص باربكيو نص بيبيروني (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Pepperoni (Large)",
+      "nameAr": "نص باربكيو نص بيبيروني (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Pepperoni (Family)",
+      "nameAr": "نص باربكيو نص بيبيروني (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Mortadella (Small)",
+      "nameAr": "نص باربيكيو نص مارتاديل (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Mortadella (Medium)",
+      "nameAr": "نص باربيكيو نص مارتاديل (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Mortadella (Large)",
+      "nameAr": "نص باربيكيو نص مارتاديل (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Mortadella (Family)",
+      "nameAr": "نص باربيكيو نص مارتاديل (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Tawook (Small)",
+      "nameAr": "نص باربكيو نص طاووق (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Tawook (Medium)",
+      "nameAr": "نص باربكيو نص طاووق (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Tawook (Large)",
+      "nameAr": "نص باربكيو نص طاووق (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.22,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Tawook (Family)",
+      "nameAr": "نص باربكيو نص طاووق (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 15,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Mexicana (Small)",
+      "nameAr": "نص بيبيروني نص مكسيكان (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Mexicana (Medium)",
+      "nameAr": "نص بيبيروني نص مكسيكان (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Mexicana (Large)",
+      "nameAr": "نص بيبيروني نص مكسيكان (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Mexicana (Family)",
+      "nameAr": "نص بيبيروني نص مكسيكان (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Margherita (Small)",
+      "nameAr": "نص بيبيروني نص ماغاريتا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Margherita (Medium)",
+      "nameAr": "نص بيبيروني نص ماغاريتا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.33,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Margherita (Large)",
+      "nameAr": "نص بيبيروني نص ماغاريتا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Margherita (Family)",
+      "nameAr": "نص بيبيروني نص ماغاريتا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Tawook (Small)",
+      "nameAr": "نص بيبيروني نص طاووق (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Tawook (Medium)",
+      "nameAr": "نص بيبيروني نص طاووق (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Tawook (Large)",
+      "nameAr": "نص بيبيروني نص طاووق (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Tawook (Family)",
+      "nameAr": "نص بيبيروني نص طاووق (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Mortadella (Small)",
+      "nameAr": "نص بيبيروني نص مارتاديلا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Mortadella (Medium)",
+      "nameAr": "نص بيبيروني نص مارتاديلا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.33,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Mortadella (Large)",
+      "nameAr": "نص بيبيروني نص مارتاديلا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Pepperoni Half Mortadella (Family)",
+      "nameAr": "نص بيبيروني نص مارتاديلا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Margherita (Small)",
+      "nameAr": "نص باربكيو نص مارغاريتا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Margherita (Medium)",
+      "nameAr": "نص باربكيو نص مارغاريتا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Margherita (Large)",
+      "nameAr": "نص باربكيو نص مارغاريتا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Margherita (Family)",
+      "nameAr": "نص باربكيو نص مارغاريتا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Mexicana (Small)",
+      "nameAr": "نص باربكيو نص ماكسيكان (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Mexicana (Medium)",
+      "nameAr": "نص باربكيو نص ماكسيكان (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Mexicana (Large)",
+      "nameAr": "نص باربكيو نص ماكسيكان (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.22,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half BBQ Half Mexicana (Family)",
+      "nameAr": "نص باربكيو نص ماكسيكان (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 15,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Tawook (Small)",
+      "nameAr": "نص خضرة نص طاووق (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Tawook (Medium)",
+      "nameAr": "نص خضرة نص طاووق (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Tawook (Large)",
+      "nameAr": "نص خضرة نص طاووق (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Tawook (Family)",
+      "nameAr": "نص خضرة نص طاووق (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Mortadella (Small)",
+      "nameAr": "نص خضرة نص مارتاديل (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Mortadella (Medium)",
+      "nameAr": "نص خضرة نص مارتاديل (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.33,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Mortadella (Large)",
+      "nameAr": "نص خضرة نص مارتاديل (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Mortadella (Family)",
+      "nameAr": "نص خضرة نص مارتاديل (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Margherita (Small)",
+      "nameAr": "نص خضرة نص مارغاريتا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Margherita (Medium)",
+      "nameAr": "نص خضرة نص مارغاريتا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Margherita (Large)",
+      "nameAr": "نص خضرة نص مارغاريتا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10.56,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Margherita (Family)",
+      "nameAr": "نص خضرة نص مارغاريتا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13.33,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Mexicana (Small)",
+      "nameAr": "نص خضرة نص ماكسيكان (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Mexicana (Medium)",
+      "nameAr": "نص خضرة نص ماكسيكان (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Mexicana (Large)",
+      "nameAr": "نص خضرة نص ماكسيكان (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Mexicana (Family)",
+      "nameAr": "نص خضرة نص ماكسيكان (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Fajita (Small)",
+      "nameAr": "نص خضرة نص فاهيتا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Fajita (Medium)",
+      "nameAr": "نص خضرة نص فاهيتا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Fajita (Large)",
+      "nameAr": "نص خضرة نص فاهيتا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Fajita (Family)",
+      "nameAr": "نص خضرة نص فاهيتا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Sausage (Small)",
+      "nameAr": "نص خضرة نص سجق (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Sausage (Medium)",
+      "nameAr": "نص خضرة نص سجق (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Sausage (Large)",
+      "nameAr": "نص خضرة نص سجق (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Sausage (Family)",
+      "nameAr": "نص خضرة نص سجق (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Turkey (Small)",
+      "nameAr": "نص خضرة نص حبش (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Turkey (Medium)",
+      "nameAr": "نص خضرة نص حبش (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.33,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Turkey (Large)",
+      "nameAr": "نص خضرة نص حبش (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half Turkey (Family)",
+      "nameAr": "نص خضرة نص حبش (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half BBQ (Small)",
+      "nameAr": "نص خضرة نص باربكيو (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half BBQ (Medium)",
+      "nameAr": "نص خضرة نص باربكيو (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half BBQ (Large)",
+      "nameAr": "نص خضرة نص باربكيو (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Vegetables Half BBQ (Family)",
+      "nameAr": "نص خضرة نص باربكيو (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Tawook Half Margherita (Small)",
+      "nameAr": "نص طاووق نص مارغاريتا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Tawook Half Margherita (Medium)",
+      "nameAr": "نص طاووق نص مارغاريتا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Tawook Half Margherita (Large)",
+      "nameAr": "نص طاووق نص مارغاريتا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Tawook Half Margherita (Family)",
+      "nameAr": "نص طاووق نص مارغاريتا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Tawook Half Mortadella (Small)",
+      "nameAr": "نص طاووق نص مارتاديل (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Tawook Half Mortadella (Medium)",
+      "nameAr": "نص طاووق نص مارتاديل (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Tawook Half Mortadella (Large)",
+      "nameAr": "نص طاووق نص مارتاديل (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Tawook Half Mortadella (Family)",
+      "nameAr": "نص طاووق نص مارتاديل (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Mortadella Half Mexicana (Small)",
+      "nameAr": "نص مارتاديل نص ماكسيكان (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Mortadella Half Mexicana (Medium)",
+      "nameAr": "نص مارتاديل نص ماكسيكان (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Mortadella Half Mexicana (Large)",
+      "nameAr": "نص مارتاديل نص ماكسيكان (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Mortadella Half Mexicana (Family)",
+      "nameAr": "نص مارتاديل نص ماكسيكان (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Margherita Half Mexicana (Small)",
+      "nameAr": "نص مارغاريتا نص ماكسيكان (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Margherita Half Mexicana (Medium)",
+      "nameAr": "نص مارغاريتا نص ماكسيكان (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Margherita Half Mexicana (Large)",
+      "nameAr": "نص مارغاريتا نص ماكسيكان (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Margherita Half Mexicana (Family)",
+      "nameAr": "نص مارغاريتا نص ماكسيكان (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Tawook Half Mexicana (Small)",
+      "nameAr": "نص طاووق نص ماكسيكان (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Tawook Half Mexicana (Medium)",
+      "nameAr": "نص طاووق نص ماكسيكان (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Tawook Half Mexicana (Large)",
+      "nameAr": "نص طاووق نص ماكسيكان (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.22,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Tawook Half Mexicana (Family)",
+      "nameAr": "نص طاووق نص ماكسيكان (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 15,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Mortadella Half Margherita (Small)",
+      "nameAr": "نص مارتاديل نص مارغاريتا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Mortadella Half Margherita (Medium)",
+      "nameAr": "نص مارتاديل نص مارغاريتا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.33,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Mortadella Half Margherita (Large)",
+      "nameAr": "نص مارتاديل نص مارغاريتا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Mortadella Half Margherita (Family)",
+      "nameAr": "نص مارتاديل نص مارغاريتا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "4 Cheese Pizza (Small)",
+      "nameAr": "بيتزا 4 cheese (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "4 Cheese Pizza (Medium)",
+      "nameAr": "بيتزا 4 cheese (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "4 Cheese Pizza (Large)",
+      "nameAr": "بيتزا 4 cheese (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "4 Cheese Pizza (Family)",
+      "nameAr": "بيتزا 4 cheese (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Tawook Pizza (Small)",
+      "nameAr": "بيتزا طاووق (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Tawook Pizza (Medium)",
+      "nameAr": "بيتزا طاووق (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.44,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Tawook Pizza (Large)",
+      "nameAr": "بيتزا طاووق (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.22,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Tawook Pizza (Family)",
+      "nameAr": "بيتزا طاووق (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 15,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Mortadella (Small)",
+      "nameAr": "نص حبش نص مارتاديلا (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Mortadella (Medium)",
+      "nameAr": "نص حبش نص مارتاديلا (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.33,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Mortadella (Large)",
+      "nameAr": "نص حبش نص مارتاديلا (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.11,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Half Turkey Half Mortadella (Family)",
+      "nameAr": "نص حبش نص مارتاديلا (عائلي)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13.89,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Regular Kaake",
+      "nameAr": "كعكة عادية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Extra Cheese Kaake",
+      "nameAr": "كعكة اكسترا جبنة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Turkey Kaake",
+      "nameAr": "كعكة حبش",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Sausage Kaake",
+      "nameAr": "كعكة سجق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Mortadella Kaake",
+      "nameAr": "كعكة مارتاديل",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.67,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Fajita Kaake",
+      "nameAr": "كعكة فاهيتا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Vegetable Kaake",
+      "nameAr": "كعكة خضار",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.67,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Extra Puffed Kaake",
+      "nameAr": "كعكة منفوخة اكسترا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.61,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Regular Puffed Kaake",
+      "nameAr": "كعكة منفوخة عادي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Pepperoni Kaake",
+      "nameAr": "كعكة بيبيروني",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Tripoli 4 Cheese Kaake",
+      "nameAr": "كعكة طرابلسية 4 cheese",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.67,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Puffed 4 Cheese Kaake",
+      "nameAr": "كعكة منفوخة 4 cheese",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.67,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Extra Cheese and Corn Kaake",
+      "nameAr": "كعكة جبنة و ذرة اكسترا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Mozzarella Kaake",
+      "nameAr": "كعكة موزاريلا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Mortadella and Greens Kaake",
+      "nameAr": "كعكة مرتاديلا وخضرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Labneh and Mortadella Kaake",
+      "nameAr": "كعكة لبنة ومارتاديلا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Empty Kaak",
+      "nameAr": "كعك فاضي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.33,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Samaa Kaak",
+      "nameAr": "كعك سماء",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.39,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Zaatar Kaak",
+      "nameAr": "كعك زعتر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.78,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Extra Greens Kaake",
+      "nameAr": "كعكة خضرة اكسترا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Cheese and Corn Kaake",
+      "nameAr": "كعكة جبنة وذرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.44,
+      "categoryName": "Kaake"
+    },
+    {
+      "name": "Soiree Pizza (Dozen)",
+      "nameAr": "سواريه بيتزا (دزينة)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Soiree Pizza (Piece)",
+      "nameAr": "سواريه بيتزا (قطعة)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.5,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Soiree Zaatar (Dozen)",
+      "nameAr": "سواريه زعتر (دزينة)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Soiree Zaatar (Piece)",
+      "nameAr": "سواريه زعتر (قطعة)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.33,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Baalbakiye (Dozen)",
+      "nameAr": "بعلبكية (دزينة)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Baalbakiye (Piece)",
+      "nameAr": "بعلبكية (قطعة)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.56,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Arish (Dozen)",
+      "nameAr": "أريش (دزينة)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Arish (Piece)",
+      "nameAr": "أريش (قطعة)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.5,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Fajita Raqaqat (Dozen)",
+      "nameAr": "رقاقات فهيتا (دزينة)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.89,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Fajita Raqaqat (Piece)",
+      "nameAr": "رقاقات فهيتا (قطعة)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.78,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Mixed Dozen",
+      "nameAr": "دزدينة مشكل",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Spinach",
+      "nameAr": "سبانغ",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Arish Pie",
+      "nameAr": "فطيرة اريش",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.56,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Fajita Pie",
+      "nameAr": "فطيرة فاهيتا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.67,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Mexicana Pie",
+      "nameAr": "فطيرة مكسيكانا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.67,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Meat in Dough Dozen",
+      "nameAr": "دزدينة لحمة بالعجين",
+      "description": null,
+      "descriptionAr": null,
+      "price": 17.33,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Small Pull Dough",
+      "nameAr": "عجينة سحب صغيرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.39,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Regular Pull Dough",
+      "nameAr": "عجينة سحب عادية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.5,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Small Dough No Toppings",
+      "nameAr": "عجينة صغيرة بلا اضافات",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.17,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Regular Dough",
+      "nameAr": "عجينة عادية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.28,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Optional Soiree Dozen",
+      "nameAr": "دزدينة سواري اختياري",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Meat in Dough Disc",
+      "nameAr": "قرص لحمة بالعجين",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.44,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Soiree Piece",
+      "nameAr": "سواريه قطعة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.47,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Soiree Cheese (Dozen)",
+      "nameAr": "جبنة (دزينة)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.11,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Soiree Cheese (Piece)",
+      "nameAr": "جبنة (قطعة)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.5,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Cheese and Zaatar Dozen",
+      "nameAr": "جبنة و زعتر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Small Meat in Dough",
+      "nameAr": "لحمة بعجين صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.5,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Shaibiyat",
+      "nameAr": "شعيبيات",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.78,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Shaibiyat Dozen",
+      "nameAr": "دزدينة شعيبيات",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9.33,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "Water",
+      "nameAr": "مياه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.28,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Mr Juicy",
+      "nameAr": "مستر جوسي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.22,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Small Soft Drink Can",
+      "nameAr": "مشروب غازي تنك صغير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.56,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Large Soft Drink Can",
+      "nameAr": "مشروب غازي تنك كبير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.78,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Soft Drink Bottle",
+      "nameAr": "مشروب غازي قنينة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.67,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Extra Juice",
+      "nameAr": "عصير اكسترا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.56,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Soft Drink 1.25L",
+      "nameAr": "مشروب غازي 1.25",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.33,
+      "categoryName": "Drinks"
+    },
+    {
+      "name": "Large Water",
+      "nameAr": "مياه كبير",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.44,
+      "categoryName": "Drinks"
+    }
+  ]
+}
