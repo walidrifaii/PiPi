@@ -106,12 +106,10 @@ export class MerchantStorefrontV2Controller extends MerchantController {
   @Get('products/:productId')
   getStorefrontProduct(
     @Param('productId', ParseUUIDPipe) productId: string,
-    @I18n() i18n?: I18nOptions,
   ) {
     return this.merchantCatalogService.getProductForStorefront(
       productId,
       true,
-      i18n,
     );
   }
 

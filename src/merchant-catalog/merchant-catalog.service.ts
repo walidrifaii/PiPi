@@ -407,11 +407,13 @@ export class MerchantCatalogService {
     });
   }
 
-  /** Public storefront: product details by id (guest or logged-in customer). */
+  /** Public storefront: product details by id (guest or logged-in customer).
+   * Always returns bilingual fields (`name` + `nameAr`, etc.) so clients can show both languages.
+   */
   async getProductForStorefront(
     productId: string,
     activeProductsOnly = false,
-    i18n?: I18nOptions,
+    _i18n?: I18nOptions,
   ) {
     const row = await this.prisma.product.findUnique({
       where: { id: productId },
@@ -456,50 +458,44 @@ export class MerchantCatalogService {
     const priced = this.attachProductPricing(row, true, offerPercent);
     const merchant = row.category.merchant;
 
-    return withLocaleValue(
-      localizeProduct(
-        {
-          id: row.id,
-          isActive: row.isActive,
-          categoryId: row.categoryId,
-          name: row.name,
-          nameAr: row.nameAr,
-          description: row.description,
-          descriptionAr: row.descriptionAr,
-          price: priced.price,
-          discountPrice: priced.discountPrice,
-          imageUrl: row.imageUrl,
-          hasDiscount: priced.hasDiscount,
-          effectivePrice: priced.effectivePrice,
-          merchantOfferPercent: offerPercent,
-          optionGroups: priced.optionGroups,
-          images: row.images,
-          createdAt: row.createdAt,
-          updatedAt: row.updatedAt,
-          category: {
-            id: row.category.id,
-            name: row.category.name,
-            nameAr: row.category.nameAr,
-            description: row.category.description,
-            descriptionAr: row.category.descriptionAr,
-          },
-          merchant: {
-            id: merchant.id,
-            name: merchant.name,
-            nameAr: merchant.nameAr,
-            logoUrl: merchant.imageUrl,
-            deliveryTime: merchant.deliveryTime
-              ? {
-                  minMinutes: merchant.deliveryTime.minMinutes,
-                  maxMinutes: merchant.deliveryTime.maxMinutes,
-                }
-              : null,
-          },
-        },
-        i18n,
-      ),
-      i18n,
-    );
+    return {
+      id: row.id,
+      isActive: row.isActive,
+      categoryId: row.categoryId,
+      name: row.name,
+      nameAr: row.nameAr ?? null,
+      description: row.description ?? null,
+      descriptionAr: row.descriptionAr ?? null,
+      price: priced.price,
+      discountPrice: priced.discountPrice,
+      imageUrl: row.imageUrl,
+      hasDiscount: priced.hasDiscount,
+      effectivePrice: priced.effectivePrice,
+      merchantOfferPercent: offerPercent,
+      optionGroups: priced.optionGroups,
+      images: row.images,
+      createdAt: row.createdAt,
+      updatedAt: row.updatedAt,
+      category: {
+        id: row.category.id,
+        name: row.category.name,
+        nameAr: row.category.nameAr ?? null,
+        description: row.category.description ?? null,
+        descriptionAr: row.category.descriptionAr ?? null,
+      },
+      merchant: {
+        id: merchant.id,
+        name: merchant.name,
+        nameAr: merchant.nameAr ?? null,
+        logoUrl: merchant.imageUrl,
+        deliveryTime: merchant.deliveryTime
+          ? {
+              minMinutes: merchant.deliveryTime.minMinutes,
+              maxMinutes: merchant.deliveryTime.maxMinutes,
+            }
+          : null,
+      },
+    };
   }
 
   /** Public storefront: guest or customer; store may be CLOSED but must exist and be active. */

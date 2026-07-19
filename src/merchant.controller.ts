@@ -341,11 +341,11 @@ export class MerchantController {
     operationId: 'storefrontGetProduct',
     summary: 'Get product details by id (public)',
     description:
-      'No auth required (guest or logged-in customer). Product info, gallery images, category, and merchant summary (name, logo, delivery time). Returns 404 if the product does not exist or the store is deactivated.',
+      'No auth required (guest or logged-in customer). Always returns bilingual fields (`name` + `nameAr`, `description` + `descriptionAr`, and the same for category/merchant). Product info, gallery images, category, and merchant summary. Returns 404 if the product does not exist or the store is deactivated.',
   })
   @ApiParam({ name: 'productId', type: String, format: 'uuid' })
   @ApiOkResponse({
-    description: 'Product details',
+    description: 'Product details (bilingual)',
     schema: {
       example: {
         id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
@@ -353,7 +353,7 @@ export class MerchantController {
         name: 'Cheese Burger',
         nameAr: 'برغر جبنة',
         description: 'Beef patty with cheese',
-        descriptionAr: null,
+        descriptionAr: 'شريحة لحم مع جبنة',
         price: 12.5,
         discountPrice: 10,
         imageUrl: 'https://example.com/product.jpg',
@@ -378,6 +378,7 @@ export class MerchantController {
         merchant: {
           id: 'dddddddd-dddd-dddd-dddd-dddddddddddd',
           name: 'Pizza House',
+          nameAr: 'بيتزا هاوس',
           logoUrl: 'https://example.com/merchant-logo.jpg',
           deliveryTime: { minMinutes: 25, maxMinutes: 45 },
         },
@@ -387,12 +388,10 @@ export class MerchantController {
   @Get('products/:productId')
   getStorefrontProduct(
     @Param('productId', ParseUUIDPipe) productId: string,
-    @I18n() i18n?: I18nOptions,
   ) {
     return this.merchantCatalogService.getProductForStorefront(
       productId,
       false,
-      i18n,
     );
   }
 
