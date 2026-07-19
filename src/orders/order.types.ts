@@ -72,6 +72,7 @@ export type OrderWithRelations = {
     name: string;
     nameAr?: string | null;
     imageUrl?: string | null;
+    phone?: string | null;
     latitude?: { toString(): string } | null;
     longitude?: { toString(): string } | null;
   };
