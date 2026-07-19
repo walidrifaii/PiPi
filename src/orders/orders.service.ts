@@ -183,7 +183,6 @@ export class OrdersService {
             ? {
                 id: o.user.id,
                 fullName: o.user.fullName,
-                phone: o.user.phone,
               }
             : null,
         };
