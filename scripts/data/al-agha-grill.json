@@ -1,0 +1,233 @@
+{
+  "merchantId": "93c6353e-3a65-4c10-b041-fb30c4af347a",
+  "merchantName": "Al Agha Grill",
+  "categories": [
+    {
+      "name": "Appetizers",
+      "nameAr": "مقبلات",
+      "sortOrder": 1
+    },
+    {
+      "name": "Sandwiches",
+      "nameAr": "سندويشات",
+      "sortOrder": 2
+    },
+    {
+      "name": "Meals",
+      "nameAr": "وجبات",
+      "sortOrder": 3
+    },
+    {
+      "name": "Grilled Chicken",
+      "nameAr": "دجاج مشوي عالفحم",
+      "sortOrder": 4
+    },
+    {
+      "name": "Sides",
+      "nameAr": "أصناف جانبية",
+      "sortOrder": 5
+    }
+  ],
+  "products": [
+    {
+      "name": "Fattoush",
+      "nameAr": "فتوش",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Arabic Salad",
+      "nameAr": "سلطة عربية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Cheese Rolls",
+      "nameAr": "رقاقات جبنة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Fries Plate",
+      "nameAr": "صحن بطاطا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Fries Box",
+      "nameAr": "علبة بطاطا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.22,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Charcoal Chicken Sandwich",
+      "nameAr": "سندويش دجاج عالفحم",
+      "description": null,
+      "descriptionAr": "دجاج، ثوم، صوص حر، كبيس",
+      "price": 5.56,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Large Charcoal Chicken Sandwich",
+      "nameAr": "سندويش دجاج عالفحم كبير",
+      "description": null,
+      "descriptionAr": "دجاج، ثوم، صوص حر، كبيس",
+      "price": 7.22,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Small Charcoal Chicken Sandwich",
+      "nameAr": "سندويش دجاج عالفحم صغير",
+      "description": null,
+      "descriptionAr": "دجاج، ثوم، صوص حر، كبيس",
+      "price": 2.78,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Tawook Sandwich",
+      "nameAr": "سندويش طاووق",
+      "description": null,
+      "descriptionAr": "٢ أسياخ طاووق، ثوم، بطاطا، سلطة ملفوف، كبيس، صوص كوكتيل",
+      "price": 5.56,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Pulled Thigh Charcoal Sandwich",
+      "nameAr": "سندويش فخاد مسحب عالفحم",
+      "description": null,
+      "descriptionAr": "فخاد مسحب، خس، ملفوف احمر كبيس، صوص الآغا",
+      "price": 5.56,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Charcoal Chicken Meal",
+      "nameAr": "وجبة دجاج عالفحم",
+      "description": null,
+      "descriptionAr": "سندويش دجاج عالفحم مقطع، بطاطا، ثوم، صوص حر، كبيس",
+      "price": 8.33,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Charcoal Chicken Cheese Kaake Meal",
+      "nameAr": "كعكة دجاج عالفحم بالجبنة",
+      "description": null,
+      "descriptionAr": "كعكة دجاج بالجبنة مقطعة، بطاطا، ثوم، صوص حر، كبيس",
+      "price": 8.89,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Charcoal Tawook Meal",
+      "nameAr": "وجبة طاووق عالفحم",
+      "description": null,
+      "descriptionAr": "٣ أسياخ طاووق، بطاطا، سلطة ملفوف، ثوم، صوص كوكتيل، كبيس",
+      "price": 8.33,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Charcoal Wings Meal",
+      "nameAr": "وجبة جوانح عالفحم",
+      "description": null,
+      "descriptionAr": "١٦ قطعة جوانح، بطاطا، ثوم، صوص الأغا",
+      "price": 7.78,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Pulled Thigh Charcoal Meal",
+      "nameAr": "وجبة فخاد مسحبة عالفحم",
+      "description": null,
+      "descriptionAr": "٣ فخاد مسحبة، بطاطا، ثوم، صوص الأغا",
+      "price": 8.33,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Rice with Grilled Breast Meal",
+      "nameAr": "وجبة أرز مع صدر عالفحم",
+      "description": null,
+      "descriptionAr": "أرز بخاري، صدر مشوي، صوص دقوس",
+      "price": 6.11,
+      "categoryName": "Meals"
+    },
+    {
+      "name": "Whole Charcoal Chicken",
+      "nameAr": "فروج عالفحم",
+      "description": null,
+      "descriptionAr": "ثوم، صوص حر، كبيس",
+      "price": 14.44,
+      "categoryName": "Grilled Chicken"
+    },
+    {
+      "name": "Half Charcoal Chicken",
+      "nameAr": "نصف فروج عالفحم",
+      "description": null,
+      "descriptionAr": "ثوم، صوص حر، كبيس",
+      "price": 7.78,
+      "categoryName": "Grilled Chicken"
+    },
+    {
+      "name": "Kilo Charcoal Tawook",
+      "nameAr": "كيلو طاووق عالفحم",
+      "description": null,
+      "descriptionAr": "ثوم، كبيس",
+      "price": 15.56,
+      "categoryName": "Grilled Chicken"
+    },
+    {
+      "name": "Kilo Charcoal Wings",
+      "nameAr": "كيلو جوانح عالفحم",
+      "description": null,
+      "descriptionAr": "صوص الأغا",
+      "price": 11.11,
+      "categoryName": "Grilled Chicken"
+    },
+    {
+      "name": "Kilo Pulled Thigh Charcoal",
+      "nameAr": "كيلو فخاد مسحبة عالفحم",
+      "description": null,
+      "descriptionAr": "صوص الأغا",
+      "price": 13.33,
+      "categoryName": "Grilled Chicken"
+    },
+    {
+      "name": "Garlic Sauce",
+      "nameAr": "علبة ثوم",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.56,
+      "categoryName": "Sides"
+    },
+    {
+      "name": "Sauce Box",
+      "nameAr": "علبة صوص",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.56,
+      "categoryName": "Sides"
+    },
+    {
+      "name": "Coleslaw",
+      "nameAr": "ColeSlaw",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.56,
+      "categoryName": "Sides"
+    },
+    {
+      "name": "Rice Plate",
+      "nameAr": "صحن رز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Sides"
+    }
+  ]
+}

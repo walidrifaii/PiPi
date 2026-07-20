@@ -30,6 +30,7 @@
     "seed:abou-shaker-catalog": "node scripts/seed-abou-shaker-catalog.mjs",
     "seed:manqoushe-catalog": "node scripts/seed-manqoushe-catalog.mjs",
     "seed:shawarma-menu-catalog": "node scripts/seed-shawarma-menu-catalog.mjs",
+    "seed:al-agha-grill-catalog": "node scripts/seed-al-agha-grill-catalog.mjs",
     "seed:crunchyz-catalog": "node scripts/seed-crunchyz-catalog.mjs",
     "seed:menu-separated-catalog": "node scripts/seed-menu-separated-catalog.mjs",
     "delete:all-orders": "node scripts/delete-all-orders.mjs",
