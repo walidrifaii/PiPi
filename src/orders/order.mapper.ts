@@ -299,14 +299,22 @@ export function mapOrderDetail(
     deliveryTimeMinutes:
       normalizeDeliveryTimeMinutes(snapshot?.deliveryTimeMinutes) ?? null,
     addressId: order.addressId,
-    address: order.address
-      ? {
-          id: order.address.id,
-          addressLine: order.address.addressLine,
-          latitude: Number(order.address.latitude),
-          longitude: Number(order.address.longitude),
-        }
-      : null,
+    address:
+      customerCoords.latitude != null && customerCoords.longitude != null
+        ? {
+            id: order.address?.id ?? order.addressId ?? '',
+            addressLine: order.address?.addressLine ?? '',
+            latitude: customerCoords.latitude,
+            longitude: customerCoords.longitude,
+          }
+        : order.address
+          ? {
+              id: order.address.id,
+              addressLine: order.address.addressLine,
+              latitude: Number(order.address.latitude),
+              longitude: Number(order.address.longitude),
+            }
+          : null,
     subtotal: totals.subtotal,
     deliveryFee: totals.deliveryFee,
     total: totals.total,
