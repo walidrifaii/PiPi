@@ -6,8 +6,10 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { Prisma } from '@prisma/client';
 import { USER_ACCOUNT_ROLE } from '../auth/account-roles';
 import { PrismaService } from '../prisma/prisma.service';
+import { ListUsersAdminQueryDto } from './dto/list-users-admin-query.dto';
 import { UpdateUserAdminDto } from './dto/update-user-admin.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
@@ -50,12 +52,63 @@ export class UsersService implements OnModuleInit {
     return { ...user, role: USER_ACCOUNT_ROLE };
   }
 
-  async findAll() {
-    const rows = await this.prisma.user.findMany({
-      orderBy: { createdAt: 'desc' },
-      select: userPublicSelect,
-    });
-    return rows.map((u) => this.withUserRole(u));
+  private normalizePagination(page: number, limit: number) {
+    const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
+    const safeLimit =
+      Number.isFinite(limit) && limit > 0
+        ? Math.min(Math.floor(limit), 100)
+        : 20;
+    return {
+      page: safePage,
+      limit: safeLimit,
+      skip: (safePage - 1) * safeLimit,
+    };
+  }
+
+  private buildAdminUsersWhere(
+    query: ListUsersAdminQueryDto,
+  ): Prisma.UserWhereInput {
+    const term = query.search?.trim();
+    if (!term) {
+      return {};
+    }
+    return {
+      OR: [
+        { fullName: { contains: term, mode: 'insensitive' } },
+        { phone: { contains: term } },
+        { email: { contains: term, mode: 'insensitive' } },
+        { id: { contains: term, mode: 'insensitive' } },
+      ],
+    };
+  }
+
+  async findAllForAdmin(query: ListUsersAdminQueryDto) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 20;
+    const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
+    const where = this.buildAdminUsersWhere(query);
+
+    const [rows, total] = await Promise.all([
+      this.prisma.user.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        select: userPublicSelect,
+        skip,
+        take: l,
+      }),
+      this.prisma.user.count({ where }),
+    ]);
+
+    return {
+      items: rows.map((u) => this.withUserRole(u)),
+      pagination: {
+        page: p,
+        limit: l,
+        pageTotal: rows.length,
+        total,
+        totalPages: Math.max(1, Math.ceil(total / l)),
+      },
+    };
   }
 
   async getProfile(userId: string) {

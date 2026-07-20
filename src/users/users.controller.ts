@@ -6,6 +6,7 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -21,6 +22,7 @@ import { UserAccountGuard } from '../auth/user-account.guard';
 import { JwtUserPayload } from '../auth/jwt-user.payload';
 import { UpdateUserAdminDto } from './dto/update-user-admin.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ListUsersAdminQueryDto } from './dto/list-users-admin-query.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -63,10 +65,13 @@ export class UsersController {
   @ApiTags('Super Admin')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, SuperAdminGuard)
-  @ApiOperation({ summary: 'List all users (super admin only)' })
+  @ApiOperation({
+    summary:
+      'List users (super admin only). Paginated; optional search by name, phone, email, or id.',
+  })
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() query: ListUsersAdminQueryDto) {
+    return this.usersService.findAllForAdmin(query);
   }
 
   @ApiTags('Super Admin')

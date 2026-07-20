@@ -15,10 +15,10 @@ export class SuperAdminPlatformController {
     private readonly driversService: DriversService,
   ) {}
 
-  @ApiOperation({ summary: 'List all customer users' })
+  @ApiOperation({ summary: 'List customer users (paginated)' })
   @Get('users')
   listUsers() {
-    return this.usersService.findAll();
+    return this.usersService.findAllForAdmin({ page: 1, limit: 100 });
   }
 
   @ApiOperation({ summary: 'List all drivers' })
