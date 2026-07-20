@@ -62,6 +62,16 @@ export class AdminOrdersController {
 
   @ApiOperation({
     summary:
+      'Get order detail (super admin). Includes delivery address, coordinates, items, and customer phone.',
+  })
+  @ApiParam({ name: 'orderId', type: String })
+  @Get(':orderId')
+  getOne(@Param('orderId', ParseUUIDPipe) orderId: string) {
+    return this.ordersService.getForSuperAdmin(orderId);
+  }
+
+  @ApiOperation({
+    summary:
       'Assign an unassigned PENDING or ACCEPTED order to a driver. ACCEPTED orders start delivery immediately.',
   })
   @ApiParam({ name: 'orderId', type: String })

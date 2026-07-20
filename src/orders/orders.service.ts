@@ -837,6 +837,20 @@ export class OrdersService {
     );
   }
 
+  async getForSuperAdmin(orderId: string) {
+    const order = await this.prisma.order.findFirst({
+      where: { id: orderId },
+      include: orderInclude,
+    });
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+    return mapOrderDetail(order as OrderWithRelations, {
+      includeCustomer: true,
+      audience: 'admin',
+    });
+  }
+
   private parseItemsSnapshot(raw: unknown): OrderItemsSnapshot | null {
     if (!raw || typeof raw !== 'object') {
       return null;
