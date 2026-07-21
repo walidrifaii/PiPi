@@ -72,14 +72,19 @@ export class UsersService implements OnModuleInit {
     if (!term) {
       return {};
     }
-    return {
-      OR: [
-        { fullName: { contains: term, mode: 'insensitive' } },
-        { phone: { contains: term } },
-        { email: { contains: term, mode: 'insensitive' } },
-        { id: { contains: term, mode: 'insensitive' } },
-      ],
-    };
+    const or: Prisma.UserWhereInput[] = [
+      { fullName: { contains: term, mode: 'insensitive' } },
+      { phone: { contains: term } },
+      { email: { contains: term, mode: 'insensitive' } },
+    ];
+    if (
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        term,
+      )
+    ) {
+      or.push({ id: term });
+    }
+    return { OR: or };
   }
 
   async findAllForAdmin(query: ListUsersAdminQueryDto) {
