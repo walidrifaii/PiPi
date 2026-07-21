@@ -7,7 +7,10 @@ import {
 } from '@nestjs/common';
 import { createHmac, randomInt, timingSafeEqual } from 'crypto';
 import { toE164Phone } from '../common/phone-e164';
+import { MessageCentralService } from './message-central.service';
 import { WhatsAppNodeService } from './whatsapp-node.service';
+
+type OtpProvider = 'message_central' | 'whatsapp_node';
 
 type OtpPurpose =
   | 'register'
@@ -24,8 +27,10 @@ interface PendingAppLogin {
 }
 
 interface StoredOtp {
-  hash: string;
   expiresAt: number;
+  provider: OtpProvider | 'local';
+  hash?: string;
+  verificationId?: string;
 }
 
 export interface PendingUserRegistration {
@@ -60,7 +65,18 @@ export class OtpService {
   >();
   private readonly pendingAppLogin = new Map<string, PendingAppLogin>();
 
-  constructor(private readonly whatsAppNode: WhatsAppNodeService) {}
+  constructor(
+    private readonly whatsAppNode: WhatsAppNodeService,
+    private readonly messageCentral: MessageCentralService,
+  ) {}
+
+  private otpProvider(): OtpProvider {
+    const raw = (process.env.OTP_PROVIDER ?? 'message_central').trim().toLowerCase();
+    if (raw === 'whatsapp_node' || raw === 'node') {
+      return 'whatsapp_node';
+    }
+    return 'message_central';
+  }
 
   private pepper(): string {
     return process.env.OTP_PEPPER ?? '';
@@ -214,24 +230,24 @@ export class OtpService {
     return pending;
   }
 
-  verifyRegisterOtp(phone: string, code: string): void {
-    this.verifyOtp('register', phone, code);
+  async verifyRegisterOtp(phone: string, code: string): Promise<void> {
+    await this.verifyOtp('register', phone, code);
   }
 
-  verifyDriverRegisterOtp(phone: string, code: string): void {
-    this.verifyOtp('driver_register', phone, code);
+  async verifyDriverRegisterOtp(phone: string, code: string): Promise<void> {
+    await this.verifyOtp('driver_register', phone, code);
   }
 
-  verifyLoginOtp(phone: string, code: string): void {
-    this.verifyOtp('login', phone, code);
+  async verifyLoginOtp(phone: string, code: string): Promise<void> {
+    await this.verifyOtp('login', phone, code);
   }
 
-  verifyDriverLoginOtp(phone: string, code: string): void {
-    this.verifyOtp('driver_login', phone, code);
+  async verifyDriverLoginOtp(phone: string, code: string): Promise<void> {
+    await this.verifyOtp('driver_login', phone, code);
   }
 
-  verifyAppLoginOtp(phone: string, code: string): void {
-    this.verifyOtp('app_login', phone, code);
+  async verifyAppLoginOtp(phone: string, code: string): Promise<void> {
+    await this.verifyOtp('app_login', phone, code);
   }
 
   setPendingAppLogin(phone: string, accountType: AppLoginAccountType): string {
@@ -264,10 +280,14 @@ export class OtpService {
     return true;
   }
 
-  private verifyOtp(purpose: OtpPurpose, phone: string, code: string): void {
+  private async verifyOtp(
+    purpose: OtpPurpose,
+    phone: string,
+    code: string,
+  ): Promise<void> {
     const phoneE164 = this.normalizePhoneE164(phone);
     const digits = code.trim();
-    if (!/^\d{6}$/.test(digits)) {
+    if (!/^\d{4,8}$/.test(digits)) {
       throw new BadRequestException('Invalid OTP code');
     }
 
@@ -281,6 +301,28 @@ export class OtpService {
 
     const stored = this.store.get(this.storeKey(purpose, phoneE164));
     if (!stored || Date.now() > stored.expiresAt) {
+      throw new BadRequestException('OTP expired or not found. Request a new code.');
+    }
+
+    if (stored.provider === 'message_central') {
+      if (!stored.verificationId) {
+        throw new BadRequestException('OTP expired or not found. Request a new code.');
+      }
+      const validated = await this.messageCentral.validateOtp(
+        stored.verificationId,
+        digits,
+      );
+      if (!validated.ok) {
+        if (validated.error === 'expired') {
+          throw new BadRequestException('OTP expired or not found. Request a new code.');
+        }
+        throw new BadRequestException('Invalid OTP code');
+      }
+      this.store.delete(this.storeKey(purpose, phoneE164));
+      return;
+    }
+
+    if (!stored.hash) {
       throw new BadRequestException('OTP expired or not found. Request a new code.');
     }
 
@@ -347,14 +389,76 @@ export class OtpService {
     expiresInSeconds: number;
   }> {
     const phoneE164 = this.normalizePhoneE164(phone);
-    const code = this.generateCode(phoneE164, purpose);
     const ttl = this.ttlSeconds();
 
     if (this.hasFixedLoginOtp(phoneE164, purpose)) {
       return { ok: true, expiresInSeconds: ttl };
     }
 
+    if (this.otpProvider() === 'message_central' && this.messageCentral.isConfigured()) {
+      return this.sendViaMessageCentral(purpose, phoneE164, ttl);
+    }
+
+    return this.sendViaWhatsAppNode(purpose, phoneE164, ttl);
+  }
+
+  private async sendViaMessageCentral(
+    purpose: OtpPurpose,
+    phoneE164: string,
+    _ttl: number,
+  ): Promise<{ ok: true; expiresInSeconds: number }> {
+    const sent = await this.messageCentral.sendWhatsAppOtp(phoneE164);
+    if (!sent.ok) {
+      if (sent.error === 'message_central_not_configured') {
+        throw new ServiceUnavailableException(
+          'Message Central OTP is not configured',
+        );
+      }
+      if (sent.error === 'insufficient_credits') {
+        throw new HttpException(
+          {
+            message:
+              'Message Central OTP balance is empty. Add credits in the Message Central dashboard.',
+            error: sent.error,
+            body: sent.body,
+          },
+          HttpStatus.PAYMENT_REQUIRED,
+        );
+      }
+      if (sent.error === 'whatsapp_platform_discontinued') {
+        throw new BadRequestException({
+          message:
+            'Message Central WhatsApp OTP (old API) is discontinued for this account. Enable the new WhatsApp platform in Message Central, or set MESSAGE_CENTRAL_FLOW_TYPE=SMS and add credits.',
+          error: sent.error,
+          body: sent.body,
+        });
+      }
+      throw new BadRequestException({
+        message: 'Failed to send OTP via Message Central',
+        error: sent.error,
+        http: sent.http,
+        body: sent.body,
+      });
+    }
+
     this.store.set(this.storeKey(purpose, phoneE164), {
+      provider: 'message_central',
+      verificationId: sent.verificationId,
+      expiresAt: Date.now() + sent.expiresInSeconds * 1000,
+    });
+
+    return { ok: true, expiresInSeconds: sent.expiresInSeconds };
+  }
+
+  private async sendViaWhatsAppNode(
+    purpose: OtpPurpose,
+    phoneE164: string,
+    ttl: number,
+  ): Promise<{ ok: true; expiresInSeconds: number }> {
+    const code = this.generateCode(phoneE164, purpose);
+
+    this.store.set(this.storeKey(purpose, phoneE164), {
+      provider: 'local',
       hash: this.hashCode(phoneE164, code),
       expiresAt: Date.now() + ttl * 1000,
     });

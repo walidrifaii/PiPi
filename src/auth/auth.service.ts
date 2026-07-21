@@ -567,7 +567,7 @@ export class AuthService {
       );
     }
 
-    this.otpService.verifyRegisterOtp(dto.phone, dto.code);
+    await this.otpService.verifyRegisterOtp(dto.phone, dto.code);
     this.otpService.markPhoneVerifiedForRegistration(dto.phone);
 
     return {
@@ -662,7 +662,7 @@ export class AuthService {
       );
     }
 
-    this.otpService.verifyDriverRegisterOtp(dto.phone, dto.code);
+    await this.otpService.verifyDriverRegisterOtp(dto.phone, dto.code);
     this.otpService.markPhoneVerifiedForDriverRegistration(dto.phone);
 
     return {
@@ -798,7 +798,7 @@ export class AuthService {
       );
     }
 
-    this.otpService.verifyAppLoginOtp(dto.phone, dto.code);
+    await this.otpService.verifyAppLoginOtp(dto.phone, dto.code);
 
     const pending = this.otpService.consumePendingAppLogin(dto.phone);
     if (!pending) {
