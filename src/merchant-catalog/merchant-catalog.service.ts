@@ -509,7 +509,7 @@ export class MerchantCatalogService {
     void limit;
     await this.assertMerchantBrowsable(merchantId);
     const result = await this.collectAllStorefrontPages((p, l) =>
-      this.fetchCategoriesPaged(merchantId, p, l),
+      this.fetchCategoriesPaged(merchantId, p, l, true),
     );
     return this.localizePagedCategories(result, i18n);
   }
@@ -523,6 +523,7 @@ export class MerchantCatalogService {
     merchantId: string,
     page: number,
     limit: number,
+    activeProductsOnly = false,
   ) {
     const pg = this.normalizePagination(page, limit);
     const where = { merchantId };
@@ -531,7 +532,15 @@ export class MerchantCatalogService {
       this.prisma.merchantCategory.findMany({
         where,
         orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
-        include: { _count: { select: { products: true } } },
+        include: {
+          _count: {
+            select: {
+              products: activeProductsOnly
+                ? { where: { isActive: true } }
+                : true,
+            },
+          },
+        },
         skip: pg.skip,
         take: pg.limit,
       }),

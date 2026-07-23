@@ -264,7 +264,7 @@ export class MerchantController {
       name,
       page,
       limit,
-      { merchantTypeCode: merchantType, scopeMerchantIds, i18n },
+      { merchantTypeCode: merchantType, scopeMerchantIds, activeProductsOnly: true, i18n },
     );
     return { type: searchType, ...result };
   }
@@ -306,7 +306,7 @@ export class MerchantController {
       page,
       limit,
       scopeMerchantIds,
-      false,
+      true,
       i18n,
     );
   }
@@ -391,7 +391,7 @@ export class MerchantController {
   ) {
     return this.merchantCatalogService.getProductForStorefront(
       productId,
-      false,
+      true,
     );
   }
 
@@ -503,7 +503,7 @@ export class MerchantController {
       name,
       page,
       limit,
-      { categoryId, activeProductsOnly: false, i18n },
+      { categoryId, activeProductsOnly: true, i18n },
     );
   }
 
@@ -569,7 +569,7 @@ export class MerchantController {
       categoryId,
       page,
       limit,
-      false,
+      true,
       i18n,
     );
   }
@@ -651,7 +651,7 @@ export class MerchantController {
       categoryId,
       page,
       limit,
-      false,
+      true,
       i18n,
     );
   }

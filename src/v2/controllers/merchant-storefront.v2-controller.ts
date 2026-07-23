@@ -20,7 +20,7 @@ import { I18n, type I18nOptions } from '../../common/i18n';
 
 /**
  * V2 storefront: inactive products are hidden from customers.
- * V1 keeps showing all products for backward compatibility.
+ * V1 storefront now also hides inactive products (same behavior).
  */
 @Controller({ path: 'merchants', version: '2' })
 export class MerchantStorefrontV2Controller extends MerchantController {
