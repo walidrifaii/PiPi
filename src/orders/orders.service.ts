@@ -22,8 +22,8 @@ import { ListAdminOrderQueueQueryDto } from './dto/list-admin-order-queue-query.
 import { ListMerchantOrdersHistoryQueryDto } from './dto/list-merchant-orders-history-query.dto';
 import { ListMerchantOrdersQueryDto } from './dto/list-merchant-orders-query.dto';
 import { MerchantEarningsQueryDto } from './dto/merchant-earnings-query.dto';
-import { UpdateAdminOrderItemsDto } from './dto/update-admin-order-items.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
+import { UpdateAdminOrderItemsDto } from './dto/update-admin-order-items.dto';
 import { mapOrderDetail, mapOrderSummary, findSnapshotItem } from './order.mapper';
 import { resolveProductDisplayImage } from '../common/product-display-image';
 import { PlatformSettingsService } from '../platform-settings/platform-settings.service';
@@ -40,6 +40,11 @@ import {
   normalizeOrderStatus,
 } from './order-status.constants';
 import { OrderItemsSnapshot, OrderWithRelations } from './order.types';
+import {
+  orderUpdatedNotificationCopy,
+  orderUpdatedStakeholderCopy,
+} from '../notifications/order-updated-notification-copy';
+import type { OrderUpdatedAction } from '../notifications/order-updated-payload';
 
 const orderInclude = {
   orderItems: { orderBy: { id: Prisma.SortOrder.asc } },
@@ -618,375 +623,6 @@ export class OrdersService {
     });
   }
 
-  /**
-   * Super admin: change line quantities (0 = remove) and/or notes.
-   * Recalculates totals, syncs itemsSnapshot, and notifies customer / merchant / driver.
-   */
-  async updateItemsForSuperAdmin(
-    orderId: string,
-    dto: UpdateAdminOrderItemsDto,
-  ) {
-    const order = await this.prisma.order.findFirst({
-      where: { id: orderId },
-      include: orderInclude,
-    });
-    if (!order) {
-      throw new NotFoundException('Order not found');
-    }
-
-    const status = normalizeOrderStatus(order.status);
-    if (isTerminalOrderStatus(status)) {
-      throw new BadRequestException(
-        `Cannot edit items on a ${status} order`,
-      );
-    }
-
-    await this.assertOrderNotSettled(orderId);
-
-    const qtyById = new Map<string, number>();
-    for (const line of dto.items) {
-      qtyById.set(line.orderItemId, line.quantity);
-    }
-
-    const existingIds = new Set(order.orderItems.map((i) => i.id));
-    for (const id of qtyById.keys()) {
-      if (!existingIds.has(id)) {
-        throw new BadRequestException(`Order item ${id} not found on this order`);
-      }
-    }
-
-    const snapshot = this.parseSnapshot(order.itemsSnapshot);
-    const snapshotItems = snapshot?.items ? [...snapshot.items] : [];
-    const usedIndexes = new Set<number>();
-
-    type LinePlan = {
-      id: string;
-      quantity: number;
-      unitPrice: number;
-      totalPrice: number;
-      productId: string | null;
-      bundleId: string | null;
-      productName: string;
-      snapIndex: number | null;
-    };
-
-    const plans: LinePlan[] = [];
-    for (const oi of order.orderItems) {
-      const nextQty = qtyById.has(oi.id) ? qtyById.get(oi.id)! : oi.quantity;
-      if (nextQty < 0) {
-        throw new BadRequestException('Quantity cannot be negative');
-      }
-
-      const snap = findSnapshotItem(oi, snapshotItems, usedIndexes);
-      const snapIndex =
-        snap != null ? snapshotItems.indexOf(snap) : null;
-
-      const unitPrice = Number(oi.unitPrice);
-      plans.push({
-        id: oi.id,
-        quantity: nextQty,
-        unitPrice,
-        totalPrice: roundMoney(unitPrice * nextQty),
-        productId: oi.productId,
-        bundleId: oi.bundleId ?? null,
-        productName: oi.productName,
-        snapIndex: snapIndex != null && snapIndex >= 0 ? snapIndex : null,
-      });
-    }
-
-    const kept = plans.filter((p) => p.quantity > 0);
-    if (kept.length === 0) {
-      throw new BadRequestException(
-        'Order must keep at least one item. Delete the order instead.',
-      );
-    }
-
-    const customerSubtotal = roundMoney(
-      kept.reduce((sum, p) => sum + p.totalPrice, 0),
-    );
-
-    let merchantSubtotal = 0;
-    for (const p of kept) {
-      const snap =
-        p.snapIndex != null ? snapshotItems[p.snapIndex] : undefined;
-      const merchantUnit =
-        snap?.merchantUnitPrice != null
-          ? Number(snap.merchantUnitPrice)
-          : snap?.listPrice != null
-            ? Number(snap.listPrice)
-            : p.unitPrice;
-      merchantSubtotal = roundMoney(
-        merchantSubtotal + roundMoney(merchantUnit * p.quantity),
-      );
-    }
-
-    const deliveryFee =
-      order.deliveryFee != null ? Number(order.deliveryFee) : 0;
-
-    const couponPercent =
-      snapshot &&
-      typeof (snapshot as { couponDiscountPercent?: unknown })
-        .couponDiscountPercent === 'number'
-        ? Number(
-            (snapshot as { couponDiscountPercent?: number })
-              .couponDiscountPercent,
-          )
-        : null;
-
-    let couponDiscount = 0;
-    if (couponPercent != null && Number.isFinite(couponPercent) && couponPercent > 0) {
-      couponDiscount = roundMoney((customerSubtotal * couponPercent) / 100);
-    } else if (order.couponDiscount != null) {
-      const oldSubtotal =
-        order.subtotal != null ? Number(order.subtotal) : customerSubtotal;
-      const oldDiscount = Number(order.couponDiscount);
-      if (oldSubtotal > 0 && oldDiscount > 0) {
-        couponDiscount = roundMoney(
-          customerSubtotal * (oldDiscount / oldSubtotal),
-        );
-      }
-    }
-
-    const customerTotal = roundMoney(
-      Math.max(0, customerSubtotal - couponDiscount) + deliveryFee,
-    );
-
-    const updatedSnapshot: OrderItemsSnapshot | null = snapshot
-      ? {
-          ...snapshot,
-          customerSubtotal,
-          customerTotal,
-          merchantSubtotal,
-          merchantTotal: merchantSubtotal,
-          deliveryFee,
-          items: kept.map((p) => {
-            const prev =
-              p.snapIndex != null ? snapshotItems[p.snapIndex] : undefined;
-            const merchantUnit =
-              prev?.merchantUnitPrice != null
-                ? Number(prev.merchantUnitPrice)
-                : prev?.listPrice != null
-                  ? Number(prev.listPrice)
-                  : p.unitPrice;
-            return {
-              productId: prev?.productId ?? p.productId,
-              bundleId: prev?.bundleId ?? p.bundleId,
-              productName: prev?.productName ?? p.productName,
-              quantity: p.quantity,
-              listPrice: prev?.listPrice ?? p.unitPrice,
-              discountPrice: prev?.discountPrice ?? null,
-              productDiscountPrice: prev?.productDiscountPrice,
-              unitPrice: p.unitPrice,
-              totalPrice: p.totalPrice,
-              merchantUnitPrice: merchantUnit,
-              merchantTotalPrice: roundMoney(merchantUnit * p.quantity),
-              message: prev?.message ?? null,
-              imageUrl: prev?.imageUrl,
-              selectedOptions: prev?.selectedOptions,
-            };
-          }),
-        }
-      : null;
-
-    if (updatedSnapshot && couponPercent != null) {
-      (updatedSnapshot as { couponDiscount?: number }).couponDiscount =
-        couponDiscount;
-    }
-
-    const removeIds = plans.filter((p) => p.quantity <= 0).map((p) => p.id);
-
-    await this.prisma.$transaction(async (tx) => {
-      if (removeIds.length > 0) {
-        await tx.orderItem.deleteMany({
-          where: { id: { in: removeIds }, orderId },
-        });
-      }
-
-      for (const p of kept) {
-        await tx.orderItem.update({
-          where: { id: p.id },
-          data: {
-            quantity: p.quantity,
-            totalPrice: p.totalPrice,
-          },
-        });
-      }
-
-      await tx.order.update({
-        where: { id: orderId },
-        data: {
-          subtotal: customerSubtotal,
-          total: customerTotal,
-          ...(couponDiscount > 0
-            ? { couponDiscount }
-            : order.couponDiscount != null
-              ? { couponDiscount: 0 }
-              : {}),
-          ...(dto.notes !== undefined
-            ? { notes: dto.notes?.trim() ? dto.notes.trim() : null }
-            : {}),
-          ...(updatedSnapshot
-            ? { itemsSnapshot: updatedSnapshot as Prisma.InputJsonValue }
-            : {}),
-        },
-      });
-    });
-
-    const refreshed = await this.prisma.order.findFirst({
-      where: { id: orderId },
-      include: orderInclude,
-    });
-    if (!refreshed) {
-      throw new NotFoundException('Order not found');
-    }
-
-    const row = refreshed as OrderWithRelations;
-    await this.notifyOrderContentChanged(row, 'updated');
-
-    return mapOrderDetail(row, {
-      includeCustomer: true,
-      audience: 'admin',
-    });
-  }
-
-  /**
-   * Super admin: permanently delete an order (cascade items).
-   * Blocked when the order is in a paid earnings settlement.
-   */
-  async deleteForSuperAdmin(orderId: string) {
-    const order = await this.prisma.order.findFirst({
-      where: { id: orderId },
-      include: orderInclude,
-    });
-    if (!order) {
-      throw new NotFoundException('Order not found');
-    }
-
-    await this.assertOrderNotSettled(orderId);
-
-    const row = order as OrderWithRelations;
-    await this.notifyOrderContentChanged(row, 'deleted');
-    void this.clearDriverOfferLive(orderId);
-
-    await this.prisma.order.delete({ where: { id: orderId } });
-
-    return { ok: true as const, id: orderId };
-  }
-
-  private async assertOrderNotSettled(orderId: string) {
-    const settlements = await this.prisma.earningsSettlement.findMany({
-      where: { status: 'PAID' },
-      select: { orderIds: true },
-    });
-    for (const row of settlements) {
-      if (parseSettlementOrderIds(row.orderIds).includes(orderId)) {
-        throw new BadRequestException(
-          'Cannot modify or delete an order that is included in a paid settlement',
-        );
-      }
-    }
-  }
-
-  private async notifyOrderContentChanged(
-    order: OrderWithRelations,
-    action: 'updated' | 'deleted',
-  ) {
-    const snapshot = this.parseSnapshot(order.itemsSnapshot);
-    const merchantName = snapshot?.merchantName ?? order.merchant.name;
-    const merchantNameAr = order.merchant.nameAr ?? null;
-    const status = normalizeOrderStatus(order.status);
-
-    const title =
-      action === 'deleted' ? 'Order cancelled' : 'Order updated';
-    const titleAr =
-      action === 'deleted' ? 'تم إلغاء الطلب' : 'تم تحديث الطلب';
-    const body =
-      action === 'deleted'
-        ? `Your order from ${merchantName} was removed by support.`
-        : `Your order from ${merchantName} was updated by support. Please review the items.`;
-    const messageAr =
-      action === 'deleted'
-        ? `تمت إزالة طلبك من ${merchantNameAr ?? merchantName} بواسطة الدعم.`
-        : `تم تحديث طلبك من ${merchantNameAr ?? merchantName} بواسطة الدعم. يرجى مراجعة العناصر.`;
-
-    try {
-      const copy = await this.userNotifications.createFromOrderStatus({
-        userId: order.userId,
-        orderId: order.id,
-        status: action === 'deleted' ? 'CANCELLED' : status,
-        merchantName,
-        merchantNameAr,
-        title,
-        body,
-        titleAr,
-        messageAr,
-      });
-
-      const user = await this.prisma.user.findUnique({
-        where: { id: order.userId },
-        select: { fcmToken: true },
-      });
-      if (user?.fcmToken?.trim()) {
-        await this.notifications.sendOrderStatusUpdate({
-          fcmToken: user.fcmToken.trim(),
-          orderId: order.id,
-          status: action === 'deleted' ? 'CANCELLED' : status,
-          merchantName,
-          title: copy.title,
-          body: copy.body,
-        });
-      }
-    } catch (err) {
-      this.log.warn(
-        `Customer notify on order ${action} failed for ${order.id}: ${
-          err instanceof Error ? err.message : err
-        }`,
-      );
-    }
-
-    const merchantTitle =
-      action === 'deleted' ? 'Order deleted' : 'Order updated';
-    const merchantBody =
-      action === 'deleted'
-        ? `Order #${order.checkoutRef ?? order.id.slice(0, 8)} was deleted by admin.`
-        : `Order #${order.checkoutRef ?? order.id.slice(0, 8)} was edited by admin.`;
-
-    try {
-      const tokens: string[] = [];
-      const merchant = await this.prisma.merchant.findUnique({
-        where: { id: order.merchantId },
-        select: { fcmToken: true },
-      });
-      if (merchant?.fcmToken?.trim()) {
-        tokens.push(merchant.fcmToken.trim());
-      }
-      if (order.driverId) {
-        const driver = await this.prisma.driver.findUnique({
-          where: { id: order.driverId },
-          select: { fcmToken: true },
-        });
-        if (driver?.fcmToken?.trim()) {
-          tokens.push(driver.fcmToken.trim());
-        }
-      }
-      if (tokens.length > 0) {
-        await this.notifications.sendOrderUpdatedAlert({
-          tokens,
-          orderId: order.id,
-          merchantId: order.merchantId,
-          title: merchantTitle,
-          body: merchantBody,
-        });
-      }
-    } catch (err) {
-      this.log.warn(
-        `Merchant/driver notify on order ${action} failed for ${order.id}: ${
-          err instanceof Error ? err.message : err
-        }`,
-      );
-    }
-  }
-
   private async updateOrderStatus(
     orderId: string,
     newStatusRaw: string,
@@ -1219,6 +855,308 @@ export class OrdersService {
       includeCustomer: true,
       audience: 'admin',
     });
+  }
+
+  /**
+   * Super-admin: change line quantities (0 = remove) and optional notes.
+   * Recalculates customer/merchant totals and notifies user, merchant, driver.
+   */
+  async updateItemsForSuperAdmin(
+    orderId: string,
+    dto: UpdateAdminOrderItemsDto,
+  ) {
+    const order = await this.prisma.order.findFirst({
+      where: { id: orderId },
+      include: orderInclude,
+    });
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    const currentStatus = normalizeOrderStatus(order.status);
+    if (isTerminalOrderStatus(currentStatus)) {
+      throw new BadRequestException(
+        `Cannot edit items on a ${currentStatus} order`,
+      );
+    }
+
+    const qtyByItemId = new Map<string, number>();
+    for (const line of dto.items) {
+      qtyByItemId.set(line.orderItemId, line.quantity);
+    }
+
+    const unknownIds = [...qtyByItemId.keys()].filter(
+      (id) => !order.orderItems.some((oi) => oi.id === id),
+    );
+    if (unknownIds.length > 0) {
+      throw new BadRequestException(
+        `Order item(s) not found on this order: ${unknownIds.join(', ')}`,
+      );
+    }
+
+    const remainingAfter = order.orderItems.filter((oi) => {
+      const next = qtyByItemId.has(oi.id) ? qtyByItemId.get(oi.id)! : oi.quantity;
+      return next > 0;
+    });
+    if (remainingAfter.length === 0) {
+      throw new BadRequestException(
+        'Order must keep at least one item. Delete the order instead.',
+      );
+    }
+
+    const snapshot = this.parseSnapshot(order.itemsSnapshot);
+    const usedSnapIndexes = new Set<number>();
+    const snapByOrderItemId = new Map<
+      string,
+      OrderItemsSnapshot['items'][number] | undefined
+    >();
+    for (const oi of order.orderItems) {
+      snapByOrderItemId.set(
+        oi.id,
+        findSnapshotItem(oi, snapshot?.items, usedSnapIndexes),
+      );
+    }
+
+    const updated = await this.prisma.$transaction(async (tx) => {
+      for (const oi of order.orderItems) {
+        if (!qtyByItemId.has(oi.id)) {
+          continue;
+        }
+        const quantity = qtyByItemId.get(oi.id)!;
+        if (quantity === 0) {
+          await tx.orderItem.delete({ where: { id: oi.id } });
+          continue;
+        }
+        const unitPrice = Number(oi.unitPrice);
+        await tx.orderItem.update({
+          where: { id: oi.id },
+          data: {
+            quantity,
+            totalPrice: roundMoney(unitPrice * quantity),
+          },
+        });
+      }
+
+      const nextItems: OrderItemsSnapshot['items'] = [];
+      for (const oi of order.orderItems) {
+        const quantity = qtyByItemId.has(oi.id)
+          ? qtyByItemId.get(oi.id)!
+          : oi.quantity;
+        if (quantity <= 0) {
+          continue;
+        }
+        const snap = snapByOrderItemId.get(oi.id);
+        const unitPrice = snap?.unitPrice ?? Number(oi.unitPrice);
+        const merchantUnit =
+          snap?.merchantUnitPrice ?? snap?.listPrice ?? unitPrice;
+        nextItems.push({
+          productId: oi.productId,
+          bundleId: oi.bundleId ?? null,
+          productName: snap?.productName ?? oi.productName,
+          quantity,
+          listPrice: snap?.listPrice ?? unitPrice,
+          discountPrice: snap?.discountPrice ?? null,
+          productDiscountPrice: snap?.productDiscountPrice,
+          unitPrice,
+          totalPrice: roundMoney(unitPrice * quantity),
+          merchantUnitPrice: merchantUnit,
+          merchantTotalPrice: roundMoney(merchantUnit * quantity),
+          message: snap?.message ?? null,
+          imageUrl: snap?.imageUrl,
+          selectedOptions: snap?.selectedOptions,
+        });
+      }
+
+      const customerSubtotal = roundMoney(
+        nextItems.reduce((sum, item) => sum + item.totalPrice, 0),
+      );
+      const merchantSubtotal = roundMoney(
+        nextItems.reduce(
+          (sum, item) =>
+            sum + (item.merchantTotalPrice ?? item.totalPrice),
+          0,
+        ),
+      );
+      const deliveryFee =
+        order.deliveryFee != null
+          ? roundMoney(Number(order.deliveryFee))
+          : roundMoney(Number(snapshot?.deliveryFee ?? 0));
+      const existingCoupon = roundMoney(Number(order.couponDiscount ?? 0));
+      const couponDiscount = Math.min(existingCoupon, customerSubtotal);
+      const customerTotal = roundMoney(
+        customerSubtotal - couponDiscount + deliveryFee,
+      );
+
+      const nextSnapshot: OrderItemsSnapshot = {
+        merchantName: snapshot?.merchantName ?? order.merchant.name,
+        latitude: snapshot?.latitude ?? 0,
+        longitude: snapshot?.longitude ?? 0,
+        distanceKm: snapshot?.distanceKm ?? 0,
+        deliveryTimeMinutes: snapshot?.deliveryTimeMinutes ?? { min: 0, max: 0 },
+        merchantOfferPercent: snapshot?.merchantOfferPercent,
+        customerSubtotal,
+        customerTotal,
+        merchantSubtotal,
+        merchantTotal: merchantSubtotal,
+        deliveryFee,
+        items: nextItems,
+      };
+
+      const notesUpdate =
+        dto.notes === undefined
+          ? {}
+          : {
+              notes:
+                dto.notes == null || String(dto.notes).trim() === ''
+                  ? null
+                  : String(dto.notes).trim(),
+            };
+
+      return tx.order.update({
+        where: { id: orderId },
+        data: {
+          subtotal: customerSubtotal,
+          total: customerTotal,
+          couponDiscount: couponDiscount > 0 ? couponDiscount : null,
+          itemsSnapshot: nextSnapshot as unknown as Prisma.InputJsonValue,
+          ...notesUpdate,
+        },
+        include: orderInclude,
+      });
+    });
+
+    const row = updated as OrderWithRelations;
+    void this.notifyOrderChangeStakeholders(row, 'updated');
+
+    return mapOrderDetail(row, {
+      includeCustomer: true,
+      audience: 'admin',
+    });
+  }
+
+  /** Super-admin: hard-delete an order and notify stakeholders. */
+  async deleteForSuperAdmin(orderId: string) {
+    const order = await this.prisma.order.findFirst({
+      where: { id: orderId },
+      include: orderInclude,
+    });
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    const row = order as OrderWithRelations;
+    const couponId = order.couponId;
+
+    await this.notifyOrderChangeStakeholders(row, 'deleted');
+    void this.clearDriverOfferLive(orderId);
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.order.delete({ where: { id: orderId } });
+      if (couponId) {
+        await tx.coupon.updateMany({
+          where: { id: couponId, usageCount: { gt: 0 } },
+          data: { usageCount: { decrement: 1 } },
+        });
+      }
+    });
+
+    return { deleted: true, orderId };
+  }
+
+  private async notifyOrderChangeStakeholders(
+    order: OrderWithRelations,
+    action: OrderUpdatedAction,
+  ) {
+    const snapshot = this.parseSnapshot(order.itemsSnapshot);
+    const merchantName = snapshot?.merchantName ?? order.merchant.name;
+    const customerCopy = orderUpdatedNotificationCopy({
+      merchantName,
+      action,
+      checkoutRef: order.checkoutRef,
+    });
+    const stakeholderCopy = orderUpdatedStakeholderCopy({
+      action,
+      checkoutRef: order.checkoutRef,
+      merchantName,
+    });
+
+    try {
+      await this.userNotifications.create({
+        userId: order.userId,
+        category: 'ORDER_STATUS',
+        title: customerCopy.title,
+        titleAr: customerCopy.titleAr,
+        message: customerCopy.body,
+        messageAr: customerCopy.messageAr,
+        metadata: {
+          orderId: order.id,
+          action,
+        },
+      });
+    } catch (err) {
+      this.log.warn(
+        `Order ${order.id} inbox notify failed: ${err instanceof Error ? err.message : err}`,
+      );
+    }
+
+    const tokens: string[] = [];
+    try {
+      const [user, merchant, driver] = await Promise.all([
+        this.prisma.user.findUnique({
+          where: { id: order.userId },
+          select: { fcmToken: true },
+        }),
+        this.prisma.merchant.findUnique({
+          where: { id: order.merchantId },
+          select: { fcmToken: true },
+        }),
+        order.driverId
+          ? this.prisma.driver.findUnique({
+              where: { id: order.driverId },
+              select: { fcmToken: true },
+            })
+          : Promise.resolve(null),
+      ]);
+
+      for (const token of [
+        user?.fcmToken,
+        merchant?.fcmToken,
+        driver?.fcmToken,
+      ]) {
+        const trimmed = token?.trim();
+        if (trimmed) {
+          tokens.push(trimmed);
+        }
+      }
+    } catch (err) {
+      this.log.warn(
+        `Order ${order.id} token lookup failed: ${err instanceof Error ? err.message : err}`,
+      );
+    }
+
+    if (tokens.length === 0) {
+      return;
+    }
+
+    try {
+      const result = await this.notifications.sendOrderUpdated({
+        tokens,
+        orderId: order.id,
+        merchantId: order.merchantId,
+        title: stakeholderCopy.title,
+        body: stakeholderCopy.body,
+        action,
+      });
+      if (!result.sent) {
+        this.log.debug(
+          `Order ${order.id} ${action} push not sent: ${result.reason ?? 'unknown'}`,
+        );
+      }
+    } catch (err) {
+      this.log.warn(
+        `Order ${order.id} ${action} push failed: ${err instanceof Error ? err.message : err}`,
+      );
+    }
   }
 
   private parseItemsSnapshot(raw: unknown): OrderItemsSnapshot | null {

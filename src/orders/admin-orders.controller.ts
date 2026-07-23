@@ -100,7 +100,7 @@ export class AdminOrdersController {
 
   @ApiOperation({
     summary:
-      'Edit order line quantities and/or notes (super admin). Recalculates totals and notifies customer, merchant, and assigned driver.',
+      'Edit order line quantities and optional notes (super admin). Quantity 0 removes a line. Recalculates totals and notifies customer, merchant, and assigned driver.',
   })
   @ApiParam({ name: 'orderId', type: String })
   @Patch(':orderId/items')
@@ -113,7 +113,7 @@ export class AdminOrdersController {
 
   @ApiOperation({
     summary:
-      'Delete an order (super admin). Notifies customer, merchant, and assigned driver. Blocked if the order is in a paid settlement.',
+      'Permanently delete an order (super admin). Notifies customer, merchant, and assigned driver.',
   })
   @ApiParam({ name: 'orderId', type: String })
   @Delete(':orderId')

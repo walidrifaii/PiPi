@@ -12,8 +12,8 @@ import { newOrderNotificationCopy } from './new-order-notification-copy';
 import { buildDriverOfferFcmData } from './driver-offer-payload';
 import { driverOfferNotificationCopy } from './driver-offer-notification-copy';
 import { buildOrderStatusFcmData } from './order-status-payload';
-import { buildUserNotificationFcmData } from './user-notification-fcm-payload';
 import { buildOrderUpdatedFcmData } from './order-updated-payload';
+import { buildUserNotificationFcmData } from './user-notification-fcm-payload';
 import {
   OrderNotificationsPort,
   type SendNewOrderAlertParams,
@@ -22,8 +22,8 @@ import {
   type SendDriverOfferAlertResult,
   type SendOrderStatusParams,
   type SendOrderStatusResult,
-  type SendOrderUpdatedAlertParams,
-  type SendOrderUpdatedAlertResult,
+  type SendOrderUpdatedParams,
+  type SendOrderUpdatedResult,
 } from './notifications.port';
 
 export type { SendOrderStatusResult } from './notifications.port';
@@ -286,63 +286,6 @@ export class NotificationsService extends OrderNotificationsPort {
   }
 
   /**
-   * Notify merchant / driver devices when a super admin edits an order.
-   * Clients refresh order lists on `data.type === order_updated`.
-   */
-  async sendOrderUpdatedAlert(
-    params: SendOrderUpdatedAlertParams,
-  ): Promise<SendOrderUpdatedAlertResult> {
-    const tokens = [
-      ...new Set(
-        params.tokens.map((t) => t.trim()).filter((t) => t.length > 0),
-      ),
-    ];
-    if (tokens.length === 0) {
-      return { sent: false, reason: 'no_tokens' };
-    }
-    const messaging = this.firebaseAdmin.messaging;
-    if (!messaging) {
-      return { sent: false, reason: 'not_configured' };
-    }
-
-    const title = String(params.title ?? '').trim() || 'Order updated';
-    const body =
-      String(params.body ?? '').trim() || 'An order was updated by admin.';
-    const data = buildOrderUpdatedFcmData(params.orderId, params.merchantId);
-
-    try {
-      const response = await messaging.sendEachForMulticast({
-        tokens,
-        notification: { title, body },
-        data,
-        android: {
-          priority: 'high',
-          notification: {
-            channelId: 'pip_pip_default',
-          },
-        },
-      });
-      const successCount = response.successCount;
-      const failureCount = response.failureCount;
-      if (successCount === 0) {
-        return {
-          sent: false,
-          successCount,
-          failureCount,
-          reason: 'all_failed',
-        };
-      }
-      return { sent: true, successCount, failureCount };
-    } catch (err) {
-      const reason = err instanceof Error ? err.message : String(err);
-      this.log.warn(
-        `Order updated push failed for order ${params.orderId}: ${reason}`,
-      );
-      return { sent: false, reason };
-    }
-  }
-
-  /**
    * Notify all driver devices when a merchant accepts an order (status ACCEPTED).
    */
   async sendDriverOfferAlert(
@@ -397,6 +340,67 @@ export class NotificationsService extends OrderNotificationsPort {
       const reason = err instanceof Error ? err.message : String(err);
       this.log.warn(
         `Driver offer push failed for order ${params.orderId}: ${reason}`,
+      );
+      return { sent: false, reason };
+    }
+  }
+
+  /**
+   * Notify customer / merchant / driver devices that an order was edited or deleted.
+   * Does not throw when Firebase is missing or tokens are invalid.
+   */
+  async sendOrderUpdated(
+    params: SendOrderUpdatedParams,
+  ): Promise<SendOrderUpdatedResult> {
+    const tokens = [
+      ...new Set(
+        params.tokens.map((t) => t.trim()).filter((t) => t.length > 0),
+      ),
+    ];
+    if (tokens.length === 0) {
+      return { sent: false, reason: 'no_tokens' };
+    }
+    const messaging = this.firebaseAdmin.messaging;
+    if (!messaging) {
+      return { sent: false, reason: 'not_configured' };
+    }
+
+    const data = buildOrderUpdatedFcmData(
+      params.orderId,
+      params.merchantId,
+      params.action ?? 'updated',
+    );
+
+    try {
+      const response = await messaging.sendEachForMulticast({
+        tokens,
+        notification: {
+          title: params.title,
+          body: params.body,
+        },
+        data,
+        android: {
+          priority: 'high',
+          notification: {
+            channelId: 'pip_pip_default',
+          },
+        },
+      });
+      const successCount = response.successCount;
+      const failureCount = response.failureCount;
+      if (successCount === 0) {
+        return {
+          sent: false,
+          successCount,
+          failureCount,
+          reason: 'all_failed',
+        };
+      }
+      return { sent: true, successCount, failureCount };
+    } catch (err) {
+      const reason = err instanceof Error ? err.message : String(err);
+      this.log.warn(
+        `Order updated push failed for order ${params.orderId}: ${reason}`,
       );
       return { sent: false, reason };
     }

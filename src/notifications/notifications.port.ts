@@ -46,15 +46,16 @@ export type SendDriverOfferAlertResult = {
   reason?: string;
 };
 
-export type SendOrderUpdatedAlertParams = {
+export type SendOrderUpdatedParams = {
   tokens: string[];
   orderId: string;
   merchantId: string;
   title: string;
   body: string;
+  action?: 'updated' | 'deleted';
 };
 
-export type SendOrderUpdatedAlertResult = {
+export type SendOrderUpdatedResult = {
   sent: boolean;
   successCount?: number;
   failureCount?: number;
@@ -99,7 +100,7 @@ export abstract class OrderNotificationsPort {
     params: SendDriverOfferAlertParams,
   ): Promise<SendDriverOfferAlertResult>;
 
-  abstract sendOrderUpdatedAlert(
-    params: SendOrderUpdatedAlertParams,
-  ): Promise<SendOrderUpdatedAlertResult>;
+  abstract sendOrderUpdated(
+    params: SendOrderUpdatedParams,
+  ): Promise<SendOrderUpdatedResult>;
 }
