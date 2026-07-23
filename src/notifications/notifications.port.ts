@@ -46,6 +46,21 @@ export type SendDriverOfferAlertResult = {
   reason?: string;
 };
 
+export type SendOrderUpdatedAlertParams = {
+  tokens: string[];
+  orderId: string;
+  merchantId: string;
+  title: string;
+  body: string;
+};
+
+export type SendOrderUpdatedAlertResult = {
+  sent: boolean;
+  successCount?: number;
+  failureCount?: number;
+  reason?: string;
+};
+
 export type SendOrderChatMessageParams = {
   fcmToken: string;
   orderId: string;
@@ -83,4 +98,8 @@ export abstract class OrderNotificationsPort {
   abstract sendDriverOfferAlert(
     params: SendDriverOfferAlertParams,
   ): Promise<SendDriverOfferAlertResult>;
+
+  abstract sendOrderUpdatedAlert(
+    params: SendOrderUpdatedAlertParams,
+  ): Promise<SendOrderUpdatedAlertResult>;
 }

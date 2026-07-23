@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
@@ -19,6 +20,7 @@ import { SuperAdminGuard } from '../auth/super-admin.guard';
 import { AssignOrderDriverDto } from './dto/assign-order-driver.dto';
 import { ListAdminOrderQueueQueryDto } from './dto/list-admin-order-queue-query.dto';
 import { ListOrdersAdminQueryDto } from './dto/list-orders-admin-query.dto';
+import { UpdateAdminOrderItemsDto } from './dto/update-admin-order-items.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { DriverOrdersService } from './driver-orders.service';
 import { OrdersService } from './orders.service';
@@ -94,5 +96,28 @@ export class AdminOrdersController {
     @Body() dto: UpdateOrderStatusDto,
   ) {
     return this.ordersService.updateStatusForSuperAdmin(orderId, dto);
+  }
+
+  @ApiOperation({
+    summary:
+      'Edit order line quantities and/or notes (super admin). Recalculates totals and notifies customer, merchant, and assigned driver.',
+  })
+  @ApiParam({ name: 'orderId', type: String })
+  @Patch(':orderId/items')
+  updateItems(
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+    @Body() dto: UpdateAdminOrderItemsDto,
+  ) {
+    return this.ordersService.updateItemsForSuperAdmin(orderId, dto);
+  }
+
+  @ApiOperation({
+    summary:
+      'Delete an order (super admin). Notifies customer, merchant, and assigned driver. Blocked if the order is in a paid settlement.',
+  })
+  @ApiParam({ name: 'orderId', type: String })
+  @Delete(':orderId')
+  deleteOrder(@Param('orderId', ParseUUIDPipe) orderId: string) {
+    return this.ordersService.deleteForSuperAdmin(orderId);
   }
 }
