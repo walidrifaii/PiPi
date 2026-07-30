@@ -1,0 +1,794 @@
+{
+  "merchantId": "2c3820e7-3abd-4d2c-9ee6-e90f3b614b6e",
+  "categories": [
+    {
+      "name": "Cheese",
+      "nameAr": "جبنة",
+      "sortOrder": 1
+    },
+    {
+      "name": "Meat",
+      "nameAr": "لحمة",
+      "sortOrder": 2
+    },
+    {
+      "name": "Zaatar",
+      "nameAr": "زعتر",
+      "sortOrder": 3
+    },
+    {
+      "name": "Areesh",
+      "nameAr": "أريش",
+      "sortOrder": 4
+    },
+    {
+      "name": "Kaak",
+      "nameAr": "كعك",
+      "sortOrder": 5
+    },
+    {
+      "name": "Labneh",
+      "nameAr": "لبنة",
+      "sortOrder": 6
+    },
+    {
+      "name": "Special",
+      "nameAr": "مميز",
+      "sortOrder": 7
+    },
+    {
+      "name": "Soiree",
+      "nameAr": "سواريه",
+      "sortOrder": 8
+    },
+    {
+      "name": "Fajita Pizza",
+      "nameAr": "بيتزا فاهيتا",
+      "sortOrder": 9
+    },
+    {
+      "name": "Chicken Pizza",
+      "nameAr": "بيتزا دجاج",
+      "sortOrder": 10
+    },
+    {
+      "name": "Vegetable Pizza",
+      "nameAr": "بيتزا خضرة",
+      "sortOrder": 11
+    },
+    {
+      "name": "Mortadella Pizza",
+      "nameAr": "بيتزا مرتديلا",
+      "sortOrder": 12
+    },
+    {
+      "name": "Sujuk Pizza",
+      "nameAr": "بيتزا سجق",
+      "sortOrder": 13
+    },
+    {
+      "name": "Margherita Pizza",
+      "nameAr": "بيتزا مارغريتا",
+      "sortOrder": 14
+    },
+    {
+      "name": "Pepperoni Pizza",
+      "nameAr": "بيتزا ببروني",
+      "sortOrder": 15
+    }
+  ],
+  "products": [
+    {
+      "name": "جبنة",
+      "nameAr": "جبنة",
+      "description": null,
+      "descriptionAr": "جبنة عكاوي وموزاريلا",
+      "price": 2.22,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "جبنة قشقوان",
+      "nameAr": "جبنة قشقوان",
+      "description": null,
+      "descriptionAr": "جبنة موزاريلا وعكاوي وقشقوان",
+      "price": 3,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "جبنة مع خضرة",
+      "nameAr": "جبنة مع خضرة",
+      "description": null,
+      "descriptionAr": "جبنة عكاوي وموزاريلا مع بندورة وزيتون وفليفلة حلوة، والذرة حسب الطلب",
+      "price": 3,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "جبنة مع سجق",
+      "nameAr": "جبنة مع سجق",
+      "description": null,
+      "descriptionAr": "جبنة موزاريلا وعكاوي مع سجق",
+      "price": 2.5,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "جبنة مع مرتديلا",
+      "nameAr": "جبنة مع مرتديلا",
+      "description": null,
+      "descriptionAr": "جبنة عكاوي وموزاريلا مع مرتديلا",
+      "price": 3,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "جبنة ذرة",
+      "nameAr": "جبنة ذرة",
+      "description": null,
+      "descriptionAr": "جبنة عكاوي وموزاريلا مع ذرة",
+      "price": 2.22,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "جبنة قشقوان مع سجق",
+      "nameAr": "جبنة قشقوان مع سجق",
+      "description": null,
+      "descriptionAr": "جبنة موزاريلا وعكاوي وقشقوان مع سجق",
+      "price": 3.55,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "جبنة سجق مع خضرة",
+      "nameAr": "جبنة سجق مع خضرة",
+      "description": null,
+      "descriptionAr": "جبنة عكاوي وموزاريلا مع بندورة وزيتون وفليفلة حلوة وسجق",
+      "price": 3.55,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "جبنة مرتديلا قشقوان",
+      "nameAr": "جبنة مرتديلا قشقوان",
+      "description": null,
+      "descriptionAr": "جبنة عكاوي وموزاريلا وقشقوان مع مرتديلا",
+      "price": 3.55,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "جبنة خضرة مع مرتديلا",
+      "nameAr": "جبنة خضرة مع مرتديلا",
+      "description": null,
+      "descriptionAr": "جبنة موزاريلا وعكاوي مع بندورة وزيتون وفليفلة حلوة ومرتديلا",
+      "price": 3.55,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "دوبلاكس",
+      "nameAr": "دوبلاكس",
+      "description": null,
+      "descriptionAr": "منقوشة جبنة وفوقها منقوشة زعتر",
+      "price": 3,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "جبنة قشقوان مع خضرة",
+      "nameAr": "جبنة قشقوان مع خضرة",
+      "description": null,
+      "descriptionAr": "جبنة عكاوي وموزاريلا وقشقوان مع بندورة وزيتون وفليفلة حلوة",
+      "price": 3.55,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "جبنة مع رشة زعتر",
+      "nameAr": "جبنة مع رشة زعتر",
+      "description": null,
+      "descriptionAr": "جبنة عكاوي وموزاريلا مع رشة زعتر",
+      "price": 2.22,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "جبنة مع ببروني",
+      "nameAr": "جبنة مع ببروني",
+      "description": null,
+      "descriptionAr": "جبنة عكاوي وموزاريلا مع ببروني",
+      "price": 3,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "جبنة ببروني مع خضرة",
+      "nameAr": "جبنة ببروني مع خضرة",
+      "description": null,
+      "descriptionAr": "جبنة موزاريلا وعكاوي مع خضرة وببروني",
+      "price": 3.55,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "جبنة قشقوان مع ببروني",
+      "nameAr": "جبنة قشقوان مع ببروني",
+      "description": null,
+      "descriptionAr": "جبنة قشقوان وموزاريلا وعكاوي مع ببروني",
+      "price": 3.55,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "جبنة قشقوان مع ببروني وخضرة",
+      "nameAr": "جبنة قشقوان مع ببروني وخضرة",
+      "description": null,
+      "descriptionAr": "جبنة موزاريلا وقشقوان وعكاوي مع ببروني وخضرة",
+      "price": 4,
+      "categoryName": "Cheese"
+    },
+    {
+      "name": "لحمة",
+      "nameAr": "لحمة",
+      "description": null,
+      "descriptionAr": "لحمة مفرومة مع بندورة وبصل وفليفلة حلوة",
+      "price": 2.22,
+      "categoryName": "Meat"
+    },
+    {
+      "name": "نصف لحمة نصف جبنة",
+      "nameAr": "نصف لحمة نصف جبنة",
+      "description": null,
+      "descriptionAr": "نصف المنقوشة لحمة والنصف الآخر جبنة",
+      "price": 2.22,
+      "categoryName": "Meat"
+    },
+    {
+      "name": "لحمة مع جبنة",
+      "nameAr": "لحمة مع جبنة",
+      "description": null,
+      "descriptionAr": "لحمة مفرومة مع بندورة وبصل وفليفلة حلوة وعليها جبنة موزاريلا",
+      "price": 3,
+      "categoryName": "Meat"
+    },
+    {
+      "name": "لحمة مع خضرة",
+      "nameAr": "لحمة مع خضرة",
+      "description": null,
+      "descriptionAr": "لحمة مع بندورة وزيتون وفليفلة حلوة",
+      "price": 3,
+      "categoryName": "Meat"
+    },
+    {
+      "name": "سمت بدن",
+      "nameAr": "سمت بدن",
+      "description": null,
+      "descriptionAr": "لحمة مع فطر وذرة وعليها جبنة",
+      "price": 3.33,
+      "categoryName": "Meat"
+    },
+    {
+      "name": "لحمة مع جبنة وخضرة",
+      "nameAr": "لحمة مع جبنة وخضرة",
+      "description": null,
+      "descriptionAr": "لحمة مع بندورة وزيتون وفليفلة حلوة وجبنة",
+      "price": 3.33,
+      "categoryName": "Meat"
+    },
+    {
+      "name": "زعتر",
+      "nameAr": "زعتر",
+      "description": null,
+      "descriptionAr": "زعتر مع زيت",
+      "price": 1,
+      "categoryName": "Zaatar"
+    },
+    {
+      "name": "زعتر مع خضرة",
+      "nameAr": "زعتر مع خضرة",
+      "description": null,
+      "descriptionAr": "زعتر وزيت مع بندورة وزيتون وفليفلة حلوة",
+      "price": 1.55,
+      "categoryName": "Zaatar"
+    },
+    {
+      "name": "نصف جبنة نصف زعتر",
+      "nameAr": "نصف جبنة نصف زعتر",
+      "description": null,
+      "descriptionAr": "نصف زعتر مع زيت ونصف جبنة عكاوي وموزاريلا",
+      "price": 1.88,
+      "categoryName": "Zaatar"
+    },
+    {
+      "name": "زعتر مع لبنة",
+      "nameAr": "زعتر مع لبنة",
+      "description": null,
+      "descriptionAr": "زعتر وزيت مع لبنة",
+      "price": 1.55,
+      "categoryName": "Zaatar"
+    },
+    {
+      "name": "زعتر مع لبنة ومرتديلا",
+      "nameAr": "زعتر مع لبنة ومرتديلا",
+      "description": null,
+      "descriptionAr": "زعتر وزيت مع لبنة ومرتديلا",
+      "price": 2.44,
+      "categoryName": "Zaatar"
+    },
+    {
+      "name": "زعتر مع جبنة",
+      "nameAr": "زعتر مع جبنة",
+      "description": null,
+      "descriptionAr": "زعتر وزيت وعليها جبنة موزاريلا",
+      "price": 1.88,
+      "categoryName": "Zaatar"
+    },
+    {
+      "name": "زعتر مع لبنة وخضرة",
+      "nameAr": "زعتر مع لبنة وخضرة",
+      "description": null,
+      "descriptionAr": "زعتر وزيت مع لبنة وبندورة وفليفلة حلوة وزيتون",
+      "price": 2,
+      "categoryName": "Zaatar"
+    },
+    {
+      "name": "زعتر مع خضرة ومرتديلا",
+      "nameAr": "زعتر مع خضرة ومرتديلا",
+      "description": null,
+      "descriptionAr": "زعتر وزيت مع بندورة وزيتون وفليفلة حلوة ومرتديلا",
+      "price": 2,
+      "categoryName": "Zaatar"
+    },
+    {
+      "name": "زعتر مع لبنة ومرتديلا وخضرة",
+      "nameAr": "زعتر مع لبنة ومرتديلا وخضرة",
+      "description": null,
+      "descriptionAr": "زعتر مع لبنة وبندورة وزيتون وفليفلة حلوة ومرتديلا",
+      "price": 2.44,
+      "categoryName": "Zaatar"
+    },
+    {
+      "name": "نصف زعتر نصف قشقوان",
+      "nameAr": "نصف زعتر نصف قشقوان",
+      "description": null,
+      "descriptionAr": "زعتر وزيت مع جبنة عكاوي وموزاريلا وقشقوان",
+      "price": 2,
+      "categoryName": "Zaatar"
+    },
+    {
+      "name": "زعتر مع جبنة وخضرة",
+      "nameAr": "زعتر مع جبنة وخضرة",
+      "description": null,
+      "descriptionAr": "زعتر وزيت مع بندورة وزيتون وفليفلة حلوة وعليها جبنة موزاريلا",
+      "price": 2.11,
+      "categoryName": "Zaatar"
+    },
+    {
+      "name": "أريش",
+      "nameAr": "أريش",
+      "description": null,
+      "descriptionAr": "أريش متبل مع بندورة وبصل وفليفلة مفرومة وزيت",
+      "price": 2,
+      "categoryName": "Areesh"
+    },
+    {
+      "name": "نصف أريش نصف جبنة",
+      "nameAr": "نصف أريش نصف جبنة",
+      "description": null,
+      "descriptionAr": "نصف أريش متبل ونصف جبنة عكاوي وموزاريلا",
+      "price": 2,
+      "categoryName": "Areesh"
+    },
+    {
+      "name": "أريش مع جبنة",
+      "nameAr": "أريش مع جبنة",
+      "description": null,
+      "descriptionAr": "أريش متبل وعليه جبنة موزاريلا",
+      "price": 3,
+      "categoryName": "Areesh"
+    },
+    {
+      "name": "أريش مع خضرة",
+      "nameAr": "أريش مع خضرة",
+      "description": null,
+      "descriptionAr": "أريش متبل مع بندورة وزيتون وفليفلة حلوة",
+      "price": 3,
+      "categoryName": "Areesh"
+    },
+    {
+      "name": "أريش مع جبنة وخضرة",
+      "nameAr": "أريش مع جبنة وخضرة",
+      "description": null,
+      "descriptionAr": "أريش متبل مع بندورة وزيتون وفليفلة حلوة وجبنة موزاريلا",
+      "price": 3.66,
+      "categoryName": "Areesh"
+    },
+    {
+      "name": "كعك بجبنة",
+      "nameAr": "كعك بجبنة",
+      "description": null,
+      "descriptionAr": "جبنة عكاوي وموزاريلا",
+      "price": 1.67,
+      "categoryName": "Kaak"
+    },
+    {
+      "name": "كعك ذرة",
+      "nameAr": "كعك ذرة",
+      "description": null,
+      "descriptionAr": "جبنة موزاريلا وعكاوي مع ذرة",
+      "price": 1.67,
+      "categoryName": "Kaak"
+    },
+    {
+      "name": "كعك قشقوان",
+      "nameAr": "كعك قشقوان",
+      "description": null,
+      "descriptionAr": "جبنة موزاريلا وعكاوي وقشقوان",
+      "price": 1.88,
+      "categoryName": "Kaak"
+    },
+    {
+      "name": "كعك خضرة",
+      "nameAr": "كعك خضرة",
+      "description": null,
+      "descriptionAr": "جبنة عكاوي وموزاريلا مع بندورة وزيتون وفليفلة حلوة",
+      "price": 1.88,
+      "categoryName": "Kaak"
+    },
+    {
+      "name": "كعك قشقوان مع خضرة",
+      "nameAr": "كعك قشقوان مع خضرة",
+      "description": null,
+      "descriptionAr": "جبنة موزاريلا وقشقوان وعكاوي مع بندورة وزيتون وفليفلة حلوة",
+      "price": 2.77,
+      "categoryName": "Kaak"
+    },
+    {
+      "name": "كعك سجق",
+      "nameAr": "كعك سجق",
+      "description": null,
+      "descriptionAr": "جبنة موزاريلا وعكاوي مع سجق",
+      "price": 2.44,
+      "categoryName": "Kaak"
+    },
+    {
+      "name": "كعك مرتديلا",
+      "nameAr": "كعك مرتديلا",
+      "description": null,
+      "descriptionAr": "جبنة موزاريلا وعكاوي مع مرتديلا",
+      "price": 2.44,
+      "categoryName": "Kaak"
+    },
+    {
+      "name": "كعك فاهيتا",
+      "nameAr": "كعك فاهيتا",
+      "description": null,
+      "descriptionAr": "فاهيتا متبلة مع جبنة موزاريلا",
+      "price": 2.44,
+      "categoryName": "Kaak"
+    },
+    {
+      "name": "كعك دجاج",
+      "nameAr": "كعك دجاج",
+      "description": null,
+      "descriptionAr": "دجاج متبل على طريقة الطاووق مع جبنة موزاريلا",
+      "price": 2.44,
+      "categoryName": "Kaak"
+    },
+    {
+      "name": "كعك خضرة وسجق",
+      "nameAr": "كعك خضرة وسجق",
+      "description": null,
+      "descriptionAr": "جبنة موزاريلا وعكاوي مع زيتون وبندورة وفليفلة حلوة وسجق",
+      "price": 2.77,
+      "categoryName": "Kaak"
+    },
+    {
+      "name": "كعك مرتديلا مع خضرة",
+      "nameAr": "كعك مرتديلا مع خضرة",
+      "description": null,
+      "descriptionAr": "جبنة موزاريلا وعكاوي مع بندورة وزيتون وفليفلة حلوة ومرتديلا",
+      "price": 2.77,
+      "categoryName": "Kaak"
+    },
+    {
+      "name": "كعك قشقوان وفاهيتا",
+      "nameAr": "كعك قشقوان وفاهيتا",
+      "description": null,
+      "descriptionAr": "فاهيتا مع جبنة موزاريلا وقشقوان",
+      "price": 3.11,
+      "categoryName": "Kaak"
+    },
+    {
+      "name": "كعك دجاج وقشقوان",
+      "nameAr": "كعك دجاج وقشقوان",
+      "description": null,
+      "descriptionAr": "دجاج متبل مع جبنة موزاريلا وقشقوان",
+      "price": 3.11,
+      "categoryName": "Kaak"
+    },
+    {
+      "name": "كعك بخميس",
+      "nameAr": "كعك بخميس",
+      "description": null,
+      "descriptionAr": "حليب وطحين ويانسون وسمن بلدي وحبة البركة",
+      "price": 0.77,
+      "categoryName": "Kaak"
+    },
+    {
+      "name": "لبنة مع خضرة",
+      "nameAr": "لبنة مع خضرة",
+      "description": null,
+      "descriptionAr": "لبنة مع بندورة وزيتون وفليفلة حلوة",
+      "price": 1.88,
+      "categoryName": "Labneh"
+    },
+    {
+      "name": "لبنة مع مرتديلا",
+      "nameAr": "لبنة مع مرتديلا",
+      "description": null,
+      "descriptionAr": "لبنة مع بندورة وزيتون وفليفلة حلوة ومرتديلا",
+      "price": 3,
+      "categoryName": "Labneh"
+    },
+    {
+      "name": "لحم بعجين",
+      "nameAr": "لحم بعجين",
+      "description": null,
+      "descriptionAr": "لحمة مع دبس رمان وبصل",
+      "price": 1.33,
+      "categoryName": "Special"
+    },
+    {
+      "name": "نصف دزينة لحم بعجين",
+      "nameAr": "نصف دزينة لحم بعجين",
+      "description": null,
+      "descriptionAr": "6 حبات لحم بعجين",
+      "price": 6.66,
+      "categoryName": "Special"
+    },
+    {
+      "name": "دزينة لحم بعجين",
+      "nameAr": "دزينة لحم بعجين",
+      "description": null,
+      "descriptionAr": "12 حبة لحم بعجين",
+      "price": 13.33,
+      "categoryName": "Special"
+    },
+    {
+      "name": "فطيرة جبنة أو سبانخ أو بيتزا",
+      "nameAr": "فطيرة جبنة أو سبانخ أو بيتزا",
+      "description": null,
+      "descriptionAr": "سعر الحبة الواحدة، والاختيار بين الجبنة أو السبانخ أو البيتزا",
+      "price": 1.33,
+      "categoryName": "Special"
+    },
+    {
+      "name": "دزينة فطائر مشكلة",
+      "nameAr": "دزينة فطائر مشكلة",
+      "description": null,
+      "descriptionAr": "12 حبة فطائر، والاختيار بين الجبنة أو الأريش أو السبانخ أو البيتزا",
+      "price": 13.33,
+      "categoryName": "Special"
+    },
+    {
+      "name": "نصف دزينة فطائر مشكلة",
+      "nameAr": "نصف دزينة فطائر مشكلة",
+      "description": null,
+      "descriptionAr": "6 حبات فطائر، والاختيار بين السبانخ أو الأريش أو الجبنة أو البيتزا",
+      "price": 6.66,
+      "categoryName": "Special"
+    },
+    {
+      "name": "منقوشة فاهيتا",
+      "nameAr": "منقوشة فاهيتا",
+      "description": null,
+      "descriptionAr": "فاهيتا متبلة وعليها جبنة",
+      "price": 4.44,
+      "categoryName": "Special"
+    },
+    {
+      "name": "منقوشة دجاج",
+      "nameAr": "منقوشة دجاج",
+      "description": null,
+      "descriptionAr": "دجاج متبل على طريقة الطاووق وعليه جبنة",
+      "price": 4.44,
+      "categoryName": "Special"
+    },
+    {
+      "name": "تركية",
+      "nameAr": "تركية",
+      "description": null,
+      "descriptionAr": "بندورة وفليفلة وبصل مفروم مع فلفل حار مطحون ناعم وعليها جبنة",
+      "price": 2,
+      "categoryName": "Special"
+    },
+    {
+      "name": "منقوشة حارة",
+      "nameAr": "منقوشة حارة",
+      "description": null,
+      "descriptionAr": "فلفل حار مطحون",
+      "price": 1,
+      "categoryName": "Special"
+    },
+    {
+      "name": "نصف زعتر نصف حارة",
+      "nameAr": "نصف زعتر نصف حارة",
+      "description": null,
+      "descriptionAr": "نصف زعتر مع زيت ونصف فلفل حار مطحون",
+      "price": 1,
+      "categoryName": "Special"
+    },
+    {
+      "name": "نصف جبنة نصف حارة",
+      "nameAr": "نصف جبنة نصف حارة",
+      "description": null,
+      "descriptionAr": "نصف جبنة عكاوي وموزاريلا ونصف فلفل حار مطحون",
+      "price": 1.88,
+      "categoryName": "Special"
+    },
+    {
+      "name": "دزينة سواريه",
+      "nameAr": "دزينة سواريه",
+      "description": null,
+      "descriptionAr": "12 قطعة مشكلة من البيتزا والجبنة والأريش والسبانخ والبعلبكية والفاهيتا ولحم بعجين",
+      "price": 5.55,
+      "categoryName": "Soiree"
+    },
+    {
+      "name": "بيتزا فاهيتا صغيرة",
+      "nameAr": "بيتزا فاهيتا صغيرة",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع فاهيتا متبلة وجبنة موزاريلا وقشقوان",
+      "price": 6.66,
+      "categoryName": "Fajita Pizza"
+    },
+    {
+      "name": "بيتزا فاهيتا وسط",
+      "nameAr": "بيتزا فاهيتا وسط",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع فاهيتا متبلة وجبنة موزاريلا وقشقوان",
+      "price": 11.11,
+      "categoryName": "Fajita Pizza"
+    },
+    {
+      "name": "بيتزا فاهيتا كبيرة",
+      "nameAr": "بيتزا فاهيتا كبيرة",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع فاهيتا متبلة وجبنة موزاريلا وقشقوان",
+      "price": 16.66,
+      "categoryName": "Fajita Pizza"
+    },
+    {
+      "name": "بيتزا دجاج صغيرة",
+      "nameAr": "بيتزا دجاج صغيرة",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع دجاج متبل على طريقة الطاووق وجبنة موزاريلا وقشقوان",
+      "price": 6.66,
+      "categoryName": "Chicken Pizza"
+    },
+    {
+      "name": "بيتزا دجاج وسط",
+      "nameAr": "بيتزا دجاج وسط",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع دجاج متبل على طريقة الطاووق وجبنة موزاريلا وقشقوان",
+      "price": 11.11,
+      "categoryName": "Chicken Pizza"
+    },
+    {
+      "name": "بيتزا دجاج كبيرة",
+      "nameAr": "بيتزا دجاج كبيرة",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع دجاج متبل على طريقة الطاووق وجبنة موزاريلا وقشقوان",
+      "price": 16.66,
+      "categoryName": "Chicken Pizza"
+    },
+    {
+      "name": "بيتزا خضرة صغيرة",
+      "nameAr": "بيتزا خضرة صغيرة",
+      "description": null,
+      "descriptionAr": "زيتون وفليفلة وفطر وذرة مع جبنة موزاريلا وقشقوان",
+      "price": 5.55,
+      "categoryName": "Vegetable Pizza"
+    },
+    {
+      "name": "بيتزا خضرة وسط",
+      "nameAr": "بيتزا خضرة وسط",
+      "description": null,
+      "descriptionAr": "زيتون وفليفلة وفطر وذرة مع جبنة موزاريلا وقشقوان",
+      "price": 8.88,
+      "categoryName": "Vegetable Pizza"
+    },
+    {
+      "name": "بيتزا خضرة كبيرة",
+      "nameAr": "بيتزا خضرة كبيرة",
+      "description": null,
+      "descriptionAr": "زيتون وفليفلة وفطر وذرة مع جبنة موزاريلا وقشقوان",
+      "price": 13.33,
+      "categoryName": "Vegetable Pizza"
+    },
+    {
+      "name": "بيتزا مرتديلا صغيرة",
+      "nameAr": "بيتزا مرتديلا صغيرة",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع زيتون وفليفلة وفطر وذرة وجبنة قشقوان وموزاريلا ومرتديلا",
+      "price": 6.66,
+      "categoryName": "Mortadella Pizza"
+    },
+    {
+      "name": "بيتزا مرتديلا وسط",
+      "nameAr": "بيتزا مرتديلا وسط",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع زيتون وفليفلة وفطر وذرة وجبنة قشقوان وموزاريلا ومرتديلا",
+      "price": 11.11,
+      "categoryName": "Mortadella Pizza"
+    },
+    {
+      "name": "بيتزا مرتديلا كبيرة",
+      "nameAr": "بيتزا مرتديلا كبيرة",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع زيتون وفليفلة وفطر وذرة وجبنة قشقوان وموزاريلا ومرتديلا",
+      "price": 16.66,
+      "categoryName": "Mortadella Pizza"
+    },
+    {
+      "name": "بيتزا سجق صغيرة",
+      "nameAr": "بيتزا سجق صغيرة",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع زيتون وفليفلة وفطر وذرة وجبنة قشقوان وموزاريلا وسجق",
+      "price": 6.66,
+      "categoryName": "Sujuk Pizza"
+    },
+    {
+      "name": "بيتزا سجق وسط",
+      "nameAr": "بيتزا سجق وسط",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع زيتون وفليفلة وفطر وذرة وجبنة قشقوان وموزاريلا وسجق",
+      "price": 11.11,
+      "categoryName": "Sujuk Pizza"
+    },
+    {
+      "name": "بيتزا سجق كبيرة",
+      "nameAr": "بيتزا سجق كبيرة",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع زيتون وفليفلة وفطر وذرة وجبنة قشقوان وموزاريلا وسجق",
+      "price": 16.66,
+      "categoryName": "Sujuk Pizza"
+    },
+    {
+      "name": "بيتزا مارغريتا صغيرة",
+      "nameAr": "بيتزا مارغريتا صغيرة",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع جبنة موزاريلا وقشقوان",
+      "price": 5.55,
+      "categoryName": "Margherita Pizza"
+    },
+    {
+      "name": "بيتزا مارغريتا وسط",
+      "nameAr": "بيتزا مارغريتا وسط",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع جبنة موزاريلا وقشقوان",
+      "price": 8.88,
+      "categoryName": "Margherita Pizza"
+    },
+    {
+      "name": "بيتزا مارغريتا كبيرة",
+      "nameAr": "بيتزا مارغريتا كبيرة",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع جبنة موزاريلا وقشقوان",
+      "price": 13.33,
+      "categoryName": "Margherita Pizza"
+    },
+    {
+      "name": "بيتزا ببروني صغيرة",
+      "nameAr": "بيتزا ببروني صغيرة",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع ببروني وجبنة وخضرة",
+      "price": 6.66,
+      "categoryName": "Pepperoni Pizza"
+    },
+    {
+      "name": "بيتزا ببروني وسط",
+      "nameAr": "بيتزا ببروني وسط",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع ببروني وجبنة وخضرة",
+      "price": 11.11,
+      "categoryName": "Pepperoni Pizza"
+    },
+    {
+      "name": "بيتزا ببروني كبيرة",
+      "nameAr": "بيتزا ببروني كبيرة",
+      "description": null,
+      "descriptionAr": "صوص بيتزا مع ببروني وجبنة وخضرة",
+      "price": 16.66,
+      "categoryName": "Pepperoni Pizza"
+    }
+  ]
+}
