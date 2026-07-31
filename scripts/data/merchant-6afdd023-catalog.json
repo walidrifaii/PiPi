@@ -1,0 +1,1347 @@
+{
+  "merchantId": "6afdd023-958e-41ef-a6c2-ae6dcbe79e41",
+  "categories": [
+    {
+      "name": "Breakfast",
+      "nameAr": "الفطور",
+      "sortOrder": 1
+    },
+    {
+      "name": "Appetizers",
+      "nameAr": "المقبلات",
+      "sortOrder": 2
+    },
+    {
+      "name": "Salads",
+      "nameAr": "السلطات",
+      "sortOrder": 3
+    },
+    {
+      "name": "Chicken Main Dishes",
+      "nameAr": "أطباق الدجاج الرئيسية",
+      "sortOrder": 4
+    },
+    {
+      "name": "Fisherman Basket",
+      "nameAr": "سلة الصياد",
+      "sortOrder": 5
+    },
+    {
+      "name": "Meat Dishes",
+      "nameAr": "أطباق اللحوم",
+      "sortOrder": 6
+    },
+    {
+      "name": "Sandwiches",
+      "nameAr": "السندويشات",
+      "sortOrder": 7
+    },
+    {
+      "name": "Rice Plates",
+      "nameAr": "أطباق الأرز",
+      "sortOrder": 8
+    },
+    {
+      "name": "Sandwich Plate",
+      "nameAr": "طبق سندويش",
+      "sortOrder": 9
+    },
+    {
+      "name": "Pizza",
+      "nameAr": "بيتزا",
+      "sortOrder": 10
+    },
+    {
+      "name": "Burger",
+      "nameAr": "برغر",
+      "sortOrder": 11
+    },
+    {
+      "name": "Pasta",
+      "nameAr": "باستا",
+      "sortOrder": 12
+    },
+    {
+      "name": "Kids Meal",
+      "nameAr": "وجبات الأطفال",
+      "sortOrder": 13
+    },
+    {
+      "name": "Cocktail",
+      "nameAr": "كوكتيلات",
+      "sortOrder": 14
+    },
+    {
+      "name": "Smoothies",
+      "nameAr": "سموذي",
+      "sortOrder": 15
+    },
+    {
+      "name": "Juice",
+      "nameAr": "العصائر",
+      "sortOrder": 16
+    },
+    {
+      "name": "Cold Drinks",
+      "nameAr": "مشروبات باردة",
+      "sortOrder": 17
+    },
+    {
+      "name": "Hot Drinks",
+      "nameAr": "مشروبات ساخنة",
+      "sortOrder": 18
+    },
+    {
+      "name": "Soft Drinks",
+      "nameAr": "مشروبات غازية",
+      "sortOrder": 19
+    },
+    {
+      "name": "Shakes Dessert",
+      "nameAr": "ميلك شيك وحلويات",
+      "sortOrder": 20
+    }
+  ],
+  "products": [
+    {
+      "name": "SAJ ZAATAR",
+      "nameAr": "صاج زعتر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.9,
+      "categoryName": "Breakfast"
+    },
+    {
+      "name": "SAJ KASHKAVAL",
+      "nameAr": "صاج قشقوان",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.8,
+      "categoryName": "Breakfast"
+    },
+    {
+      "name": "SAJ JEBNE AND KAFTA",
+      "nameAr": "صاج جبنة وكفتة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0,
+      "categoryName": "Breakfast"
+    },
+    {
+      "name": "SAJ LABNEH WITH VEGETABLE",
+      "nameAr": "صاج لبنة مع خضار",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.9,
+      "categoryName": "Breakfast"
+    },
+    {
+      "name": "KAAK JEBNE",
+      "nameAr": "كعك جبنة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.75,
+      "categoryName": "Breakfast"
+    },
+    {
+      "name": "KAAK JEBNE AND PEPPERONI",
+      "nameAr": "كعك جبنة وبيبروني",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.25,
+      "categoryName": "Breakfast"
+    },
+    {
+      "name": "KAAK JEBNE KASHKAVAL",
+      "nameAr": "كعك جبنة قشقوان",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.8,
+      "categoryName": "Breakfast"
+    },
+    {
+      "name": "Plate Cheese Omlette",
+      "nameAr": "طبق أومليت بالجبنة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.5,
+      "categoryName": "Breakfast"
+    },
+    {
+      "name": "Plate Labneh",
+      "nameAr": "طبق لبنة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.4,
+      "categoryName": "Breakfast"
+    },
+    {
+      "name": "Curly Fries",
+      "nameAr": "بطاطا حلزونية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "French Fries",
+      "nameAr": "بطاطا مقلية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Potato Wedges",
+      "nameAr": "بطاطا ودجز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Chicken Nuggets",
+      "nameAr": "قطع دجاج مقلية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Cheese Garlic Bread",
+      "nameAr": "خبز بالثوم والجبنة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Dynamite Shrimps",
+      "nameAr": "روبيان ديناميت",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.25,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Mozzarella Cheese Sticks",
+      "nameAr": "أصابع موزاريلا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.2,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Quesadillas",
+      "nameAr": "كاساديا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Rotana Combo",
+      "nameAr": "كومبو روتانا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.5,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Nachos",
+      "nameAr": "ناتشوز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.5,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Buffalo Chicken Wings",
+      "nameAr": "أجنحة دجاج بافلو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.5,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Barbecue Chicken Wings",
+      "nameAr": "أجنحة دجاج باربكيو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.5,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Honey Chicken Wings",
+      "nameAr": "أجنحة دجاج بالعسل",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.5,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Calamari Rings",
+      "nameAr": "حلقات كاليماري",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.5,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Spring Rolls",
+      "nameAr": "سبرينغ رول",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Onion Rings",
+      "nameAr": "حلقات بصل",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.2,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Sauce",
+      "nameAr": "صلصة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.5,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "White Rice",
+      "nameAr": "أرز أبيض",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Chicky Tenders (5 pcs)",
+      "nameAr": "قطع دجاج تندر (5 قطع)",
+      "description": null,
+      "descriptionAr": "5 قطع دجاج تندر مغطاة بالصوص، متوفرة مع بافلو أو باربكيو أو هاني ماسترد",
+      "price": 8,
+      "categoryName": "Appetizers"
+    },
+    {
+      "name": "Tuna Pasta Salad",
+      "nameAr": "سلطة باستا بالتونة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Avocado",
+      "nameAr": "سلطة أفوكادو",
+      "description": "Iceberg, colorful lettuce, olive, mushrooms, tomato, cucumber, corn, avocado, shrimps with mustard sauce",
+      "descriptionAr": null,
+      "price": 10,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Crab Salad",
+      "nameAr": "سلطة السلطعون",
+      "description": "Iceberg, colorful lettuce, tomato, corn, crab, caper, mustard sauce",
+      "descriptionAr": null,
+      "price": 8,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Greek Salad",
+      "nameAr": "سلطة يونانية",
+      "description": "Iceberg, colorful lettuce, tomato, cucumber, black olive, green peppers, feta cheese, mustard sauce and oregano",
+      "descriptionAr": null,
+      "price": 5.2,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Chicken Pasta Salad",
+      "nameAr": "سلطة باستا بالدجاج",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Tabbouleh",
+      "nameAr": "تبولة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.5,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Chicken Caesar Salad",
+      "nameAr": "سلطة سيزر بالدجاج",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Quinoa Salad",
+      "nameAr": "سلطة كينوا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Rocca Halloumi",
+      "nameAr": "روكا حلوم",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.5,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Salmon Salad",
+      "nameAr": "سلطة سلمون",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Quinoa Tabbouleh",
+      "nameAr": "تبولة كينوا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.5,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Caesar Salad",
+      "nameAr": "سلطة سيزر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Crispy and Rice",
+      "nameAr": "كريسبي مع أرز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Chicken Curry",
+      "nameAr": "دجاج بالكاري",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Chicken Pesto",
+      "nameAr": "دجاج بيستو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.5,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Grilled Chicken",
+      "nameAr": "دجاج مشوي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Chicken Mushroom",
+      "nameAr": "دجاج بالفطر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Chicken Parmigiano",
+      "nameAr": "دجاج بارميجيانو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Chicken Arkadash",
+      "nameAr": "دجاج أركاداش",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12.5,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Broasted Chicken (5pcs)",
+      "nameAr": "دجاج بروستد (5 قطع)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Rotana Chicken",
+      "nameAr": "دجاج روتانا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Crispy Chicken",
+      "nameAr": "دجاج كريسبي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.5,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Chicken Escalope",
+      "nameAr": "إسكالوب دجاج",
+      "description": null,
+      "descriptionAr": null,
+      "price": 13,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Broasted Chicken (10pcs)",
+      "nameAr": "دجاج بروستد (10 قطع)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 15,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Chicken Taouk Plate",
+      "nameAr": "طبق دجاج طاووق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.5,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Sweet Chilli Chicken",
+      "nameAr": "دجاج سويت تشيلي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 14.16,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Fajitas Lava",
+      "nameAr": "فاهيتا لافا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.12,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Taouk and Rice",
+      "nameAr": "طاووق مع أرز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Rotana Finger",
+      "nameAr": "روتانا فينغر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11.5,
+      "categoryName": "Chicken Main Dishes"
+    },
+    {
+      "name": "Roasted Salmon",
+      "nameAr": "سلمون مشوي",
+      "description": "Smoked salmon, potato puree, green salad with salmon sauce",
+      "descriptionAr": null,
+      "price": 17.5,
+      "categoryName": "Fisherman Basket"
+    },
+    {
+      "name": "Chilli Seafood Provencal",
+      "nameAr": "مأكولات بحرية حارة بروفنسال",
+      "description": "Lobsters, crab, shrimps, calamari with mussels",
+      "descriptionAr": null,
+      "price": 15,
+      "categoryName": "Fisherman Basket"
+    },
+    {
+      "name": "Mushroom Steak",
+      "nameAr": "ستيك بالفطر",
+      "description": "Steak, rice, sautéed vegetables with mushroom sauce",
+      "descriptionAr": null,
+      "price": 13.5,
+      "categoryName": "Meat Dishes"
+    },
+    {
+      "name": "Pepper Steak",
+      "nameAr": "ستيك بالفلفل",
+      "description": "Steak, sautéed vegetables, wedges with pepper sauce",
+      "descriptionAr": null,
+      "price": 14,
+      "categoryName": "Meat Dishes"
+    },
+    {
+      "name": "Philadelphia Sandwich",
+      "nameAr": "سندويش فيلادلفيا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Fajitas Sandwich",
+      "nameAr": "سندويش فاهيتا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Chicken Sub Sandwich",
+      "nameAr": "سندويش تشيكن سب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Crispy Wrap",
+      "nameAr": "راب كريسبي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Rotana Mexican Sandwich",
+      "nameAr": "سندويش روتانا مكسيكي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Taouk Sandwich",
+      "nameAr": "سندويش طاووق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Chicken Dynamite Sandwich",
+      "nameAr": "سندويش دجاج ديناميت",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.7,
+      "categoryName": "Sandwiches"
+    },
+    {
+      "name": "Rice with Crispy",
+      "nameAr": "أرز مع كريسبي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7,
+      "categoryName": "Rice Plates"
+    },
+    {
+      "name": "Rice with Taouk",
+      "nameAr": "أرز مع طاووق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8,
+      "categoryName": "Rice Plates"
+    },
+    {
+      "name": "Fajitas Sandwich Plate",
+      "nameAr": "طبق سندويش فاهيتا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10,
+      "categoryName": "Sandwich Plate"
+    },
+    {
+      "name": "Chicken Sub Plate",
+      "nameAr": "طبق تشيكن سب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9,
+      "categoryName": "Sandwich Plate"
+    },
+    {
+      "name": "Chicken Dynamite Plate",
+      "nameAr": "طبق دجاج ديناميت",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9,
+      "categoryName": "Sandwich Plate"
+    },
+    {
+      "name": "Taouk Sandwich Plate",
+      "nameAr": "طبق سندويش طاووق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9,
+      "categoryName": "Sandwich Plate"
+    },
+    {
+      "name": "Crispy Wrap Plate",
+      "nameAr": "طبق راب كريسبي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 9,
+      "categoryName": "Sandwich Plate"
+    },
+    {
+      "name": "Philadelphia Sandwich Plate",
+      "nameAr": "طبق سندويش فيلادلفيا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 11,
+      "categoryName": "Sandwich Plate"
+    },
+    {
+      "name": "Rotana Mexican Plate",
+      "nameAr": "طبق روتانا مكسيكي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10,
+      "categoryName": "Sandwich Plate"
+    },
+    {
+      "name": "Vegetariana Pizza",
+      "nameAr": "بيتزا خضار",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Margherita Pizza",
+      "nameAr": "بيتزا مارغريتا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Pepperoni Pizza",
+      "nameAr": "بيتزا بيبروني",
+      "description": null,
+      "descriptionAr": null,
+      "price": 8.75,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Pizza Fajitas",
+      "nameAr": "بيتزا فاهيتا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Chicken Pizza",
+      "nameAr": "بيتزا دجاج",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Pizza Alfredo Shrimps",
+      "nameAr": "بيتزا ألفريدو روبيان",
+      "description": null,
+      "descriptionAr": null,
+      "price": 12,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Pizza Crispy",
+      "nameAr": "بيتزا كريسبي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10.5,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Pizza Rotana Pesto",
+      "nameAr": "بيتزا روتانا بيستو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10.5,
+      "categoryName": "Pizza"
+    },
+    {
+      "name": "Milk Banana Strawberry",
+      "nameAr": "حليب موز وفراولة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.5,
+      "categoryName": "Cocktail"
+    },
+    {
+      "name": "Tutti Fruity",
+      "nameAr": "توتي فروتي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.5,
+      "categoryName": "Cocktail"
+    },
+    {
+      "name": "Fruit Salad",
+      "nameAr": "سلطة فواكه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7,
+      "categoryName": "Cocktail"
+    },
+    {
+      "name": "Kitkat Salad",
+      "nameAr": "سلطة كيت كات",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6,
+      "categoryName": "Cocktail"
+    },
+    {
+      "name": "Cocktail Nachii",
+      "nameAr": "كوكتيل ناتشي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7,
+      "categoryName": "Cocktail"
+    },
+    {
+      "name": "Cocktail Slices",
+      "nameAr": "كوكتيل سلايس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6,
+      "categoryName": "Cocktail"
+    },
+    {
+      "name": "Juicy Fruit",
+      "nameAr": "جوسي فروت",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Cocktail"
+    },
+    {
+      "name": "Avocado Cocktail",
+      "nameAr": "كوكتيل أفوكادو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7,
+      "categoryName": "Cocktail"
+    },
+    {
+      "name": "Vanberry",
+      "nameAr": "فانبيري",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0,
+      "categoryName": "Cocktail"
+    },
+    {
+      "name": "Strawberry Smoothie",
+      "nameAr": "سموذي فراولة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Smoothies"
+    },
+    {
+      "name": "Forest Fruit Smoothie",
+      "nameAr": "سموذي فواكه الغابة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Smoothies"
+    },
+    {
+      "name": "Mango Smoothie",
+      "nameAr": "سموذي مانغا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Smoothies"
+    },
+    {
+      "name": "Passion Fruit Smoothie",
+      "nameAr": "سموذي باشن فروت",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Smoothies"
+    },
+    {
+      "name": "Peach Smoothie",
+      "nameAr": "سموذي خوخ",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Smoothies"
+    },
+    {
+      "name": "Pina Colada",
+      "nameAr": "بينا كولادا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4,
+      "categoryName": "Juice"
+    },
+    {
+      "name": "Lemon Mint",
+      "nameAr": "ليمون ونعنع",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4,
+      "categoryName": "Juice"
+    },
+    {
+      "name": "Lemonade",
+      "nameAr": "ليموناضة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3,
+      "categoryName": "Juice"
+    },
+    {
+      "name": "Orange Juice",
+      "nameAr": "عصير برتقال",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.5,
+      "categoryName": "Juice"
+    },
+    {
+      "name": "Jamaica",
+      "nameAr": "جامايكا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4,
+      "categoryName": "Juice"
+    },
+    {
+      "name": "Ice Tea",
+      "nameAr": "شاي مثلج",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4,
+      "categoryName": "Juice"
+    },
+    {
+      "name": "Blue Hawaii",
+      "nameAr": "بلو هاواي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4,
+      "categoryName": "Juice"
+    },
+    {
+      "name": "Fresh Carrot",
+      "nameAr": "عصير جزر طازج",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.5,
+      "categoryName": "Juice"
+    },
+    {
+      "name": "Fresh Strawberry",
+      "nameAr": "فراولة طازجة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.5,
+      "categoryName": "Juice"
+    },
+    {
+      "name": "Fresh Mango",
+      "nameAr": "مانغا طازجة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Juice"
+    },
+    {
+      "name": "Small Water",
+      "nameAr": "مياه صغيرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.75,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Large Water",
+      "nameAr": "مياه كبيرة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.5,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Perrier",
+      "nameAr": "بيرييه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Caramel Frappe",
+      "nameAr": "فرابيه كراميل",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Vanilla Cookies",
+      "nameAr": "فانيلا كوكيز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Mocca Frappe",
+      "nameAr": "موكا فرابيه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Iced Caramel Latte",
+      "nameAr": "آيس كراميل لاتيه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Iced Hazelnut Latte",
+      "nameAr": "آيس بندق لاتيه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Cold Drinks"
+    },
+    {
+      "name": "Espresso",
+      "nameAr": "إسبريسو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.5,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "Turkish Coffee",
+      "nameAr": "قهوة تركية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "Nescafe Milk",
+      "nameAr": "نسكافيه بالحليب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.5,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "Cappuccino",
+      "nameAr": "كابتشينو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "Latte With Flavor",
+      "nameAr": "لاتيه بالنكهة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.5,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "Snickers Latte",
+      "nameAr": "لاتيه سنيكرز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.5,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "Hot Chocolate",
+      "nameAr": "شوكولا ساخنة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "Caramel Macchiato",
+      "nameAr": "كراميل ماكياتو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.5,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "Tea",
+      "nameAr": "شاي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.5,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "Zhourat",
+      "nameAr": "زهورات",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.5,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "Green Tea",
+      "nameAr": "شاي أخضر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.5,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "White Mocha",
+      "nameAr": "وايت موكا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "American Coffee",
+      "nameAr": "قهوة أمريكية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "Hot Lotus",
+      "nameAr": "هوت لوتس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.5,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "Irish Cappuccino",
+      "nameAr": "كابتشينو إيرلندي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "Hazelnut Cappuccino",
+      "nameAr": "كابتشينو بندق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.5,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "Mocha Latte",
+      "nameAr": "موكا لاتيه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.5,
+      "categoryName": "Hot Drinks"
+    },
+    {
+      "name": "Crepe Kitkat",
+      "nameAr": "كريب كيت كات",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.5,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Crepe Fruits",
+      "nameAr": "كريب فواكه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.5,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Crepe Banana",
+      "nameAr": "كريب موز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Cheesecake Oreo",
+      "nameAr": "تشيز كيك أوريو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.5,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Chocolate Fondant",
+      "nameAr": "فوندان شوكولا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Cheese Cake",
+      "nameAr": "تشيز كيك",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.5,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Fudge Cake",
+      "nameAr": "فادج كيك",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Crepe Chocolate",
+      "nameAr": "كريب شوكولا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Crepe Oreo",
+      "nameAr": "كريب أوريو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.5,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Crepe Lotus",
+      "nameAr": "كريب لوتس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.5,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Crepe Snickers",
+      "nameAr": "كريب سنيكرز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.5,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Pain Perdu",
+      "nameAr": "بان بيردو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.5,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Arabic Ice Cream",
+      "nameAr": "بوظة عربية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Banana Split",
+      "nameAr": "بانانا سبليت",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Strawberry Mou",
+      "nameAr": "موس فراولة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.5,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Cheesecake Lotus",
+      "nameAr": "تشيز كيك لوتس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.5,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Chocolate Mou",
+      "nameAr": "موس شوكولا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Ghazli Crepe Sandwich",
+      "nameAr": "ساندويش كريب غزلي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Seasonal Fruits Plate",
+      "nameAr": "طبق فواكه موسمية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 10,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Fruits Plate",
+      "nameAr": "طبق فواكه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Shakes Dessert"
+    },
+    {
+      "name": "Watermelon Plate",
+      "nameAr": "طبق بطيخ",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6,
+      "categoryName": "Shakes Dessert"
+    }
+  ]
+}
