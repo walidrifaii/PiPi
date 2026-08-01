@@ -14,6 +14,9 @@ import {
   CheckoutV2Controller,
   UserAddressV2Controller,
 } from '../v2/controllers/feature.v2-controllers';
+import { CheckoutV3Controller } from '../v3/checkout/checkout-v3.controller';
+import { UserAddressV3Controller } from '../v3/checkout/user-address-v3.controller';
+import { UserAddressV3Service } from '../v3/checkout/user-address-v3.service';
 
 @Module({
   imports: [
@@ -28,10 +31,13 @@ import {
     UserAddressController,
     CheckoutV2Controller,
     UserAddressV2Controller,
+    CheckoutV3Controller,
+    UserAddressV3Controller,
   ],
   providers: [
     CheckoutService,
     UserAddressService,
+    UserAddressV3Service,
     {
       provide: OrderNotificationsPort,
       useExisting: NotificationsService,

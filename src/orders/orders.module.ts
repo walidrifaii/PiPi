@@ -26,6 +26,16 @@ import {
   MerchantOrdersV2Controller,
   UserOrdersV2Controller,
 } from '../v2/controllers/feature.v2-controllers';
+import {
+  AdminDriverEarningsV3Controller,
+  AdminMerchantEarningsV3Controller,
+  AdminOrdersV3Controller,
+  DriverEarningsV3Controller,
+  DriverOrdersV3Controller,
+  MerchantEarningsV3Controller,
+  MerchantOrdersV3Controller,
+  UserOrdersV3Controller,
+} from '../v3/controllers/feature.v3-controllers';
 
 @Module({
   imports: [PrismaModule, NotificationsModule, TrackingModule, PlatformSettingsModule],
@@ -46,6 +56,14 @@ import {
     MerchantEarningsV2Controller,
     AdminDriverEarningsV2Controller,
     AdminMerchantEarningsV2Controller,
+    UserOrdersV3Controller,
+    MerchantOrdersV3Controller,
+    AdminOrdersV3Controller,
+    DriverOrdersV3Controller,
+    DriverEarningsV3Controller,
+    MerchantEarningsV3Controller,
+    AdminDriverEarningsV3Controller,
+    AdminMerchantEarningsV3Controller,
   ],
   providers: [
     OrdersService,

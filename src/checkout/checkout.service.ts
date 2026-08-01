@@ -99,10 +99,16 @@ export class CheckoutService {
     private readonly couponSvc: CouponService,
   ) {}
 
+  private static readonly COORD_TOLERANCE = 0.0001;
+
   async createOrder(
     userId: string,
     dto: CreateCheckoutDto,
-    opts?: { requireActiveProducts?: boolean },
+    opts?: {
+      requireActiveProducts?: boolean;
+      requireAddressId?: boolean;
+      validateSavedAddressCoordinates?: boolean;
+    },
   ) {
     const merchant = await this.prisma.merchant.findUnique({
       where: { id: dto.merchantId },
@@ -137,13 +143,30 @@ export class CheckoutService {
 
     this.assertMerchantOpenForCheckout(merchant);
 
+    if (opts?.requireAddressId && !dto.addressId) {
+      throw new BadRequestException('addressId is required');
+    }
+
     if (dto.addressId) {
       const saved = await this.prisma.userAddress.findFirst({
         where: { id: dto.addressId, userId },
-        select: { id: true },
+        select: { id: true, latitude: true, longitude: true },
       });
       if (!saved) {
         throw new NotFoundException('Delivery address not found');
+      }
+      if (opts?.validateSavedAddressCoordinates) {
+        const savedLat = Number(saved.latitude);
+        const savedLng = Number(saved.longitude);
+        if (
+          Math.abs(savedLat - dto.latitude) >
+            CheckoutService.COORD_TOLERANCE ||
+          Math.abs(savedLng - dto.longitude) > CheckoutService.COORD_TOLERANCE
+        ) {
+          throw new BadRequestException(
+            'Delivery coordinates do not match the saved address',
+          );
+        }
       }
     }
 

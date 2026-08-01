@@ -8,6 +8,10 @@ import {
   BannerAdminV2Controller,
   BannerV2Controller,
 } from '../v2/controllers/feature.v2-controllers';
+import {
+  BannerAdminV3Controller,
+  BannerV3Controller,
+} from '../v3/controllers/feature.v3-controllers';
 
 @Module({
   imports: [PrismaModule],
@@ -16,6 +20,8 @@ import {
     BannerAdminController,
     BannerV2Controller,
     BannerAdminV2Controller,
+    BannerV3Controller,
+    BannerAdminV3Controller,
   ],
   providers: [BannerService, S3Service],
   exports: [BannerService],

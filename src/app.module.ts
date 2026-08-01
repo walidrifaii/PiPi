@@ -29,7 +29,9 @@ import { PlatformSettingsModule } from './platform-settings/platform-settings.mo
 import { DeliveryFeeModule } from './delivery-fee/delivery-fee.module';
 import { GeoModule } from './geo/geo.module';
 import { V2Module } from './v2/v2.module';
+import { V3Module } from './v3/v3.module';
 import { APP_V2_CONTROLLERS } from './v2/controllers/app.v2-controllers';
+import { APP_V3_CONTROLLERS } from './v3/controllers/app.v3-controllers';
 import { AppVersionModule } from './app-version/app-version.module';
 import { CouponModule } from './coupon/coupon.module';
 import { BundleModule } from './bundle/bundle.module';
@@ -65,6 +67,7 @@ import {
     CouponModule,
     BundleModule,
     V2Module,
+    V3Module,
   ],
   controllers: [
     AppController,
@@ -82,6 +85,7 @@ import {
     MerchantController,
     MerchantCatalogSuperAdminController,
     ...APP_V2_CONTROLLERS,
+    ...APP_V3_CONTROLLERS,
   ],
   providers: [
     AppService,
