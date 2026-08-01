@@ -107,6 +107,7 @@ export class CheckoutService {
     opts?: {
       requireActiveProducts?: boolean;
       requireAddressId?: boolean;
+      resolveCoordinatesFromSavedAddress?: boolean;
       validateSavedAddressCoordinates?: boolean;
     },
   ) {
@@ -155,19 +156,43 @@ export class CheckoutService {
       if (!saved) {
         throw new NotFoundException('Delivery address not found');
       }
-      if (opts?.validateSavedAddressCoordinates) {
-        const savedLat = Number(saved.latitude);
-        const savedLng = Number(saved.longitude);
+
+      const savedLat = Number(saved.latitude);
+      const savedLng = Number(saved.longitude);
+      const clientSentLat = dto.latitude != null;
+      const clientSentLng = dto.longitude != null;
+
+      if (clientSentLat !== clientSentLng) {
+        throw new BadRequestException(
+          'latitude and longitude must both be provided or both omitted',
+        );
+      }
+
+      if (
+        clientSentLat &&
+        clientSentLng &&
+        opts?.validateSavedAddressCoordinates
+      ) {
+        const requestLat = Number(dto.latitude);
+        const requestLng = Number(dto.longitude);
         if (
-          Math.abs(savedLat - dto.latitude) >
-            CheckoutService.COORD_TOLERANCE ||
-          Math.abs(savedLng - dto.longitude) > CheckoutService.COORD_TOLERANCE
+          Math.abs(savedLat - requestLat) > CheckoutService.COORD_TOLERANCE ||
+          Math.abs(savedLng - requestLng) > CheckoutService.COORD_TOLERANCE
         ) {
           throw new BadRequestException(
             'Delivery coordinates do not match the saved address',
           );
         }
       }
+
+      if (opts?.resolveCoordinatesFromSavedAddress) {
+        dto.latitude = dto.latitude ?? savedLat;
+        dto.longitude = dto.longitude ?? savedLng;
+      }
+    }
+
+    if (dto.latitude == null || dto.longitude == null) {
+      throw new BadRequestException('latitude and longitude are required');
     }
 
     const productItems = dto.items.filter((i) => i.productId);

@@ -16,7 +16,7 @@ export class CheckoutV3Controller {
 
   @ApiOperation({
     summary:
-      'Place order for one merchant (v3). Requires addressId; inactive products cannot be ordered.',
+      'Place order for one merchant (v3). Requires addressId; lat/lng optional (resolved from saved address). Inactive products cannot be ordered.',
   })
   @Post()
   create(
@@ -26,6 +26,7 @@ export class CheckoutV3Controller {
     return this.checkoutService.createOrder(req.user!.sub, dto, {
       requireActiveProducts: true,
       requireAddressId: true,
+      resolveCoordinatesFromSavedAddress: true,
       validateSavedAddressCoordinates: true,
     });
   }

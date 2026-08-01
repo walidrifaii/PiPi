@@ -94,4 +94,29 @@ describe('CheckoutService v3 address rules', () => {
       ),
     ).rejects.toBeInstanceOf(BadRequestException);
   });
+
+  it('resolves coordinates from saved address when lat/lng omitted', async () => {
+    prisma.userAddress.findFirst.mockResolvedValue({
+      id: addressId,
+      latitude: new Prisma.Decimal(32.8872),
+      longitude: new Prisma.Decimal(13.1913),
+    });
+    prisma.product.findMany.mockResolvedValue([]);
+
+    const { latitude: _lat, longitude: _lng, ...dtoWithoutCoords } = baseDto;
+
+    await expect(
+      service.createOrder(
+        userId,
+        { ...dtoWithoutCoords, addressId } as never,
+        {
+          requireAddressId: true,
+          resolveCoordinatesFromSavedAddress: true,
+          validateSavedAddressCoordinates: true,
+        },
+      ),
+    ).rejects.toThrow(
+      'One or more products are invalid or belong to a different merchant',
+    );
+  });
 });
