@@ -35,6 +35,7 @@
     "seed:menu-separated-catalog": "node scripts/seed-menu-separated-catalog.mjs",
     "seed:merchant-2c3820e7-catalog": "node scripts/seed-merchant-2c3820e7-catalog.mjs",
     "seed:merchant-6afdd023-catalog": "node scripts/seed-merchant-6afdd023-catalog.mjs",
+    "seed:merchant-17423af2-catalog": "node scripts/seed-merchant-17423af2-catalog.mjs",
     "delete:all-orders": "node scripts/delete-all-orders.mjs",
     "seed:app-version": "ts-node prisma/seed.ts"
   },
