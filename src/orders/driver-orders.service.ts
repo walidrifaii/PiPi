@@ -19,6 +19,7 @@ import {
   DRIVER_ACTIVE_STATUSES,
   DRIVER_OFFER_STATUSES,
   MAX_DRIVER_BATCH_ORDERS,
+  isCustomerTrackableStatus,
   isDriverOfferStatus,
   isTerminalOrderStatus,
   normalizeOrderStatus,
@@ -117,6 +118,29 @@ export class DriverOrdersService {
     }
   }
 
+  /** Pre-sync Firestore chat meta so opening chat does not wait on first write. */
+  private async syncChatMetaIfContactable(order: {
+    id: string;
+    userId: string;
+    driverId: string | null;
+    status: string | null;
+  }): Promise<void> {
+    if (!order.driverId || !isCustomerTrackableStatus(order.status)) {
+      return;
+    }
+    try {
+      await this.tracking.syncOrderMeta(
+        order.id,
+        order.userId,
+        order.driverId,
+      );
+    } catch (err) {
+      this.log.warn(
+        `syncOrderMeta failed for order ${order.id}: ${String(err)}`,
+      );
+    }
+  }
+
   /** Unassigned orders ready for pickup from any merchant (indexed filter, lean select). */
   async listAvailable(driverId: string, page = 1, limit = 20) {
     await this.assertDriverActive(driverId);
@@ -169,6 +193,8 @@ export class DriverOrdersService {
       return { order: null };
     }
 
+    await this.syncChatMetaIfContactable(order);
+
     const sharePercent = await this.driverSharePercent();
 
     return {
@@ -191,6 +217,8 @@ export class DriverOrdersService {
       include: driverOrderInclude,
       orderBy: { createdAt: 'asc' },
     });
+
+    await Promise.all(orders.map((o) => this.syncChatMetaIfContactable(o)));
 
     const sharePercent = await this.driverSharePercent();
 
@@ -459,6 +487,7 @@ export class DriverOrdersService {
     if (!order) {
       throw new NotFoundException('Order not found');
     }
+    await this.syncChatMetaIfContactable(order);
     const sharePercent = await this.driverSharePercent();
     return mapDriverOrderDetail(order as OrderWithRelations, sharePercent);
   }
@@ -647,6 +676,7 @@ export class DriverOrdersService {
 
     const row = order! as OrderWithRelations;
     await this.notifyCustomerDispatched(row);
+    await this.syncChatMetaIfContactable(row);
 
     const sharePercent = await this.driverSharePercent();
 

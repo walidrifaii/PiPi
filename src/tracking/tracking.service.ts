@@ -257,6 +257,42 @@ export class TrackingService {
     await firestore.collection('orders').doc(orderId).set(meta, { merge: true });
   }
 
+  /** Sync Firestore meta and confirm participant uids are readable before client opens chat. */
+  async ensureOrderMetaSynced(
+    orderId: string,
+    userId: string,
+    driverId: string,
+  ): Promise<boolean> {
+    const expectedUserUid = `user:${userId}`;
+    const expectedDriverUid = `driver:${driverId}`;
+    const firestore = this.firebase.firestore;
+
+    if (!firestore) {
+      await this.syncOrderMeta(orderId, userId, driverId);
+      return false;
+    }
+
+    for (let attempt = 0; attempt < 3; attempt++) {
+      await this.syncOrderMeta(orderId, userId, driverId);
+      const snap = await firestore.collection('orders').doc(orderId).get();
+      const data = snap.data();
+      if (
+        data?.userUid === expectedUserUid &&
+        data?.driverUid === expectedDriverUid
+      ) {
+        return true;
+      }
+      if (attempt < 2) {
+        await new Promise((resolve) => setTimeout(resolve, 150 * (attempt + 1)));
+      }
+    }
+
+    this.log.warn(
+      `Order meta verify failed for ${orderId} after sync attempts`,
+    );
+    return false;
+  }
+
   /** At least every 3s to RTDB; otherwise max 1 write/sec when moving. */
   private acceptThrottledWrite(
     driverId: string,

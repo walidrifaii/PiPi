@@ -84,13 +84,18 @@ export class OrderChatService {
     if (order.userId !== userId) {
       throw new ForbiddenException('Not your order');
     }
-    await this.tracking.syncOrderMeta(orderId, order.userId, order.driverId!);
+    const metaSynced = await this.tracking.ensureOrderMetaSynced(
+      orderId,
+      order.userId,
+      order.driverId!,
+    );
     return {
       orderId,
       userUid: `user:${order.userId}`,
       driverUid: `driver:${order.driverId}`,
       myUid: `user:${userId}`,
       firestoreReady: this.tracking.isFirestoreConfigured(),
+      metaSynced,
     };
   }
 
@@ -99,13 +104,18 @@ export class OrderChatService {
     if (order.driverId !== driverId) {
       throw new ForbiddenException('Not your delivery');
     }
-    await this.tracking.syncOrderMeta(orderId, order.userId, order.driverId!);
+    const metaSynced = await this.tracking.ensureOrderMetaSynced(
+      orderId,
+      order.userId,
+      order.driverId!,
+    );
     return {
       orderId,
       userUid: `user:${order.userId}`,
       driverUid: `driver:${order.driverId}`,
       myUid: `driver:${driverId}`,
       firestoreReady: this.tracking.isFirestoreConfigured(),
+      metaSynced,
     };
   }
 
