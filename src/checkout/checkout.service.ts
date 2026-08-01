@@ -20,7 +20,7 @@ import {
 import { OrderNotificationsPort } from '../notifications/notifications.port';
 import type { SelectedOptionSnapshot } from '../merchant/product-option.types';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateCheckoutDto } from './dto/create-checkout.dto';
+import { CreateCheckoutOrderInput } from './dto/create-checkout.dto';
 import { MerchantOfferService } from '../merchant-offer/merchant-offer.service';
 import { resolveStorefrontProductPricing } from '../merchant-offer/merchant-offer-pricing';
 import { CouponService } from '../coupon/coupon.service';
@@ -103,7 +103,7 @@ export class CheckoutService {
 
   async createOrder(
     userId: string,
-    dto: CreateCheckoutDto,
+    dto: CreateCheckoutOrderInput,
     opts?: {
       requireActiveProducts?: boolean;
       requireAddressId?: boolean;

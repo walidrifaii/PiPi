@@ -120,8 +120,7 @@ export class CreateCheckoutDto {
   notes?: string;
 
   @ApiPropertyOptional({
-    description:
-      'Optional coupon code (case-insensitive).',
+    description: 'Optional coupon code (case-insensitive).',
     example: 'SUMMER20',
   })
   @IsOptional()
@@ -129,3 +128,12 @@ export class CreateCheckoutDto {
   @MaxLength(50)
   couponCode?: string;
 }
+
+/** Checkout payload accepted by CheckoutService (v3 may omit lat/lng until resolved). */
+export type CreateCheckoutOrderInput = Omit<
+  CreateCheckoutDto,
+  'latitude' | 'longitude'
+> & {
+  latitude?: number;
+  longitude?: number;
+};
