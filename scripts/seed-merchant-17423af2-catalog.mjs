@@ -39,4 +39,5 @@ if (transform.status !== 0) {
 
 process.env.SEED_CATALOG_FILE ??= "scripts/data/merchant-17423af2-catalog.json";
 process.env.SEED_MERCHANT_ID ??= merchantId;
+process.env.SEED_REPLACE_CATALOG ??= "1";
 await import("./seed-merchant-catalog.mjs");
