@@ -1,0 +1,535 @@
+{
+  "merchantId": "17423af2-31c3-4b11-91f3-e0ee7e095200",
+  "generatedAt": "2026-08-01T21:01:23.447Z",
+  "tileSize": 512,
+  "categories": [
+    {
+      "name": "المثلجات والبوظة",
+      "fileName": "01-المثلجات-والبوظة.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/01-المثلجات-والبوظة.png",
+      "emoji": "1f366",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f366.png",
+      "gradient": {
+        "from": "#7DD3FC",
+        "to": "#38BDF8"
+      }
+    },
+    {
+      "name": "الخبز والمخبوزات",
+      "fileName": "02-الخبز-والمخبوزات.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/02-الخبز-والمخبوزات.png",
+      "emoji": "1f35e",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f35e.png",
+      "gradient": {
+        "from": "#FCD34D",
+        "to": "#F59E0B"
+      }
+    },
+    {
+      "name": "الأرز والحبوب",
+      "fileName": "03-الأرز-والحبوب.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/03-الأرز-والحبوب.png",
+      "emoji": "1f35a",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f35a.png",
+      "gradient": {
+        "from": "#FDE68A",
+        "to": "#D97706"
+      }
+    },
+    {
+      "name": "البقوليات والبرغل",
+      "fileName": "04-البقوليات-والبرغل.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/04-البقوليات-والبرغل.png",
+      "emoji": "1fad8",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1fad8.png",
+      "gradient": {
+        "from": "#86EFAC",
+        "to": "#16A34A"
+      }
+    },
+    {
+      "name": "المعكرونة والنودلز",
+      "fileName": "05-المعكرونة-والنودلز.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/05-المعكرونة-والنودلز.png",
+      "emoji": "1f35d",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f35d.png",
+      "gradient": {
+        "from": "#FDBA74",
+        "to": "#EA580C"
+      }
+    },
+    {
+      "name": "الطحين والسكر والملح",
+      "fileName": "06-الطحين-والسكر-والملح.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/06-الطحين-والسكر-والملح.png",
+      "emoji": "1f370",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f370.png",
+      "gradient": {
+        "from": "#F5F5F4",
+        "to": "#D6D3D1"
+      }
+    },
+    {
+      "name": "البهارات والأعشاب والشوربات",
+      "fileName": "07-البهارات-والأعشاب-والشوربات.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/07-البهارات-والأعشاب-والشوربات.png",
+      "emoji": "1f336",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f336.png",
+      "gradient": {
+        "from": "#FCA5A5",
+        "to": "#DC2626"
+      }
+    },
+    {
+      "name": "الزيوت والسمن والزبدة",
+      "fileName": "08-الزيوت-والسمن-والزبدة.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/08-الزيوت-والسمن-والزبدة.png",
+      "emoji": "1f9c8",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f9c8.png",
+      "gradient": {
+        "from": "#FEF08A",
+        "to": "#CA8A04"
+      }
+    },
+    {
+      "name": "الحليب ومكونات الحلويات",
+      "fileName": "09-الحليب-ومكونات-الحلويات.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/09-الحليب-ومكونات-الحلويات.png",
+      "emoji": "1f95b",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f95b.png",
+      "gradient": {
+        "from": "#E0E7FF",
+        "to": "#6366F1"
+      }
+    },
+    {
+      "name": "الأجبان والكريمة",
+      "fileName": "10-الأجبان-والكريمة.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/10-الأجبان-والكريمة.png",
+      "emoji": "1f9c0",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f9c0.png",
+      "gradient": {
+        "from": "#FEF3C7",
+        "to": "#F59E0B"
+      }
+    },
+    {
+      "name": "المعلبات والخضار المحفوظة",
+      "fileName": "11-المعلبات-والخضار-المحفوظة.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/11-المعلبات-والخضار-المحفوظة.png",
+      "emoji": "1f96b",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f96b.png",
+      "gradient": {
+        "from": "#BBF7D0",
+        "to": "#059669"
+      }
+    },
+    {
+      "name": "المرتديلا واللحوم المعلبة",
+      "fileName": "12-المرتديلا-واللحوم-المعلبة.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/12-المرتديلا-واللحوم-المعلبة.png",
+      "emoji": "1f969",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f969.png",
+      "gradient": {
+        "from": "#FECACA",
+        "to": "#B91C1C"
+      }
+    },
+    {
+      "name": "التونة والسردين",
+      "fileName": "13-التونة-والسردين.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/13-التونة-والسردين.png",
+      "emoji": "1f41f",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f41f.png",
+      "gradient": {
+        "from": "#93C5FD",
+        "to": "#2563EB"
+      }
+    },
+    {
+      "name": "الصلصات والتتبيلات",
+      "fileName": "14-الصلصات-والتتبيلات.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/14-الصلصات-والتتبيلات.png",
+      "emoji": "1fAD2",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1fad2.png",
+      "gradient": {
+        "from": "#FCA5A5",
+        "to": "#C2410C"
+      }
+    },
+    {
+      "name": "المخللات والزيتون",
+      "fileName": "15-المخللات-والزيتون.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/15-المخللات-والزيتون.png",
+      "emoji": "1fAD9",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1fad9.png",
+      "gradient": {
+        "from": "#A3E635",
+        "to": "#4D7C0F"
+      }
+    },
+    {
+      "name": "المربى والسبريد والحلاوة والطحينة",
+      "fileName": "16-المربى-والسبريد-والحلاوة-والطحينة.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/16-المربى-والسبريد-والحلاوة-والطحينة.png",
+      "emoji": "1f36f",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f36f.png",
+      "gradient": {
+        "from": "#FDE047",
+        "to": "#A16207"
+      }
+    },
+    {
+      "name": "البسكويت والويفر والكيك",
+      "fileName": "17-البسكويت-والويفر-والكيك.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/17-البسكويت-والويفر-والكيك.png",
+      "emoji": "1f36a",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f36a.png",
+      "gradient": {
+        "from": "#FBCFE8",
+        "to": "#DB2777"
+      }
+    },
+    {
+      "name": "الشوكولا والحلويات",
+      "fileName": "18-الشوكولا-والحلويات.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/18-الشوكولا-والحلويات.png",
+      "emoji": "1f36b",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f36b.png",
+      "gradient": {
+        "from": "#D97706",
+        "to": "#78350F"
+      }
+    },
+    {
+      "name": "العلكة والبونبون والجيلي",
+      "fileName": "19-العلكة-والبونبون-والجيلي.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/19-العلكة-والبونبون-والجيلي.png",
+      "emoji": "1f36c",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f36c.png",
+      "gradient": {
+        "from": "#F0ABFC",
+        "to": "#A21CAF"
+      }
+    },
+    {
+      "name": "الشيبس والسناكات المالحة",
+      "fileName": "20-الشيبس-والسناكات-المالحة.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/20-الشيبس-والسناكات-المالحة.png",
+      "emoji": "1f954",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f954.png",
+      "gradient": {
+        "from": "#FDBA74",
+        "to": "#C2410C"
+      }
+    },
+    {
+      "name": "المكسرات والبزر",
+      "fileName": "21-المكسرات-والبزر.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/21-المكسرات-والبزر.png",
+      "emoji": "1f330",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f330.png",
+      "gradient": {
+        "from": "#D6B48A",
+        "to": "#92400E"
+      }
+    },
+    {
+      "name": "العصائر",
+      "fileName": "22-العصائر.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/22-العصائر.png",
+      "emoji": "1f9c3",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f9c3.png",
+      "gradient": {
+        "from": "#FDE68A",
+        "to": "#EA580C"
+      }
+    },
+    {
+      "name": "المشروبات الغازية",
+      "fileName": "23-المشروبات-الغازية.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/23-المشروبات-الغازية.png",
+      "emoji": "1f964",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f964.png",
+      "gradient": {
+        "from": "#BFDBFE",
+        "to": "#1D4ED8"
+      }
+    },
+    {
+      "name": "مشروبات الطاقة",
+      "fileName": "24-مشروبات-الطاقة.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/24-مشروبات-الطاقة.png",
+      "emoji": "26a1",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/26a1.png",
+      "gradient": {
+        "from": "#FEF08A",
+        "to": "#CA8A04"
+      }
+    },
+    {
+      "name": "المياه",
+      "fileName": "25-المياه.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/25-المياه.png",
+      "emoji": "1f4a7",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4a7.png",
+      "gradient": {
+        "from": "#BAE6FD",
+        "to": "#0284C7"
+      }
+    },
+    {
+      "name": "القهوة والشاي والمشروبات الساخنة",
+      "fileName": "26-القهوة-والشاي-والمشروبات-الساخنة.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/26-القهوة-والشاي-والمشروبات-الساخنة.png",
+      "emoji": "2615",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2615.png",
+      "gradient": {
+        "from": "#D6D3D1",
+        "to": "#57534E"
+      }
+    },
+    {
+      "name": "المجمدات",
+      "fileName": "27-المجمدات.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/27-المجمدات.png",
+      "emoji": "1f9ca",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f9ca.png",
+      "gradient": {
+        "from": "#A5F3FC",
+        "to": "#0891B2"
+      }
+    },
+    {
+      "name": "المنظفات والمعطرات المنزلية",
+      "fileName": "28-المنظفات-والمعطرات-المنزلية.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/28-المنظفات-والمعطرات-المنزلية.png",
+      "emoji": "1f9f4",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f9f4.png",
+      "gradient": {
+        "from": "#C4B5FD",
+        "to": "#6D28D9"
+      }
+    },
+    {
+      "name": "أدوات التنظيف المنزلية",
+      "fileName": "29-أدوات-التنظيف-المنزلية.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/29-أدوات-التنظيف-المنزلية.png",
+      "emoji": "1f9f9",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f9f9.png",
+      "gradient": {
+        "from": "#93C5FD",
+        "to": "#1D4ED8"
+      }
+    },
+    {
+      "name": "المبيدات الحشرية",
+      "fileName": "30-المبيدات-الحشرية.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/30-المبيدات-الحشرية.png",
+      "emoji": "1f41c",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f41c.png",
+      "gradient": {
+        "from": "#86EFAC",
+        "to": "#15803D"
+      }
+    },
+    {
+      "name": "المحارم والورقيات",
+      "fileName": "31-المحارم-والورقيات.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/31-المحارم-والورقيات.png",
+      "emoji": "1f9fb",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f9fb.png",
+      "gradient": {
+        "from": "#F5F5F4",
+        "to": "#A8A29E"
+      }
+    },
+    {
+      "name": "الأكياس والتغليف",
+      "fileName": "32-الأكياس-والتغليف.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/32-الأكياس-والتغليف.png",
+      "emoji": "1f6cd",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f6cd.png",
+      "gradient": {
+        "from": "#FDE68A",
+        "to": "#B45309"
+      }
+    },
+    {
+      "name": "مستلزمات السفرة",
+      "fileName": "33-مستلزمات-السفرة.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/33-مستلزمات-السفرة.png",
+      "emoji": "1f374",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f374.png",
+      "gradient": {
+        "from": "#E5E7EB",
+        "to": "#6B7280"
+      }
+    },
+    {
+      "name": "العناية بالشعر",
+      "fileName": "34-العناية-بالشعر.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/34-العناية-بالشعر.png",
+      "emoji": "1f487",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f487.png",
+      "gradient": {
+        "from": "#FBCFE8",
+        "to": "#BE185D"
+      }
+    },
+    {
+      "name": "الصابون والاستحمام",
+      "fileName": "35-الصابون-والاستحمام.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/35-الصابون-والاستحمام.png",
+      "emoji": "1f9fc",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f9fc.png",
+      "gradient": {
+        "from": "#BAE6FD",
+        "to": "#0369A1"
+      }
+    },
+    {
+      "name": "مزيلات العرق والعطور",
+      "fileName": "36-مزيلات-العرق-والعطور.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/36-مزيلات-العرق-والعطور.png",
+      "emoji": "1f9f4",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f9f4.png",
+      "gradient": {
+        "from": "#DDD6FE",
+        "to": "#7C3AED"
+      }
+    },
+    {
+      "name": "العناية الشخصية والصحية",
+      "fileName": "37-العناية-الشخصية-والصحية.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/37-العناية-الشخصية-والصحية.png",
+      "emoji": "1f9fc",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f9fc.png",
+      "gradient": {
+        "from": "#A7F3D0",
+        "to": "#047857"
+      }
+    },
+    {
+      "name": "العناية بالفم والأسنان",
+      "fileName": "38-العناية-بالفم-والأسنان.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/38-العناية-بالفم-والأسنان.png",
+      "emoji": "1f9b7",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f9b7.png",
+      "gradient": {
+        "from": "#E0F2FE",
+        "to": "#0284C7"
+      }
+    },
+    {
+      "name": "الفوط الصحية",
+      "fileName": "39-الفوط-الصحية.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/39-الفوط-الصحية.png",
+      "emoji": "1f6c1",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f6c1.png",
+      "gradient": {
+        "from": "#FBCFE8",
+        "to": "#DB2777"
+      }
+    },
+    {
+      "name": "حفاضات الأطفال",
+      "fileName": "40-حفاضات-الأطفال.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/40-حفاضات-الأطفال.png",
+      "emoji": "1f476",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f476.png",
+      "gradient": {
+        "from": "#BFDBFE",
+        "to": "#2563EB"
+      }
+    },
+    {
+      "name": "الحلاقة",
+      "fileName": "41-الحلاقة.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/41-الحلاقة.png",
+      "emoji": "1fa92",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1fa92.png",
+      "gradient": {
+        "from": "#CBD5E1",
+        "to": "#475569"
+      }
+    },
+    {
+      "name": "الدخان والمعسل ولوازمه",
+      "fileName": "42-الدخان-والمعسل-ولوازمه.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/42-الدخان-والمعسل-ولوازمه.png",
+      "emoji": "1f6ac",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f6ac.png",
+      "gradient": {
+        "from": "#D4D4D8",
+        "to": "#52525B"
+      }
+    },
+    {
+      "name": "الفحم ولوازم النرجيلة",
+      "fileName": "43-الفحم-ولوازم-النرجيلة.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/43-الفحم-ولوازم-النرجيلة.png",
+      "emoji": "1fa93",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1fa93.png",
+      "gradient": {
+        "from": "#57534E",
+        "to": "#1C1917"
+      }
+    },
+    {
+      "name": "الألعاب",
+      "fileName": "44-الألعاب.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/44-الألعاب.png",
+      "emoji": "1f3ae",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3ae.png",
+      "gradient": {
+        "from": "#F0ABFC",
+        "to": "#9333EA"
+      }
+    },
+    {
+      "name": "القرطاسية",
+      "fileName": "45-القرطاسية.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/45-القرطاسية.png",
+      "emoji": "1f4dd",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4dd.png",
+      "gradient": {
+        "from": "#FDE68A",
+        "to": "#B45309"
+      }
+    },
+    {
+      "name": "البطاريات واللوازم الكهربائية",
+      "fileName": "46-البطاريات-واللوازم-الكهربائية.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/46-البطاريات-واللوازم-الكهربائية.png",
+      "emoji": "1f50b",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f50b.png",
+      "gradient": {
+        "from": "#86EFAC",
+        "to": "#15803D"
+      }
+    },
+    {
+      "name": "البيض",
+      "fileName": "47-البيض.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/47-البيض.png",
+      "emoji": "1f95a",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f95a.png",
+      "gradient": {
+        "from": "#FFEDD5",
+        "to": "#EA580C"
+      }
+    },
+    {
+      "name": "متفرقات منزلية",
+      "fileName": "48-متفرقات-منزلية.png",
+      "relativePath": "scripts/data/category-images/17423af2-31c3-4b11-91f3-e0ee7e095200/48-متفرقات-منزلية.png",
+      "emoji": "1f3e0",
+      "cdnUrl": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3e0.png",
+      "gradient": {
+        "from": "#E5E7EB",
+        "to": "#64748B"
+      }
+    }
+  ]
+}
