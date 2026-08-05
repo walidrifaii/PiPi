@@ -1,0 +1,573 @@
+{
+  "categories": [
+    {
+      "name": "Fresh",
+      "name_ar": "المشروبات الطازجة",
+      "order": 1
+    },
+    {
+      "name": "Desserts",
+      "name_ar": "الحلويات",
+      "order": 2
+    },
+    {
+      "name": "Pick Your Sauce",
+      "name_ar": "اختر الصوص",
+      "order": 3
+    },
+    {
+      "name": "Pick Your Favorite Toppings",
+      "name_ar": "اختر إضافاتك المفضلة",
+      "order": 4
+    },
+    {
+      "name": "Pick Your Seasonal Fruits",
+      "name_ar": "اختر الفواكه الموسمية",
+      "order": 5
+    }
+  ],
+  "items": [
+    {
+      "name": "POMMY PASH Sugarcane Regular",
+      "name_ar": "بومي باش قصب السكر - عادي",
+      "description": "A refreshing chilled blend made with fresh sugarcane. Available in regular size.",
+      "description_ar": "مزيج منعش وبارد محضّر من قصب السكر الطازج. متوفر بحجم عادي.",
+      "price": 5.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "POMMY PASH Sugarcane Large",
+      "name_ar": "بومي باش قصب السكر - كبير",
+      "description": "A refreshing chilled blend made with fresh sugarcane. Available in large size.",
+      "description_ar": "مزيج منعش وبارد محضّر من قصب السكر الطازج. متوفر بحجم كبير.",
+      "price": 6.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "SPLASH CANE Sugarcane Regular",
+      "name_ar": "سبلاش كين قصب السكر - عادي",
+      "description": "A fresh and cooling sugarcane drink served chilled. Available in regular size.",
+      "description_ar": "مشروب قصب سكر طازج ومنعش يُقدّم بارداً. متوفر بحجم عادي.",
+      "price": 5.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "SPLASH CANE Sugarcane Large",
+      "name_ar": "سبلاش كين قصب السكر - كبير",
+      "description": "A fresh and cooling sugarcane drink served chilled. Available in large size.",
+      "description_ar": "مشروب قصب سكر طازج ومنعش يُقدّم بارداً. متوفر بحجم كبير.",
+      "price": 6.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "CANEBAR Sugarcane Regular",
+      "name_ar": "كين بار قصب السكر - عادي",
+      "description": "Fresh sugarcane blended with orange, passion fruit, pomegranate, strawberry, and lemon. Available in regular size.",
+      "description_ar": "قصب سكر طازج ممزوج بالبرتقال والباشن فروت والرمان والفراولة والليمون. متوفر بحجم عادي.",
+      "price": 5.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "CANEBAR Sugarcane Large",
+      "name_ar": "كين بار قصب السكر - كبير",
+      "description": "Fresh sugarcane blended with orange, passion fruit, pomegranate, strawberry, and lemon. Available in large size.",
+      "description_ar": "قصب سكر طازج ممزوج بالبرتقال والباشن فروت والرمان والفراولة والليمون. متوفر بحجم كبير.",
+      "price": 6.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "PINE CANE Sugarcane Regular",
+      "name_ar": "باين كين قصب السكر - عادي",
+      "description": "A tropical chilled sugarcane blend with pineapple flavor. Available in regular size.",
+      "description_ar": "مزيج استوائي بارد من قصب السكر بنكهة الأناناس. متوفر بحجم عادي.",
+      "price": 5.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "PINE CANE Sugarcane Large",
+      "name_ar": "باين كين قصب السكر - كبير",
+      "description": "A tropical chilled sugarcane blend with pineapple flavor. Available in large size.",
+      "description_ar": "مزيج استوائي بارد من قصب السكر بنكهة الأناناس. متوفر بحجم كبير.",
+      "price": 6.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "COCO BAR Sugarcane Regular",
+      "name_ar": "كوكو بار قصب السكر - عادي",
+      "description": "A smooth chilled sugarcane blend with a tropical coconut touch. Available in regular size.",
+      "description_ar": "مزيج ناعم وبارد من قصب السكر مع لمسة استوائية من جوز الهند. متوفر بحجم عادي.",
+      "price": 5.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "COCO BAR Sugarcane Large",
+      "name_ar": "كوكو بار قصب السكر - كبير",
+      "description": "A smooth chilled sugarcane blend with a tropical coconut touch. Available in large size.",
+      "description_ar": "مزيج ناعم وبارد من قصب السكر مع لمسة استوائية من جوز الهند. متوفر بحجم كبير.",
+      "price": 6.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "MANGO PASH Sugarcane Regular",
+      "name_ar": "مانجو باش قصب السكر - عادي",
+      "description": "Fresh sugarcane blended with sweet tropical mango. Available in regular size.",
+      "description_ar": "قصب سكر طازج ممزوج بالمانجو الاستوائية الحلوة. متوفر بحجم عادي.",
+      "price": 5.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "MANGO PASH Sugarcane Large",
+      "name_ar": "مانجو باش قصب السكر - كبير",
+      "description": "Fresh sugarcane blended with sweet tropical mango. Available in large size.",
+      "description_ar": "قصب سكر طازج ممزوج بالمانجو الاستوائية الحلوة. متوفر بحجم كبير.",
+      "price": 6.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "BERRY CANE Sugarcane Regular",
+      "name_ar": "بيري كين قصب السكر - عادي",
+      "description": "Fresh sugarcane blended with mixed berries and passion fruit. Available in regular size.",
+      "description_ar": "قصب سكر طازج ممزوج بتشكيلة من التوت والباشن فروت. متوفر بحجم عادي.",
+      "price": 5.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "BERRY CANE Sugarcane Large",
+      "name_ar": "بيري كين قصب السكر - كبير",
+      "description": "Fresh sugarcane blended with mixed berries and passion fruit. Available in large size.",
+      "description_ar": "قصب سكر طازج ممزوج بتشكيلة من التوت والباشن فروت. متوفر بحجم كبير.",
+      "price": 6.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "SUNSET Sugarcane Regular",
+      "name_ar": "صن سيت قصب السكر - عادي",
+      "description": "A refreshing signature sugarcane blend served chilled. Available in regular size.",
+      "description_ar": "خلطة قصب سكر مميزة ومنعشة تُقدّم باردة. متوفر بحجم عادي.",
+      "price": 5.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "SUNSET Sugarcane Large",
+      "name_ar": "صن سيت قصب السكر - كبير",
+      "description": "A refreshing signature sugarcane blend served chilled. Available in large size.",
+      "description_ar": "خلطة قصب سكر مميزة ومنعشة تُقدّم باردة. متوفر بحجم كبير.",
+      "price": 6.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "Fresh Sugarcane",
+      "name_ar": "قصب سكر طازج",
+      "description": "Freshly pressed natural sugarcane juice.",
+      "description_ar": "عصير قصب سكر طبيعي ومعصور طازجاً.",
+      "price": null,
+      "category": "Fresh"
+    },
+    {
+      "name": "V Cans",
+      "name_ar": "في كانز",
+      "description": "A chilled can of V energy drink.",
+      "description_ar": "علبة مشروب الطاقة V تُقدّم باردة.",
+      "price": 2.5,
+      "category": "Fresh"
+    },
+    {
+      "name": "V Bombs",
+      "name_ar": "في بومب",
+      "description": "An energizing V bomb drink served chilled.",
+      "description_ar": "مشروب في بومب منعش وغني بالطاقة يُقدّم بارداً.",
+      "price": 5,
+      "category": "Fresh"
+    },
+    {
+      "name": "Green V Bomb",
+      "name_ar": "غرين في بومب",
+      "description": "A refreshing green-flavored V bomb energy drink.",
+      "description_ar": "مشروب طاقة في بومب منعش بالنكهة الخضراء.",
+      "price": 5,
+      "category": "Fresh"
+    },
+    {
+      "name": "Blue V Bomb",
+      "name_ar": "بلو في بومب",
+      "description": "A refreshing blue-flavored V bomb energy drink.",
+      "description_ar": "مشروب طاقة في بومب منعش بالنكهة الزرقاء.",
+      "price": 5,
+      "category": "Fresh"
+    },
+    {
+      "name": "Red Bull Bomb",
+      "name_ar": "ريد بول بومب",
+      "description": "A bold and energizing Red Bull bomb drink.",
+      "description_ar": "مشروب ريد بول بومب قوي ومنعش وغني بالطاقة.",
+      "price": 5,
+      "category": "Fresh"
+    },
+    {
+      "name": "Iced Vanilla Latte",
+      "name_ar": "آيس فانيلا لاتيه",
+      "description": "Chilled espresso with milk and smooth vanilla flavor.",
+      "description_ar": "إسبريسو بارد مع الحليب ونكهة الفانيلا الناعمة.",
+      "price": 4,
+      "category": "Fresh"
+    },
+    {
+      "name": "Iced Vanilla Caramel",
+      "name_ar": "آيس فانيلا كراميل",
+      "description": "A chilled creamy drink flavored with vanilla and caramel.",
+      "description_ar": "مشروب كريمي بارد بنكهة الفانيلا والكراميل.",
+      "price": 4,
+      "category": "Fresh"
+    },
+    {
+      "name": "Milkshake",
+      "name_ar": "ميلك شيك",
+      "description": "A thick, creamy, and refreshing milkshake.",
+      "description_ar": "ميلك شيك كثيف وكريمي ومنعش.",
+      "price": 4,
+      "category": "Fresh"
+    },
+    {
+      "name": "Crunchy Waffles",
+      "name_ar": "وافل كرانشي",
+      "description": "Crispy waffles with a crunchy finish and your favorite toppings.",
+      "description_ar": "وافل مقرمش مع لمسة كرانشي وإضافاتك المفضلة.",
+      "price": 6,
+      "category": "Desserts",
+      "addons": [
+        {
+          "name": "Extra Sauce or Fruit",
+          "name_ar": "صوص أو فواكه إضافية",
+          "price": 1
+        }
+      ]
+    },
+    {
+      "name": "Churros",
+      "name_ar": "تشوروز",
+      "description": "Golden fried churros, crisp outside and soft inside.",
+      "description_ar": "تشوروز ذهبية مقلية، مقرمشة من الخارج وطرية من الداخل.",
+      "price": 6,
+      "category": "Desserts",
+      "addons": [
+        {
+          "name": "Extra Sauce or Fruit",
+          "name_ar": "صوص أو فواكه إضافية",
+          "price": 1
+        }
+      ]
+    },
+    {
+      "name": "Dubai Strawberry Cup",
+      "name_ar": "كوب فراولة دبي",
+      "description": "Fresh strawberries served Dubai-style with rich chocolate and a crunchy touch.",
+      "description_ar": "فراولة طازجة على طريقة دبي مع شوكولا غنية ولمسة مقرمشة.",
+      "price": 6,
+      "category": "Desserts",
+      "addons": [
+        {
+          "name": "Extra Sauce or Fruit",
+          "name_ar": "صوص أو فواكه إضافية",
+          "price": 1
+        }
+      ]
+    },
+    {
+      "name": "Mini Pancakes",
+      "name_ar": "ميني بان كيك",
+      "description": "Soft bite-sized pancakes served with your favorite toppings.",
+      "description_ar": "قطع بان كيك صغيرة وطرية تُقدّم مع إضافاتك المفضلة.",
+      "price": 6,
+      "category": "Desserts",
+      "addons": [
+        {
+          "name": "Extra Sauce or Fruit",
+          "name_ar": "صوص أو فواكه إضافية",
+          "price": 1
+        }
+      ]
+    },
+    {
+      "name": "Dutch Pancakes",
+      "name_ar": "بان كيك هولندي",
+      "description": "Fluffy Dutch-style pancakes served warm with your choice of toppings.",
+      "description_ar": "بان كيك هش على الطريقة الهولندية يُقدّم ساخناً مع إضافات من اختيارك.",
+      "price": 6,
+      "category": "Desserts",
+      "addons": [
+        {
+          "name": "Extra Sauce or Fruit",
+          "name_ar": "صوص أو فواكه إضافية",
+          "price": 1
+        }
+      ]
+    },
+    {
+      "name": "Japanese Souffle",
+      "name_ar": "سوفليه ياباني",
+      "description": "Light and airy Japanese-style souffle pancakes.",
+      "description_ar": "بان كيك سوفليه ياباني خفيف وهش.",
+      "price": 6,
+      "category": "Desserts",
+      "addons": [
+        {
+          "name": "Extra Sauce or Fruit",
+          "name_ar": "صوص أو فواكه إضافية",
+          "price": 1
+        }
+      ]
+    },
+    {
+      "name": "Strawberry Sticks",
+      "name_ar": "أعواد الفراولة",
+      "description": "Fresh strawberry sticks served with your choice of delicious sauce.",
+      "description_ar": "أعواد فراولة طازجة تُقدّم مع صوص شهي من اختيارك.",
+      "price": 6,
+      "category": "Desserts",
+      "addons": [
+        {
+          "name": "Extra Sauce or Fruit",
+          "name_ar": "صوص أو فواكه إضافية",
+          "price": 1
+        }
+      ]
+    },
+    {
+      "name": "Fried Ice Cream",
+      "name_ar": "آيس كريم مقلي",
+      "description": "Crispy fried coating with cold and creamy ice cream inside.",
+      "description_ar": "طبقة خارجية مقلية ومقرمشة مع آيس كريم بارد وكريمي من الداخل.",
+      "price": 6,
+      "category": "Desserts",
+      "addons": [
+        {
+          "name": "Extra Sauce or Fruit",
+          "name_ar": "صوص أو فواكه إضافية",
+          "price": 1
+        }
+      ]
+    },
+    {
+      "name": "Fondue Melting Cup",
+      "name_ar": "كوب فوندو بالشوكولا الذائبة",
+      "description": "A rich dessert cup filled with warm melting chocolate for dipping.",
+      "description_ar": "كوب حلو غني بالشوكولا الدافئة والذائبة للتغميس.",
+      "price": 10,
+      "category": "Desserts",
+      "addons": [
+        {
+          "name": "Extra Sauce or Fruit",
+          "name_ar": "صوص أو فواكه إضافية",
+          "price": 1
+        }
+      ]
+    },
+    {
+      "name": "Dubai Chocolate Bar",
+      "name_ar": "لوح شوكولا دبي",
+      "description": "Dubai-style chocolate bar with a rich and crunchy filling.",
+      "description_ar": "لوح شوكولا على طريقة دبي بحشوة غنية ومقرمشة.",
+      "price": 5,
+      "category": "Desserts",
+      "addons": [
+        {
+          "name": "Extra Sauce or Fruit",
+          "name_ar": "صوص أو فواكه إضافية",
+          "price": 1
+        }
+      ]
+    },
+    {
+      "name": "Peanut Butter",
+      "name_ar": "زبدة الفول السوداني",
+      "description": "Creamy peanut butter sauce for desserts.",
+      "description_ar": "صوص زبدة فول سوداني كريمي للحلويات.",
+      "price": 1,
+      "category": "Pick Your Sauce"
+    },
+    {
+      "name": "Nutella",
+      "name_ar": "نوتيلا",
+      "description": "Rich and creamy Nutella chocolate spread.",
+      "description_ar": "صوص شوكولا نوتيلا غني وكريمي.",
+      "price": 1,
+      "category": "Pick Your Sauce"
+    },
+    {
+      "name": "Biscoff",
+      "name_ar": "بيسكوف",
+      "description": "Smooth caramelized Biscoff biscuit sauce.",
+      "description_ar": "صوص بسكويت بيسكوف ناعم بنكهة الكراميل.",
+      "price": 1,
+      "category": "Pick Your Sauce"
+    },
+    {
+      "name": "Pistachio",
+      "name_ar": "فستق حلبي",
+      "description": "Creamy pistachio sauce with a rich nutty flavor.",
+      "description_ar": "صوص فستق حلبي كريمي وغني بالنكهة.",
+      "price": 1,
+      "category": "Pick Your Sauce"
+    },
+    {
+      "name": "Bueno",
+      "name_ar": "بوينو",
+      "description": "Creamy Bueno-flavored chocolate sauce.",
+      "description_ar": "صوص شوكولا كريمي بنكهة بوينو.",
+      "price": 1,
+      "category": "Pick Your Sauce"
+    },
+    {
+      "name": "White Chocolate",
+      "name_ar": "شوكولا بيضاء",
+      "description": "Smooth and sweet white chocolate sauce.",
+      "description_ar": "صوص شوكولا بيضاء ناعم وحلو.",
+      "price": 1,
+      "category": "Pick Your Sauce"
+    },
+    {
+      "name": "Ferrero Rocher",
+      "name_ar": "فيريرو روشيه",
+      "description": "Rich chocolate and hazelnut sauce inspired by Ferrero Rocher.",
+      "description_ar": "صوص غني بالشوكولا والبندق مستوحى من فيريرو روشيه.",
+      "price": 1,
+      "category": "Pick Your Sauce"
+    },
+    {
+      "name": "Honey",
+      "name_ar": "عسل",
+      "description": "Natural sweet honey topping.",
+      "description_ar": "إضافة عسل طبيعي وحلو.",
+      "price": 1,
+      "category": "Pick Your Sauce"
+    },
+    {
+      "name": "Mango Puree",
+      "name_ar": "بوريه مانجو",
+      "description": "Smooth puree made with sweet mango.",
+      "description_ar": "بوريه ناعم محضّر من المانجو الحلوة.",
+      "price": 1,
+      "category": "Pick Your Sauce"
+    },
+    {
+      "name": "Passion Fruit",
+      "name_ar": "باشن فروت",
+      "description": "Bright and tangy passion fruit sauce.",
+      "description_ar": "صوص باشن فروت منعش وحامض بنكهة مميزة.",
+      "price": 1,
+      "category": "Pick Your Sauce"
+    },
+    {
+      "name": "Oreo",
+      "name_ar": "أوريو",
+      "description": "Crushed Oreo biscuits for a crunchy chocolate topping.",
+      "description_ar": "بسكويت أوريو مجروش لإضافة شوكولا مقرمشة.",
+      "price": 1,
+      "category": "Pick Your Favorite Toppings"
+    },
+    {
+      "name": "Coconut Shreds",
+      "name_ar": "برش جوز الهند",
+      "description": "Light shredded coconut topping.",
+      "description_ar": "إضافة خفيفة من برش جوز الهند.",
+      "price": 1,
+      "category": "Pick Your Favorite Toppings"
+    },
+    {
+      "name": "M&Ms",
+      "name_ar": "إم آند إمز",
+      "description": "Colorful crunchy chocolate candy topping.",
+      "description_ar": "حبات شوكولا ملوّنة ومقرمشة للإضافة.",
+      "price": 1,
+      "category": "Pick Your Favorite Toppings"
+    },
+    {
+      "name": "Pistachios & Almonds",
+      "name_ar": "فستق حلبي ولوز",
+      "description": "A premium crunchy mix of pistachios and almonds.",
+      "description_ar": "مزيج فاخر ومقرمش من الفستق الحلبي واللوز.",
+      "price": 3,
+      "category": "Pick Your Favorite Toppings"
+    },
+    {
+      "name": "Apple",
+      "name_ar": "تفاح",
+      "description": "Fresh seasonal apple pieces.",
+      "description_ar": "قطع تفاح موسمية طازجة.",
+      "price": 1,
+      "category": "Pick Your Seasonal Fruits"
+    },
+    {
+      "name": "Orange",
+      "name_ar": "برتقال",
+      "description": "Fresh seasonal orange pieces.",
+      "description_ar": "قطع برتقال موسمية طازجة.",
+      "price": 2,
+      "category": "Pick Your Seasonal Fruits"
+    },
+    {
+      "name": "Strawberry",
+      "name_ar": "فراولة",
+      "description": "Fresh seasonal strawberries.",
+      "description_ar": "فراولة موسمية طازجة.",
+      "price": 3,
+      "category": "Pick Your Seasonal Fruits"
+    },
+    {
+      "name": "Banana",
+      "name_ar": "موز",
+      "description": "Fresh banana slices.",
+      "description_ar": "شرائح موز طازجة.",
+      "price": 1,
+      "category": "Pick Your Seasonal Fruits"
+    },
+    {
+      "name": "Mango",
+      "name_ar": "مانجو",
+      "description": "Fresh sweet mango pieces.",
+      "description_ar": "قطع مانجو طازجة وحلوة.",
+      "price": 1,
+      "category": "Pick Your Seasonal Fruits"
+    },
+    {
+      "name": "Watermelon",
+      "name_ar": "بطيخ",
+      "description": "Fresh and juicy watermelon pieces.",
+      "description_ar": "قطع بطيخ طازجة وغنية بالعصير.",
+      "price": 1,
+      "category": "Pick Your Seasonal Fruits"
+    },
+    {
+      "name": "Pomegranate",
+      "name_ar": "رمان",
+      "description": "Fresh pomegranate seeds.",
+      "description_ar": "حبوب رمان طازجة.",
+      "price": 1,
+      "category": "Pick Your Seasonal Fruits"
+    },
+    {
+      "name": "Blueberry",
+      "name_ar": "توت أزرق",
+      "description": "Fresh seasonal blueberries.",
+      "description_ar": "حبوب توت أزرق موسمية طازجة.",
+      "price": 1,
+      "category": "Pick Your Seasonal Fruits"
+    },
+    {
+      "name": "Passion Fruit",
+      "name_ar": "باشن فروت",
+      "description": "Fresh passion fruit with a bright tropical flavor.",
+      "description_ar": "باشن فروت طازج بنكهة استوائية منعشة.",
+      "price": 1,
+      "category": "Pick Your Seasonal Fruits"
+    },
+    {
+      "name": "Pineapple",
+      "name_ar": "أناناس",
+      "description": "Fresh sweet and tangy pineapple pieces.",
+      "description_ar": "قطع أناناس طازجة بطعم حلو وحامض.",
+      "price": 1,
+      "category": "Pick Your Seasonal Fruits"
+    }
+  ]
+}

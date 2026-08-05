@@ -86,6 +86,8 @@ for (const item of source.items) {
   const product = {
     name: productName,
     nameAr: emptyToNull(item?.name_ar ?? item?.nameAr),
+    description: emptyToNull(item?.description),
+    descriptionAr: emptyToNull(item?.description_ar ?? item?.descriptionAr),
     categoryName,
     price: roundPrice(item?.price),
   };
@@ -133,7 +135,7 @@ fs.writeFileSync(path.resolve(outputPath), JSON.stringify(catalog, null, 2), "ut
 
 console.log(`Wrote ${outputPath}`);
 console.log(`  Merchant:   ${merchantIdArg}`);
-console.log(`  Markup:     ${Math.round((markup - 1) * 100)}% (x${markup})`);
+console.log(`  Markup:     ${markup === 1 ? "same prices" : `${Math.round((markup - 1) * 100)}% (x${markup})`}`);
 console.log(`  Categories: ${categories.length}`);
 console.log(`  Products:   ${products.length}`);
 console.log(`  With addons:${products.filter((p) => p.optionGroups?.length).length}`);
