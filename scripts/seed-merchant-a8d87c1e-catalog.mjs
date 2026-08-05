@@ -6,7 +6,7 @@
  *
  * Usage (from PiPi/):
  *   node scripts/seed-merchant-a8d87c1e-catalog.mjs
- *   SEED_REPLACE_CATALOG=1 node scripts/seed-merchant-a8d87c1e-catalog.mjs
+ *   SEED_REPLACE_CATALOG=1 node scripts/seed-merchant-a8d87c1e-catalog.mjs  # wipes catalog first
  */
 import { spawnSync } from "child_process";
 import fs from "fs";
@@ -39,5 +39,5 @@ if (transform.status !== 0) {
 
 process.env.SEED_CATALOG_FILE ??= "scripts/data/merchant-a8d87c1e-catalog.json";
 process.env.SEED_MERCHANT_ID ??= merchantId;
-process.env.SEED_REPLACE_CATALOG ??= "1";
+process.env.SEED_REPLACE_CATALOG ??= "0";
 await import("./seed-merchant-catalog.mjs");
