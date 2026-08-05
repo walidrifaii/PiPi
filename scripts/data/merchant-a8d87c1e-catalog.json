@@ -62,7 +62,7 @@
       "name": "Regular Crepe",
       "nameAr": "الكريب العادية",
       "categoryName": "Sweet Crepes",
-      "price": 4,
+      "price": 3.66,
       "optionGroups": [
         {
           "name": "Addons",
@@ -75,91 +75,91 @@
             {
               "name": "Banana",
               "nameAr": "موز",
-              "priceModifier": 0.94,
+              "priceModifier": 0.86,
               "sortOrder": 1
             },
             {
               "name": "Pineapple",
               "nameAr": "أناناس",
-              "priceModifier": 1.07,
+              "priceModifier": 0.98,
               "sortOrder": 2
             },
             {
               "name": "Strawberry",
               "nameAr": "فراولة",
-              "priceModifier": 1.33,
+              "priceModifier": 1.22,
               "sortOrder": 3
             },
             {
               "name": "Mango",
               "nameAr": "مانجو",
-              "priceModifier": 1.33,
+              "priceModifier": 1.22,
               "sortOrder": 4
             },
             {
               "name": "Crema",
               "nameAr": "كريما",
-              "priceModifier": 1.33,
+              "priceModifier": 1.22,
               "sortOrder": 5
             },
             {
               "name": "Ice Cream",
               "nameAr": "آيس كريم",
-              "priceModifier": 1.33,
+              "priceModifier": 1.22,
               "sortOrder": 6
             },
             {
               "name": "Oreo",
               "nameAr": "أوريو",
-              "priceModifier": 1.33,
+              "priceModifier": 1.22,
               "sortOrder": 7
             },
             {
               "name": "Halawa Cream",
               "nameAr": "كريم الحلاوة",
-              "priceModifier": 2,
+              "priceModifier": 1.84,
               "sortOrder": 8
             },
             {
               "name": "Twix or KitKat",
               "nameAr": "تويكس أو كيت كات",
-              "priceModifier": 1.33,
+              "priceModifier": 1.22,
               "sortOrder": 9
             },
             {
               "name": "Bounty or Snickers",
               "nameAr": "باونتي أو سنيكرز",
-              "priceModifier": 1.33,
+              "priceModifier": 1.22,
               "sortOrder": 10
             },
             {
               "name": "Brownie",
               "nameAr": "براوني",
-              "priceModifier": 1.33,
+              "priceModifier": 1.22,
               "sortOrder": 11
             },
             {
               "name": "Lotus",
               "nameAr": "لوتوس",
-              "priceModifier": 2,
+              "priceModifier": 1.84,
               "sortOrder": 12
             },
             {
               "name": "Kinder",
               "nameAr": "كيندر",
-              "priceModifier": 2,
+              "priceModifier": 1.84,
               "sortOrder": 13
             },
             {
               "name": "Marshmallow",
               "nameAr": "مارشميلو",
-              "priceModifier": 1.33,
+              "priceModifier": 1.22,
               "sortOrder": 14
             },
             {
               "name": "Crispy Chocolate",
               "nameAr": "شوكولا كريسبي",
-              "priceModifier": 1.07,
+              "priceModifier": 0.98,
               "sortOrder": 15
             }
           ]
@@ -170,289 +170,289 @@
       "name": "Mini Crepe",
       "nameAr": "ميني كريب",
       "categoryName": "Sweet Crepes",
-      "price": 3.34
+      "price": 3.06
     },
     {
       "name": "Crepe Dubai - Pistachio Kunafa",
       "nameAr": "كريب دبي - كنافة بالفستق",
       "categoryName": "Sweet Crepes",
-      "price": 7.33
+      "price": 6.72
     },
     {
       "name": "Crepe Multi Flavors",
       "nameAr": "كريب متعدد النكهات",
       "categoryName": "Sweet Crepes",
-      "price": 6.67
+      "price": 6.12
     },
     {
       "name": "Crepe with Dark Chocolate",
       "nameAr": "كريب بالشوكولا الداكنة",
       "categoryName": "Sweet Crepes",
-      "price": 5.33
+      "price": 4.88
     },
     {
       "name": "Original Nutella Crepe",
       "nameAr": "كريب نوتيلا الأصلي",
       "categoryName": "Sweet Crepes",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Crepe with Strawberry Cream",
       "nameAr": "كريب بكريمة الفراولة",
       "categoryName": "Sweet Crepes",
-      "price": 5.33
+      "price": 4.88
     },
     {
       "name": "Knefeh Crepe",
       "nameAr": "كريب كنافة",
       "categoryName": "Sweet Crepes",
-      "price": 6.67
+      "price": 6.12
     },
     {
       "name": "Special Crepe",
       "nameAr": "كريب سبيسيال",
       "categoryName": "Sweet Crepes",
-      "price": 7.33
+      "price": 6.72
     },
     {
       "name": "Fettuccine Crepe",
       "nameAr": "كريب فيتوتشيني",
       "categoryName": "Sweet Crepes",
-      "price": 5.33
+      "price": 4.88
     },
     {
       "name": "Fettuccine Special",
       "nameAr": "فيتوتشيني سبيسيال",
       "categoryName": "Sweet Crepes",
-      "price": 8
+      "price": 7.34
     },
     {
       "name": "Sushi Crepe",
       "nameAr": "سوشي كريب",
       "categoryName": "Sweet Crepes",
-      "price": 5.33
+      "price": 4.88
     },
     {
       "name": "Sushi Crepe Special",
       "nameAr": "سوشي كريب سبيسيال",
       "categoryName": "Sweet Crepes",
-      "price": 6.67
+      "price": 6.12
     },
     {
       "name": "Sushi Crepe Multi Flavors",
       "nameAr": "سوشي كريب متعدد النكهات",
       "categoryName": "Sweet Crepes",
-      "price": 6.67
+      "price": 6.12
     },
     {
       "name": "Pancake",
       "nameAr": "بان كيك",
       "categoryName": "Sweet Crepes",
-      "price": 5.33
+      "price": 4.88
     },
     {
       "name": "Pancake Special",
       "nameAr": "بان كيك سبيسيال",
       "categoryName": "Sweet Crepes",
-      "price": 7.33
+      "price": 6.72
     },
     {
       "name": "Pancake Multi Flavors",
       "nameAr": "بان كيك متعدد النكهات",
       "categoryName": "Sweet Crepes",
-      "price": 6.67
+      "price": 6.12
     },
     {
       "name": "Pancake Burger",
       "nameAr": "بان كيك برغر",
       "categoryName": "Sweet Crepes",
-      "price": 8.66
+      "price": 7.94
     },
     {
       "name": "Pizza Crepe",
       "nameAr": "بيتزا كريب",
       "categoryName": "Sweet Crepes",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Big Roll",
       "nameAr": "بيغ رول",
       "categoryName": "Sweet Crepes",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Big Roll Special",
       "nameAr": "بيغ رول سبيسيال",
       "categoryName": "Sweet Crepes",
-      "price": 8
+      "price": 7.34
     },
     {
       "name": "Big Roll Multi Flavors",
       "nameAr": "بيغ رول متعدد النكهات",
       "categoryName": "Sweet Crepes",
-      "price": 7.33
+      "price": 6.72
     },
     {
       "name": "Mini Pancake Balls",
       "nameAr": "كرات ميني بان كيك",
       "categoryName": "Sweet Crepes",
-      "price": 4
+      "price": 3.66
     },
     {
       "name": "Pancake Balls with Fruit",
       "nameAr": "كرات بان كيك مع فواكه",
       "categoryName": "Sweet Crepes",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Mini Pancake Multi Flavors",
       "nameAr": "ميني بان كيك متعدد النكهات",
       "categoryName": "Sweet Crepes",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Waffle",
       "nameAr": "وافل",
       "categoryName": "Sweet Crepes",
-      "price": 5.33
+      "price": 4.88
     },
     {
       "name": "Waffle Lotus",
       "nameAr": "وافل لوتوس",
       "categoryName": "Sweet Crepes",
-      "price": 6.67
+      "price": 6.12
     },
     {
       "name": "Waffle Special",
       "nameAr": "وافل سبيسيال",
       "categoryName": "Sweet Crepes",
-      "price": 7.33
+      "price": 6.72
     },
     {
       "name": "Waffle Multi Flavors",
       "nameAr": "وافل متعدد النكهات",
       "categoryName": "Sweet Crepes",
-      "price": 6.67
+      "price": 6.12
     },
     {
       "name": "Bubble Waffle in Cup",
       "nameAr": "بابل وافل بالكوب",
       "categoryName": "Sweet Crepes",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Bubble Waffle Special",
       "nameAr": "بابل وافل سبيسيال",
       "categoryName": "Sweet Crepes",
-      "price": 6.67
+      "price": 6.12
     },
     {
       "name": "Bubble Waffle Dubai",
       "nameAr": "بابل وافل دبي",
       "categoryName": "Sweet Crepes",
-      "price": 8.66
+      "price": 7.94
     },
     {
       "name": "Bubble Waffle Lotus",
       "nameAr": "بابل وافل لوتوس",
       "categoryName": "Sweet Crepes",
-      "price": 6.67
+      "price": 6.12
     },
     {
       "name": "Pancake Burger",
       "nameAr": "بان كيك برغر",
       "categoryName": "Trend",
-      "price": 8.66
+      "price": 7.94
     },
     {
       "name": "Ice Cream with Brownie",
       "nameAr": "آيس كريم مع براوني",
       "categoryName": "Trend",
-      "price": 5.33
+      "price": 4.88
     },
     {
       "name": "Ice Cream with Cotton Candy",
       "nameAr": "آيس كريم مع غزل البنات",
       "categoryName": "Trend",
-      "price": 5.33
+      "price": 4.88
     },
     {
       "name": "Special Bubble Waffle",
       "nameAr": "بابل وافل سبيسيال",
       "categoryName": "Trend",
-      "price": 7.33
+      "price": 6.72
     },
     {
       "name": "Ashta Ice Cream with Pistachio",
       "nameAr": "آيس كريم قشطة مع فستق حلبي",
       "categoryName": "Trend",
-      "price": 5.33
+      "price": 4.88
     },
     {
       "name": "Ado Cup Oreo",
       "nameAr": "أدو كاب أوريو",
       "categoryName": "Ado Cup",
-      "price": 4.67
+      "price": 4.28
     },
     {
       "name": "Ado Cup KitKat",
       "nameAr": "أدو كاب كيت كات",
       "categoryName": "Ado Cup",
-      "price": 4.67
+      "price": 4.28
     },
     {
       "name": "Ado Cup Brownie",
       "nameAr": "أدو كاب براوني",
       "categoryName": "Ado Cup",
-      "price": 5.33
+      "price": 4.88
     },
     {
       "name": "Ado Cup Lotus",
       "nameAr": "أدو كاب لوتوس",
       "categoryName": "Ado Cup",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Ado Cup Kinder",
       "nameAr": "أدو كاب كيندر",
       "categoryName": "Ado Cup",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Ado Cup Fettuccine Crepe",
       "nameAr": "أدو كاب كريب فيتوتشيني",
       "categoryName": "Ado Cup",
-      "price": 5.33
+      "price": 4.88
     },
     {
       "name": "Ado Cup Strawberry",
       "nameAr": "أدو كاب فراولة",
       "categoryName": "Ado Cup",
-      "price": 5.33
+      "price": 4.88
     },
     {
       "name": "Ado Cup Special",
       "nameAr": "أدو كاب سبيسيال",
       "categoryName": "Ado Cup",
-      "price": 6.67
+      "price": 6.12
     },
     {
       "name": "Ado Cup Dubai",
       "nameAr": "أدو كاب دبي",
       "categoryName": "Ado Cup",
-      "price": 6.67
+      "price": 6.12
     },
     {
       "name": "Cheese Crepe",
       "nameAr": "كريب مع جبنة",
       "categoryName": "Salty Crepes",
-      "price": 4
+      "price": 3.66
     },
     {
       "name": "Cheese and Chocolate Crepe",
       "nameAr": "كريب جبنة مع شوكولا",
       "categoryName": "Salty Crepes",
-      "price": 4.67
+      "price": 4.28
     },
     {
       "name": "Zaatar Crepe",
@@ -470,25 +470,25 @@
       "name": "Cheddar Cheese Crepe",
       "nameAr": "كريب مع جبنة شيدر",
       "categoryName": "Salty Crepes",
-      "price": 4.67
+      "price": 4.28
     },
     {
       "name": "Cheese and Picon Crepe",
       "nameAr": "كريب جبنة مع بيكون",
       "categoryName": "Salty Crepes",
-      "price": 4.27
+      "price": 3.92
     },
     {
       "name": "Cheese and Vegetables Crepe",
       "nameAr": "كريب مع جبنة وخضرة",
       "categoryName": "Salty Crepes",
-      "price": 4.67
+      "price": 4.28
     },
     {
       "name": "Cheese and Mortadella Crepe",
       "nameAr": "كريب مع جبنة ومرتديلا",
       "categoryName": "Salty Crepes",
-      "price": 4.67
+      "price": 4.28
     },
     {
       "name": "Qareesh Cheese Crepe",
@@ -530,7 +530,7 @@
       "name": "Regular Corn",
       "nameAr": "ذرة عادية",
       "categoryName": "Corn",
-      "price": 3.34,
+      "price": 3.06,
       "optionGroups": [
         {
           "name": "Addons",
@@ -543,49 +543,49 @@
             {
               "name": "BBQ Sauce",
               "nameAr": "صوص باربكيو",
-              "priceModifier": 0.67,
+              "priceModifier": 0.62,
               "sortOrder": 1
             },
             {
               "name": "Cheddar Sauce",
               "nameAr": "صوص شيدر",
-              "priceModifier": 0.67,
+              "priceModifier": 0.62,
               "sortOrder": 2
             },
             {
               "name": "Buffalo Hot Sauce",
               "nameAr": "صوص بافلو حار",
-              "priceModifier": 0.67,
+              "priceModifier": 0.62,
               "sortOrder": 3
             },
             {
               "name": "Mayonnaise",
               "nameAr": "مايونيز",
-              "priceModifier": 0.67,
+              "priceModifier": 0.62,
               "sortOrder": 4
             },
             {
               "name": "Ketchup",
               "nameAr": "كاتشب",
-              "priceModifier": 0.67,
+              "priceModifier": 0.62,
               "sortOrder": 5
             },
             {
               "name": "Sitos Chips",
               "nameAr": "شيبس سيتوس",
-              "priceModifier": 0.4,
+              "priceModifier": 0.36,
               "sortOrder": 6
             },
             {
               "name": "Dr. Food Sunshine Stix",
               "nameAr": "د. فود صن شاين ستيكس",
-              "priceModifier": 0.8,
+              "priceModifier": 0.74,
               "sortOrder": 7
             },
             {
               "name": "Pringles",
               "nameAr": "برينغلز",
-              "priceModifier": 0.67,
+              "priceModifier": 0.62,
               "sortOrder": 8
             }
           ]
@@ -596,13 +596,13 @@
       "name": "Corn with Mozzarella",
       "nameAr": "ذرة مع موزاريلا",
       "categoryName": "Corn",
-      "price": 4.67
+      "price": 4.28
     },
     {
       "name": "Regular Akkawi Kaake",
       "nameAr": "كعكة عكاوي العادية",
       "categoryName": "Kaake Traboulsiye",
-      "price": 1.33,
+      "price": 1.22,
       "optionGroups": [
         {
           "name": "Addons",
@@ -615,91 +615,91 @@
             {
               "name": "Vegetables",
               "nameAr": "خضرة",
-              "priceModifier": 1.33,
+              "priceModifier": 1.22,
               "sortOrder": 1
             },
             {
               "name": "Picon",
               "nameAr": "بيكون",
-              "priceModifier": 0.67,
+              "priceModifier": 0.62,
               "sortOrder": 2
             },
             {
               "name": "Cheddar Pieces",
               "nameAr": "قطع شيدر",
-              "priceModifier": 1.07,
+              "priceModifier": 0.98,
               "sortOrder": 3
             },
             {
               "name": "Mortadella",
               "nameAr": "مرتديلا",
-              "priceModifier": 1.33,
+              "priceModifier": 1.22,
               "sortOrder": 4
             },
             {
               "name": "Turkey Mortadella",
               "nameAr": "مرتديلا حبش",
-              "priceModifier": 1.33,
+              "priceModifier": 1.22,
               "sortOrder": 5
             },
             {
               "name": "Pepperoni",
               "nameAr": "بيبروني",
-              "priceModifier": 1.33,
+              "priceModifier": 1.22,
               "sortOrder": 6
             },
             {
               "name": "Mozzarella",
               "nameAr": "موزاريلا",
-              "priceModifier": 1.73,
+              "priceModifier": 1.58,
               "sortOrder": 7
             },
             {
               "name": "BBQ Sauce",
               "nameAr": "صوص باربكيو",
-              "priceModifier": 0.67,
+              "priceModifier": 0.62,
               "sortOrder": 8
             },
             {
               "name": "Cheddar Sauce",
               "nameAr": "صوص شيدر",
-              "priceModifier": 0.67,
+              "priceModifier": 0.62,
               "sortOrder": 9
             },
             {
               "name": "Buffalo Hot Sauce",
               "nameAr": "صوص بافلو حار",
-              "priceModifier": 0.67,
+              "priceModifier": 0.62,
               "sortOrder": 10
             },
             {
               "name": "Mayonnaise",
               "nameAr": "مايونيز",
-              "priceModifier": 0.67,
+              "priceModifier": 0.62,
               "sortOrder": 11
             },
             {
               "name": "Ketchup",
               "nameAr": "كاتشب",
-              "priceModifier": 0.67,
+              "priceModifier": 0.62,
               "sortOrder": 12
             },
             {
               "name": "Sitos Chips",
               "nameAr": "شيبس سيتوس",
-              "priceModifier": 0.67,
+              "priceModifier": 0.62,
               "sortOrder": 13
             },
             {
               "name": "Dr. Food Sunshine Stix",
               "nameAr": "د. فود صن شاين ستيكس",
-              "priceModifier": 0.8,
+              "priceModifier": 0.74,
               "sortOrder": 14
             },
             {
               "name": "Pringles",
               "nameAr": "برينغلز",
-              "priceModifier": 0.67,
+              "priceModifier": 0.62,
               "sortOrder": 15
             }
           ]
@@ -710,187 +710,187 @@
       "name": "4 Cheese Kaake",
       "nameAr": "كعكة 4 أجبان",
       "categoryName": "Kaake Traboulsiye",
-      "price": 4.67
+      "price": 4.28
     },
     {
       "name": "5 Cheese Kaake",
       "nameAr": "كعكة 5 أجبان",
       "categoryName": "Kaake Traboulsiye",
-      "price": 5.33
+      "price": 4.88
     },
     {
       "name": "Special Kaake",
       "nameAr": "كعكة سبيسيال",
       "categoryName": "Kaake Traboulsiye",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Pizza Kaake",
       "nameAr": "كعكة البيتزا",
       "categoryName": "Kaake Traboulsiye",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Orange Juice",
       "nameAr": "عصير برتقال",
       "categoryName": "Ado Juice",
-      "price": 1.33
+      "price": 1.22
     },
     {
       "name": "Carrot Juice",
       "nameAr": "عصير جزر",
       "categoryName": "Ado Juice",
-      "price": 1.33
+      "price": 1.22
     },
     {
       "name": "Small Water",
       "nameAr": "مياه صغيرة",
       "categoryName": "Ado Juice",
-      "price": 0.67
+      "price": 0.62
     },
     {
       "name": "Large Water",
       "nameAr": "مياه كبيرة",
       "categoryName": "Ado Juice",
-      "price": 1.33
+      "price": 1.22
     },
     {
       "name": "Pepsi",
       "nameAr": "بيبسي",
       "categoryName": "Ado Juice",
-      "price": 1.33
+      "price": 1.22
     },
     {
       "name": "7UP",
       "nameAr": "سفن أب",
       "categoryName": "Ado Juice",
-      "price": 1.33
+      "price": 1.22
     },
     {
       "name": "XXL",
       "nameAr": "إكس إكس إل",
       "categoryName": "Ado Juice",
-      "price": 1.07
+      "price": 0.98
     },
     {
       "name": "Dark Blue",
       "nameAr": "دارك بلو",
       "categoryName": "Ado Juice",
-      "price": 1.07
+      "price": 0.98
     },
     {
       "name": "1 kg Gelly Gum",
       "nameAr": "1 كغ جيلي غام",
       "categoryName": "Gelly Gum",
-      "price": 10.67
+      "price": 9.78
     },
     {
       "name": "Gelly Gum Cup",
       "nameAr": "كوب جيلي غام",
       "categoryName": "Gelly Gum",
-      "price": 2
+      "price": 1.84
     },
     {
       "name": "Gelly Gum Sticks",
       "nameAr": "أعواد جيلي غام",
       "categoryName": "Gelly Gum",
-      "price": 0.67
+      "price": 0.62
     },
     {
       "name": "Pistachio Kunafa Chocolate Bar",
       "nameAr": "لوح شوكولا كنافة بالفستق",
       "categoryName": "Dubai Chocolate Bars",
-      "price": 8.4
+      "price": 7.7
     },
     {
       "name": "Lotus Chocolate Bar",
       "nameAr": "لوح شوكولا لوتوس",
       "categoryName": "Dubai Chocolate Bars",
-      "price": 6.6
+      "price": 6.05
     },
     {
       "name": "Hazelnut Chocolate Bar",
       "nameAr": "لوح شوكولا بالبندق",
       "categoryName": "Dubai Chocolate Bars",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Oreo Chocolate Bar",
       "nameAr": "لوح شوكولا أوريو",
       "categoryName": "Dubai Chocolate Bars",
-      "price": 6.6
+      "price": 6.05
     },
     {
       "name": "Ghazle Chocolate Bar",
       "nameAr": "لوح شوكولا غزلة",
       "categoryName": "Dubai Chocolate Bars",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Chocolate with Crunchy Fruits and Nuts",
       "nameAr": "شوكولا مع فواكه ومكسرات كرانشي",
       "categoryName": "Dubai Chocolate Bars",
-      "price": 5.4
+      "price": 4.95
     },
     {
       "name": "Crunchy Fruit",
       "nameAr": "فواكه كرانشي",
       "categoryName": "Crunchy Desserts",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Crunchy Marshmallow",
       "nameAr": "مارشميلو كرانشي",
       "categoryName": "Crunchy Desserts",
-      "price": 9.6
+      "price": 8.8
     },
     {
       "name": "Crunchy Ice Cream",
       "nameAr": "آيس كريم كرانشي",
       "categoryName": "Crunchy Desserts",
-      "price": 9.6
+      "price": 8.8
     },
     {
       "name": "Honey",
       "nameAr": "عسل",
       "categoryName": "Crunchy Desserts",
-      "price": 4
+      "price": 3.66
     },
     {
       "name": "Caramel Qashtouta",
       "nameAr": "قشطوطة كراميل",
       "categoryName": "Qashtouta",
-      "price": 4.67
+      "price": 4.28
     },
     {
       "name": "Pistachio Qashtouta",
       "nameAr": "قشطوطة بستاشيو مع فستق حلبي",
       "categoryName": "Qashtouta",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Lotus Qashtouta",
       "nameAr": "قشطوطة لوتوس",
       "categoryName": "Qashtouta",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Oreo Qashtouta",
       "nameAr": "قشطوطة أوريو",
       "categoryName": "Qashtouta",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Fruit Qashtouta",
       "nameAr": "قشطوطة مع فواكه",
       "categoryName": "Qashtouta",
-      "price": 6
+      "price": 5.5
     },
     {
       "name": "Mango Qashtouta",
       "nameAr": "قشطوطة مانجو",
       "categoryName": "Qashtouta",
-      "price": 6
+      "price": 5.5
     }
   ]
 }

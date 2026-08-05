@@ -2,7 +2,7 @@
  * Seed ADO CREPE catalog for merchant a8d87c1e-da2e-4739-91e1-f8c4dc2e3da9 only.
  *
  * Source: scripts/data/merchant-a8d87c1e-ado-menu.json
- * Prices: +20% markup on base menu prices and addons.
+ * Prices: +10% markup on base menu prices and addons.
  *
  * Usage (from PiPi/):
  *   node scripts/seed-merchant-a8d87c1e-catalog.mjs
@@ -30,7 +30,7 @@ const transform = spawnSync(
     sourceFile,
     catalogFile,
     merchantId,
-    "1.2",
+    "1.1",
   ],
   { stdio: "inherit", cwd: path.join(__dirname, "..") },
 );

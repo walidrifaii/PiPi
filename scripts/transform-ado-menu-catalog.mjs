@@ -1,6 +1,6 @@
 /**
  * Transform ADO menu JSON { categories, items } into seed-merchant-catalog.mjs format.
- * Applies a price markup (default +20%) to product and addon prices.
+ * Applies a price markup (default +10%) to product and addon prices.
  *
  * Usage:
  *   node scripts/transform-ado-menu-catalog.mjs <source.json> <output.json> <merchantId> [markupMultiplier]
@@ -16,7 +16,7 @@ if (!sourcePath || !outputPath || !merchantIdArg) {
   process.exit(1);
 }
 
-const markup = Number(markupArg ?? process.env.PRICE_MARKUP ?? "1.2");
+const markup = Number(markupArg ?? process.env.PRICE_MARKUP ?? "1.1");
 if (!Number.isFinite(markup) || markup <= 0) {
   console.error("Invalid markup multiplier:", markupArg ?? process.env.PRICE_MARKUP);
   process.exit(1);
