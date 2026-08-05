@@ -56,6 +56,58 @@ function emptyToNull(value) {
   return trimmed === "" ? null : trimmed;
 }
 
+async function insertOptionGroups(client, productId, optionGroups) {
+  if (!Array.isArray(optionGroups) || optionGroups.length === 0) return 0;
+
+  let inserted = 0;
+  for (const group of optionGroups) {
+    const choices = Array.isArray(group.choices) ? group.choices : [];
+    if (choices.length === 0) continue;
+
+    const groupId = crypto.randomUUID();
+    await client.query(
+      `INSERT INTO product_option_groups (
+        id, product_id, name, name_ar, is_required, min_select, max_select, sort_order, created_at, updated_at
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())`,
+      [
+        groupId,
+        productId,
+        group.name,
+        emptyToNull(group.nameAr),
+        group.isRequired ?? true,
+        group.minSelect ?? 1,
+        group.maxSelect ?? 1,
+        group.sortOrder ?? 0,
+      ],
+    );
+
+    for (const choice of choices) {
+      await client.query(
+        `INSERT INTO product_option_choices (
+          id, group_id, name, name_ar, price_modifier, sort_order, is_active, created_at, updated_at
+        ) VALUES ($1, $2, $3, $4, $5, $6, true, NOW(), NOW())`,
+        [
+          crypto.randomUUID(),
+          groupId,
+          choice.name,
+          emptyToNull(choice.nameAr),
+          Number(choice.priceModifier ?? 0),
+          choice.sortOrder ?? 0,
+        ],
+      );
+    }
+    inserted++;
+  }
+  return inserted;
+}
+
+async function replaceOptionGroups(client, productId, optionGroups) {
+  await client.query(`DELETE FROM product_option_groups WHERE product_id = $1`, [
+    productId,
+  ]);
+  return insertOptionGroups(client, productId, optionGroups);
+}
+
 try {
   await client.query("BEGIN");
 
@@ -153,6 +205,7 @@ try {
   let productsCreated = 0;
   let productsSkipped = 0;
   let productsUpdated = 0;
+  let optionGroupsCreated = 0;
 
   for (const product of catalog.products) {
     const categoryId = categoryIdByName.get(product.categoryName);
@@ -180,6 +233,13 @@ try {
          WHERE id = $1`,
         [existingProductId, nameAr, description, descriptionAr, price],
       );
+      if (product.optionGroups !== undefined) {
+        optionGroupsCreated += await replaceOptionGroups(
+          client,
+          existingProductId,
+          product.optionGroups,
+        );
+      }
       productsUpdated++;
       continue;
     }
@@ -199,6 +259,13 @@ try {
         price,
       ],
     );
+    if (product.optionGroups?.length) {
+      optionGroupsCreated += await insertOptionGroups(
+        client,
+        newId,
+        product.optionGroups,
+      );
+    }
     productIdByCategoryAndName.set(productKey, newId);
     productsCreated++;
   }
@@ -211,6 +278,7 @@ try {
   console.log(`  Products created:   ${productsCreated}`);
   console.log(`  Products updated:   ${productsUpdated}`);
   console.log(`  Products skipped:   ${productsSkipped}`);
+  console.log(`  Option groups:      ${optionGroupsCreated}`);
 } catch (err) {
   await client.query("ROLLBACK");
   console.error(err);

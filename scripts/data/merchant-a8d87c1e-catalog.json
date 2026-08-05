@@ -2,5183 +2,895 @@
   "merchantId": "a8d87c1e-da2e-4739-91e1-f8c4dc2e3da9",
   "categories": [
     {
-      "name": "المثلجات والبوظة",
+      "name": "Sweet Crepes",
+      "nameAr": "الكريب الحلو",
       "sortOrder": 1
     },
     {
-      "name": "الخبز والمخبوزات",
+      "name": "Trend",
+      "nameAr": "ترند",
       "sortOrder": 2
     },
     {
-      "name": "الأرز والحبوب",
+      "name": "Ado Cup",
+      "nameAr": "أدو كاب",
       "sortOrder": 3
     },
     {
-      "name": "البقوليات والبرغل",
+      "name": "Salty Crepes",
+      "nameAr": "الكريب المالح",
       "sortOrder": 4
     },
     {
-      "name": "المعكرونة والنودلز",
+      "name": "Corn",
+      "nameAr": "الذرة",
       "sortOrder": 5
     },
     {
-      "name": "الطحين والسكر والملح",
+      "name": "Kaake Traboulsiye",
+      "nameAr": "الكعكة الطرابلسية",
       "sortOrder": 6
     },
     {
-      "name": "البهارات والأعشاب والشوربات",
+      "name": "Ado Juice",
+      "nameAr": "عصائر أدو",
       "sortOrder": 7
     },
     {
-      "name": "الزيوت والسمن والزبدة",
+      "name": "Gelly Gum",
+      "nameAr": "جيلي غام",
       "sortOrder": 8
     },
     {
-      "name": "الحليب ومكونات الحلويات",
+      "name": "Dubai Chocolate Bars",
+      "nameAr": "ألواح شوكولا دبي",
       "sortOrder": 9
     },
     {
-      "name": "الأجبان والكريمة",
+      "name": "Crunchy Desserts",
+      "nameAr": "حلويات كرانشي",
       "sortOrder": 10
     },
     {
-      "name": "المعلبات والخضار المحفوظة",
+      "name": "Qashtouta",
+      "nameAr": "قشطوطة",
       "sortOrder": 11
-    },
-    {
-      "name": "المرتديلا واللحوم المعلبة",
-      "sortOrder": 12
-    },
-    {
-      "name": "التونة والسردين",
-      "sortOrder": 13
-    },
-    {
-      "name": "الصلصات والتتبيلات",
-      "sortOrder": 14
-    },
-    {
-      "name": "المخللات والزيتون",
-      "sortOrder": 15
-    },
-    {
-      "name": "المربى والسبريد والحلاوة والطحينة",
-      "sortOrder": 16
-    },
-    {
-      "name": "البسكويت والويفر والكيك",
-      "sortOrder": 17
-    },
-    {
-      "name": "الشوكولا والحلويات",
-      "sortOrder": 18
-    },
-    {
-      "name": "العلكة والبونبون والجيلي",
-      "sortOrder": 19
-    },
-    {
-      "name": "الشيبس والسناكات المالحة",
-      "sortOrder": 20
-    },
-    {
-      "name": "المكسرات والبزر",
-      "sortOrder": 21
-    },
-    {
-      "name": "العصائر",
-      "sortOrder": 22
-    },
-    {
-      "name": "المشروبات الغازية",
-      "sortOrder": 23
-    },
-    {
-      "name": "مشروبات الطاقة",
-      "sortOrder": 24
-    },
-    {
-      "name": "المياه",
-      "sortOrder": 25
-    },
-    {
-      "name": "القهوة والشاي والمشروبات الساخنة",
-      "sortOrder": 26
-    },
-    {
-      "name": "المجمدات",
-      "sortOrder": 27
-    },
-    {
-      "name": "المنظفات والمعطرات المنزلية",
-      "sortOrder": 28
-    },
-    {
-      "name": "أدوات التنظيف المنزلية",
-      "sortOrder": 29
-    },
-    {
-      "name": "المبيدات الحشرية",
-      "sortOrder": 30
-    },
-    {
-      "name": "المحارم والورقيات",
-      "sortOrder": 31
-    },
-    {
-      "name": "الأكياس والتغليف",
-      "sortOrder": 32
-    },
-    {
-      "name": "مستلزمات السفرة",
-      "sortOrder": 33
-    },
-    {
-      "name": "العناية بالشعر",
-      "sortOrder": 34
-    },
-    {
-      "name": "الصابون والاستحمام",
-      "sortOrder": 35
-    },
-    {
-      "name": "مزيلات العرق والعطور",
-      "sortOrder": 36
-    },
-    {
-      "name": "العناية الشخصية والصحية",
-      "sortOrder": 37
-    },
-    {
-      "name": "العناية بالفم والأسنان",
-      "sortOrder": 38
-    },
-    {
-      "name": "الفوط الصحية",
-      "sortOrder": 39
-    },
-    {
-      "name": "حفاضات الأطفال",
-      "sortOrder": 40
-    },
-    {
-      "name": "الحلاقة",
-      "sortOrder": 41
-    },
-    {
-      "name": "الدخان والمعسل ولوازمه",
-      "sortOrder": 42
-    },
-    {
-      "name": "الفحم ولوازم النرجيلة",
-      "sortOrder": 43
-    },
-    {
-      "name": "الألعاب",
-      "sortOrder": 44
-    },
-    {
-      "name": "القرطاسية",
-      "sortOrder": 45
-    },
-    {
-      "name": "البطاريات واللوازم الكهربائية",
-      "sortOrder": 46
-    },
-    {
-      "name": "البيض",
-      "sortOrder": 47
-    },
-    {
-      "name": "متفرقات منزلية",
-      "sortOrder": 48
     }
   ],
   "products": [
     {
-      "name": "بوظة ساندويش",
-      "categoryName": "المثلجات والبوظة",
-      "price": 0.84
+      "name": "Regular Crepe",
+      "nameAr": "الكريب العادية",
+      "categoryName": "Sweet Crepes",
+      "price": 4,
+      "optionGroups": [
+        {
+          "name": "Addons",
+          "nameAr": "إضافات",
+          "isRequired": false,
+          "minSelect": 0,
+          "maxSelect": 15,
+          "sortOrder": 1,
+          "choices": [
+            {
+              "name": "Banana",
+              "nameAr": "موز",
+              "priceModifier": 0.94,
+              "sortOrder": 1
+            },
+            {
+              "name": "Pineapple",
+              "nameAr": "أناناس",
+              "priceModifier": 1.07,
+              "sortOrder": 2
+            },
+            {
+              "name": "Strawberry",
+              "nameAr": "فراولة",
+              "priceModifier": 1.33,
+              "sortOrder": 3
+            },
+            {
+              "name": "Mango",
+              "nameAr": "مانجو",
+              "priceModifier": 1.33,
+              "sortOrder": 4
+            },
+            {
+              "name": "Crema",
+              "nameAr": "كريما",
+              "priceModifier": 1.33,
+              "sortOrder": 5
+            },
+            {
+              "name": "Ice Cream",
+              "nameAr": "آيس كريم",
+              "priceModifier": 1.33,
+              "sortOrder": 6
+            },
+            {
+              "name": "Oreo",
+              "nameAr": "أوريو",
+              "priceModifier": 1.33,
+              "sortOrder": 7
+            },
+            {
+              "name": "Halawa Cream",
+              "nameAr": "كريم الحلاوة",
+              "priceModifier": 2,
+              "sortOrder": 8
+            },
+            {
+              "name": "Twix or KitKat",
+              "nameAr": "تويكس أو كيت كات",
+              "priceModifier": 1.33,
+              "sortOrder": 9
+            },
+            {
+              "name": "Bounty or Snickers",
+              "nameAr": "باونتي أو سنيكرز",
+              "priceModifier": 1.33,
+              "sortOrder": 10
+            },
+            {
+              "name": "Brownie",
+              "nameAr": "براوني",
+              "priceModifier": 1.33,
+              "sortOrder": 11
+            },
+            {
+              "name": "Lotus",
+              "nameAr": "لوتوس",
+              "priceModifier": 2,
+              "sortOrder": 12
+            },
+            {
+              "name": "Kinder",
+              "nameAr": "كيندر",
+              "priceModifier": 2,
+              "sortOrder": 13
+            },
+            {
+              "name": "Marshmallow",
+              "nameAr": "مارشميلو",
+              "priceModifier": 1.33,
+              "sortOrder": 14
+            },
+            {
+              "name": "Crispy Chocolate",
+              "nameAr": "شوكولا كريسبي",
+              "priceModifier": 1.07,
+              "sortOrder": 15
+            }
+          ]
+        }
+      ]
     },
     {
-      "name": "بوظة شوكو توب فستق",
-      "categoryName": "المثلجات والبوظة",
-      "price": 0.61
+      "name": "Mini Crepe",
+      "nameAr": "ميني كريب",
+      "categoryName": "Sweet Crepes",
+      "price": 3.34
     },
     {
-      "name": "بوظة برنسيس",
-      "categoryName": "المثلجات والبوظة",
-      "price": 0.37
+      "name": "Crepe Dubai - Pistachio Kunafa",
+      "nameAr": "كريب دبي - كنافة بالفستق",
+      "categoryName": "Sweet Crepes",
+      "price": 7.33
     },
     {
-      "name": "امبريال فريز بوظة",
-      "categoryName": "المثلجات والبوظة",
-      "price": 1.22
+      "name": "Crepe Multi Flavors",
+      "nameAr": "كريب متعدد النكهات",
+      "categoryName": "Sweet Crepes",
+      "price": 6.67
     },
     {
-      "name": "بوظة دايت كينغ",
-      "categoryName": "المثلجات والبوظة",
-      "price": 1.82
+      "name": "Crepe with Dark Chocolate",
+      "nameAr": "كريب بالشوكولا الداكنة",
+      "categoryName": "Sweet Crepes",
+      "price": 5.33
     },
     {
-      "name": "بوظة تاكسي فانيلا",
-      "categoryName": "المثلجات والبوظة",
-      "price": 0.37
+      "name": "Original Nutella Crepe",
+      "nameAr": "كريب نوتيلا الأصلي",
+      "categoryName": "Sweet Crepes",
+      "price": 6
     },
     {
-      "name": "بوظة كورن ثلج",
-      "categoryName": "المثلجات والبوظة",
-      "price": 0.24
+      "name": "Crepe with Strawberry Cream",
+      "nameAr": "كريب بكريمة الفراولة",
+      "categoryName": "Sweet Crepes",
+      "price": 5.33
     },
     {
-      "name": "توبي بوظة كاسة",
-      "categoryName": "المثلجات والبوظة",
-      "price": 0.61
+      "name": "Knefeh Crepe",
+      "nameAr": "كريب كنافة",
+      "categoryName": "Sweet Crepes",
+      "price": 6.67
     },
     {
-      "name": "بوظة ثلج*48",
-      "categoryName": "المثلجات والبوظة",
-      "price": 0.24
+      "name": "Special Crepe",
+      "nameAr": "كريب سبيسيال",
+      "categoryName": "Sweet Crepes",
+      "price": 7.33
     },
     {
-      "name": "بوظة فوجي فانيلا",
-      "categoryName": "المثلجات والبوظة",
-      "price": 0.49
+      "name": "Fettuccine Crepe",
+      "nameAr": "كريب فيتوتشيني",
+      "categoryName": "Sweet Crepes",
+      "price": 5.33
     },
     {
-      "name": "كورن بوظة",
-      "categoryName": "المثلجات والبوظة",
-      "price": 0.84
+      "name": "Fettuccine Special",
+      "nameAr": "فيتوتشيني سبيسيال",
+      "categoryName": "Sweet Crepes",
+      "price": 8
     },
     {
-      "name": "خبز قمرين",
-      "categoryName": "الخبز والمخبوزات",
-      "price": 1.1
+      "name": "Sushi Crepe",
+      "nameAr": "سوشي كريب",
+      "categoryName": "Sweet Crepes",
+      "price": 5.33
     },
     {
-      "name": "سمون اسمر بالحبوب",
-      "categoryName": "الخبز والمخبوزات",
-      "price": 1.82
+      "name": "Sushi Crepe Special",
+      "nameAr": "سوشي كريب سبيسيال",
+      "categoryName": "Sweet Crepes",
+      "price": 6.67
     },
     {
-      "name": "كرواسان قمرين",
-      "categoryName": "الخبز والمخبوزات",
-      "price": 0.72
+      "name": "Sushi Crepe Multi Flavors",
+      "nameAr": "سوشي كريب متعدد النكهات",
+      "categoryName": "Sweet Crepes",
+      "price": 6.67
     },
     {
-      "name": "خبز قمرين (2)",
-      "categoryName": "الخبز والمخبوزات",
-      "price": 1.1
+      "name": "Pancake",
+      "nameAr": "بان كيك",
+      "categoryName": "Sweet Crepes",
+      "price": 5.33
     },
     {
-      "name": "كرواسان لوكمي35غ",
-      "categoryName": "الخبز والمخبوزات",
-      "price": 0.24
+      "name": "Pancake Special",
+      "nameAr": "بان كيك سبيسيال",
+      "categoryName": "Sweet Crepes",
+      "price": 7.33
     },
     {
-      "name": "سمون قمرين ابيض",
-      "categoryName": "الخبز والمخبوزات",
-      "price": 0.92
+      "name": "Pancake Multi Flavors",
+      "nameAr": "بان كيك متعدد النكهات",
+      "categoryName": "Sweet Crepes",
+      "price": 6.67
     },
     {
-      "name": "توست قمرين طري",
-      "categoryName": "الخبز والمخبوزات",
-      "price": 1.82
+      "name": "Pancake Burger",
+      "nameAr": "بان كيك برغر",
+      "categoryName": "Sweet Crepes",
+      "price": 8.66
     },
     {
-      "name": "تنور قمرين شوفان",
-      "categoryName": "الخبز والمخبوزات",
-      "price": 0.97
+      "name": "Pizza Crepe",
+      "nameAr": "بيتزا كريب",
+      "categoryName": "Sweet Crepes",
+      "price": 6
     },
     {
-      "name": "خبز اسمر قمرين",
-      "categoryName": "الخبز والمخبوزات",
-      "price": 1.04
+      "name": "Big Roll",
+      "nameAr": "بيغ رول",
+      "categoryName": "Sweet Crepes",
+      "price": 6
     },
     {
-      "name": "توست محمص ابيض اسمر",
-      "categoryName": "الخبز والمخبوزات",
-      "price": 1.94
+      "name": "Big Roll Special",
+      "nameAr": "بيغ رول سبيسيال",
+      "categoryName": "Sweet Crepes",
+      "price": 8
     },
     {
-      "name": "مون واي باي100غ",
-      "categoryName": "الخبز والمخبوزات",
-      "price": 0.61
+      "name": "Big Roll Multi Flavors",
+      "nameAr": "بيغ رول متعدد النكهات",
+      "categoryName": "Sweet Crepes",
+      "price": 7.33
     },
     {
-      "name": "كعك طويل قمرين",
-      "categoryName": "الخبز والمخبوزات",
-      "price": 1.47
+      "name": "Mini Pancake Balls",
+      "nameAr": "كرات ميني بان كيك",
+      "categoryName": "Sweet Crepes",
+      "price": 4
     },
     {
-      "name": "دعبول رز مصري 900غ",
-      "categoryName": "الأرز والحبوب",
-      "price": 0.97
+      "name": "Pancake Balls with Fruit",
+      "nameAr": "كرات بان كيك مع فواكه",
+      "categoryName": "Sweet Crepes",
+      "price": 6
     },
     {
-      "name": "دعبول رز مصري 5ك",
-      "categoryName": "الأرز والحبوب",
-      "price": 4.52
+      "name": "Mini Pancake Multi Flavors",
+      "nameAr": "ميني بان كيك متعدد النكهات",
+      "categoryName": "Sweet Crepes",
+      "price": 6
     },
     {
-      "name": "رز مصرية دعبول 5ك",
-      "categoryName": "الأرز والحبوب",
-      "price": 4.52
+      "name": "Waffle",
+      "nameAr": "وافل",
+      "categoryName": "Sweet Crepes",
+      "price": 5.33
     },
     {
-      "name": "رز مصري مابل 900غ",
-      "categoryName": "الأرز والحبوب",
-      "price": 0.97
+      "name": "Waffle Lotus",
+      "nameAr": "وافل لوتوس",
+      "categoryName": "Sweet Crepes",
+      "price": 6.67
     },
     {
-      "name": "رز طويل غرين900غ",
-      "categoryName": "الأرز والحبوب",
-      "price": 0.97
+      "name": "Waffle Special",
+      "nameAr": "وافل سبيسيال",
+      "categoryName": "Sweet Crepes",
+      "price": 7.33
     },
     {
-      "name": "رز بسمتي ابو راشد800غ",
-      "categoryName": "الأرز والحبوب",
-      "price": 1.94
+      "name": "Waffle Multi Flavors",
+      "nameAr": "وافل متعدد النكهات",
+      "categoryName": "Sweet Crepes",
+      "price": 6.67
     },
     {
-      "name": "مابل رز مصري900غ",
-      "categoryName": "الأرز والحبوب",
-      "price": 0.92
+      "name": "Bubble Waffle in Cup",
+      "nameAr": "بابل وافل بالكوب",
+      "categoryName": "Sweet Crepes",
+      "price": 6
     },
     {
-      "name": "دعبول رز مصري 5ك (2)",
-      "categoryName": "الأرز والحبوب",
-      "price": 4.52
+      "name": "Bubble Waffle Special",
+      "nameAr": "بابل وافل سبيسيال",
+      "categoryName": "Sweet Crepes",
+      "price": 6.67
     },
     {
-      "name": "دعبول رز كبسة 5ك",
-      "categoryName": "الأرز والحبوب",
-      "price": 5.07
+      "name": "Bubble Waffle Dubai",
+      "nameAr": "بابل وافل دبي",
+      "categoryName": "Sweet Crepes",
+      "price": 8.66
     },
     {
-      "name": "تاج رز تيجان 800غ",
-      "categoryName": "الأرز والحبوب",
-      "price": 1.82
+      "name": "Bubble Waffle Lotus",
+      "nameAr": "بابل وافل لوتوس",
+      "categoryName": "Sweet Crepes",
+      "price": 6.67
     },
     {
-      "name": "رز مابل اصفر 900غ",
-      "categoryName": "الأرز والحبوب",
-      "price": 1.05
+      "name": "Pancake Burger",
+      "nameAr": "بان كيك برغر",
+      "categoryName": "Trend",
+      "price": 8.66
     },
     {
-      "name": "بوراك رز بسمتي 5ك",
-      "categoryName": "الأرز والحبوب",
-      "price": 7.94
+      "name": "Ice Cream with Brownie",
+      "nameAr": "آيس كريم مع براوني",
+      "categoryName": "Trend",
+      "price": 5.33
     },
     {
-      "name": "مابل رز كبسة900غ",
-      "categoryName": "الأرز والحبوب",
-      "price": 1.1
+      "name": "Ice Cream with Cotton Candy",
+      "nameAr": "آيس كريم مع غزل البنات",
+      "categoryName": "Trend",
+      "price": 5.33
     },
     {
-      "name": "رز سامي",
-      "categoryName": "الأرز والحبوب",
-      "price": 1.22
+      "name": "Special Bubble Waffle",
+      "nameAr": "بابل وافل سبيسيال",
+      "categoryName": "Trend",
+      "price": 7.33
     },
     {
-      "name": "بوشار900غ",
-      "categoryName": "الأرز والحبوب",
-      "price": 0.92
+      "name": "Ashta Ice Cream with Pistachio",
+      "nameAr": "آيس كريم قشطة مع فستق حلبي",
+      "categoryName": "Trend",
+      "price": 5.33
     },
     {
-      "name": "مابل برغل خشن 900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 0.84
+      "name": "Ado Cup Oreo",
+      "nameAr": "أدو كاب أوريو",
+      "categoryName": "Ado Cup",
+      "price": 4.67
     },
     {
-      "name": "مابل فاصوليا مدعبلة حمراء900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 2.57
+      "name": "Ado Cup KitKat",
+      "nameAr": "أدو كاب كيت كات",
+      "categoryName": "Ado Cup",
+      "price": 4.67
     },
     {
-      "name": "فاصوليا حمراء900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 2.14
+      "name": "Ado Cup Brownie",
+      "nameAr": "أدو كاب براوني",
+      "categoryName": "Ado Cup",
+      "price": 5.33
     },
     {
-      "name": "برغل ابيض ناعم 900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 0.92
+      "name": "Ado Cup Lotus",
+      "nameAr": "أدو كاب لوتوس",
+      "categoryName": "Ado Cup",
+      "price": 6
     },
     {
-      "name": "مابل برغل ابيض خشن900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 1.04
+      "name": "Ado Cup Kinder",
+      "nameAr": "أدو كاب كيندر",
+      "categoryName": "Ado Cup",
+      "price": 6
     },
     {
-      "name": "دعبول قمح مقشور 900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 0.97
+      "name": "Ado Cup Fettuccine Crepe",
+      "nameAr": "أدو كاب كريب فيتوتشيني",
+      "categoryName": "Ado Cup",
+      "price": 5.33
     },
     {
-      "name": "ترمس حلو 900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 1.59
+      "name": "Ado Cup Strawberry",
+      "nameAr": "أدو كاب فراولة",
+      "categoryName": "Ado Cup",
+      "price": 5.33
     },
     {
-      "name": "مابل برغل اسمر ناعم 900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 0.92
+      "name": "Ado Cup Special",
+      "nameAr": "أدو كاب سبيسيال",
+      "categoryName": "Ado Cup",
+      "price": 6.67
     },
     {
-      "name": "قمح غرين 900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 0.97
+      "name": "Ado Cup Dubai",
+      "nameAr": "أدو كاب دبي",
+      "categoryName": "Ado Cup",
+      "price": 6.67
     },
     {
-      "name": "عدس اخضر امينو900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 1.52
+      "name": "Cheese Crepe",
+      "nameAr": "كريب مع جبنة",
+      "categoryName": "Salty Crepes",
+      "price": 4
     },
     {
-      "name": "مابل حمص مكسيكي900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 1.82
+      "name": "Cheese and Chocolate Crepe",
+      "nameAr": "كريب جبنة مع شوكولا",
+      "categoryName": "Salty Crepes",
+      "price": 4.67
     },
     {
-      "name": "مابل فاصوليا بيضا900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 1.71
+      "name": "Zaatar Crepe",
+      "nameAr": "كريب مع زعتر",
+      "categoryName": "Salty Crepes",
+      "price": 0
     },
     {
-      "name": "مابل برغل اسمر خشن900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 0.84
+      "name": "Zaatar and Vegetables Crepe",
+      "nameAr": "كريب مع زعتر وخضرة",
+      "categoryName": "Salty Crepes",
+      "price": 0
     },
     {
-      "name": "برغل مابل اسمر900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 0.92
+      "name": "Cheddar Cheese Crepe",
+      "nameAr": "كريب مع جبنة شيدر",
+      "categoryName": "Salty Crepes",
+      "price": 4.67
     },
     {
-      "name": "مابل فريكة900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 2.75
-    },
-    {
-      "name": "عدس احمر امينكو900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 1.34
-    },
-    {
-      "name": "مابل حمص فحلي 900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 2.2
-    },
-    {
-      "name": "حمص حب غرين900غ",
-      "categoryName": "البقوليات والبرغل",
-      "price": 1.05
-    },
-    {
-      "name": "باستا معكرونة طويلة 500غ",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 1.1
-    },
-    {
-      "name": "ديروني معكرونة500غ",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 0.84
-    },
-    {
-      "name": "مالتا غليلتي معكرونة وشعيرية500غ",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 1.59
-    },
-    {
-      "name": "شعيرية باستا ريل5ك",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 3.67
-    },
-    {
-      "name": "شعيرية نورة صغير",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 0.49
-    },
-    {
-      "name": "معكرونة لازنيا 500غ",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 2.32
-    },
-    {
-      "name": "معكرونة ديروني 500غ",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 0.84
-    },
-    {
-      "name": "شعيرة باستا ريل 400غ",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 0.49
-    },
-    {
-      "name": "معكرونة ريجيا500غ",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 1.1
-    },
-    {
-      "name": "اندومي خضار 75غ",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 0.24
-    },
-    {
-      "name": "اندومي ظرف بالزيت",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 0.29
-    },
-    {
-      "name": "معكرونة عريضة فوتوتشني500غ",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 1.77
-    },
-    {
-      "name": "اندومي كبايات 70غ",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 0.67
-    },
-    {
-      "name": "مغربية دعبول 900غ",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 1.47
-    },
-    {
-      "name": "اندومي بولداك",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 1.82
-    },
-    {
-      "name": "اندومي بولداك مشكل",
-      "categoryName": "المعكرونة والنودلز",
-      "price": 1.47
-    },
-    {
-      "name": "دعبول سكر ابيض 5كيلو",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 3.54
-    },
-    {
-      "name": "طحين هابي900غ",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 0.8
-    },
-    {
-      "name": "دعبول ملح خشن كيلو",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 0.29
-    },
-    {
-      "name": "تاج ملح اكياس700غ",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 0.29
-    },
-    {
-      "name": "سميد ناعم مابل 900غ",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 1.16
-    },
-    {
-      "name": "مابل سميد ناعم900غ",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 1.16
-    },
-    {
-      "name": "سكر ناعم",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 0.72
-    },
-    {
-      "name": "طحين دعبول 900غ",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 0.84
-    },
-    {
-      "name": "نشاء المختار350غ",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 0.55
-    },
-    {
-      "name": "ملح سيرينا 1ك",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 0.24
-    },
-    {
-      "name": "مابل سميد 900غ",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 1.16
-    },
-    {
-      "name": "سكر مابل 900غ",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 0.72
-    },
-    {
-      "name": "سكر دعبول900غ",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 0.72
-    },
-    {
-      "name": "دعبول ملح خشن1000غ",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 0.29
-    },
-    {
-      "name": "سكر كريستال مكعبات كيلو",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 1.47
-    },
-    {
-      "name": "مابل طحين 900غ",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 0.72
-    },
-    {
-      "name": "مابل سكر ناعم",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 0.72
-    },
-    {
-      "name": "ملح خشن قبيطر1000غ",
-      "categoryName": "الطحين والسكر والملح",
-      "price": 0.24
-    },
-    {
-      "name": "زعتر الاكسير 400غ",
-      "categoryName": "البهارات والأعشاب والشوربات",
-      "price": 1.27
-    },
-    {
-      "name": "ملوخية المختار200غ",
-      "categoryName": "البهارات والأعشاب والشوربات",
-      "price": 1.82
-    },
-    {
-      "name": "زعتر زهرة بلادي400غ",
-      "categoryName": "البهارات والأعشاب والشوربات",
-      "price": 1.59
-    },
-    {
-      "name": "مابل بهارات ظرف",
-      "categoryName": "البهارات والأعشاب والشوربات",
-      "price": 0.61
-    },
-    {
-      "name": "مابل قرفة",
-      "categoryName": "البهارات والأعشاب والشوربات",
-      "price": 0.61
-    },
-    {
-      "name": "تاج شوربة ظرف 60غ",
-      "categoryName": "البهارات والأعشاب والشوربات",
-      "price": 0.72
-    },
-    {
-      "name": "شوربة ماجي 50غ",
-      "categoryName": "البهارات والأعشاب والشوربات",
-      "price": 0.61
-    },
-    {
-      "name": "مكعاب ماجي دجاج18غ",
-      "categoryName": "البهارات والأعشاب والشوربات",
-      "price": 0.17
-    },
-    {
-      "name": "سمنة قوت750غ",
-      "categoryName": "الزيوت والسمن والزبدة",
-      "price": 2.07
-    },
-    {
-      "name": "سمنة قوت 1.5ك",
-      "categoryName": "الزيوت والسمن والزبدة",
-      "price": 3.91
-    },
-    {
-      "name": "لونا ذبدة 200غ",
-      "categoryName": "الزيوت والسمن والزبدة",
-      "price": 0.61
-    },
-    {
-      "name": "زيت اصلي دنكر 500مل",
-      "categoryName": "الزيوت والسمن والزبدة",
-      "price": 1.82
-    },
-    {
-      "name": "سمنة الروابي 700غ",
-      "categoryName": "الزيوت والسمن والزبدة",
-      "price": 2.07
-    },
-    {
-      "name": "زيت عافية ذرة 1.6ليتر",
-      "categoryName": "الزيوت والسمن والزبدة",
-      "price": 5.5
-    },
-    {
-      "name": "زيت الينا 8.5ليتر",
-      "categoryName": "الزيوت والسمن والزبدة",
-      "price": 14.67
-    },
-    {
-      "name": "سمنة الروابي 1.5ك",
-      "categoryName": "الزيوت والسمن والزبدة",
-      "price": 3.97
-    },
-    {
-      "name": "زيت تاج داور الشمس 700مل",
-      "categoryName": "الزيوت والسمن والزبدة",
-      "price": 1.77
-    },
-    {
-      "name": "سمنة رامي فيجيتال 3.5كلغ",
-      "categoryName": "الزيوت والسمن والزبدة",
-      "price": 21.87
-    },
-    {
-      "name": "لورباك 400غ",
-      "categoryName": "الزيوت والسمن والزبدة",
-      "price": 5.62
-    },
-    {
-      "name": "زيت مازولا ذرة1.5ل",
-      "categoryName": "الزيوت والسمن والزبدة",
-      "price": 7.82
-    },
-    {
-      "name": "لورباك 200غ",
-      "categoryName": "الزيوت والسمن والزبدة",
-      "price": 2.92
-    },
-    {
-      "name": "زيت اليتا 5ليتر",
-      "categoryName": "الزيوت والسمن والزبدة",
-      "price": 8.54
-    },
-    {
-      "name": "سمنة تاج 700غ",
-      "categoryName": "الزيوت والسمن والزبدة",
-      "price": 2.57
-    },
-    {
-      "name": "نسلة نورين مكثفة 1ك",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 2.44
-    },
-    {
-      "name": "نسله مكثف محلي 370غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 2.37
-    },
-    {
-      "name": "نسله مكثف نينا395غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 1.04
-    },
-    {
-      "name": "قشطة هوليداي155غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 0.72
-    },
-    {
-      "name": "دومو روح الفانيليا سائل50مل",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 2.2
-    },
-    {
-      "name": "ربطة حليب كانديا*4",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 7.27
-    },
-    {
-      "name": "نسلة كليم حليب 750غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 5.5
-    },
-    {
-      "name": "دومو فانيلين بالسكر5غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 0.17
-    },
-    {
-      "name": "حليب دانو ظرف22غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 0.42
-    },
-    {
-      "name": "دومو مغلي250غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 1.39
-    },
-    {
-      "name": "دومو سيروب 610غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 3.91
-    },
-    {
-      "name": "باكينغ بودو دومو تنك 100غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 1.22
-    },
-    {
-      "name": "دومو خليط الكيك 500غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 2.26
-    },
-    {
-      "name": "حليب كليو375غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 3.36
-    },
-    {
-      "name": "نيدو حليب كيس 400غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 4.52
-    },
-    {
-      "name": "نيدو حليب كيس 900غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 9.04
-    },
-    {
-      "name": "كريمة شانتيى دومو 80غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 1.47
-    },
-    {
-      "name": "جيلو دومو بقري 85غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 0.84
-    },
-    {
-      "name": "دومو كاسترد فانيليا340غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 2.2
-    },
-    {
-      "name": "دومو كاسترد شوكولا 340غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 3.3
-    },
-    {
-      "name": "لاكتو حليب750غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 4.89
-    },
-    {
-      "name": "تنك فانيليا دومو28.35غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 0.92
-    },
-    {
-      "name": "دومو خمير10غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 0.17
-    },
-    {
-      "name": "دومو بيكنغ بودر 10غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 0.17
-    },
-    {
-      "name": "دومو سيروب 610غ (2)",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 3.91
-    },
-    {
-      "name": "حليب كانديا 1ليتر*4",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 1.94
-    },
-    {
-      "name": "كليو 750غ+عرض 3دفتر",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 13.07
-    },
-    {
-      "name": "حليب ظرف كاب ميلك20غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 0.24
-    },
-    {
-      "name": "كاكاو حميدو 40غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 0.61
-    },
-    {
-      "name": "حليب كليم كيس 750غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 5.37
-    },
-    {
-      "name": "دومو كريم كاراميل 80غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 0.84
-    },
-    {
-      "name": "حليب نيدو 400غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 5.01
-    },
-    {
-      "name": "مابل كربونات40غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 0.24
-    },
-    {
-      "name": "خميرة باكمايا 125غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 1.22
-    },
-    {
-      "name": "جوز الهند 200غ",
-      "categoryName": "الحليب ومكونات الحلويات",
-      "price": 0.84
-    },
-    {
-      "name": "جبنة بوك*8",
-      "categoryName": "الأجبان والكريمة",
-      "price": 1.1
-    },
-    {
-      "name": "سميدس بلوك400غ",
-      "categoryName": "الأجبان والكريمة",
-      "price": 3.12
-    },
-    {
-      "name": "بوك دهن 240غ",
-      "categoryName": "الأجبان والكريمة",
-      "price": 2.2
-    },
-    {
-      "name": "بيكون 16قطعة",
-      "categoryName": "الأجبان والكريمة",
-      "price": 2.99
-    },
-    {
-      "name": "كيري6 قطع",
-      "categoryName": "الأجبان والكريمة",
-      "price": 1.59
-    },
-    {
-      "name": "جبنة بيلا 8قطع",
-      "categoryName": "الأجبان والكريمة",
-      "price": 0.61
-    },
-    {
-      "name": "دومتي كريمي فيتا 220غ",
-      "categoryName": "الأجبان والكريمة",
-      "price": 0.79
-    },
-    {
-      "name": "جبنة بوك دهن240غ",
-      "categoryName": "الأجبان والكريمة",
-      "price": 2.2
-    },
-    {
-      "name": "بيكون جبنة 24قطعة360غ",
-      "categoryName": "الأجبان والكريمة",
-      "price": 4.4
-    },
-    {
-      "name": "جبنة بوك 500غ",
-      "categoryName": "الأجبان والكريمة",
-      "price": 4.4
-    },
-    {
-      "name": "جبنة دومتي 500غ",
-      "categoryName": "الأجبان والكريمة",
-      "price": 1.39
-    },
-    {
-      "name": "بيكون اصفر8قطع",
-      "categoryName": "الأجبان والكريمة",
-      "price": 0.72
-    },
-    {
-      "name": "كريم طبخ نباتي 500ملل",
-      "categoryName": "الأجبان والكريمة",
-      "price": 2.14
-    },
-    {
-      "name": "بيكون 8 قطع",
-      "categoryName": "الأجبان والكريمة",
-      "price": 1.65
-    },
-    {
-      "name": "تاج بابا غنوج375غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 2.14
-    },
-    {
-      "name": "درة حلو غرين تريس400غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 0.72
-    },
-    {
-      "name": "لولو ذرة 2125غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 5.5
-    },
-    {
-      "name": "ديروني تنك فطر حب400غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 1.59
-    },
-    {
-      "name": "تاج درة",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 1.22
-    },
-    {
-      "name": "تاج حمص حب400غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 1.04
-    },
-    {
-      "name": "تاج فطر مقطع170غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 1.39
-    },
-    {
-      "name": "ذرة سويت كورن تنك",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 0.72
-    },
-    {
-      "name": "فول محراث شتورة 800غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 1.05
-    },
-    {
-      "name": "تاج فول مع حمص400غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 0.92
-    },
-    {
-      "name": "قطشة التاج تنك155غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 0.97
-    },
-    {
-      "name": "ديروني ذرة340غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 1.39
-    },
-    {
-      "name": "ماء الزهر يمامة 300مل",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 1.22
-    },
-    {
-      "name": "فول مدمس تاج 400غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 0.92
-    },
-    {
-      "name": "ديروني تنك فطر مقطع400غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 1.34
-    },
-    {
-      "name": "تاج بزيلا مع جزر400غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 2.07
-    },
-    {
-      "name": "ماء الورد يمامة300مل",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 1.22
-    },
-    {
-      "name": "فول مدمس 390غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 0.79
-    },
-    {
-      "name": "محراث شتورة حمص حب 240غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 67.1
-    },
-    {
-      "name": "تاج فواكه مشكله820غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 3.59
-    },
-    {
-      "name": "شرح بونتيلا اناناس565غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 1.77
-    },
-    {
-      "name": "شرائح اناناس 565غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 1.65
-    },
-    {
-      "name": "فول مدمس حدائق شتورة400غ",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 0.67
-    },
-    {
-      "name": "حمص بالطحينة محراث شتورة",
-      "categoryName": "المعلبات والخضار المحفوظة",
-      "price": 0.67
-    },
-    {
-      "name": "مرتدلا الاسرة 800غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 2.26
-    },
-    {
-      "name": "مرتدلا سما 200غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 0.72
-    },
-    {
-      "name": "مرتدلا الاسرة200غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 0.67
-    },
-    {
-      "name": "زوان دجاج340غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 3.42
-    },
-    {
-      "name": "التغذية بقر200غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 0.97
-    },
-    {
-      "name": "مرتدلا سما بقري 840غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 2.57
-    },
-    {
-      "name": "زوان دجاج200غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 2.37
-    },
-    {
-      "name": "سما مرتديلا بقر 840غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 2.69
-    },
-    {
-      "name": "مرتدلا دجاج الاسرة380غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 1.1
-    },
-    {
-      "name": "زوان بقر 850غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 9.52
-    },
-    {
-      "name": "مرتدلا منارة شتورة340غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 0.97
-    },
-    {
-      "name": "زوان بقر200غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 2.69
-    },
-    {
-      "name": "مرتدلا تغذية بقر200غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 1.1
-    },
-    {
-      "name": "مرتدلا منارة شتورة200غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 0.61
-    },
-    {
-      "name": "زوان بقر340غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 4.02
-    },
-    {
-      "name": "زوان دجاج850غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 7.82
-    },
-    {
-      "name": "الراعي مرتدلا بقر200غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 1.59
-    },
-    {
-      "name": "مرتدلا منارة شتورة 825غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 1.89
-    },
-    {
-      "name": "مرتدلا تغذيه دجاج 200غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 1.1
-    },
-    {
-      "name": "مرتدلا الاسرة 30غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 1.1
-    },
-    {
-      "name": "مرتدلا الراعي بقر 1814غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 9.35
-    },
-    {
-      "name": "الاسرة مرتدلا دجاج 850غ",
-      "categoryName": "المرتديلا واللحوم المعلبة",
-      "price": 2.26
-    },
-    {
-      "name": "سردين كوين125غ",
-      "categoryName": "التونة والسردين",
-      "price": 0.72
-    },
-    {
-      "name": "تونا بلفي185غ",
-      "categoryName": "التونة والسردين",
-      "price": 1.52
-    },
-    {
-      "name": "طون لولو تونغول 185غ",
-      "categoryName": "التونة والسردين",
-      "price": 1.52
-    },
-    {
-      "name": "تون ديروني 185غ",
-      "categoryName": "التونة والسردين",
-      "price": 1.65
-    },
-    {
-      "name": "باك فيش طون 185غ",
-      "categoryName": "التونة والسردين",
-      "price": 1.47
-    },
-    {
-      "name": "طون بل في 185غ",
-      "categoryName": "التونة والسردين",
-      "price": 1.59
-    },
-    {
-      "name": "سردين ديلي 90غ",
-      "categoryName": "التونة والسردين",
-      "price": 1.1
-    },
-    {
-      "name": "ديروني تونا 185غ",
-      "categoryName": "التونة والسردين",
-      "price": 1.65
-    },
-    {
-      "name": "ديلي طون 185غ",
-      "categoryName": "التونة والسردين",
-      "price": 1.59
-    },
-    {
-      "name": "سردين ليو 125غ",
-      "categoryName": "التونة والسردين",
-      "price": 0.67
-    },
-    {
-      "name": "سردين جيرسي90غ",
-      "categoryName": "التونة والسردين",
-      "price": 0.72
-    },
-    {
-      "name": "سردين دالي 125غ",
-      "categoryName": "التونة والسردين",
-      "price": 1.1
-    },
-    {
-      "name": "مايونز ميا 250مل",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 0.84
-    },
-    {
-      "name": "دوليز صلصة البيتزا360غ",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 1.71
-    },
-    {
-      "name": "خل ابيض الوادي ليتر",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 0.37
-    },
-    {
-      "name": "كاتشب ليبز 340",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 0.72
-    },
-    {
-      "name": "رب بندورة تنك الطاووس400غ",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 2.37
-    },
-    {
-      "name": "كاتشب اكسترا2200غ",
-      "categoryName": "الصلصات والتتبيلات",
+      "name": "Cheese and Picon Crepe",
+      "nameAr": "كريب جبنة مع بيكون",
+      "categoryName": "Salty Crepes",
       "price": 4.27
     },
     {
-      "name": "مايونيز مازولا 1000ملل",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 7.15
-    },
-    {
-      "name": "شطة حرة رافولي 260ملل",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 1.77
-    },
-    {
-      "name": "تاج كاتشب زجاج",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 0.97
-    },
-    {
-      "name": "دوليز صلصة المشاوي450غ",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 2.81
-    },
-    {
-      "name": "صلصة حار88غ",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 0.61
-    },
-    {
-      "name": "دبس رمان يمامة 750ملل",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 3.42
-    },
-    {
-      "name": "مايونيز مازولا عصارة340مل",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 3.3
-    },
-    {
-      "name": "دوليز صلصة جوانح الدجاج300غ",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 1.71
-    },
-    {
-      "name": "دوليز خردل 266ملل",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 1.82
-    },
-    {
-      "name": "مازولا صلصة التغميس250مل",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 3.3
-    },
-    {
-      "name": "كاتشب اكسترا340غ",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 0.72
-    },
-    {
-      "name": "كاتشب اكسترا غالون4200غ",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 7.27
-    },
-    {
-      "name": "مازولا مايونيز زجاج 250ملل",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 2.44
-    },
-    {
-      "name": "دوليز صلصة الدجاج بالذبدة360غ",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 2.14
-    },
-    {
-      "name": "مايونيز ميا 1000ملل",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 2.49
-    },
-    {
-      "name": "مايونيز ميا 500مل",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 1.39
-    },
-    {
-      "name": "اكسترا كاتشب حر340غ",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 0.84
-    },
-    {
-      "name": "دوليز صويا صوص 150غ",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 1.1
-    },
-    {
-      "name": "خل ابيض الوادي1ليتر",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 0.37
-    },
-    {
-      "name": "مايونيز مازولا340ملل",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 3.3
-    },
-    {
-      "name": "دبس رمان يمامة300مل",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 1.77
-    },
-    {
-      "name": "صويا سوس يمامة250ملل",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 1.77
-    },
-    {
-      "name": "تاج خل ابيض1ليتر",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 1.04
-    },
-    {
-      "name": "حامض ليمون يمامة ليتر",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 0.97
-    },
-    {
-      "name": "دوليز شطة حرة85غ",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 0.97
-    },
-    {
-      "name": "رب بندورة الوسيلة1ك",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 2.2
-    },
-    {
-      "name": "مايونيز تاج 235ملل",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 1.71
-    },
-    {
-      "name": "رب بندورة مروة تنك 400غ",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 1.22
-    },
-    {
-      "name": "بندورة مروة زجاج650غ",
-      "categoryName": "الصلصات والتتبيلات",
-      "price": 1.77
-    },
-    {
-      "name": "زيتون محشي جنى عكار600غ",
-      "categoryName": "المخللات والزيتون",
-      "price": 3.36
-    },
-    {
-      "name": "زيتون اسود مشرح جنى عكار600غ",
-      "categoryName": "المخللات والزيتون",
-      "price": 2.32
-    },
-    {
-      "name": "كبيس تاج مقتي600غ",
-      "categoryName": "المخللات والزيتون",
-      "price": 3.17
-    },
-    {
-      "name": "راكي زيتون اخضر 720غ",
-      "categoryName": "المخللات والزيتون",
-      "price": 2.32
-    },
-    {
-      "name": "ورق غنب 900غ الراقي",
-      "categoryName": "المخللات والزيتون",
-      "price": 3.59
-    },
-    {
-      "name": "تاج كبيس خيار600غ",
-      "categoryName": "المخللات والزيتون",
-      "price": 2.69
-    },
-    {
-      "name": "مكدوس باذنجا 600غ الراقي",
-      "categoryName": "المخللات والزيتون",
-      "price": 4.02
-    },
-    {
-      "name": "يالنجي ورق عنب دلتا",
-      "categoryName": "المخللات والزيتون",
-      "price": 2.26
-    },
-    {
-      "name": "مرطبان اونو شوكولا350غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 2.07
-    },
-    {
-      "name": "حلاوة قلعجية 450غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 2.14
-    },
-    {
-      "name": "حلاوة سكرية علم الدين400غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 1.77
-    },
-    {
-      "name": "حلاوة سكرية قلعجية900غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 3.97
-    },
-    {
-      "name": "تاج طحينة جار600غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 3.54
-    },
-    {
-      "name": "شوكولا غيستات 300غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 1.34
-    },
-    {
-      "name": "الراقي مربى كرز حب 600غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 2.2
-    },
-    {
-      "name": "طحينة قلعجية 2ك",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 10.19
-    },
-    {
-      "name": "ماكسيمز زبدة الفستق340غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 2.92
-    },
-    {
-      "name": "طحينة علم الدين",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 2.07
-    },
-    {
-      "name": "حلاوة علم الدين فستق400غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 2.57
-    },
-    {
-      "name": "ماكسيمز زبدة الفستق بالموز340غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 4.77
-    },
-    {
-      "name": "مرطبان لوتس سبريد400غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 4.69
-    },
-    {
-      "name": "مرطبان اونو شوكولا 750غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 3.79
-    },
-    {
-      "name": "طحينة علم الدين 800غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 3.97
-    },
-    {
-      "name": "حمص بالطحينة محراث شتورة800غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 1.39
-    },
-    {
-      "name": "طحينة قلعجية900غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 4.77
-    },
-    {
-      "name": "كونسروة مربى فريز450غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 2.81
-    },
-    {
-      "name": "محراث شتورة حمص بطحينة",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 0.72
-    },
-    {
-      "name": "شوكولا نوتيلا كبير630غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 6.72
-    },
-    {
-      "name": "حلاوة قلعية فستق900غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 6.22
-    },
-    {
-      "name": "الراقي مربى توت الشامي600غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 2.2
-    },
-    {
-      "name": "شوكولا نوتيلا صغير 350غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 3.97
-    },
-    {
-      "name": "كونسروة مربى مشمش 450غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 2.57
-    },
-    {
-      "name": "ريحانة دبس خرنوب500غ",
-      "categoryName": "المربى والسبريد والحلاوة والطحينة",
-      "price": 1.82
-    },
-    {
-      "name": "فينغر تورنادو",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "بيتفور ديلايت 40غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.42
-    },
-    {
-      "name": "بيغ ام برنسيب80غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "توينز يامي",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "توينز لوف30غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.17
-    },
-    {
-      "name": "ديجستيف زالوم",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.17
-    },
-    {
-      "name": "كومبو اتي 44غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.79
-    },
-    {
-      "name": "الباني رول",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.79
-    },
-    {
-      "name": "ايسبيرج ويفر",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "ريماس سيوا",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "توينز باي 55غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "بيسكو تايم كوكيز40غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.17
-    },
-    {
-      "name": "غو فيا35غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "ماري بسكوت سادة",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "بيسكو جيل20غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "سوبر ساندويش بونو",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "بيسكولاتا ستيك27.5غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.61
-    },
-    {
-      "name": "الفيان ديجستيف كوكيز",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "كيك امريكانا 60غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.42
-    },
-    {
-      "name": "ويفر غوفريت40غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "مارشيل سوبرا 60غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.37
-    },
-    {
-      "name": "تسيبرز ماكس",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.37
-    },
-    {
-      "name": "بسكو مارك2فينغر",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "ريماس براوني",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.43
-    },
-    {
-      "name": "كوفي جوي",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.42
-    },
-    {
-      "name": "تيركو ساندويش محشي",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "دايجستيف ملت ميلك",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "غو كاتش",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "بانينو سيغار مشكل",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.17
-    },
-    {
-      "name": "بانينو سيغار بيستاشيو",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "بسكويت كريمز",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "رولانا جوز الهند",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "ديجستيف اوتسفل 80غ*3",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.42
-    },
-    {
-      "name": "بيسكريم 50%",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.79
-    },
-    {
-      "name": "هالب بسكويت كريم",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.17
-    },
-    {
-      "name": "بسكويت سامو فور",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "ديجستيف تام 104غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.42
-    },
-    {
-      "name": "كيك جوردينا مشكل",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "بامبو تيركو بامبو 45غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "كوسبي ستيك",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "تسيبرز وايفر جوردينا",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "بيغ ام دوماكس",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "ساندويش وايفر اب50غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.42
-    },
-    {
-      "name": "ستارز مشكل",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "بيغ ام اوركو40غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "بانينو غولدن رول",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "كيك اوريو",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.37
-    },
-    {
-      "name": "ويفر لافيتا ميني",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "بيغ ام سانس",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "اليغانس بيسكوتو*4قطع",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.37
-    },
-    {
-      "name": "بانينو روند بيستاشيو",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.37
-    },
-    {
-      "name": "بانينو عشق",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "وايفر وينكرز 135غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.72
-    },
-    {
-      "name": "اونيكا ماكس 45غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.49
-    },
-    {
-      "name": "كيك تايم",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "اتي ديجستيف احمر",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.72
-    },
-    {
-      "name": "بيسكريم اكسترا 184غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 1.22
-    },
-    {
-      "name": "وايف اب دارك 40غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.61
-    },
-    {
-      "name": "ديجستيف ديمة لايت",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 1.47
-    },
-    {
-      "name": "غو فروي 25غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "بيغ ام ويفر 40غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "هالي رول66غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.79
-    },
-    {
-      "name": "بسكويت تريند 2فينغر",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "ريماس طويل",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "بيمكس وايفربكريمة الفستق",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.18
-    },
-    {
-      "name": "بيسكويت احرف",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "وايفر ليزيتو",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "غو كريزي",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "الفيان ديجستيف *3",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.17
-    },
-    {
-      "name": "بيغ ام كريميو",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "وايفر انجوي",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "كيك ماكسي40غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "ويفر فويس محشي",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "غو شانك36غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "اليغانس بيسكوتو قطعتين",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "وايفر مينتو",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "جوردينا سويس رول كيك*12",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.86
-    },
-    {
-      "name": "وايف اب مشكل 40غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.49
-    },
-    {
-      "name": "بانينو وافل 55غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.38
-    },
-    {
-      "name": "هالي قعطة 30غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "غو ميلك22غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "بانينو كوكيز مشكل20غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "اوبتيلا فينغر",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "كوسبي برنس50غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "بيغ ام تويست30غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.17
-    },
-    {
-      "name": "اونيكا ويفر",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "بيسكوف لوتس25غ*2",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.42
-    },
-    {
-      "name": "لوريو اورجينال*4",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.37
-    },
-    {
-      "name": "اليغانس ساندويش50غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.42
-    },
-    {
-      "name": "ويفر مارلكس60غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "تورنادو كوكيز30غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.17
-    },
-    {
-      "name": "بسكويت سمايلي50غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "كوكو رودي 20غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "اورينو *4",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "سنيبس كورن فلاكس20غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "ريماس محاشي",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "كاجي اصبعين بالفستق",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "ديجستيف جمانة*2",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.24
-    },
-    {
-      "name": "اليغانس مغطس بيسكوتو",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.17
-    },
-    {
-      "name": "مايلوكس كوفي بيست",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.29
-    },
-    {
-      "name": "تيركو بسكويت *12",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "لوكمي مي ايكولر20غ",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "الباني30%",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.49
-    },
-    {
-      "name": "روميلا جوز الهند",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.17
-    },
-    {
-      "name": "سوبر ساندويش",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "بيتفور فورتي *4",
-      "categoryName": "البسكويت والويفر والكيك",
-      "price": 0.12
-    },
-    {
-      "name": "شوكولا سناك بيغ ام 33غ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.24
-    },
-    {
-      "name": "كيندر بوينو*2",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.97
-    },
-    {
-      "name": "مارس 51غ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.79
-    },
-    {
-      "name": "شوكولا بريك 15غ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.17
-    },
-    {
-      "name": "كوتي فار شوكولا",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.24
-    },
-    {
-      "name": "شوكولا فيوري",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.37
-    },
-    {
-      "name": "ويفر ميلكا و بيسكولاتا",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.12
-    },
-    {
-      "name": "شوكو ستار*6",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.12
-    },
-    {
-      "name": "بيغ ام كراميل 40غ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.24
-    },
-    {
-      "name": "غو كراميل 45غ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.29
-    },
-    {
-      "name": "شوكو جامبو",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.24
-    },
-    {
-      "name": "شوكو تويست ميني16غ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.12
-    },
-    {
-      "name": "سنيكرز 40غ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.79
-    },
-    {
-      "name": "بريك 17غ*24",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.17
-    },
-    {
-      "name": "شوكو برنس 28.5غ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.49
-    },
-    {
-      "name": "شوكولا لارين",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.17
-    },
-    {
-      "name": "تيك فايف",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.17
-    },
-    {
-      "name": "سنيكرز اورجينال50غ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.79
-    },
-    {
-      "name": "مترو%40",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.49
-    },
-    {
-      "name": "شوكولا توركو فاست30غ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.29
-    },
-    {
-      "name": "وانتد بوبز كرميل32غ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.61
-    },
-    {
-      "name": "بريك شوكولا30غ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.37
-    },
-    {
-      "name": "شوكو رول جوردينا",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.12
-    },
-    {
-      "name": "شوكولا جيفاكو",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.24
-    },
-    {
-      "name": "شوكولا عمار دف40غ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.24
-    },
-    {
-      "name": "ايلا شوكو كينغ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.29
-    },
-    {
-      "name": "نسله نسكويك27غ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.42
-    },
-    {
-      "name": "ميلكا دف",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 1.47
-    },
-    {
-      "name": "كيندر ترونكي*48",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.42
-    },
-    {
-      "name": "شوكولا اوباليز",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.12
-    },
-    {
-      "name": "باونتي 57غ",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.84
-    },
-    {
-      "name": "شوكولاتينو ديو *2",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.29
-    },
-    {
-      "name": "شوكو هابي",
-      "categoryName": "الشوكولا والحلويات",
-      "price": 0.12
-    },
-    {
-      "name": "غونغ سادة32غ",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.61
-    },
-    {
-      "name": "رولو كارت*24",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.29
-    },
-    {
-      "name": "غونغ طعمات",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.61
-    },
-    {
-      "name": "بوبنز بيغ بنغ",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.12
-    },
-    {
-      "name": "بونبون لاسنزا",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.12
-    },
-    {
-      "name": "منتوس دف*12",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.61
-    },
-    {
-      "name": "بونبون منتوس",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.37
-    },
-    {
-      "name": "هولز دف",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.37
-    },
-    {
-      "name": "علكة بيغارو",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.12
-    },
-    {
-      "name": "علكة شكلس",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.17
-    },
-    {
-      "name": "علكة بلانغ عسل",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.06
-    },
-    {
-      "name": "منتوس مرطبان",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.97
-    },
-    {
-      "name": "علكة ستيك*7",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.12
-    },
-    {
-      "name": "بونبون اكس بوكس",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.12
-    },
-    {
-      "name": "كلورتس حب*100",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.06
-    },
-    {
-      "name": "منتوس سريدي*15",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.37
-    },
-    {
-      "name": "مرطبان علكة ستيك",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 1.22
-    },
-    {
-      "name": "علكة شيفيتو",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.12
-    },
-    {
-      "name": "كلورتس دف",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.37
-    },
-    {
-      "name": "علكة شوبا شوس*20",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.55
-    },
-    {
-      "name": "صيني مشكل*30",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.12
-    },
-    {
-      "name": "جيلي غوموتشو",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.17
-    },
-    {
-      "name": "غوم بابيتو18غ اتي",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.17
-    },
-    {
-      "name": "بيغ برغر مارشميللو",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.17
-    },
-    {
-      "name": "ليكوريكو صغير",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.77
-    },
-    {
-      "name": "سليكا سوسات",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.12
-    },
-    {
-      "name": "بون بون بوسنتر",
-      "categoryName": "العلكة والبونبون والجيلي",
-      "price": 0.12
-    },
-    {
-      "name": "اني مالح 30غ",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.17
-    },
-    {
-      "name": "تسيبرز مالح مادهوري",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.12
-    },
-    {
-      "name": "هاغي بوف*2",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.12
-    },
-    {
-      "name": "تسيبرز عبيد 18غ",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.12
-    },
-    {
-      "name": "بريتزل طعمات مشبك30غ",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.24
-    },
-    {
-      "name": "بريتزل مشبك مالح30غ",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.17
-    },
-    {
-      "name": "كلوب ستيك كبير36غ",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.42
-    },
-    {
-      "name": "شيبس دوريتوس جامبو 100غ",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 2.14
-    },
-    {
-      "name": "فانتازيا وسط 65غ",
-      "categoryName": "الشيبس والسناكات المالحة",
+      "name": "Cheese and Vegetables Crepe",
+      "nameAr": "كريب مع جبنة وخضرة",
+      "categoryName": "Salty Crepes",
+      "price": 4.67
+    },
+    {
+      "name": "Cheese and Mortadella Crepe",
+      "nameAr": "كريب مع جبنة ومرتديلا",
+      "categoryName": "Salty Crepes",
+      "price": 4.67
+    },
+    {
+      "name": "Qareesh Cheese Crepe",
+      "nameAr": "كريب مع قريش",
+      "categoryName": "Salty Crepes",
+      "price": 0
+    },
+    {
+      "name": "Labneh Crepe",
+      "nameAr": "كريب مع لبنة",
+      "categoryName": "Salty Crepes",
+      "price": 0
+    },
+    {
+      "name": "Labneh and Mortadella Crepe",
+      "nameAr": "كريب مع لبنة ومرتديلا",
+      "categoryName": "Salty Crepes",
+      "price": 0
+    },
+    {
+      "name": "Labneh and Vegetables Crepe",
+      "nameAr": "كريب مع لبنة وخضرة",
+      "categoryName": "Salty Crepes",
+      "price": 0
+    },
+    {
+      "name": "Nutella Kunafa Cheese Crepe",
+      "nameAr": "كريب نوتيلا مع كنافة بجبنة",
+      "categoryName": "Salty Crepes",
+      "price": 0
+    },
+    {
+      "name": "Nutella Kunafa Ashta Crepe",
+      "nameAr": "كريب نوتيلا مع كنافة بقشطة",
+      "categoryName": "Salty Crepes",
+      "price": 0
+    },
+    {
+      "name": "Regular Corn",
+      "nameAr": "ذرة عادية",
+      "categoryName": "Corn",
+      "price": 3.34,
+      "optionGroups": [
+        {
+          "name": "Addons",
+          "nameAr": "إضافات",
+          "isRequired": false,
+          "minSelect": 0,
+          "maxSelect": 8,
+          "sortOrder": 1,
+          "choices": [
+            {
+              "name": "BBQ Sauce",
+              "nameAr": "صوص باربكيو",
+              "priceModifier": 0.67,
+              "sortOrder": 1
+            },
+            {
+              "name": "Cheddar Sauce",
+              "nameAr": "صوص شيدر",
+              "priceModifier": 0.67,
+              "sortOrder": 2
+            },
+            {
+              "name": "Buffalo Hot Sauce",
+              "nameAr": "صوص بافلو حار",
+              "priceModifier": 0.67,
+              "sortOrder": 3
+            },
+            {
+              "name": "Mayonnaise",
+              "nameAr": "مايونيز",
+              "priceModifier": 0.67,
+              "sortOrder": 4
+            },
+            {
+              "name": "Ketchup",
+              "nameAr": "كاتشب",
+              "priceModifier": 0.67,
+              "sortOrder": 5
+            },
+            {
+              "name": "Sitos Chips",
+              "nameAr": "شيبس سيتوس",
+              "priceModifier": 0.4,
+              "sortOrder": 6
+            },
+            {
+              "name": "Dr. Food Sunshine Stix",
+              "nameAr": "د. فود صن شاين ستيكس",
+              "priceModifier": 0.8,
+              "sortOrder": 7
+            },
+            {
+              "name": "Pringles",
+              "nameAr": "برينغلز",
+              "priceModifier": 0.67,
+              "sortOrder": 8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Corn with Mozzarella",
+      "nameAr": "ذرة مع موزاريلا",
+      "categoryName": "Corn",
+      "price": 4.67
+    },
+    {
+      "name": "Regular Akkawi Kaake",
+      "nameAr": "كعكة عكاوي العادية",
+      "categoryName": "Kaake Traboulsiye",
+      "price": 1.33,
+      "optionGroups": [
+        {
+          "name": "Addons",
+          "nameAr": "إضافات",
+          "isRequired": false,
+          "minSelect": 0,
+          "maxSelect": 15,
+          "sortOrder": 1,
+          "choices": [
+            {
+              "name": "Vegetables",
+              "nameAr": "خضرة",
+              "priceModifier": 1.33,
+              "sortOrder": 1
+            },
+            {
+              "name": "Picon",
+              "nameAr": "بيكون",
+              "priceModifier": 0.67,
+              "sortOrder": 2
+            },
+            {
+              "name": "Cheddar Pieces",
+              "nameAr": "قطع شيدر",
+              "priceModifier": 1.07,
+              "sortOrder": 3
+            },
+            {
+              "name": "Mortadella",
+              "nameAr": "مرتديلا",
+              "priceModifier": 1.33,
+              "sortOrder": 4
+            },
+            {
+              "name": "Turkey Mortadella",
+              "nameAr": "مرتديلا حبش",
+              "priceModifier": 1.33,
+              "sortOrder": 5
+            },
+            {
+              "name": "Pepperoni",
+              "nameAr": "بيبروني",
+              "priceModifier": 1.33,
+              "sortOrder": 6
+            },
+            {
+              "name": "Mozzarella",
+              "nameAr": "موزاريلا",
+              "priceModifier": 1.73,
+              "sortOrder": 7
+            },
+            {
+              "name": "BBQ Sauce",
+              "nameAr": "صوص باربكيو",
+              "priceModifier": 0.67,
+              "sortOrder": 8
+            },
+            {
+              "name": "Cheddar Sauce",
+              "nameAr": "صوص شيدر",
+              "priceModifier": 0.67,
+              "sortOrder": 9
+            },
+            {
+              "name": "Buffalo Hot Sauce",
+              "nameAr": "صوص بافلو حار",
+              "priceModifier": 0.67,
+              "sortOrder": 10
+            },
+            {
+              "name": "Mayonnaise",
+              "nameAr": "مايونيز",
+              "priceModifier": 0.67,
+              "sortOrder": 11
+            },
+            {
+              "name": "Ketchup",
+              "nameAr": "كاتشب",
+              "priceModifier": 0.67,
+              "sortOrder": 12
+            },
+            {
+              "name": "Sitos Chips",
+              "nameAr": "شيبس سيتوس",
+              "priceModifier": 0.67,
+              "sortOrder": 13
+            },
+            {
+              "name": "Dr. Food Sunshine Stix",
+              "nameAr": "د. فود صن شاين ستيكس",
+              "priceModifier": 0.8,
+              "sortOrder": 14
+            },
+            {
+              "name": "Pringles",
+              "nameAr": "برينغلز",
+              "priceModifier": 0.67,
+              "sortOrder": 15
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4 Cheese Kaake",
+      "nameAr": "كعكة 4 أجبان",
+      "categoryName": "Kaake Traboulsiye",
+      "price": 4.67
+    },
+    {
+      "name": "5 Cheese Kaake",
+      "nameAr": "كعكة 5 أجبان",
+      "categoryName": "Kaake Traboulsiye",
+      "price": 5.33
+    },
+    {
+      "name": "Special Kaake",
+      "nameAr": "كعكة سبيسيال",
+      "categoryName": "Kaake Traboulsiye",
+      "price": 6
+    },
+    {
+      "name": "Pizza Kaake",
+      "nameAr": "كعكة البيتزا",
+      "categoryName": "Kaake Traboulsiye",
+      "price": 6
+    },
+    {
+      "name": "Orange Juice",
+      "nameAr": "عصير برتقال",
+      "categoryName": "Ado Juice",
+      "price": 1.33
+    },
+    {
+      "name": "Carrot Juice",
+      "nameAr": "عصير جزر",
+      "categoryName": "Ado Juice",
+      "price": 1.33
+    },
+    {
+      "name": "Small Water",
+      "nameAr": "مياه صغيرة",
+      "categoryName": "Ado Juice",
       "price": 0.67
     },
     {
-      "name": "فانتازيا جامبو",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 1.1
+      "name": "Large Water",
+      "nameAr": "مياه كبيرة",
+      "categoryName": "Ado Juice",
+      "price": 1.33
     },
     {
-      "name": "ماستر مشكل صغير 14غ",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.12
+      "name": "Pepsi",
+      "nameAr": "بيبسي",
+      "categoryName": "Ado Juice",
+      "price": 1.33
     },
     {
-      "name": "شيبس ليز45غ",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 1.22
+      "name": "7UP",
+      "nameAr": "سفن أب",
+      "categoryName": "Ado Juice",
+      "price": 1.33
     },
     {
-      "name": "ماستر مشكل وان دولار",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 1.1
+      "name": "XXL",
+      "nameAr": "إكس إكس إل",
+      "categoryName": "Ado Juice",
+      "price": 1.07
     },
     {
-      "name": "دوريتوس شيبس 43غ",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 1.22
+      "name": "Dark Blue",
+      "nameAr": "دارك بلو",
+      "categoryName": "Ado Juice",
+      "price": 1.07
     },
     {
-      "name": "شيبس دولسي",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.97
+      "name": "1 kg Gelly Gum",
+      "nameAr": "1 كغ جيلي غام",
+      "categoryName": "Gelly Gum",
+      "price": 10.67
     },
     {
-      "name": "برنجلز صغير 40غ",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 1.1
+      "name": "Gelly Gum Cup",
+      "nameAr": "كوب جيلي غام",
+      "categoryName": "Gelly Gum",
+      "price": 2
     },
     {
-      "name": "فانتازيا23غ",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.37
-    },
-    {
-      "name": "سناكز شيبس كبير",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.42
-    },
-    {
-      "name": "شيبس ليز155غ جامبو",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 2.92
-    },
-    {
-      "name": "شيبس سناكز صغير",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.12
-    },
-    {
-      "name": "برنجلز كبير 165غ",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 2.2
-    },
-    {
-      "name": "شيبس رينغو جامبو",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.3
-    },
-    {
-      "name": "شيبس شيتوس كرنشي80غ",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 1.65
-    },
-    {
-      "name": "ماستر مشكل صغير 14غ (2)",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.12
-    },
-    {
-      "name": "شيبس فانتازيا65غ وسط",
-      "categoryName": "الشيبس والسناكات المالحة",
+      "name": "Gelly Gum Sticks",
+      "nameAr": "أعواد جيلي غام",
+      "categoryName": "Gelly Gum",
       "price": 0.67
     },
     {
-      "name": "شيبس شيتوس حار35غ",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.84
+      "name": "Pistachio Kunafa Chocolate Bar",
+      "nameAr": "لوح شوكولا كنافة بالفستق",
+      "categoryName": "Dubai Chocolate Bars",
+      "price": 8.4
     },
     {
-      "name": "ماستر مشكل وسط",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.61
+      "name": "Lotus Chocolate Bar",
+      "nameAr": "لوح شوكولا لوتوس",
+      "categoryName": "Dubai Chocolate Bars",
+      "price": 6.6
     },
     {
-      "name": "ماستر صغير مشكل",
-      "categoryName": "الشيبس والسناكات المالحة",
-      "price": 0.12
+      "name": "Hazelnut Chocolate Bar",
+      "nameAr": "لوح شوكولا بالبندق",
+      "categoryName": "Dubai Chocolate Bars",
+      "price": 6
     },
     {
-      "name": "ذرة شفاف",
-      "categoryName": "المكسرات والبزر",
-      "price": 0.61
+      "name": "Oreo Chocolate Bar",
+      "nameAr": "لوح شوكولا أوريو",
+      "categoryName": "Dubai Chocolate Bars",
+      "price": 6.6
     },
     {
-      "name": "مخلوطة 80غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 0.61
+      "name": "Ghazle Chocolate Bar",
+      "nameAr": "لوح شوكولا غزلة",
+      "categoryName": "Dubai Chocolate Bars",
+      "price": 6
     },
     {
-      "name": "عبيد بقشر مملح80غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 0.55
+      "name": "Chocolate with Crunchy Fruits and Nuts",
+      "nameAr": "شوكولا مع فواكه ومكسرات كرانشي",
+      "categoryName": "Dubai Chocolate Bars",
+      "price": 5.4
     },
     {
-      "name": "قلوبات كبير العيلة 400غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 3.67
+      "name": "Crunchy Fruit",
+      "nameAr": "فواكه كرانشي",
+      "categoryName": "Crunchy Desserts",
+      "price": 6
     },
     {
-      "name": "بزر جلنط 60غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 0.72
+      "name": "Crunchy Marshmallow",
+      "nameAr": "مارشميلو كرانشي",
+      "categoryName": "Crunchy Desserts",
+      "price": 9.6
     },
     {
-      "name": "ميال الشمس 100غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 0.61
+      "name": "Crunchy Ice Cream",
+      "nameAr": "آيس كريم كرانشي",
+      "categoryName": "Crunchy Desserts",
+      "price": 9.6
     },
     {
-      "name": "علبة صغير مكسرات نية",
-      "categoryName": "المكسرات والبزر",
-      "price": 0.61
+      "name": "Honey",
+      "nameAr": "عسل",
+      "categoryName": "Crunchy Desserts",
+      "price": 4
     },
     {
-      "name": "مخلوطة صغير مشكل",
-      "categoryName": "المكسرات والبزر",
-      "price": 0.12
+      "name": "Caramel Qashtouta",
+      "nameAr": "قشطوطة كراميل",
+      "categoryName": "Qashtouta",
+      "price": 4.67
     },
     {
-      "name": "اكسترا مكشوف300غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 2.44
+      "name": "Pistachio Qashtouta",
+      "nameAr": "قشطوطة بستاشيو مع فستق حلبي",
+      "categoryName": "Qashtouta",
+      "price": 6
     },
     {
-      "name": "مخلوطة مشكل وسط150غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 1.47
+      "name": "Lotus Qashtouta",
+      "nameAr": "قشطوطة لوتوس",
+      "categoryName": "Qashtouta",
+      "price": 6
     },
     {
-      "name": "الرئيقف مشكل اكسترا250غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 2.2
+      "name": "Oreo Qashtouta",
+      "nameAr": "قشطوطة أوريو",
+      "categoryName": "Qashtouta",
+      "price": 6
     },
     {
-      "name": "بزورات مشكل عادي250غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 1.47
+      "name": "Fruit Qashtouta",
+      "nameAr": "قشطوطة مع فواكه",
+      "categoryName": "Qashtouta",
+      "price": 6
     },
     {
-      "name": "دوار الشمس مالح180غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 1.34
-    },
-    {
-      "name": "بزر دوار الشمس 180غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 1.34
-    },
-    {
-      "name": "مكسرات الرئيف نية",
-      "categoryName": "المكسرات والبزر",
-      "price": 0.72
-    },
-    {
-      "name": "قلوبات مشكلة200غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 4.62
-    },
-    {
-      "name": "قلوبات مشكة28غ*10",
-      "categoryName": "المكسرات والبزر",
-      "price": 0.84
-    },
-    {
-      "name": "بزر مصري100غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 0.61
-    },
-    {
-      "name": "عبيد مشكل مملح 80غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 0.55
-    },
-    {
-      "name": "سوبر اكسترا250غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 2.81
-    },
-    {
-      "name": "علبة كبيرة مكسرات نية",
-      "categoryName": "المكسرات والبزر",
-      "price": 1.22
-    },
-    {
-      "name": "ميال الشمس 30غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 0.17
-    },
-    {
-      "name": "بزر جلنط 200غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 2.2
-    },
-    {
-      "name": "قلوبات مشكل70غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 0.84
-    },
-    {
-      "name": "شمام مملح200غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 2.2
-    },
-    {
-      "name": "بزر شمام 60غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 0.72
-    },
-    {
-      "name": "بزر مصري200غ",
-      "categoryName": "المكسرات والبزر",
-      "price": 1.34
-    },
-    {
-      "name": "عصير في250ملل",
-      "categoryName": "العصائر",
-      "price": 1.82
-    },
-    {
-      "name": "راني شقف250ملل",
-      "categoryName": "العصائر",
-      "price": 0.73
-    },
-    {
-      "name": "دارينا ظرف35غ",
-      "categoryName": "العصائر",
-      "price": 0.24
-    },
-    {
-      "name": "راني شقف",
-      "categoryName": "العصائر",
-      "price": 0.81
-    },
-    {
-      "name": "تمر هندي ليتر بلاستيك",
-      "categoryName": "العصائر",
-      "price": 0.97
-    },
-    {
-      "name": "مستر جوسي",
-      "categoryName": "العصائر",
-      "price": 0.24
-    },
-    {
-      "name": "موغو موغو 320ملل",
-      "categoryName": "العصائر",
-      "price": 1.22
-    },
-    {
-      "name": "باسل بذور ريحان",
-      "categoryName": "العصائر",
-      "price": 1.22
-    },
-    {
-      "name": "عصير سموزي",
-      "categoryName": "العصائر",
-      "price": 1.47
-    },
-    {
-      "name": "تمر هندي تنك",
-      "categoryName": "العصائر",
-      "price": 0.5
-    },
-    {
-      "name": "عصير بلاند330ملل",
-      "categoryName": "العصائر",
-      "price": 1.47
-    },
-    {
-      "name": "سوبرينا ظرف",
-      "categoryName": "العصائر",
-      "price": 0.24
-    },
-    {
-      "name": "دارينا لايت ظرف25غ",
-      "categoryName": "العصائر",
-      "price": 0.49
-    },
-    {
-      "name": "اونو شوكلا",
-      "categoryName": "العصائر",
-      "price": 0.38
-    },
-    {
-      "name": "بيبسي ابو جامبو",
-      "categoryName": "المشروبات الغازية",
-      "price": 1.82
-    },
-    {
-      "name": "بيبسي زجاج مرتجع صغير",
-      "categoryName": "المشروبات الغازية",
-      "price": 0.3
-    },
-    {
-      "name": "يبسي لتر وربع",
-      "categoryName": "المشروبات الغازية",
-      "price": 1.53
-    },
-    {
-      "name": "باربيكان زجاج",
-      "categoryName": "المشروبات الغازية",
-      "price": 1.22
-    },
-    {
-      "name": "بيبسي بلاستيك صغير",
-      "categoryName": "المشروبات الغازية",
-      "price": 0.72
-    },
-    {
-      "name": "ارسي 1ليتر",
-      "categoryName": "المشروبات الغازية",
-      "price": 0.92
-    },
-    {
-      "name": "بيبسي تنك كبير",
-      "categoryName": "المشروبات الغازية",
-      "price": 0.86
-    },
-    {
-      "name": "اكسترا ليتر مشكل",
-      "categoryName": "المشروبات الغازية",
-      "price": 1.34
-    },
-    {
-      "name": "عصير اكس ال 500ملل",
-      "categoryName": "مشروبات الطاقة",
-      "price": 0.84
-    },
-    {
-      "name": "اكس ال طعمات250ملل",
-      "categoryName": "مشروبات الطاقة",
-      "price": 0.84
-    },
-    {
-      "name": "ريد بول250ملل",
-      "categoryName": "مشروبات الطاقة",
-      "price": 1.82
-    },
-    {
-      "name": "ريندو تنك250ملل",
-      "categoryName": "مشروبات الطاقة",
-      "price": 0.49
-    },
-    {
-      "name": "بوم بوم تنك 250ملل",
-      "categoryName": "مشروبات الطاقة",
-      "price": 1.59
-    },
-    {
-      "name": "اكسترا250مللل",
-      "categoryName": "مشروبات الطاقة",
-      "price": 0.49
-    },
-    {
-      "name": "اكس ال 250ملل",
-      "categoryName": "مشروبات الطاقة",
-      "price": 0.61
-    },
-    {
-      "name": "عصير انرجي بلاس250ملل",
-      "categoryName": "مشروبات الطاقة",
-      "price": 0.61
-    },
-    {
-      "name": "دارك بلو",
-      "categoryName": "مشروبات الطاقة",
-      "price": 0.61
-    },
-    {
-      "name": "مياه نسله600ملل",
-      "categoryName": "المياه",
-      "price": 0.24
-    },
-    {
-      "name": "ميا نسلة2ليتر",
-      "categoryName": "المياه",
-      "price": 0.61
-    },
-    {
-      "name": "مياة عالية ليتر ونص",
-      "categoryName": "المياه",
-      "price": 0.49
-    },
-    {
-      "name": "عالية نونو",
-      "categoryName": "المياه",
-      "price": 0.17
-    },
-    {
-      "name": "شاي ليبتون",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 0.86
-    },
-    {
-      "name": "ايس كوفي لونا",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 0.86
-    },
-    {
-      "name": "ايس لونا18ملل",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 0.84
-    },
-    {
-      "name": "ايس كافيو 180ملل",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 0.84
-    },
-    {
-      "name": "كافيو",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 0.86
-    },
-    {
-      "name": "ظرف هوت شوكولت دومو",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 0.37
-    },
-    {
-      "name": "نجار فاكيوم عادي180غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 3.59
-    },
-    {
-      "name": "نسكافيه احمر مر 2في1",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 5.44
-    },
-    {
-      "name": "شاي راس الحصان140غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 2.14
-    },
-    {
-      "name": "نجار قهوة فاكيوم 180غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 3.42
-    },
-    {
-      "name": "كابتشينو ظرف",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 0.24
-    },
-    {
-      "name": "قهوة دومينغو 400غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 6.22
-    },
-    {
-      "name": "شاي راس الحصان 700غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 10.07
-    },
-    {
-      "name": "متة خارطة",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 1.39
-    },
-    {
-      "name": "قهوة ستار كافي 450غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 6.72
-    },
-    {
-      "name": "شاي راس الحصان 350غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 5.19
-    },
-    {
-      "name": "ليبتون 100ظرف",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 2.69
-    },
-    {
-      "name": "مرطبان نسكافية غولد 190غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 11.49
-    },
-    {
-      "name": "قهوة بالما400غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 3.91
-    },
-    {
-      "name": "قهوة بالما 180غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 1.82
-    },
-    {
-      "name": "قهوة ستارز كافي 200غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 3.04
-    },
-    {
-      "name": "قهوة نجار مع هال 450غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 7.87
-    },
-    {
-      "name": "دومينغو صغير 180غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 2.98
-    },
-    {
-      "name": "شاي ليبتون*ظرف",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 0.72
-    },
-    {
-      "name": "دومينغو 180غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 2.99
-    },
-    {
-      "name": "مرطبان نسكافي كوفي بريك 50غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 1.34
-    },
-    {
-      "name": "ليبتون 25ظرف",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 0.79
-    },
-    {
-      "name": "قهوة دومينغو 400غ (2)",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 6.22
-    },
-    {
-      "name": "نسكافية 190غ+كوفي مت150غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 8.37
-    },
-    {
-      "name": "قهوة نجار بدون هال450غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 7.27
-    },
-    {
-      "name": "نسكافيه مر 2في1*21",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 0.29
-    },
-    {
-      "name": "دانيال مع هال180غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 3.14
-    },
-    {
-      "name": "العطار ظرف",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 1.22
-    },
-    {
-      "name": "نجار مع هال180غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 3.67
-    },
-    {
-      "name": "شاي ليبتون 100ظرف",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 2.69
-    },
-    {
-      "name": "كوفي مت 450غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 3.3
-    },
-    {
-      "name": "كاريوكا كافي 200غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 3.3
-    },
-    {
-      "name": "بن دانيال200غ",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 2.69
-    },
-    {
-      "name": "تاج شاج سيلاني2غ*20ظرف",
-      "categoryName": "القهوة والشاي والمشروبات الساخنة",
-      "price": 0.67
-    },
-    {
-      "name": "ناغتس دجاج تب توب900غ",
-      "categoryName": "المجمدات",
-      "price": 5.5
-    },
-    {
-      "name": "كريسبي تب توب 900غ",
-      "categoryName": "المجمدات",
-      "price": 7.57
-    },
-    {
-      "name": "برغر دجاج تب توب 500غ",
-      "categoryName": "المجمدات",
-      "price": 3.67
-    },
-    {
-      "name": "جبنة حيواني تب توب450غ",
-      "categoryName": "المجمدات",
-      "price": 2.69
-    },
-    {
-      "name": "بطاطا مفرزة 900غ",
-      "categoryName": "المجمدات",
-      "price": 2.69
-    },
-    {
-      "name": "اصابع موزاريلا مقرمشة 400غ",
-      "categoryName": "المجمدات",
-      "price": 5.5
-    },
-    {
-      "name": "ديمكس جافيل 3750غ",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 2.57
-    },
-    {
-      "name": "فانيش 495مل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.65
-    },
-    {
-      "name": "جافيل اودكس 1ليتر",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.22
-    },
-    {
-      "name": "جافيل ديمكس ليتر",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 0.92
-    },
-    {
-      "name": "مبيض الافراح اوريس",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 0.61
-    },
-    {
-      "name": "اريال غسيل 4كيلو",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 11.29
-    },
-    {
-      "name": "تاب للسجاد 1ليتر",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 3.97
-    },
-    {
-      "name": "غسيل بيروس 1.5ك",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 2.81
-    },
-    {
-      "name": "جيف كريم 750مل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 3.59
-    },
-    {
-      "name": "فانيش 1ليتر",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 3.97
-    },
-    {
-      "name": "اريال 10ك",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 20.77
-    },
-    {
-      "name": "معطر غسيل سيلك ويف1ليتر",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.22
-    },
-    {
-      "name": "اوكو غسيل جل 2.5ل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 5.07
-    },
-    {
-      "name": "فلاش كرمل 800ملل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 0.8
-    },
-    {
-      "name": "اريال جل 3.6ك",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 9.77
-    },
-    {
-      "name": "رامبو سبارتن 650غ",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 2.69
-    },
-    {
-      "name": "داوني منعم غسيل 2ل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 4.22
-    },
-    {
-      "name": "معطر كرمل800مل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.22
-    },
-    {
-      "name": "ايزي ديمكس650ملل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.1
-    },
-    {
-      "name": "بونكس غسيل 8كيلو",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 13.75
-    },
-    {
-      "name": "معطر داوني 1ليتر",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 5.87
-    },
-    {
-      "name": "سيلفر احذية 50مل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 0.79
-    },
-    {
-      "name": "جافيل كرمل 900مل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 0.79
-    },
-    {
-      "name": "معطر ليتس",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.47
-    },
-    {
-      "name": "ماجيك سيف ستنلس15غ",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 0.43
-    },
-    {
-      "name": "جيرمكس سبارتن 1ليتر",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 2.44
-    },
-    {
-      "name": "كومفورت منظيف غسيل 1ل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 2.69
-    },
-    {
-      "name": "فانيش3ليتر+1ليتر",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 12.77
-    },
-    {
-      "name": "برسيل 10ك هنكل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 21.02
-    },
-    {
-      "name": "دوا غسيل لاتس 2ك",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 5.99
-    },
-    {
-      "name": "جيرمكس 2ليتر",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 3.79
-    },
-    {
-      "name": "برسيل 2ك",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 4.89
-    },
-    {
-      "name": "معطر كرمل 800مل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.22
-    },
-    {
-      "name": "ديمكس معطر ارض800ملل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.22
-    },
-    {
-      "name": "فلاش ديمكس باور 1ليتر",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.71
-    },
-    {
-      "name": "يس كلاسيك 650غ",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.71
-    },
-    {
-      "name": "جافيل اودكس غالون 4ك",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 3.97
-    },
-    {
-      "name": "بونكس غسيل4ك",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 8.37
-    },
-    {
-      "name": "سائل جلي ديمكس 700ملل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.22
-    },
-    {
-      "name": "ايزي اصلي 825مل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 2.37
-    },
-    {
-      "name": "سائل جلي الوزير 3.5ك",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 4.02
-    },
-    {
-      "name": "سائل جلي كرمل650مل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.1
-    },
-    {
-      "name": "فانيش1.8ليتر+500ملل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 9.47
-    },
-    {
-      "name": "معطر نورا800مل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 0.94
-    },
-    {
-      "name": "بونكس غسيل 1.5ك",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 3.3
-    },
-    {
-      "name": "ليف جلي سويت*2",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 0.61
-    },
-    {
-      "name": "معطر غسيل بيروس3ليتر",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 2.81
-    },
-    {
-      "name": "اريال جل 3.6غ",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 9.77
-    },
-    {
-      "name": "ريمال توليت*4",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 0.72
-    },
-    {
-      "name": "لكروا جافيل عادي 3.79ل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 3.67
-    },
-    {
-      "name": "فانيش اوكسي ابيض500غ20",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 6.22
-    },
-    {
-      "name": "اريال بودر 10ك",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 20.77
-    },
-    {
-      "name": "فلاش سبارين اصلي 1ليتر",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 2.57
-    },
-    {
-      "name": "برسيل جل 4.8ليتر",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 12.22
-    },
-    {
-      "name": "لكروا جافيل 1ليتر",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.22
-    },
-    {
-      "name": "سائل جلي فيري1250مل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 4.22
-    },
-    {
-      "name": "سائل جلي بريل 1250ملل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 2.75
-    },
-    {
-      "name": "فاري 750مل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 2.14
-    },
-    {
-      "name": "اريال 2 كيلو",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 5.79
-    },
-    {
-      "name": "سائل جلي بريل 700مل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.39
-    },
-    {
-      "name": "بيروس غسيل 6كيلو",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 6.97
-    },
-    {
-      "name": "ديتول سائل500مل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 3.67
-    },
-    {
-      "name": "اريال بودر 10كيلو",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 20.77
-    },
-    {
-      "name": "معطر ملابس ديمكس 825ملل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.22
-    },
-    {
-      "name": "معطر للجو اليغانس250مل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 1.71
-    },
-    {
-      "name": "داوني الغسيل 3ل",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 5.62
-    },
-    {
-      "name": "سائل جلي الوزير3.5ك",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 4.02
-    },
-    {
-      "name": "نيلة 100غ",
-      "categoryName": "المنظفات والمعطرات المنزلية",
-      "price": 0.92
-    },
-    {
-      "name": "اريكس 1199ملتي*3",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 2.07
-    },
-    {
-      "name": "مكنسة in\\outتونكيتا620",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 8.49
-    },
-    {
-      "name": "اريكس123 ملتي سكراب*3",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 2.02
-    },
-    {
-      "name": "تونكيتا 074 وابير ميتال36سم",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 4.52
-    },
-    {
-      "name": "ملاقط الاصلي كبير*24",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 2.02
-    },
-    {
-      "name": "كف ملون رجالي",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 0.84
-    },
-    {
-      "name": "تونكيتا 066 ادهر سيف كلوز",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 2.57
-    },
-    {
-      "name": "عصا تونكيتا 04بكولور130سم",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 3.17
-    },
-    {
-      "name": "ملاقط غسيل بلاستيك*24",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 1.77
-    },
-    {
-      "name": "قحاطة تيتيز 330",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 0.97
-    },
-    {
-      "name": "ملاقط بامبو خشب",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 0.55
-    },
-    {
-      "name": "تونكيتا 326 واشنغ براش",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 3.3
-    },
-    {
-      "name": "مكنسة مكتب",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 1.34
-    },
-    {
-      "name": "تونكيتا8541وايبر42سم",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 6.54
-    },
-    {
-      "name": "داست بان+براش تونكيتا307",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 6.11
-    },
-    {
-      "name": "تونكيتا 605سبازيو بروم",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 6.22
-    },
-    {
-      "name": "تونكيتا 855قشاطة55سم",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 9.29
-    },
-    {
-      "name": "فرشاة كازالينا034",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 1.22
-    },
-    {
-      "name": "ماجيك ممسحة ملون 50*80",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 5.44
-    },
-    {
-      "name": "تونكيتا854قشاطة44سم",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 6.97
-    },
-    {
-      "name": "فيلادا مماسح اصفر1+2",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 3.67
-    },
-    {
-      "name": "اريكس 1193كلوز صاني*3",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 2.37
-    },
-    {
-      "name": "كازالينا016*3ملون لميع",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 2.07
-    },
-    {
-      "name": "تونكيتا 073 مجلى26سم",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 3.97
-    },
-    {
-      "name": "تونكيتا 067 ادهر سيف رول*2",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 4.46
-    },
-    {
-      "name": "ماجيك كلين 001سم فوط*3",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 1.04
-    },
-    {
-      "name": "مماسح ارض قطن",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 2.7
-    },
-    {
-      "name": "تونكيتا847رابيد قطن فلات",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 16.37
-    },
-    {
-      "name": "قشاطة تونكيتا 33سم",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 6.47
-    },
-    {
-      "name": "فيلادا قشاطة مع عصا42سم",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 4.52
-    },
-    {
-      "name": "سيف خشن*3شبك",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 0.42
-    },
-    {
-      "name": "شفاطة كوبرا النور",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 0.72
-    },
-    {
-      "name": "فيلدا ممسحة ارض ايزي كلين",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 3.67
-    },
-    {
-      "name": "اريكس 1199 ملتي*3",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 2.07
-    },
-    {
-      "name": "كفوف غسيل",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 0.55
-    },
-    {
-      "name": "قشاطة تيتيز556",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 2.37
-    },
-    {
-      "name": "فرشاة ارض تونكيتا",
-      "categoryName": "أدوات التنظيف المنزلية",
-      "price": 3.3
-    },
-    {
-      "name": "فاب مبيد الحشرات400مل",
-      "categoryName": "المبيدات الحشرية",
-      "price": 3.17
-    },
-    {
-      "name": "هاكر للحشرات 750مل ازرق",
-      "categoryName": "المبيدات الحشرية",
-      "price": 3.47
-    },
-    {
-      "name": "فاب مبيد الحشرات400مل (2)",
-      "categoryName": "المبيدات الحشرية",
-      "price": 5.37
-    },
-    {
-      "name": "دفتر فار اخضر",
-      "categoryName": "المبيدات الحشرية",
-      "price": 0.37
-    },
-    {
-      "name": "هاكر رش الحشرات400مل ازرق فاتح",
-      "categoryName": "المبيدات الحشرية",
-      "price": 2.32
-    },
-    {
-      "name": "هاكر رش 400مل اخضر فاتح",
-      "categoryName": "المبيدات الحشرية",
-      "price": 2.32
-    },
-    {
-      "name": "فاب اخضر للصراصير400مل",
-      "categoryName": "المبيدات الحشرية",
-      "price": 3.17
-    },
-    {
-      "name": "يونيفكس دفتر تلزيق فار",
-      "categoryName": "المبيدات الحشرية",
-      "price": 0.84
-    },
-    {
-      "name": "فاب اخضر للصراصير",
-      "categoryName": "المبيدات الحشرية",
-      "price": 5.62
-    },
-    {
-      "name": "فاب ازرق للبرغش",
-      "categoryName": "المبيدات الحشرية",
-      "price": 4.69
-    },
-    {
-      "name": "فاب دولاب 150غ",
-      "categoryName": "المبيدات الحشرية",
-      "price": 0.72
-    },
-    {
-      "name": "هاكر رش 400مل احمر",
-      "categoryName": "المبيدات الحشرية",
-      "price": 2.32
-    },
-    {
-      "name": "هاكر دولاب كاتول",
-      "categoryName": "المبيدات الحشرية",
-      "price": 0.79
-    },
-    {
-      "name": "تلزيق فار",
-      "categoryName": "المبيدات الحشرية",
-      "price": 1.59
-    },
-    {
-      "name": "هاكر الحشرات 400مل ازرق",
-      "categoryName": "المبيدات الحشرية",
-      "price": 2.32
-    },
-    {
-      "name": "سيليفر ويبس",
-      "categoryName": "المحارم والورقيات",
-      "price": 0.86
-    },
-    {
-      "name": "محارم لومكس",
-      "categoryName": "المحارم والورقيات",
-      "price": 0.72
-    },
-    {
-      "name": "محارم الاسرة",
-      "categoryName": "المحارم والورقيات",
-      "price": 0.24
-    },
-    {
-      "name": "محارم معطرة وي وي80غ",
-      "categoryName": "المحارم والورقيات",
-      "price": 1.34
-    },
-    {
-      "name": "محارم الاسرة 200",
-      "categoryName": "المحارم والورقيات",
-      "price": 0.24
-    },
-    {
-      "name": "محارم كينغ اصفر400",
-      "categoryName": "المحارم والورقيات",
-      "price": 1.1
-    },
-    {
-      "name": "رول تواليت ميموزا",
-      "categoryName": "المحارم والورقيات",
-      "price": 1.71
-    },
-    {
-      "name": "بترا مناشف2000غ",
-      "categoryName": "المحارم والورقيات",
-      "price": 0.61
-    },
-    {
-      "name": "محارم عادي شفااف",
-      "categoryName": "المحارم والورقيات",
-      "price": 0.24
-    },
-    {
-      "name": "محارم شفاف علبة",
-      "categoryName": "المحارم والورقيات",
-      "price": 0.24
-    },
-    {
-      "name": "ربطة محارم شفاف",
-      "categoryName": "المحارم والورقيات",
-      "price": 2.44
-    },
-    {
-      "name": "محارم كينغ 200غ",
-      "categoryName": "المحارم والورقيات",
-      "price": 0.55
-    },
-    {
-      "name": "محارم معطرة سيلفي120م",
-      "categoryName": "المحارم والورقيات",
-      "price": 0.84
-    },
-    {
-      "name": "محارم مينو 500غ",
-      "categoryName": "المحارم والورقيات",
-      "price": 1.47
-    },
-    {
-      "name": "محارم معطر ماكسيمنس",
-      "categoryName": "المحارم والورقيات",
-      "price": 0.72
-    },
-    {
-      "name": "رول تواليت بريمو",
-      "categoryName": "المحارم والورقيات",
-      "price": 0.72
-    },
-    {
-      "name": "محارم جيبة معطرة *36",
-      "categoryName": "المحارم والورقيات",
-      "price": 0.24
-    },
-    {
-      "name": "اكياس تفريز وسط*20",
-      "categoryName": "الأكياس والتغليف",
-      "price": 0.84
-    },
-    {
-      "name": "اكياس نفايات اكس لارج",
-      "categoryName": "الأكياس والتغليف",
-      "price": 2.37
-    },
-    {
-      "name": "لزيق عريض شفاف",
-      "categoryName": "الأكياس والتغليف",
-      "price": 0.84
-    },
-    {
-      "name": "لزيق اسود",
-      "categoryName": "الأكياس والتغليف",
-      "price": 0.42
-    },
-    {
-      "name": "شراشف نايلون برينو",
-      "categoryName": "الأكياس والتغليف",
-      "price": 2.2
-    },
-    {
-      "name": "اكياس نفايات اسود كلين",
-      "categoryName": "الأكياس والتغليف",
-      "price": 1.65
-    },
-    {
-      "name": "ABMلزيق خلض",
-      "categoryName": "الأكياس والتغليف",
-      "price": 1.59
-    },
-    {
-      "name": "لزيق رفيع كتب",
-      "categoryName": "الأكياس والتغليف",
-      "price": 0.12
-    },
-    {
-      "name": "الومنيوم فويل اي كلاين*25",
-      "categoryName": "الأكياس والتغليف",
-      "price": 1.22
-    },
-    {
-      "name": "كبايات كرتون ابيض",
-      "categoryName": "مستلزمات السفرة",
-      "price": 0.97
-    },
-    {
-      "name": "صحون كبير 9انش",
-      "categoryName": "مستلزمات السفرة",
-      "price": 0.92
-    },
-    {
-      "name": "صحون صعير",
-      "categoryName": "مستلزمات السفرة",
-      "price": 0.84
-    },
-    {
-      "name": "المينوم فويل اي كلين",
-      "categoryName": "مستلزمات السفرة",
-      "price": 1.22
-    },
-    {
-      "name": "قهوة كرتون*50",
-      "categoryName": "مستلزمات السفرة",
-      "price": 0.61
-    },
-    {
-      "name": "سياخ خشب",
-      "categoryName": "مستلزمات السفرة",
-      "price": 0.79
-    },
-    {
-      "name": "كبايات بلاستيك*100",
-      "categoryName": "مستلزمات السفرة",
-      "price": 0.84
-    },
-    {
-      "name": "اي كلين نفايات زهري",
-      "categoryName": "مستلزمات السفرة",
-      "price": 1.1
-    },
-    {
-      "name": "قهوة كرتون صغير",
-      "categoryName": "مستلزمات السفرة",
-      "price": 0.61
-    },
-    {
-      "name": "شوك بلاستيك",
-      "categoryName": "مستلزمات السفرة",
-      "price": 0.72
-    },
-    {
-      "name": "معالق بلاستيك",
-      "categoryName": "مستلزمات السفرة",
-      "price": 0.72
-    },
-    {
-      "name": "كبايات كرتون*50",
-      "categoryName": "مستلزمات السفرة",
-      "price": 1.22
-    },
-    {
-      "name": "شاليمون بلاستيك",
-      "categoryName": "مستلزمات السفرة",
-      "price": 0.79
-    },
-    {
-      "name": "عصا خشب",
-      "categoryName": "مستلزمات السفرة",
-      "price": 0.37
-    },
-    {
-      "name": "بلسم كوزمالين مرطب للشعر كيرلي500ما",
-      "categoryName": "العناية بالشعر",
-      "price": 3.3
-    },
-    {
-      "name": "الترا دو لكل انوا الشعر400مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.3
-    },
-    {
-      "name": "الترا دو للشعر الجاف400مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.3
-    },
-    {
-      "name": "بلسم الفيف لحماية اللون 200مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.97
-    },
-    {
-      "name": "الترا دو للشعر التالف400مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.3
-    },
-    {
-      "name": "بلسم الفيف مقام للتكسر200مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.97
-    },
-    {
-      "name": "شامبو كلير600ملل",
-      "categoryName": "العناية بالشعر",
-      "price": 4.22
-    },
-    {
-      "name": "غالون شامبو داني",
-      "categoryName": "العناية بالشعر",
-      "price": 4.4
-    },
-    {
-      "name": "بلسم حجاب سوفت وايف400مل",
-      "categoryName": "العناية بالشعر",
-      "price": 2.32
-    },
-    {
-      "name": "شامبو هيد ان شولدرز بالفحم1000مل",
-      "categoryName": "العناية بالشعر",
-      "price": 8.42
-    },
-    {
-      "name": "ماسك الترا دو ترطيب منعش390مل",
-      "categoryName": "العناية بالشعر",
-      "price": 6.34
-    },
-    {
-      "name": "ماسك الترا دو ترطيب 3في1 باصبار390مل",
-      "categoryName": "العناية بالشعر",
-      "price": 6.34
-    },
-    {
-      "name": "يلسم مرمم الفيف ابيض200مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.97
-    },
-    {
-      "name": "ماسك الترا دو للشعر الطويل340مل",
-      "categoryName": "العناية بالشعر",
-      "price": 5.5
-    },
-    {
-      "name": "شامبو الفيف فائق اللمعان600مل",
-      "categoryName": "العناية بالشعر",
-      "price": 4.89
-    },
-    {
-      "name": "بلسم مرمم للشعر التالف200مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.97
-    },
-    {
-      "name": "صانسيلك600مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.04
-    },
-    {
-      "name": "بلسم كوزمالين 500مل",
-      "categoryName": "العناية بالشعر",
-      "price": 2.99
-    },
-    {
-      "name": "بلسم الفيف لاعادة الترطيب200مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.97
-    },
-    {
-      "name": "شامبو الفيف مشكل 400مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.79
-    },
-    {
-      "name": "بلسم الترا دو لفروة الراس الدهنية200مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.59
-    },
-    {
-      "name": "كوزمالين شامبو الشعر كيرلي500مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.14
-    },
-    {
-      "name": "شامبو الفيف لحماية اللون600مل",
-      "categoryName": "العناية بالشعر",
-      "price": 4.89
-    },
-    {
-      "name": "بلسم الفيف مثبت اللمعان200مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.97
-    },
-    {
-      "name": "بلسم الترا دو للشعر الشديد الجفاف200مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.59
-    },
-    {
-      "name": "شامبو داني غالون4ك",
-      "categoryName": "العناية بالشعر",
-      "price": 4.4
-    },
-    {
-      "name": "فلتيكا زيت للشعر500مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.67
-    },
-    {
-      "name": "شامبو هيد اند شولدرز بالنعناع1000غ",
-      "categoryName": "العناية بالشعر",
-      "price": 8.56
-    },
-    {
-      "name": "اليغانس شامبو750مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.04
-    },
-    {
-      "name": "هيد اند شولدرزالفحم350مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.67
-    },
-    {
-      "name": "panten daily care 1L",
-      "categoryName": "العناية بالشعر",
-      "price": 7.57
-    },
-    {
-      "name": "ماسك مرطب كوزمالين الشعر كيرلي450مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.67
-    },
-    {
-      "name": "هند اند شولدرز لوز350مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.67
-    },
-    {
-      "name": "شامبو جونسون300ملل",
-      "categoryName": "العناية بالشعر",
-      "price": 1.59
-    },
-    {
-      "name": "زيت فاتيكا للشعر 500مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.79
-    },
-    {
-      "name": "شامبو كلير 400ملل",
-      "categoryName": "العناية بالشعر",
-      "price": 2.57
-    },
-    {
-      "name": "بلسم الترا دو للشعر فاقد الترطيب200مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.59
-    },
-    {
-      "name": "شامبو الفيف مرطب 600مل موف",
-      "categoryName": "العناية بالشعر",
-      "price": 4.89
-    },
-    {
-      "name": "شامبو صانسيلك400مل",
-      "categoryName": "العناية بالشعر",
-      "price": 2.2
-    },
-    {
-      "name": "هيد اند شولدرز نعناع350مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.67
-    },
-    {
-      "name": "الفيف بديل زيت 300مل",
-      "categoryName": "العناية بالشعر",
-      "price": 4.89
-    },
-    {
-      "name": "شامبو نورا الشعر العادي1.7ل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.17
-    },
-    {
-      "name": "الترا دو للشعر الشديد الجفاف400مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.3
-    },
-    {
-      "name": "الترا دو 400مل ازهار اصفر",
-      "categoryName": "العناية بالشعر",
-      "price": 3.3
-    },
-    {
-      "name": "الفيف مرمم للشعر التالف ابيض600مل",
-      "categoryName": "العناية بالشعر",
-      "price": 4.89
-    },
-    {
-      "name": "هيد اند شولدرز مرطب 400مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.67
-    },
-    {
-      "name": "شامبو بانتين 400مل",
-      "categoryName": "العناية بالشعر",
-      "price": 4.02
-    },
-    {
-      "name": "بلسم مملس الفيف200مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.97
-    },
-    {
-      "name": "شامبو الفيف مغذي600مل",
-      "categoryName": "العناية بالشعر",
-      "price": 4.89
-    },
-    {
-      "name": "شامبو سوفت حجاب 400مل",
-      "categoryName": "العناية بالشعر",
-      "price": 2.44
-    },
-    {
-      "name": "ماسك الفيف مرمم300مل",
-      "categoryName": "العناية بالشعر",
-      "price": 5.99
-    },
-    {
-      "name": "شامبو كلير للرجال600مل",
-      "categoryName": "العناية بالشعر",
-      "price": 4.22
-    },
-    {
-      "name": "شامبو اليغانس مع ديدوران750مل",
-      "categoryName": "العناية بالشعر",
-      "price": 4.02
-    },
-    {
-      "name": "هيد اند شولدرز 500مل ازرق",
-      "categoryName": "العناية بالشعر",
-      "price": 4.64
-    },
-    {
-      "name": "بلسم بالكيراتين اليغانس750مل",
-      "categoryName": "العناية بالشعر",
-      "price": 2.44
-    },
-    {
-      "name": "ماسك الترا دو للشعر فاقد الترطيب340مل",
-      "categoryName": "العناية بالشعر",
-      "price": 5.5
-    },
-    {
-      "name": "بلسم السادا1.85ليتر",
-      "categoryName": "العناية بالشعر",
-      "price": 3.24
-    },
-    {
-      "name": "غالون بلسم داني 4ك",
-      "categoryName": "العناية بالشعر",
-      "price": 4.51
-    },
-    {
-      "name": "شامبو برت بلاس400مل",
-      "categoryName": "العناية بالشعر",
-      "price": 2.57
-    },
-    {
-      "name": "الترا دو 400مل للاطفال مشمش",
-      "categoryName": "العناية بالشعر",
-      "price": 3.3
-    },
-    {
-      "name": "ماسك الفيف منقذ300مل",
-      "categoryName": "العناية بالشعر",
-      "price": 5.99
-    },
-    {
-      "name": "شامبو جونسون 500مل",
-      "categoryName": "العناية بالشعر",
-      "price": 2.44
-    },
-    {
-      "name": "شامبو و غسول السادا للاطفال400مل",
-      "categoryName": "العناية بالشعر",
-      "price": 2.1
-    },
-    {
-      "name": "شامبو كلير للرجال400مل",
-      "categoryName": "العناية بالشعر",
-      "price": 2.57
-    },
-    {
-      "name": "شامبو نورا للشعر الجاف1.7ل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.17
-    },
-    {
-      "name": "الترا دو للشعر فاقد الترطيب400مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.3
-    },
-    {
-      "name": "شامبو جونسون750مل",
-      "categoryName": "العناية بالشعر",
-      "price": 2.87
-    },
-    {
-      "name": "الترا دو 4000مل لفروة الراس الدهنية",
-      "categoryName": "العناية بالشعر",
-      "price": 3.3
-    },
-    {
-      "name": "شامبو شالنج السادا 3.785ليتر",
-      "categoryName": "العناية بالشعر",
-      "price": 3.42
-    },
-    {
-      "name": "بلسم الفيف مغذي200مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.97
-    },
-    {
-      "name": "شامبو كوزمالين 500مل",
-      "categoryName": "العناية بالشعر",
-      "price": 2.81
-    },
-    {
-      "name": "دابر املا زيت شعر200مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.04
-    },
-    {
-      "name": "جل السادا بروفشةنال100مل",
-      "categoryName": "العناية بالشعر",
-      "price": 0.84
-    },
-    {
-      "name": "جل بروفشونال السادا250مل",
-      "categoryName": "العناية بالشعر",
-      "price": 1.47
-    },
-    {
-      "name": "هيد اند شولدرز انسيابي350مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.67
-    },
-    {
-      "name": "الترا دو للشعر الطويل 400مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.3
-    },
-    {
-      "name": "شامبو نورا الشعر التالف 1.7",
-      "categoryName": "العناية بالشعر",
-      "price": 3.17
-    },
-    {
-      "name": "شامبو صانسيلك 600مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.04
-    },
-    {
-      "name": "بلسم الترا دو لكل انواع الشعر2007",
-      "categoryName": "العناية بالشعر",
-      "price": 3.59
-    },
-    {
-      "name": "اليغانس واكس للشعر 140غ",
-      "categoryName": "العناية بالشعر",
-      "price": 1.47
-    },
-    {
-      "name": "بلسم الترا دو للشعر الطويل200مل",
-      "categoryName": "العناية بالشعر",
-      "price": 3.59
-    },
-    {
-      "name": "شامبو الفيف مرمم600مل",
-      "categoryName": "العناية بالشعر",
-      "price": 4.89
-    },
-    {
-      "name": "شاور جل لوكس500مل",
-      "categoryName": "الصابون والاستحمام",
-      "price": 2.02
-    },
-    {
-      "name": "ليف حمام ماجيك",
-      "categoryName": "الصابون والاستحمام",
-      "price": 1.59
-    },
-    {
-      "name": "شاور جل ماليزيا 1000مل",
-      "categoryName": "الصابون والاستحمام",
-      "price": 2.07
-    },
-    {
-      "name": "شاور جل سوفت وايف650مل",
-      "categoryName": "الصابون والاستحمام",
-      "price": 2.32
-    },
-    {
-      "name": "صابون سائل السادا 440مل",
-      "categoryName": "الصابون والاستحمام",
-      "price": 1.1
-    },
-    {
-      "name": "صابون دوف 90غ",
-      "categoryName": "الصابون والاستحمام",
-      "price": 0.92
-    },
-    {
-      "name": "صابون سائل لايف بوي 200مل",
-      "categoryName": "الصابون والاستحمام",
-      "price": 1.82
-    },
-    {
-      "name": "صابون جونسون125غ",
-      "categoryName": "الصابون والاستحمام",
-      "price": 0.72
-    },
-    {
-      "name": "صابون سافانا 60غ",
-      "categoryName": "الصابون والاستحمام",
-      "price": 0.49
-    },
-    {
-      "name": "سائل لايف بوي 500مل",
-      "categoryName": "الصابون والاستحمام",
-      "price": 4.14
-    },
-    {
-      "name": "صابون جيف 80غ",
-      "categoryName": "الصابون والاستحمام",
-      "price": 0.37
-    },
-    {
-      "name": "صابون افا",
-      "categoryName": "الصابون والاستحمام",
-      "price": 0.42
-    },
-    {
-      "name": "صابون لايف بوي115غ",
-      "categoryName": "الصابون والاستحمام",
-      "price": 0.72
-    },
-    {
-      "name": "صابون مدار 125غ",
-      "categoryName": "الصابون والاستحمام",
-      "price": 0.61
-    },
-    {
-      "name": "سائل ديتول 210مل",
-      "categoryName": "الصابون والاستحمام",
-      "price": 1.77
-    },
-    {
-      "name": "سائل ديتول 400مل",
-      "categoryName": "الصابون والاستحمام",
-      "price": 2.44
-    },
-    {
-      "name": "صابون لوكس75غ",
-      "categoryName": "الصابون والاستحمام",
-      "price": 0.97
-    },
-    {
-      "name": "ديدوران رش نيفيا150مل",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 3.04
-    },
-    {
-      "name": "سبلاش بودي نسائي السادا 300مل",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 2.44
-    },
-    {
-      "name": "نيفيا ديودوران150ملل",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 2.81
-    },
-    {
-      "name": "ديدوران رجالي سبيد ستيك 50غ",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 3.17
-    },
-    {
-      "name": "كولونيا السادا 250مل",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 1.59
-    },
-    {
-      "name": "ليدي سبيد نسائي 65غ",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 4.02
-    },
-    {
-      "name": "ديدوران سبيد ستيك نسائي65غ",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 4.02
-    },
-    {
-      "name": "ديدوران السادا للرجال200مل",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 1.71
-    },
-    {
-      "name": "ديودوران ريكسونا رجالي200مل",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 2.75
-    },
-    {
-      "name": "رول ديدوران السادا 50مل",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 1.34
-    },
-    {
-      "name": "ديدوران اكس150ملل",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 2.07
-    },
-    {
-      "name": "نيفيا رول50مل",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 2.2
-    },
-    {
-      "name": "ديدوران سبيد ستيك85غ",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 4.4
-    },
-    {
-      "name": "ديدوران رش السادا 200مل",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 1.47
-    },
-    {
-      "name": "ديودوران ريكسونا نسائي200ملل",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 2.75
-    },
-    {
-      "name": "رول نيفيا 50مل",
-      "categoryName": "مزيلات العرق والعطور",
-      "price": 2.2
-    },
-    {
-      "name": "زيت جونسون لاطفال500مل",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 6.47
-    },
-    {
-      "name": "سبيرتو الايثائول500مل",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 1.52
-    },
-    {
-      "name": "لزيق جرح*20",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 0.49
-    },
-    {
-      "name": "كولونيا للاطفال300مل",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 1.71
-    },
-    {
-      "name": "قطن اذن مدور *200",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 0.72
-    },
-    {
-      "name": "كليب كريم لليدين 62غ",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 2.69
-    },
-    {
-      "name": "مقص اظافر كبير0818تريم",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 0.42
-    },
-    {
-      "name": "كفوف طبية",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 3.97
-    },
-    {
-      "name": "النور ليف كف صغير",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 0.79
-    },
-    {
-      "name": "سوفت مزيل للشعر",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 0.49
-    },
-    {
-      "name": "بودر الزهرة تنك",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 1.39
-    },
-    {
-      "name": "قطن اذن خشب صغير",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 0.12
-    },
-    {
-      "name": "سبيرتو لاليثانول250مل",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 1.04
-    },
-    {
-      "name": "مزيل اطلا اظافر200مل",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 0.97
-    },
-    {
-      "name": "مقص اظافر 602 صغير",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 0.29
-    },
-    {
-      "name": "فازلين جيلي معطر السادا 100مل",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 1.1
-    },
-    {
-      "name": "قطن كلينيك مدور*100",
-      "categoryName": "العناية الشخصية والصحية",
-      "price": 1.16
-    },
-    {
-      "name": "كولجيت ماكس فريش100مل ازرق",
-      "categoryName": "العناية بالفم والأسنان",
-      "price": 2.07
-    },
-    {
-      "name": "كولجيت 125مل ازرق",
-      "categoryName": "العناية بالفم والأسنان",
-      "price": 1.39
-    },
-    {
-      "name": "كولجيت فريش ماكس 100مل اخضر",
-      "categoryName": "العناية بالفم والأسنان",
-      "price": 2.07
-    },
-    {
-      "name": "كولجيت ماكس فريش 75مل",
-      "categoryName": "العناية بالفم والأسنان",
-      "price": 2.07
-    },
-    {
-      "name": "كولجيت125ملتريبل اكشن",
-      "categoryName": "العناية بالفم والأسنان",
-      "price": 1.39
-    },
-    {
-      "name": "فرشاة اسنان اورال ب اشكال",
-      "categoryName": "العناية بالفم والأسنان",
-      "price": 0.92
-    },
-    {
-      "name": "فرشاة اسنان غورول",
-      "categoryName": "العناية بالفم والأسنان",
-      "price": 0.42
-    },
-    {
-      "name": "كولجيت ماكس فريش 100مل احمر",
-      "categoryName": "العناية بالفم والأسنان",
-      "price": 2.07
-    },
-    {
-      "name": "معجون سجنال50مل",
-      "categoryName": "العناية بالفم والأسنان",
-      "price": 0.97
-    },
-    {
-      "name": "كوردون اسنان",
-      "categoryName": "العناية بالفم والأسنان",
-      "price": 0.55
-    },
-    {
-      "name": "اولويز ماكسي 8قطع",
-      "categoryName": "الفوط الصحية",
-      "price": 1.22
-    },
-    {
-      "name": "اولويز*16",
-      "categoryName": "الفوط الصحية",
-      "price": 2.14
-    },
-    {
-      "name": "فريش داي طويل*72",
-      "categoryName": "الفوط الصحية",
-      "price": 4.52
-    },
-    {
-      "name": "اولويز*16 (2)",
-      "categoryName": "الفوط الصحية",
-      "price": 1.94
-    },
-    {
-      "name": "ريلاكس كبير*20",
-      "categoryName": "الفوط الصحية",
-      "price": 2.57
-    },
-    {
-      "name": "برايفت عادي *10",
-      "categoryName": "الفوط الصحية",
-      "price": 1.82
-    },
-    {
-      "name": "برايفت ليلي 8قطع",
-      "categoryName": "الفوط الصحية",
-      "price": 1.47
-    },
-    {
-      "name": "برايفت ماكسي مربع سوبر 9",
-      "categoryName": "الفوط الصحية",
-      "price": 1.27
-    },
-    {
-      "name": "برايفت نايت16+8",
-      "categoryName": "الفوط الصحية",
-      "price": 2.57
-    },
-    {
-      "name": "برايفت ماكسي ليلي9-10",
-      "categoryName": "الفوط الصحية",
-      "price": 1.59
-    },
-    {
-      "name": "برايفت سانتيا سوبر 20+10",
-      "categoryName": "الفوط الصحية",
-      "price": 2.57
-    },
-    {
-      "name": "فريش داي نورمال*72",
-      "categoryName": "الفوط الصحية",
-      "price": 3.79
-    },
-    {
-      "name": "لولي حفاضات",
-      "categoryName": "حفاضات الأطفال",
-      "price": 2.57
-    },
-    {
-      "name": "غيزمو حفاضات 4",
-      "categoryName": "حفاضات الأطفال",
-      "price": 3.06
-    },
-    {
-      "name": "حفاضات وي وي",
-      "categoryName": "حفاضات الأطفال",
-      "price": 7.94
-    },
-    {
-      "name": "حفاضات جذمو",
-      "categoryName": "حفاضات الأطفال",
-      "price": 3.04
-    },
-    {
-      "name": "حفاضات لولو",
-      "categoryName": "حفاضات الأطفال",
-      "price": 4.46
-    },
-    {
-      "name": "حفاضات وي وي (2)",
-      "categoryName": "حفاضات الأطفال",
-      "price": 7.94
-    },
-    {
-      "name": "حفاضات لولو (2)",
-      "categoryName": "حفاضات الأطفال",
-      "price": 4.57
-    },
-    {
-      "name": "حفاضات بامبرز للاطفال",
-      "categoryName": "حفاضات الأطفال",
-      "price": 8.31
-    },
-    {
-      "name": "جيلات شفر*20شفرة",
-      "categoryName": "الحلاقة",
-      "price": 0.42
-    },
-    {
-      "name": "ستارك شفر*5",
-      "categoryName": "الحلاقة",
-      "price": 6.71
-    },
-    {
-      "name": "استور عادي كيس *5 شفر",
-      "categoryName": "الحلاقة",
-      "price": 1.59
-    },
-    {
-      "name": "قداحة شليمون 168",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 0.29
-    },
-    {
-      "name": "ملبورو كرتون قديم",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 2.93
-    },
-    {
-      "name": "قداحة شليمون164/142/168",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 0.29
-    },
-    {
-      "name": "ملبورو قديم كرتون",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 2.92
-    },
-    {
-      "name": "ماستر طويل",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.05
-    },
-    {
-      "name": "كنت ازرق و فضي",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.96
-    },
-    {
-      "name": "سيدرز طويل",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.05
-    },
-    {
-      "name": "معسل الاسطورة تفاحتين50غ",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.47
-    },
-    {
-      "name": "دفيدوف قديم",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 3.04
-    },
-    {
-      "name": "دافيداوف غولد كرتون",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 2.81
-    },
-    {
-      "name": "قداحة شليمون 220",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 0.42
-    },
-    {
-      "name": "ماستر كرتون",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 0.93
-    },
-    {
-      "name": "ميغو كرتون",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 0.86
-    },
-    {
-      "name": "معسل نخلة تفاحتين",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 2.63
-    },
-    {
-      "name": "ونشسترازرق كرتون",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.47
-    },
-    {
-      "name": "معسل تفاحتين الفاخر",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.47
-    },
-    {
-      "name": "malboro red wara2",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 2.44
-    },
-    {
-      "name": "ماستر كرتون رفيع",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 0.92
-    },
-    {
-      "name": "قداحة شليمون",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 0.31
-    },
-    {
-      "name": "فايب ميبار اكسترا طعمات",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 13.2
-    },
-    {
-      "name": "ملبورو كرتون جديد",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.77
-    },
-    {
-      "name": "دافيدوف مطار",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 3.04
-    },
-    {
-      "name": "وانستون احمر",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 2.03
-    },
-    {
-      "name": "سيدرز رفيع فضي",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.05
-    },
-    {
-      "name": "معسل مازايا حامض ونعنع",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.34
-    },
-    {
-      "name": "ملبورو ازرق رفيع",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.96
-    },
-    {
-      "name": "ميغو طويل",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 0.86
-    },
-    {
-      "name": "1970 كرتون",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 0.79
-    },
-    {
-      "name": "بيبلوس",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 0.68
-    },
-    {
-      "name": "سيدرز كرتون جلطة",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.05
-    },
-    {
-      "name": "سيدرز ازرق قديم",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 0.98
-    },
-    {
-      "name": "دافيدوف فضي",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.96
-    },
-    {
-      "name": "ملبورو كريفت جديد",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.78
-    },
-    {
-      "name": "سيديرس رفيع ازرق",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.05
-    },
-    {
-      "name": "ونستون كومباكت ازرق",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.96
-    },
-    {
-      "name": "قداحة شيلمون",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 0.92
-    },
-    {
-      "name": "سيديرس ازرق كرتون",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.05
-    },
-    {
-      "name": "غلواز كرتون",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.16
-    },
-    {
-      "name": "غاز قداحة 60مل",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 0.72
-    },
-    {
-      "name": "وينستون ازرق لايت",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 2.03
-    },
-    {
-      "name": "ملبورو كومبارك",
-      "categoryName": "الدخان والمعسل ولوازمه",
-      "price": 1.34
-    },
-    {
-      "name": "فحم كوكو افانا",
-      "categoryName": "الفحم ولوازم النرجيلة",
-      "price": 4.27
-    },
-    {
-      "name": "كوكو افانا جامبو كيلو",
-      "categoryName": "الفحم ولوازم النرجيلة",
-      "price": 3.54
-    },
-    {
-      "name": "فحم كوكو افانا اي بي",
-      "categoryName": "الفحم ولوازم النرجيلة",
-      "price": 2.99
-    },
-    {
-      "name": "فحم كوكو افانا نص كيلو",
-      "categoryName": "الفحم ولوازم النرجيلة",
-      "price": 1.82
-    },
-    {
-      "name": "كوكو افانا غولد400غ",
-      "categoryName": "الفحم ولوازم النرجيلة",
-      "price": 1.71
-    },
-    {
-      "name": "برلا المنيوم نرجيلة 80 قطعة",
-      "categoryName": "الفحم ولوازم النرجيلة",
-      "price": 1.16
-    },
-    {
-      "name": "سحبة مصاري بيغ40",
-      "categoryName": "الألعاب",
-      "price": 0.24
-    },
-    {
-      "name": "جيلي بانس ملون صيني مشكل",
-      "categoryName": "الألعاب",
-      "price": 0.12
-    },
-    {
-      "name": "سلايم بون بلاستيك",
-      "categoryName": "الألعاب",
-      "price": 7.94
-    },
-    {
-      "name": "سلايم زبدة",
-      "categoryName": "الألعاب",
-      "price": 5.24
-    },
-    {
-      "name": "ساعة ستيتش",
-      "categoryName": "الألعاب",
-      "price": 1.34
-    },
-    {
-      "name": "سلايم دو بلاي ميكس*3",
-      "categoryName": "الألعاب",
-      "price": 4.4
-    },
-    {
-      "name": "سلايم سكاتش",
-      "categoryName": "الألعاب",
-      "price": 1.47
-    },
-    {
-      "name": "طابة صغيرة فوار رغوة ملونة",
-      "categoryName": "الألعاب",
-      "price": 3.04
-    },
-    {
-      "name": "سلايم دب",
-      "categoryName": "الألعاب",
-      "price": 0.72
-    },
-    {
-      "name": "سلايم جبنة",
-      "categoryName": "الألعاب",
-      "price": 5.24
-    },
-    {
-      "name": "ذبدة سلايم كبير",
-      "categoryName": "الألعاب",
-      "price": 7.7
-    },
-    {
-      "name": "سلايم لابوبو",
-      "categoryName": "الألعاب",
-      "price": 1.1
-    },
-    {
-      "name": "اخطبوط سلايم",
-      "categoryName": "الألعاب",
-      "price": 4.89
-    },
-    {
-      "name": "هاغي واغي رصور ضو*12",
-      "categoryName": "الألعاب",
-      "price": 1.47
-    },
-    {
-      "name": "سلايم طابة شبك كبير",
-      "categoryName": "الألعاب",
-      "price": 0.97
-    },
-    {
-      "name": "سلايم كوب سوبر سوليد",
-      "categoryName": "الألعاب",
-      "price": 6.72
-    },
-    {
-      "name": "سحبة مونديال كرتون",
-      "categoryName": "الألعاب",
-      "price": 0.37
-    },
-    {
-      "name": "سحبة مونديال كرتون ضو",
-      "categoryName": "الألعاب",
-      "price": 0.61
-    },
-    {
-      "name": "سحبة كرتون كبيرة",
-      "categoryName": "الألعاب",
-      "price": 0.37
-    },
-    {
-      "name": "سحبة كمال تويز",
-      "categoryName": "الألعاب",
-      "price": 1.22
-    },
-    {
-      "name": "سحبة سوسيت بلاستيك",
-      "categoryName": "الألعاب",
-      "price": 0.84
-    },
-    {
-      "name": "مبراة رنا*72",
-      "categoryName": "القرطاسية",
-      "price": 0.12
-    },
-    {
-      "name": "ورق شدي 2001اوك",
-      "categoryName": "القرطاسية",
-      "price": 0.37
-    },
-    {
-      "name": "ورق كلاسور*100",
-      "categoryName": "القرطاسية",
-      "price": 0.61
-    },
-    {
-      "name": "قلم حبر كلارا فروستي",
-      "categoryName": "القرطاسية",
-      "price": 0.12
-    },
-    {
-      "name": "مسطرة 20",
-      "categoryName": "القرطاسية",
-      "price": 0.37
-    },
-    {
-      "name": "دفتر 50ورقة",
-      "categoryName": "القرطاسية",
-      "price": 0.24
-    },
-    {
-      "name": "هندسة ماب",
-      "categoryName": "القرطاسية",
-      "price": 1.04
-    },
-    {
-      "name": "رصاص غرافيتي",
-      "categoryName": "القرطاسية",
-      "price": 0.92
-    },
-    {
-      "name": "ورق كلاسور48ورقة",
-      "categoryName": "القرطاسية",
-      "price": 0.61
-    },
-    {
-      "name": "هندسنة الخريطة",
-      "categoryName": "القرطاسية",
-      "price": 0.55
-    },
-    {
-      "name": "مابد هندسة مفتوحة",
-      "categoryName": "القرطاسية",
-      "price": 2.87
-    },
-    {
-      "name": "الفا كوركتر",
-      "categoryName": "القرطاسية",
-      "price": 0.42
-    },
-    {
-      "name": "AAAبطارية*4",
-      "categoryName": "البطاريات واللوازم الكهربائية",
-      "price": 0.49
-    },
-    {
-      "name": "بيض",
-      "categoryName": "البيض",
-      "price": 3.17
-    },
-    {
-      "name": "شمع22شمعة",
-      "categoryName": "متفرقات منزلية",
-      "price": 3.17
+      "name": "Mango Qashtouta",
+      "nameAr": "قشطوطة مانجو",
+      "categoryName": "Qashtouta",
+      "price": 6
     }
   ]
 }
