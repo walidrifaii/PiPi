@@ -519,6 +519,22 @@ export class MerchantCatalogService {
     return this.fetchCategoriesPaged(merchantId, page, limit);
   }
 
+  async getCategory(merchantId: string, categoryId: string) {
+    await this.assertMerchantExists(merchantId);
+    const category = await this.prisma.merchantCategory.findFirst({
+      where: { id: categoryId, merchantId },
+      include: {
+        _count: {
+          select: { products: true },
+        },
+      },
+    });
+    if (!category) {
+      throw new NotFoundException('Category not found');
+    }
+    return category;
+  }
+
   private async fetchCategoriesPaged(
     merchantId: string,
     page: number,

@@ -60,6 +60,16 @@ export class MerchantCatalogController {
     return this.catalog.listCategories(merchantId, page, limit);
   }
 
+  @ApiOperation({ summary: 'Get one category for your store (JWT merchant id)' })
+  @ApiParam({ name: 'categoryId', type: String })
+  @Get('categories/:categoryId')
+  getCategory(
+    @EffectiveMerchantId() merchantId: string,
+    @Param('categoryId') categoryId: string,
+  ) {
+    return this.catalog.getCategory(merchantId, categoryId);
+  }
+
   @ApiOperation({ summary: 'Create category' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
