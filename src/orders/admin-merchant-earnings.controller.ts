@@ -8,6 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { SuperAdminGuard } from '../auth/super-admin.guard';
+import { ListAdminAllMerchantEarningsQueryDto } from './dto/list-admin-all-merchant-earnings-query.dto';
 import { MerchantEarningsQueryDto } from './dto/merchant-earnings-query.dto';
 import { OrdersService } from './orders.service';
 
@@ -17,6 +18,16 @@ import { OrdersService } from './orders.service';
 @Controller('admin/merchants')
 export class AdminMerchantEarningsController {
   constructor(private readonly ordersService: OrdersService) {}
+
+  @ApiOperation({
+    summary: 'List merchant payout totals (all stores)',
+    description:
+      'Simple paginated table: gross food, platform fee, merchant earnings, paid and unpaid amounts per store. No orders or line items.',
+  })
+  @Get('earnings')
+  listAllMerchantEarnings(@Query() query: ListAdminAllMerchantEarningsQueryDto) {
+    return this.ordersService.listAllMerchantEarningsForAdmin(query);
+  }
 
   @ApiOperation({
     summary:

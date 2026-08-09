@@ -22,13 +22,17 @@ import { ListAdminOrderQueueQueryDto } from './dto/list-admin-order-queue-query.
 import { ListMerchantOrdersHistoryQueryDto } from './dto/list-merchant-orders-history-query.dto';
 import { ListMerchantOrdersQueryDto } from './dto/list-merchant-orders-query.dto';
 import { MerchantEarningsQueryDto } from './dto/merchant-earnings-query.dto';
+import { ListAdminAllMerchantEarningsQueryDto } from './dto/list-admin-all-merchant-earnings-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { UpdateAdminOrderItemsDto } from './dto/update-admin-order-items.dto';
 import { mapOrderDetail, mapOrderSummary, findSnapshotItem } from './order.mapper';
 import { resolveProductDisplayImage } from '../common/product-display-image';
 import { PlatformSettingsService } from '../platform-settings/platform-settings.service';
 import { EarningsSettlementsService } from './earnings-settlements.service';
-import { parseSettlementOrderIds } from './earnings-settlement.constants';
+import {
+  EARNINGS_SETTLEMENT_STATUS_PAID,
+  parseSettlementOrderIds,
+} from './earnings-settlement.constants';
 import {
   canMerchantTransition,
   canSuperAdminTransition,
@@ -1727,6 +1731,202 @@ export class OrdersService {
         paidOrderIds,
         { forAdmin: true },
       ),
+    };
+  }
+
+  async listAllMerchantEarningsForAdmin(
+    query: ListAdminAllMerchantEarningsQueryDto,
+  ) {
+    const periodQuery: MerchantEarningsQueryDto = {
+      from: query.from,
+      to: query.to,
+      last15Days: query.last15Days,
+    };
+    const { from, to } = this.resolveMerchantEarningsPeriod(periodQuery);
+    const { page: p, limit: l } = this.normalizePagination(
+      query.page ?? 1,
+      query.limit ?? 20,
+    );
+    const payoutFilter = query.payoutStatus ?? 'ALL';
+
+    const merchantWhere: Prisma.MerchantWhereInput = {};
+    const search = query.search?.trim();
+    if (search) {
+      merchantWhere.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { nameAr: { contains: search, mode: 'insensitive' } },
+        { phone: { contains: search } },
+        { email: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    const [merchants, defaultSharePercent] = await Promise.all([
+      this.prisma.merchant.findMany({
+        where: merchantWhere,
+        select: {
+          id: true,
+          name: true,
+          phone: true,
+          foodSharePercent: true,
+        },
+        orderBy: [{ name: 'asc' }],
+      }),
+      this.platformSettings.getMerchantFoodSharePercent(),
+    ]);
+
+    const merchantIds = merchants.map((m) => m.id);
+    if (merchantIds.length === 0) {
+      return {
+        period: {
+          from: from.toISOString(),
+          to: to.toISOString(),
+        },
+        merchants: [],
+        pagination: {
+          page: p,
+          limit: l,
+          total: 0,
+          totalPages: 1,
+        },
+      };
+    }
+
+    const earningsSelect = {
+      id: true,
+      merchantId: true,
+      itemsSnapshot: true,
+      subtotal: true,
+    } satisfies Prisma.OrderSelect;
+
+    const [orders, settlements] = await Promise.all([
+      this.prisma.order.findMany({
+        where: {
+          merchantId: { in: merchantIds },
+          status: 'DELIVERED',
+          createdAt: { gte: from, lte: to },
+        },
+        select: earningsSelect,
+      }),
+      this.prisma.earningsSettlement.findMany({
+        where: {
+          participantType: 'MERCHANT',
+          merchantId: { in: merchantIds },
+          status: EARNINGS_SETTLEMENT_STATUS_PAID,
+        },
+        select: { merchantId: true, orderIds: true },
+      }),
+    ]);
+
+    const paidOrderIdsByMerchant = new Map<string, Set<string>>();
+    for (const settlement of settlements) {
+      if (!settlement.merchantId) {
+        continue;
+      }
+      const existing =
+        paidOrderIdsByMerchant.get(settlement.merchantId) ?? new Set<string>();
+      for (const orderId of parseSettlementOrderIds(settlement.orderIds)) {
+        existing.add(orderId);
+      }
+      paidOrderIdsByMerchant.set(settlement.merchantId, existing);
+    }
+
+    const ordersByMerchant = new Map<string, typeof orders>();
+    for (const order of orders) {
+      const list = ordersByMerchant.get(order.merchantId) ?? [];
+      list.push(order);
+      ordersByMerchant.set(order.merchantId, list);
+    }
+
+    const allRows = merchants.map((merchant) => {
+      const sharePercent =
+        merchant.foodSharePercent != null
+          ? Number(merchant.foodSharePercent)
+          : defaultSharePercent;
+      const merchantOrders = ordersByMerchant.get(merchant.id) ?? [];
+      const paidOrderIds =
+        paidOrderIdsByMerchant.get(merchant.id) ?? new Set<string>();
+
+      let grossFood = 0;
+      let netEarnings = 0;
+      let paidNetEarnings = 0;
+      let unpaidNetEarnings = 0;
+      let paidOrderCount = 0;
+      let unpaidOrderCount = 0;
+
+      for (const order of merchantOrders) {
+        const gross = this.merchantGrossFoodFromRow(order);
+        const net = computeMerchantEarningsFromFoodSubtotal(gross, sharePercent);
+        grossFood += gross;
+        netEarnings += net;
+        if (paidOrderIds.has(order.id)) {
+          paidNetEarnings += net;
+          paidOrderCount += 1;
+        } else {
+          unpaidNetEarnings += net;
+          unpaidOrderCount += 1;
+        }
+      }
+
+      const orderCount = merchantOrders.length;
+      const platformFee = grossFood - netEarnings;
+      let rowPayoutStatus: 'ALL_PAID' | 'HAS_UNPAID' | 'NO_ORDERS';
+      if (orderCount === 0) {
+        rowPayoutStatus = 'NO_ORDERS';
+      } else if (unpaidOrderCount === 0) {
+        rowPayoutStatus = 'ALL_PAID';
+      } else {
+        rowPayoutStatus = 'HAS_UNPAID';
+      }
+
+      return {
+        merchantId: merchant.id,
+        merchantName: merchant.name,
+        phone: merchant.phone,
+        grossFood: roundMoney(grossFood),
+        platformFee: roundMoney(platformFee),
+        merchantEarnings: roundMoney(netEarnings),
+        paid: roundMoney(paidNetEarnings),
+        unpaid: roundMoney(unpaidNetEarnings),
+        isFullyPaid: rowPayoutStatus === 'ALL_PAID',
+      };
+    });
+
+    const filteredRows = allRows.filter((row) => {
+      if (payoutFilter === 'ALL') {
+        return true;
+      }
+      if (payoutFilter === 'UNPAID') {
+        return row.unpaid > 0;
+      }
+      if (payoutFilter === 'PAID') {
+        return row.isFullyPaid && row.merchantEarnings > 0;
+      }
+      return row.merchantEarnings === 0 && row.paid === 0 && row.unpaid === 0;
+    });
+
+    filteredRows.sort((a, b) => {
+      if (b.unpaid !== a.unpaid) {
+        return b.unpaid - a.unpaid;
+      }
+      return a.merchantName.localeCompare(b.merchantName);
+    });
+
+    const total = filteredRows.length;
+    const skip = (p - 1) * l;
+    const merchantsPage = filteredRows.slice(skip, skip + l);
+
+    return {
+      period: {
+        from: from.toISOString(),
+        to: to.toISOString(),
+      },
+      merchants: merchantsPage,
+      pagination: {
+        page: p,
+        limit: l,
+        total,
+        totalPages: Math.max(1, Math.ceil(total / l)),
+      },
     };
   }
 
