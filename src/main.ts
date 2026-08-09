@@ -54,10 +54,10 @@ async function bootstrap() {
     .build();
 
   const fullSwaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
-  const legacySwaggerDocument = excludeVersionedSwaggerPaths(fullSwaggerDocument, [
-    '/v2',
-    '/v3',
-  ]);
+  const legacySwaggerDocument = excludeVersionedSwaggerPaths(
+    fullSwaggerDocument,
+    ['/v2', '/v3'],
+  );
   Object.assign(legacySwaggerDocument, { 'x-tagGroups': SWAGGER_X_TAG_GROUPS });
   SwaggerModule.setup('api', app, legacySwaggerDocument, {
     swaggerOptions: {
@@ -69,7 +69,7 @@ async function bootstrap() {
   const v3SwaggerConfig = new DocumentBuilder()
     .setTitle('Athar API v3')
     .setDescription(
-      'v3 API only — saved addresses (max 5), checkout requires addressId, inactive products hidden at checkout. All routes are under `/v3/...`.',
+      'v3 API only — saved addresses (max 5), checkout requires addressId, inactive products hidden at checkout, product options (sizes/extras) with per-line pricing. All routes are under `/v3/...`.',
     )
     .setVersion('3.0')
     .addBearerAuth()

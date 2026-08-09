@@ -22,6 +22,10 @@ export const SWAGGER_V3_TAG_GROUPS: Array<{ name: string; tags: string[] }> = [
     name: 'V3 · Customer',
     tags: ['Customer', 'V3 · Customer · Addresses', 'V3 · Customer · Checkout'],
   },
+  {
+    name: 'V3 · Product Options',
+    tags: ['V3 · Product Options', 'V3 · Product Options · Merchant'],
+  },
   { name: 'V3 · Delivery', tags: ['Delivery'] },
   { name: 'V3 · Shared', tags: ['Shared'] },
   { name: 'V3 · Coupons', tags: ['Coupons'] },
