@@ -18,7 +18,7 @@ export class CheckoutV3Controller {
     summary:
       'Place order for one merchant (v3). Requires addressId; lat/lng optional (resolved from saved address). Inactive products cannot be ordered.',
     description:
-      'Product options: send selectedChoiceIds on each line. Order the same product with different options as separate items (e.g. 2× Large in one item, 1× Small in another). Preview totals with POST /v3/product-options/quote.',
+      'Product options: send selectedChoiceIds on each line. Order the same product with different options as separate items (e.g. 2× Large in one item, 1× Small in another).',
   })
   @Post()
   create(
