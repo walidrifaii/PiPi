@@ -42,6 +42,8 @@ export class ProductOptionsV3Service {
     productId: string,
   ): Promise<ProductOptionsProductV3ResponseDto> {
     const product = await this.catalog.getProductForStorefront(productId, true);
+    const optionGroups = product.optionGroups;
+    const hasOptions = (optionGroups?.length ?? 0) > 0;
     return {
       productId: product.id,
       name: product.name,
@@ -49,7 +51,8 @@ export class ProductOptionsV3Service {
       price: product.price,
       discountPrice: product.discountPrice,
       effectivePrice: product.effectivePrice,
-      optionGroups: product.optionGroups ?? [],
+      hasOptions,
+      ...(hasOptions && optionGroups ? { optionGroups } : {}),
     };
   }
 
@@ -140,6 +143,7 @@ export class ProductOptionsV3Service {
     name: string;
     nameAr: string | null;
     price: number;
+    hasOptions: boolean;
     optionGroups: ProductOptionGroupView[];
   }> {
     const row = await this.prisma.product.findFirst({
@@ -150,29 +154,32 @@ export class ProductOptionsV3Service {
       throw new NotFoundException('Product not found');
     }
 
-    const optionGroups = row.optionGroups.map((g) => ({
-      id: g.id,
-      name: g.name,
-      nameAr: g.nameAr,
-      isRequired: g.isRequired,
-      minSelect: g.minSelect,
-      maxSelect: g.maxSelect,
-      sortOrder: g.sortOrder,
-      choices: g.choices.map((c) => ({
-        id: c.id,
-        name: c.name,
-        nameAr: c.nameAr,
-        priceModifier: Number(c.priceModifier),
-        sortOrder: c.sortOrder,
-        isActive: c.isActive,
-      })),
-    }));
+    const optionGroups = row.optionGroups
+      .map((g) => ({
+        id: g.id,
+        name: g.name,
+        nameAr: g.nameAr,
+        isRequired: g.isRequired,
+        minSelect: g.minSelect,
+        maxSelect: g.maxSelect,
+        sortOrder: g.sortOrder,
+        choices: g.choices.map((c) => ({
+          id: c.id,
+          name: c.name,
+          nameAr: c.nameAr,
+          priceModifier: Number(c.priceModifier),
+          sortOrder: c.sortOrder,
+          isActive: c.isActive,
+        })),
+      }))
+      .filter((g) => g.choices.length > 0);
 
     return {
       productId: row.id,
       name: row.name,
       nameAr: row.nameAr,
       price: Number(row.price),
+      hasOptions: optionGroups.length > 0,
       optionGroups,
     };
   }
@@ -185,12 +192,14 @@ export class ProductOptionsV3Service {
     const updated = await this.catalog.updateProduct(merchantId, productId, {
       optionGroups,
     });
+    const savedOptionGroups = updated.optionGroups ?? [];
     return {
       productId: updated.id,
       name: updated.name,
       nameAr: updated.nameAr,
       price: updated.price,
-      optionGroups: updated.optionGroups ?? [],
+      hasOptions: savedOptionGroups.length > 0,
+      optionGroups: savedOptionGroups,
     };
   }
 }

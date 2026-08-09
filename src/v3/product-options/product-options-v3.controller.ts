@@ -32,7 +32,7 @@ export class ProductOptionsStorefrontV3Controller {
   @ApiOperation({
     summary: 'Get product option groups (storefront)',
     description:
-      'Returns size/extras groups and choice price modifiers for one active product. Products without options return an empty optionGroups array.',
+      'Returns size/extras groups and choice price modifiers for one active product. hasOptions is false when the product has no options; optionGroups is omitted in that case.',
   })
   @ApiParam({ name: 'productId', format: 'uuid' })
   @ApiResponse({ status: 200, type: ProductOptionsProductV3ResponseDto })

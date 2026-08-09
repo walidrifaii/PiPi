@@ -220,6 +220,28 @@ export class MerchantCatalogService {
     }));
   }
 
+  /** Storefront list/card: expose hasOptions only, omit option payload. */
+  private toStorefrontProductListItem<
+    T extends { optionGroups: ProductOptionGroupView[]; hasOptions: boolean },
+  >(item: T): Omit<T, 'optionGroups'> {
+    const { optionGroups: _optionGroups, ...rest } = item;
+    return rest;
+  }
+
+  /** Storefront detail: include optionGroups only when hasOptions is true. */
+  private toStorefrontProductDetail<T extends Record<string, unknown>>(
+    item: T & { optionGroups: ProductOptionGroupView[]; hasOptions: boolean },
+  ): Omit<T, 'optionGroups' | 'hasOptions'> & {
+    hasOptions: boolean;
+    optionGroups?: ProductOptionGroupView[];
+  } {
+    const { optionGroups, hasOptions, ...rest } = item;
+    if (hasOptions) {
+      return { ...rest, hasOptions, optionGroups };
+    }
+    return { ...rest, hasOptions };
+  }
+
   private assertOptionGroupsValid(groups?: ProductOptionGroupDto[]): void {
     if (!groups?.length) {
       return;
@@ -289,8 +311,11 @@ export class MerchantCatalogService {
   ) {
     const price = Number(row.price);
     const optionGroups = row.optionGroups
-      ? this.mapOptionGroups(row.optionGroups, activeOnly)
+      ? this.mapOptionGroups(row.optionGroups, activeOnly).filter(
+          (g) => g.choices.length > 0,
+        )
       : [];
+    const hasOptions = optionGroups.length > 0;
 
     if (storefrontOfferPercent !== undefined) {
       const pricing = resolveStorefrontProductPricing(
@@ -304,6 +329,7 @@ export class MerchantCatalogService {
         hasDiscount: pricing.hasDiscount,
         effectivePrice: pricing.effectivePrice,
         merchantOfferPercent: pricing.merchantOfferPercent,
+        hasOptions,
         optionGroups,
       };
     }
@@ -313,6 +339,7 @@ export class MerchantCatalogService {
       price,
       discountPrice: null,
       ...this.discountPresentation(price, null),
+      hasOptions,
       optionGroups,
     };
   }
@@ -394,13 +421,13 @@ export class MerchantCatalogService {
           discountPrice: priced.discountPrice,
           hasDiscount: priced.hasDiscount,
           effectivePrice: priced.effectivePrice,
+          hasOptions: priced.hasOptions,
           category: p.category.name,
           categoryAr: p.category.nameAr,
           images: this.collectImageUrls(
             p.imageUrl,
             p.images.map((i) => i.url),
           ),
-          optionGroups: priced.optionGroups,
         },
         i18n,
       );
@@ -458,7 +485,7 @@ export class MerchantCatalogService {
     const priced = this.attachProductPricing(row, true, offerPercent);
     const merchant = row.category.merchant;
 
-    return {
+    return this.toStorefrontProductDetail({
       id: row.id,
       isActive: row.isActive,
       categoryId: row.categoryId,
@@ -472,6 +499,7 @@ export class MerchantCatalogService {
       hasDiscount: priced.hasDiscount,
       effectivePrice: priced.effectivePrice,
       merchantOfferPercent: offerPercent,
+      hasOptions: priced.hasOptions,
       optionGroups: priced.optionGroups,
       images: row.images,
       createdAt: row.createdAt,
@@ -495,7 +523,7 @@ export class MerchantCatalogService {
             }
           : null,
       },
-    };
+    });
   }
 
   /** Public storefront: guest or customer; store may be CLOSED but must exist and be active. */
@@ -694,13 +722,16 @@ export class MerchantCatalogService {
     const offerPercent = activeOptionsOnly
       ? await this.merchantOffers.getLiveOfferPercentForMerchant(merchantId)
       : undefined;
-    const items = rows.map((p) =>
-      this.attachProductPricing(
+    const items = rows.map((p) => {
+      const priced = this.attachProductPricing(
         p,
         activeOptionsOnly,
         activeOptionsOnly ? offerPercent : undefined,
-      ),
-    );
+      );
+      return activeOptionsOnly
+        ? this.toStorefrontProductListItem(priced)
+        : priced;
+    });
     return this.pagedResponse(items, total, pg.page, pg.limit);
   }
 
@@ -790,14 +821,19 @@ export class MerchantCatalogService {
     const offerPercent = activeOptionsOnly
       ? await this.merchantOffers.getLiveOfferPercentForMerchant(merchantId)
       : undefined;
-    const items = rows.map((p) => ({
-      ...this.attachProductPricing(
-        p,
-        activeOptionsOnly,
-        activeOptionsOnly ? offerPercent : undefined,
-      ),
-      category: p.category,
-    }));
+    const items = rows.map((p) => {
+      const priced = {
+        ...this.attachProductPricing(
+          p,
+          activeOptionsOnly,
+          activeOptionsOnly ? offerPercent : undefined,
+        ),
+        category: p.category,
+      };
+      return activeOptionsOnly
+        ? this.toStorefrontProductListItem(priced)
+        : priced;
+    });
     return this.pagedResponse(items, total, pg.page, pg.limit);
   }
 
@@ -915,7 +951,7 @@ export class MerchantCatalogService {
 
     const items = ordered.map((p) => {
       const offerPercent = offerByMerchant.get(p.category.merchant.id) ?? null;
-      return {
+      return this.toStorefrontProductListItem({
         ...this.attachProductPricing(p, true, offerPercent),
         category: {
           id: p.category.id,
@@ -927,7 +963,7 @@ export class MerchantCatalogService {
           name: p.category.merchant.name,
           nameAr: p.category.merchant.nameAr,
         },
-      };
+      });
     });
 
     return this.localizePagedProducts(
@@ -1013,19 +1049,21 @@ export class MerchantCatalogService {
       }),
     ]);
 
-    const items = rows.map((p) => ({
-      ...this.attachProductPricing(p, true),
-      category: {
-        id: p.category.id,
-        name: p.category.name,
-        nameAr: p.category.nameAr,
-      },
-      merchant: {
-        id: p.category.merchant.id,
-        name: p.category.merchant.name,
-        nameAr: p.category.merchant.nameAr,
-      },
-    }));
+    const items = rows.map((p) =>
+      this.toStorefrontProductListItem({
+        ...this.attachProductPricing(p, true),
+        category: {
+          id: p.category.id,
+          name: p.category.name,
+          nameAr: p.category.nameAr,
+        },
+        merchant: {
+          id: p.category.merchant.id,
+          name: p.category.merchant.name,
+          nameAr: p.category.merchant.nameAr,
+        },
+      }),
+    );
 
     return this.localizePagedProducts(
       this.pagedResponse(items, total, pg.page, pg.limit),
@@ -1087,10 +1125,12 @@ export class MerchantCatalogService {
 
     const offerPercent =
       await this.merchantOffers.getLiveOfferPercentForMerchant(merchantId);
-    const items = rows.map((p) => ({
-      ...this.attachProductPricing(p, true, offerPercent),
-      category: p.category,
-    }));
+    const items = rows.map((p) =>
+      this.toStorefrontProductListItem({
+        ...this.attachProductPricing(p, true, offerPercent),
+        category: p.category,
+      }),
+    );
 
     return this.localizePagedProducts(
       this.pagedResponse(items, total, pg.page, pg.limit),

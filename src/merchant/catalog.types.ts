@@ -14,8 +14,11 @@ export type UnifiedProduct = {
   hasDiscount: boolean;
   /** Price charged at checkout: offer price when on sale, otherwise `price` */
   effectivePrice: number;
+  /** True when the product has at least one option group with choices */
+  hasOptions: boolean;
   images: string[];
   category: string;
   categoryAr: string | null;
-  optionGroups: ProductOptionGroupView[];
+  /** Present on product detail responses when hasOptions is true */
+  optionGroups?: ProductOptionGroupView[];
 };

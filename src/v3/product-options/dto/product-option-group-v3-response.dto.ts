@@ -68,6 +68,15 @@ export class ProductOptionsProductV3ResponseDto {
   @ApiProperty({ example: 9 })
   effectivePrice!: number;
 
-  @ApiProperty({ type: [ProductOptionGroupV3ResponseDto] })
-  optionGroups!: ProductOptionGroupV3ResponseDto[];
+  @ApiProperty({
+    description: 'True when the product has configurable size/extras options.',
+    example: true,
+  })
+  hasOptions!: boolean;
+
+  @ApiPropertyOptional({
+    type: [ProductOptionGroupV3ResponseDto],
+    description: 'Included only when hasOptions is true.',
+  })
+  optionGroups?: ProductOptionGroupV3ResponseDto[];
 }
