@@ -25,6 +25,10 @@ import { AppVersionAdminController } from '../../app-version/app-version-admin.c
 import { AppVersionController } from '../../app-version/app-version.controller';
 import { CouponAdminController } from '../../coupon/coupon-admin.controller';
 import { CouponPublicController } from '../../coupon/coupon-public.controller';
+import { PickupAdminController } from '../../pickup/pickup-admin.controller';
+import { PickupController } from '../../pickup/pickup.controller';
+import { DriverPickupsController } from '../../pickup/driver-pickups.controller';
+import { UserPickupsController } from '../../pickup/user-pickups.controller';
 import { createV3Controller } from './create-v3-controller';
 
 export const UsersV3Controller = createV3Controller(UsersController, 'users');
@@ -122,4 +126,17 @@ export const AppVersionV3Controller = createV3Controller(
 export const AppVersionAdminV3Controller = createV3Controller(
   AppVersionAdminController,
   'admin/app-version',
+);
+export const PickupV3Controller = createV3Controller(PickupController, 'pickups');
+export const UserPickupsV3Controller = createV3Controller(
+  UserPickupsController,
+  'pickups/me',
+);
+export const DriverPickupsV3Controller = createV3Controller(
+  DriverPickupsController,
+  'drivers/me/pickups',
+);
+export const PickupAdminV3Controller = createV3Controller(
+  PickupAdminController,
+  'admin/pickups',
 );

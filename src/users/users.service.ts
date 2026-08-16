@@ -211,6 +211,7 @@ export class UsersService implements OnModuleInit {
         });
         await tx.order.deleteMany({ where: { userId } });
       }
+      await tx.pickupOrder.deleteMany({ where: { userId } });
       await tx.user.delete({ where: { id: userId } });
     });
   }

@@ -830,14 +830,16 @@ export class OrdersService {
     const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
     const where = this.buildSuperAdminOrdersWhere(query);
 
-    const rows = await this.prisma.order.findMany({
-      where,
-      include: orderInclude,
-      orderBy: { createdAt: 'desc' },
-      skip,
-      take: l,
-    });
-    const total = await this.prisma.order.count({ where });
+    const [rows, total] = await Promise.all([
+      this.prisma.order.findMany({
+        where,
+        include: orderInclude,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: l,
+      }),
+      this.prisma.order.count({ where }),
+    ]);
 
     return this.pagedResponse(
       rows.map((o) => this.mapAdminOrderRow(o as OrderWithRelations)),
@@ -1747,7 +1749,7 @@ export class OrdersService {
       query.page ?? 1,
       query.limit ?? 20,
     );
-    const payoutFilter = query.payoutStatus ?? 'ALL';
+    const payoutFilter = query.payoutStatus ?? 'UNPAID';
 
     const merchantWhere: Prisma.MerchantWhereInput = {};
     const search = query.search?.trim();
@@ -1892,16 +1894,15 @@ export class OrdersService {
     });
 
     const filteredRows = allRows.filter((row) => {
-      if (payoutFilter === 'ALL') {
-        return true;
-      }
-      if (payoutFilter === 'UNPAID') {
+      if (payoutFilter === 'UNPAID' || payoutFilter === 'ALL') {
         return row.unpaid > 0;
       }
       if (payoutFilter === 'PAID') {
         return row.isFullyPaid && row.merchantEarnings > 0;
       }
-      return row.merchantEarnings === 0 && row.paid === 0 && row.unpaid === 0;
+      const hasOrdersInPeriod =
+        row.merchantEarnings > 0 || row.paid > 0 || row.unpaid > 0;
+      return !hasOrdersInPeriod;
     });
 
     filteredRows.sort((a, b) => {

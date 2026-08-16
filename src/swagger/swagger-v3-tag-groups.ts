@@ -10,8 +10,8 @@ export const SWAGGER_V3_TAG_GROUPS: Array<{ name: string; tags: string[] }> = [
     tags: ['Super Admin · Delivery Fees'],
   },
   {
-    name: 'V3 · Super Admin — Notifications',
-    tags: ['Super Admin · Notifications'],
+    name: 'V3 · Super Admin — Pickup',
+    tags: ['Super Admin · Pickup'],
   },
   { name: 'V3 · Merchant', tags: ['Merchant'] },
   {
@@ -20,13 +20,18 @@ export const SWAGGER_V3_TAG_GROUPS: Array<{ name: string; tags: string[] }> = [
   },
   {
     name: 'V3 · Customer',
-    tags: ['Customer', 'V3 · Customer · Addresses', 'V3 · Customer · Checkout'],
+    tags: [
+      'Customer',
+      'V3 · Customer · Addresses',
+      'V3 · Customer · Checkout',
+      'V3 · Customer · Pickup',
+    ],
   },
   {
     name: 'V3 · Product Options',
     tags: ['V3 · Product Options', 'V3 · Product Options · Merchant'],
   },
-  { name: 'V3 · Delivery', tags: ['Delivery'] },
+  { name: 'V3 · Delivery', tags: ['Delivery', 'V3 · Delivery · Pickup'] },
   { name: 'V3 · Shared', tags: ['Shared'] },
   { name: 'V3 · Coupons', tags: ['Coupons'] },
 ];

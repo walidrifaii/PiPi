@@ -88,6 +88,10 @@ async function bootstrap() {
     },
   });
 
-  await app.listen(process.env.PORT ?? 3000);
+  const server = await app.listen(process.env.PORT ?? 3000);
+  // Keep idle sockets above typical nginx proxy timeouts so reused
+  // connections are not closed mid-request on production.
+  server.keepAliveTimeout = 65_000;
+  server.headersTimeout = 66_000;
 }
 void bootstrap();

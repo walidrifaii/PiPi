@@ -20,9 +20,9 @@ export class AdminMerchantEarningsController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @ApiOperation({
-    summary: 'List merchant payout totals (all stores)',
+    summary: 'List merchants pending payout (unpaid earnings only)',
     description:
-      'Simple paginated table: gross food, platform fee, merchant earnings, paid and unpaid amounts per store. No orders or line items.',
+      'Paginated table of vendors with unpaid merchant earnings in the period. Defaults to payoutStatus=UNPAID.',
   })
   @Get('earnings')
   listAllMerchantEarnings(@Query() query: ListAdminAllMerchantEarningsQueryDto) {

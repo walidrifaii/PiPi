@@ -57,6 +57,7 @@ model User {
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @updatedAt @map("updated_at")
   orders          Order[]
+  pickupOrders    PickupOrder[]
   addresses       UserAddress[]
   notifications   UserNotification[]
   couponUsages    CouponUsage[]
@@ -125,6 +126,8 @@ model UserAddress {
   updatedAt           DateTime @updatedAt @map("updated_at")
   user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   orders              Order[]
+  pickupFroms         PickupOrder[] @relation("PickupFromAddress")
+  pickupTos           PickupOrder[] @relation("PickupToAddress")
 
   @@index([userId])
   @@map("user_addresses")
@@ -144,6 +147,7 @@ model Driver {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
   orders       Order[]
+  pickupOrders PickupOrder[]
   earningsSettlements EarningsSettlement[]
 
   @@map("drivers")
@@ -418,6 +422,10 @@ model Order {
   @@index([status, driverId])
   @@index([addressId])
   @@index([couponId])
+  @@index([merchantId, createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([status, createdAt(sort: Desc)])
+  @@index([merchantId, status, createdAt(sort: Desc)])
   @@map("orders")
 }
 
@@ -558,4 +566,118 @@ model DeliveryFeeConfig {
 
   @@index([isActive, sortOrder])
   @@map("delivery_fee_configs")
+}
+
+/// Singleton pickup config (id = 1). NOW window, service fee, timezone.
+model PickupSetting {
+  id            Int      @id @default(1)
+  isEnabled     Boolean  @default(true) @map("is_enabled")
+  timezone      String   @default("Africa/Tripoli") @db.VarChar(64)
+  /// ASAP pickup ETA window in minutes (super admin).
+  nowMinMinutes Int      @default(35) @map("now_min_minutes")
+  nowMaxMinutes Int      @default(60) @map("now_max_minutes")
+  /// Flat platform service fee added on top of deliveryFee.
+  serviceFee    Decimal  @default(0) @map("service_fee") @db.Decimal(10, 2)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("pickup_settings")
+}
+
+/// Bookable scheduled windows. Weekday 1=Mon … 7=Sun, times in PickupSetting.timezone.
+model PickupScheduleSlot {
+  id         String   @id @default(uuid()) @db.Uuid
+  weekday    Int
+  startLocal String   @map("start_local") @db.VarChar(5)
+  endLocal   String   @map("end_local") @db.VarChar(5)
+  isActive   Boolean  @default(true) @map("is_active")
+  sortOrder  Int      @default(0) @map("sort_order")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([weekday, isActive])
+  @@map("pickup_schedule_slots")
+}
+
+/// Pickup-only delivery fee (separate from food delivery_fee_configs).
+model PickupDeliveryFeeConfig {
+  id              String   @id @default(uuid()) @db.Uuid
+  name            String?  @db.VarChar(100)
+  /// Minimum delivery fee (e.g. 100).
+  fixedFee        Decimal  @map("fixed_fee") @db.Decimal(12, 2)
+  includedKm      Decimal  @default(10) @map("included_km") @db.Decimal(8, 2)
+  kmUnit          Decimal  @default(1) @map("km_unit") @db.Decimal(8, 2)
+  feePerUnit      Decimal  @map("fee_per_unit") @db.Decimal(12, 2)
+  /// Maximum delivery fee (e.g. 500).
+  maxFee          Decimal  @map("max_fee") @db.Decimal(12, 2)
+  maxKm           Decimal  @default(30) @map("max_km") @db.Decimal(8, 2)
+  sampleBreakdown Json?    @map("sample_breakdown")
+  isActive        Boolean  @default(false) @map("is_active")
+  sortOrder       Int      @default(0) @map("sort_order")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive, sortOrder])
+  @@map("pickup_delivery_fee_configs")
+}
+
+/// Pickup-only blocked polygons. Independent from service_areas.
+model PickupBlockedZone {
+  id              String   @id @default(uuid()) @db.Uuid
+  name            String   @db.VarChar(255)
+  /// FROM = cannot collect; TO = cannot drop off; BOTH = neither.
+  appliesTo       String   @default("BOTH") @map("applies_to") @db.VarChar(10)
+  boundaryGeoJson Json     @map("boundary_geo_json")
+  isActive        Boolean  @default(true) @map("is_active")
+  reason          String?  @db.VarChar(255)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive, appliesTo])
+  @@map("pickup_blocked_zones")
+}
+
+/// Courier job: from address → to address. No merchant.
+model PickupOrder {
+  id              String    @id @default(uuid()) @db.Uuid
+  userId          String    @map("user_id") @db.Uuid
+  driverId        String?   @map("driver_id") @db.Uuid
+  /// NOW | SCHEDULED
+  method          String    @db.VarChar(20)
+  /// SCHEDULED | PENDING | DELIVERING | DISPATCHED | DELIVERED | CANCELLED
+  status          String    @db.VarChar(50)
+  description     String    @db.Text
+  declaredValue   Decimal   @map("declared_value") @db.Decimal(10, 2)
+  serviceFee      Decimal   @map("service_fee") @db.Decimal(10, 2)
+  deliveryFee     Decimal   @map("delivery_fee") @db.Decimal(10, 2)
+  total           Decimal   @db.Decimal(10, 2)
+  distanceKm      Decimal   @map("distance_km") @db.Decimal(8, 3)
+  pickupRef       String?   @map("pickup_ref") @db.VarChar(191)
+
+  fromAddressLine String    @map("from_address_line") @db.VarChar(500)
+  fromLatitude    Decimal   @map("from_latitude") @db.Decimal(10, 7)
+  fromLongitude   Decimal   @map("from_longitude") @db.Decimal(10, 7)
+  fromAddressId   String?   @map("from_address_id") @db.Uuid
+
+  toAddressLine   String    @map("to_address_line") @db.VarChar(500)
+  toLatitude      Decimal   @map("to_latitude") @db.Decimal(10, 7)
+  toLongitude     Decimal   @map("to_longitude") @db.Decimal(10, 7)
+  toAddressId     String?   @map("to_address_id") @db.Uuid
+
+  scheduledAt     DateTime? @map("scheduled_at")
+  etaMinMinutes   Int?      @map("eta_min_minutes")
+  etaMaxMinutes   Int?      @map("eta_max_minutes")
+  snapshot        Json?
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Restrict)
+  driver      Driver?      @relation(fields: [driverId], references: [id], onDelete: SetNull)
+  fromAddress UserAddress? @relation("PickupFromAddress", fields: [fromAddressId], references: [id], onDelete: SetNull)
+  toAddress   UserAddress? @relation("PickupToAddress", fields: [toAddressId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([driverId, status])
+  @@index([status, driverId])
+  @@index([status, scheduledAt])
+  @@map("pickup_orders")
 }

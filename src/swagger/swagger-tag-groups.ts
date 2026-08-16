@@ -10,10 +10,6 @@ export const SWAGGER_X_TAG_GROUPS: Array<{ name: string; tags: string[] }> = [
     name: '1 · Super Admin — Delivery Fees',
     tags: ['Super Admin · Delivery Fees'],
   },
-  {
-    name: '1 · Super Admin — Notifications',
-    tags: ['Super Admin · Notifications'],
-  },
   { name: '2 · Merchant (store owner)', tags: ['Merchant'] },
   {
     name: '3 · Storefront (browse)',

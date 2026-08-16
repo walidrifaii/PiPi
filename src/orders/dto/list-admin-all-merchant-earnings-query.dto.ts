@@ -67,9 +67,9 @@ export class ListAdminAllMerchantEarningsQueryDto {
 
   @ApiPropertyOptional({
     enum: ADMIN_MERCHANT_EARNINGS_PAYOUT_FILTERS,
-    default: 'ALL',
+    default: 'UNPAID',
     description:
-      'Filter merchants by payout state in the selected period. UNPAID = has unpaid merchant earnings; PAID = all delivered orders in period are settled; NO_ORDERS = no delivered orders in period.',
+      'Defaults to UNPAID — only merchants that still need payout. Use PAID or NO_ORDERS for other views.',
   })
   @IsOptional()
   @IsIn([...ADMIN_MERCHANT_EARNINGS_PAYOUT_FILTERS])
