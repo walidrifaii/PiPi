@@ -36,6 +36,7 @@
     "seed:merchant-2c3820e7-catalog": "node scripts/seed-merchant-2c3820e7-catalog.mjs",
     "seed:merchant-6afdd023-catalog": "node scripts/seed-merchant-6afdd023-catalog.mjs",
     "seed:merchant-17423af2-catalog": "node scripts/seed-merchant-17423af2-catalog.mjs",
+    "offer:merchant-17423af2-10": "node scripts/apply-merchant-17423af2-10-percent-offer.mjs",
     "generate:category-images": "node scripts/generate-category-images.mjs",
     "seed:merchant-a8d87c1e-catalog": "node scripts/seed-merchant-a8d87c1e-catalog.mjs",
     "seed:merchant-f67547fa-catalog": "node scripts/seed-merchant-f67547fa-catalog.mjs",
