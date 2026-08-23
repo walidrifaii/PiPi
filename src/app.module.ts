@@ -36,6 +36,7 @@ import { AppVersionModule } from './app-version/app-version.module';
 import { CouponModule } from './coupon/coupon.module';
 import { BundleModule } from './bundle/bundle.module';
 import { PickupModule } from './pickup/pickup.module';
+import { SpecialRequestModule } from './special-request/special-request.module';
 import { BundleAdminController } from './bundle/bundle-admin.controller';
 import { BundleMerchantController } from './bundle/bundle-merchant.controller';
 import {
@@ -68,6 +69,7 @@ import {
     CouponModule,
     BundleModule,
     PickupModule,
+    SpecialRequestModule,
     V2Module,
     V3Module,
   ],

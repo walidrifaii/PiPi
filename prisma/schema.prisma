@@ -58,6 +58,7 @@ model User {
   updatedAt    DateTime      @updatedAt @map("updated_at")
   orders          Order[]
   pickupOrders    PickupOrder[]
+  specialRequests SpecialRequest[]
   addresses       UserAddress[]
   notifications   UserNotification[]
   couponUsages    CouponUsage[]
@@ -128,6 +129,8 @@ model UserAddress {
   orders              Order[]
   pickupFroms         PickupOrder[] @relation("PickupFromAddress")
   pickupTos           PickupOrder[] @relation("PickupToAddress")
+  specialRequestFroms SpecialRequest[] @relation("SpecialRequestFromAddress")
+  specialRequestTos   SpecialRequest[] @relation("SpecialRequestToAddress")
 
   @@index([userId])
   @@map("user_addresses")
@@ -148,6 +151,7 @@ model Driver {
   updatedAt    DateTime @updatedAt @map("updated_at")
   orders       Order[]
   pickupOrders PickupOrder[]
+  specialRequests SpecialRequest[]
   earningsSettlements EarningsSettlement[]
 
   @@map("drivers")
@@ -684,4 +688,62 @@ model PickupOrder {
   @@index([status, driverId])
   @@index([status, scheduledAt])
   @@map("pickup_orders")
+}
+
+/// Shop-for-me job: buy an item from a store not listed in the app.
+model SpecialRequest {
+  id              String    @id @default(uuid()) @db.Uuid
+  userId          String    @map("user_id") @db.Uuid
+  driverId        String?   @map("driver_id") @db.Uuid
+  /// PENDING | DELIVERING | DISPATCHED | DELIVERED | CANCELLED
+  status          String    @db.VarChar(50)
+  storeName       String    @map("store_name") @db.VarChar(191)
+  itemName        String    @map("item_name") @db.VarChar(191)
+  productImageUrl String    @map("product_image_url") @db.VarChar(500)
+  requestRef      String?   @map("request_ref") @db.VarChar(191)
+
+  serviceFee      Decimal   @map("service_fee") @db.Decimal(10, 2)
+  deliveryFee     Decimal   @default(0) @map("delivery_fee") @db.Decimal(10, 2)
+  total           Decimal   @db.Decimal(10, 2)
+
+  fromAddressLine String    @map("from_address_line") @db.VarChar(500)
+  fromLatitude    Decimal   @map("from_latitude") @db.Decimal(10, 7)
+  fromLongitude   Decimal   @map("from_longitude") @db.Decimal(10, 7)
+  fromAddressId   String?   @map("from_address_id") @db.Uuid
+
+  toAddressLine   String    @map("to_address_line") @db.VarChar(500)
+  toLatitude      Decimal   @map("to_latitude") @db.Decimal(10, 7)
+  toLongitude     Decimal   @map("to_longitude") @db.Decimal(10, 7)
+  toAddressId     String?   @map("to_address_id") @db.Uuid
+
+  etaMinMinutes   Int?      @map("eta_min_minutes")
+  etaMaxMinutes   Int?      @map("eta_max_minutes")
+  snapshot        Json?
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Restrict)
+  driver      Driver?      @relation(fields: [driverId], references: [id], onDelete: SetNull)
+  fromAddress UserAddress? @relation("SpecialRequestFromAddress", fields: [fromAddressId], references: [id], onDelete: SetNull)
+  toAddress   UserAddress? @relation("SpecialRequestToAddress", fields: [toAddressId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([driverId, status])
+  @@index([status, driverId])
+  @@map("special_requests")
+}
+
+/// Singleton special-request config (id = 1). Fixed buy fee for every job.
+model SpecialRequestSetting {
+  id            Int      @id @default(1)
+  isEnabled     Boolean  @default(true) @map("is_enabled")
+  timezone      String   @default("Africa/Tripoli") @db.VarChar(64)
+  nowMinMinutes Int      @default(35) @map("now_min_minutes")
+  nowMaxMinutes Int      @default(60) @map("now_max_minutes")
+  /// Flat buy/service fee charged on every special request (super admin).
+  buyFee        Decimal  @default(3) @map("buy_fee") @db.Decimal(10, 2)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("special_request_settings")
 }

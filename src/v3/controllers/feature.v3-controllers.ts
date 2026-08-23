@@ -29,6 +29,10 @@ import { PickupAdminController } from '../../pickup/pickup-admin.controller';
 import { PickupController } from '../../pickup/pickup.controller';
 import { DriverPickupsController } from '../../pickup/driver-pickups.controller';
 import { UserPickupsController } from '../../pickup/user-pickups.controller';
+import { SpecialRequestAdminController } from '../../special-request/special-request-admin.controller';
+import { SpecialRequestController } from '../../special-request/special-request.controller';
+import { DriverSpecialRequestsController } from '../../special-request/driver-special-requests.controller';
+import { UserSpecialRequestsController } from '../../special-request/user-special-requests.controller';
 import { createV3Controller } from './create-v3-controller';
 
 export const UsersV3Controller = createV3Controller(UsersController, 'users');
@@ -139,4 +143,20 @@ export const DriverPickupsV3Controller = createV3Controller(
 export const PickupAdminV3Controller = createV3Controller(
   PickupAdminController,
   'admin/pickups',
+);
+export const SpecialRequestV3Controller = createV3Controller(
+  SpecialRequestController,
+  'special-requests',
+);
+export const UserSpecialRequestsV3Controller = createV3Controller(
+  UserSpecialRequestsController,
+  'special-requests/me',
+);
+export const DriverSpecialRequestsV3Controller = createV3Controller(
+  DriverSpecialRequestsController,
+  'drivers/me/special-requests',
+);
+export const SpecialRequestAdminV3Controller = createV3Controller(
+  SpecialRequestAdminController,
+  'admin/special-requests',
 );

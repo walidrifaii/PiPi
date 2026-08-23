@@ -10,35 +10,20 @@ import { MAX_DRIVER_BATCH_ORDERS } from '../orders/order-status.constants';
 import { OrderNotificationsPort } from '../notifications/notifications.port';
 import { PlatformSettingsService } from '../platform-settings/platform-settings.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { DRIVER_PICKUP_ACTIVE_STATUSES } from '../pickup/pickup.constants';
 import {
-  DRIVER_PICKUP_ACTIVE_STATUSES,
-  DRIVER_PICKUP_OFFER_STATUSES,
-  isTerminalPickupStatus,
-  normalizePickupStatus,
-} from './pickup.constants';
-import { DRIVER_SPECIAL_REQUEST_ACTIVE_STATUSES } from '../special-request/special-request.constants';
-import { mapPickupOrder, withDriverEarnings } from './pickup.mapper';
-import { PickupService } from './pickup.service';
-
-const pickupInclude = {
-  driver: {
-    select: {
-      id: true,
-      fullName: true,
-      phone: true,
-      vehicleType: true,
-    },
-  },
-  user: {
-    select: { id: true, fullName: true, phone: true },
-  },
-} as const;
+  DRIVER_SPECIAL_REQUEST_ACTIVE_STATUSES,
+  DRIVER_SPECIAL_REQUEST_OFFER_STATUSES,
+  isTerminalSpecialRequestStatus,
+  normalizeSpecialRequestStatus,
+} from './special-request.constants';
+import { mapSpecialRequest, withDriverEarnings } from './special-request.mapper';
+import { specialRequestInclude } from './special-request.service';
 
 @Injectable()
-export class DriverPickupsService {
+export class DriverSpecialRequestsService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly pickups: PickupService,
     private readonly platformSettings: PlatformSettingsService,
     private readonly notifications: OrderNotificationsPort,
   ) {}
@@ -50,7 +35,9 @@ export class DriverPickupsService {
   private normalizePagination(page: number, limit: number) {
     const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
     const safeLimit =
-      Number.isFinite(limit) && limit > 0 ? Math.min(Math.floor(limit), 100) : 20;
+      Number.isFinite(limit) && limit > 0
+        ? Math.min(Math.floor(limit), 100)
+        : 20;
     return { page: safePage, limit: safeLimit, skip: (safePage - 1) * safeLimit };
   }
 
@@ -67,7 +54,7 @@ export class DriverPickupsService {
     }
   }
 
-  private async countActiveJobs(driverId: string, excludePickupId?: string) {
+  private async countActiveJobs(driverId: string, excludeRequestId?: string) {
     const [orders, pickups, specials] = await Promise.all([
       this.prisma.order.count({
         where: {
@@ -79,13 +66,13 @@ export class DriverPickupsService {
         where: {
           driverId,
           status: { in: [...DRIVER_PICKUP_ACTIVE_STATUSES] },
-          ...(excludePickupId ? { id: { not: excludePickupId } } : {}),
         },
       }),
       this.prisma.specialRequest.count({
         where: {
           driverId,
           status: { in: [...DRIVER_SPECIAL_REQUEST_ACTIVE_STATUSES] },
+          ...(excludeRequestId ? { id: { not: excludeRequestId } } : {}),
         },
       }),
     ]);
@@ -93,7 +80,7 @@ export class DriverPickupsService {
   }
 
   private async notifyCustomer(
-    pickupId: string,
+    requestId: string,
     userId: string,
     status: string,
     title?: string,
@@ -109,9 +96,9 @@ export class DriverPickupsService {
     }
     await this.notifications.sendOrderStatusUpdate({
       fcmToken: token,
-      orderId: pickupId,
+      orderId: requestId,
       status,
-      merchantName: 'Pickup',
+      merchantName: 'Special Request',
       title,
       body,
     });
@@ -119,28 +106,27 @@ export class DriverPickupsService {
 
   async listAvailable(driverId: string, page = 1, limit = 20) {
     await this.assertDriverActive(driverId);
-    await this.pickups.activateDueScheduled();
     const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
     const offerMaxAgeMs = 72 * 60 * 60 * 1000;
-    const where: Prisma.PickupOrderWhereInput = {
+    const where: Prisma.SpecialRequestWhereInput = {
       driverId: null,
-      status: { in: [...DRIVER_PICKUP_OFFER_STATUSES] },
+      status: { in: [...DRIVER_SPECIAL_REQUEST_OFFER_STATUSES] },
       createdAt: { gte: new Date(Date.now() - offerMaxAgeMs) },
     };
     const [rows, total, sharePercent] = await Promise.all([
-      this.prisma.pickupOrder.findMany({
+      this.prisma.specialRequest.findMany({
         where,
-        include: pickupInclude,
+        include: specialRequestInclude,
         orderBy: { createdAt: 'desc' },
         skip,
         take: l,
       }),
-      this.prisma.pickupOrder.count({ where }),
+      this.prisma.specialRequest.count({ where }),
       this.sharePercent(),
     ]);
     return {
       items: rows.map((row) =>
-        withDriverEarnings(mapPickupOrder(row), sharePercent),
+        withDriverEarnings(mapSpecialRequest(row), sharePercent),
       ),
       total,
       page: p,
@@ -153,19 +139,19 @@ export class DriverPickupsService {
     const { page: p, limit: l, skip } = this.normalizePagination(page, limit);
     const where = { driverId };
     const [rows, total, sharePercent] = await Promise.all([
-      this.prisma.pickupOrder.findMany({
+      this.prisma.specialRequest.findMany({
         where,
-        include: pickupInclude,
+        include: specialRequestInclude,
         orderBy: { createdAt: 'desc' },
         skip,
         take: l,
       }),
-      this.prisma.pickupOrder.count({ where }),
+      this.prisma.specialRequest.count({ where }),
       this.sharePercent(),
     ]);
     return {
       items: rows.map((row) =>
-        withDriverEarnings(mapPickupOrder(row), sharePercent),
+        withDriverEarnings(mapSpecialRequest(row), sharePercent),
       ),
       total,
       page: p,
@@ -176,158 +162,169 @@ export class DriverPickupsService {
   async listActive(driverId: string) {
     await this.assertDriverActive(driverId);
     const [rows, sharePercent] = await Promise.all([
-      this.prisma.pickupOrder.findMany({
+      this.prisma.specialRequest.findMany({
         where: {
           driverId,
-          status: { in: [...DRIVER_PICKUP_ACTIVE_STATUSES] },
+          status: { in: [...DRIVER_SPECIAL_REQUEST_ACTIVE_STATUSES] },
         },
-        include: pickupInclude,
+        include: specialRequestInclude,
         orderBy: { createdAt: 'asc' },
       }),
       this.sharePercent(),
     ]);
     return {
       items: rows.map((row) =>
-        withDriverEarnings(mapPickupOrder(row), sharePercent),
+        withDriverEarnings(mapSpecialRequest(row), sharePercent),
       ),
     };
   }
 
-  async getOne(driverId: string, pickupId: string) {
+  async getOne(driverId: string, requestId: string) {
     await this.assertDriverActive(driverId);
-    const row = await this.prisma.pickupOrder.findFirst({
-      where: { id: pickupId, driverId },
-      include: pickupInclude,
+    const row = await this.prisma.specialRequest.findFirst({
+      where: { id: requestId, driverId },
+      include: specialRequestInclude,
     });
     if (!row) {
-      throw new NotFoundException('Pickup not found');
+      throw new NotFoundException('Special request not found');
     }
-    return withDriverEarnings(mapPickupOrder(row), await this.sharePercent());
+    return withDriverEarnings(mapSpecialRequest(row), await this.sharePercent());
   }
 
-  async accept(driverId: string, pickupId: string) {
+  async accept(driverId: string, requestId: string) {
     await this.assertDriverActive(driverId);
-    const activeCount = await this.countActiveJobs(driverId, pickupId);
+    const activeCount = await this.countActiveJobs(driverId, requestId);
     if (activeCount + 1 > MAX_DRIVER_BATCH_ORDERS) {
       throw new BadRequestException(
         `You can carry at most ${MAX_DRIVER_BATCH_ORDERS} jobs at once`,
       );
     }
 
-    const updated = await this.prisma.pickupOrder.updateMany({
+    const updated = await this.prisma.specialRequest.updateMany({
       where: {
-        id: pickupId,
+        id: requestId,
         driverId: null,
-        status: { in: [...DRIVER_PICKUP_OFFER_STATUSES] },
+        status: { in: [...DRIVER_SPECIAL_REQUEST_OFFER_STATUSES] },
       },
       data: { driverId, status: 'DELIVERING' },
     });
 
     if (updated.count === 0) {
-      const existing = await this.prisma.pickupOrder.findUnique({
-        where: { id: pickupId },
+      const existing = await this.prisma.specialRequest.findUnique({
+        where: { id: requestId },
         select: { driverId: true, status: true },
       });
       if (!existing) {
-        throw new NotFoundException('Pickup not found');
+        throw new NotFoundException('Special request not found');
       }
       if (existing.driverId === driverId) {
-        return this.getOne(driverId, pickupId).then((pickup) => ({
+        return this.getOne(driverId, requestId).then((request) => ({
           accepted: true as const,
-          pickup,
+          request,
         }));
       }
       if (existing.driverId) {
-        throw new ConflictException('Pickup already assigned to another driver');
+        throw new ConflictException(
+          'Special request already assigned to another driver',
+        );
       }
       throw new BadRequestException(
-        `Pickup cannot be accepted in status ${normalizePickupStatus(existing.status)}`,
+        `Special request cannot be accepted in status ${normalizeSpecialRequestStatus(existing.status)}`,
       );
     }
 
-    const row = await this.prisma.pickupOrder.findFirst({
-      where: { id: pickupId, driverId },
-      include: pickupInclude,
+    const row = await this.prisma.specialRequest.findFirst({
+      where: { id: requestId, driverId },
+      include: specialRequestInclude,
     });
     void this.notifyCustomer(
-      pickupId,
+      requestId,
       row!.userId,
       'DELIVERING',
       'Driver on the way',
-      'Your pickup driver is heading to the collection address.',
+      'Your driver is heading to the store for your special request.',
     );
     return {
       accepted: true as const,
-      pickup: withDriverEarnings(mapPickupOrder(row!), await this.sharePercent()),
+      request: withDriverEarnings(
+        mapSpecialRequest(row!),
+        await this.sharePercent(),
+      ),
     };
   }
 
-  async confirmCollected(driverId: string, pickupId: string) {
+  async confirmCollected(driverId: string, requestId: string) {
     await this.assertDriverActive(driverId);
-    const updated = await this.prisma.pickupOrder.updateMany({
-      where: { id: pickupId, driverId, status: 'DELIVERING' },
+    const updated = await this.prisma.specialRequest.updateMany({
+      where: { id: requestId, driverId, status: 'DELIVERING' },
       data: { status: 'DISPATCHED' },
     });
     if (updated.count === 0) {
       throw new BadRequestException(
-        'Pickup must be DELIVERING before confirming collection',
+        'Special request must be DELIVERING before confirming collection',
       );
     }
-    const row = await this.prisma.pickupOrder.findFirst({
-      where: { id: pickupId, driverId },
-      include: pickupInclude,
+    const row = await this.prisma.specialRequest.findFirst({
+      where: { id: requestId, driverId },
+      include: specialRequestInclude,
     });
     void this.notifyCustomer(
-      pickupId,
+      requestId,
       row!.userId,
       'DISPATCHED',
-      'Package collected',
-      'Your driver collected the package and is heading to the drop-off.',
+      'Item collected',
+      'Your driver bought the item and is heading to you.',
     );
     return {
       collected: true as const,
-      pickup: withDriverEarnings(mapPickupOrder(row!), await this.sharePercent()),
+      request: withDriverEarnings(
+        mapSpecialRequest(row!),
+        await this.sharePercent(),
+      ),
     };
   }
 
-  async complete(driverId: string, pickupId: string) {
+  async complete(driverId: string, requestId: string) {
     await this.assertDriverActive(driverId);
-    const updated = await this.prisma.pickupOrder.updateMany({
-      where: { id: pickupId, driverId, status: 'DISPATCHED' },
+    const updated = await this.prisma.specialRequest.updateMany({
+      where: { id: requestId, driverId, status: 'DISPATCHED' },
       data: { status: 'DELIVERED' },
     });
     if (updated.count === 0) {
       throw new BadRequestException(
-        'Confirm collection at the from address before finishing delivery',
+        'Confirm collection at the store before finishing delivery',
       );
     }
-    const row = await this.prisma.pickupOrder.findFirst({
-      where: { id: pickupId, driverId },
-      include: pickupInclude,
+    const row = await this.prisma.specialRequest.findFirst({
+      where: { id: requestId, driverId },
+      include: specialRequestInclude,
     });
-    void this.notifyCustomer(pickupId, row!.userId, 'DELIVERED');
+    void this.notifyCustomer(requestId, row!.userId, 'DELIVERED');
     return {
       completed: true as const,
-      pickup: withDriverEarnings(mapPickupOrder(row!), await this.sharePercent()),
+      request: withDriverEarnings(
+        mapSpecialRequest(row!),
+        await this.sharePercent(),
+      ),
     };
   }
 
-  async assignByAdmin(pickupId: string, driverId: string) {
+  async assignByAdmin(requestId: string, driverId: string) {
     await this.assertDriverActive(driverId);
-    const existing = await this.prisma.pickupOrder.findUnique({
-      where: { id: pickupId },
+    const existing = await this.prisma.specialRequest.findUnique({
+      where: { id: requestId },
       select: { id: true, status: true, driverId: true },
     });
     if (!existing) {
-      throw new NotFoundException('Pickup not found');
+      throw new NotFoundException('Special request not found');
     }
     if (existing.driverId) {
-      throw new ConflictException('Pickup already assigned to a driver');
+      throw new ConflictException('Special request already assigned to a driver');
     }
-    const status = normalizePickupStatus(existing.status);
-    if (status !== 'PENDING' && status !== 'SCHEDULED') {
+    const status = normalizeSpecialRequestStatus(existing.status);
+    if (status !== 'PENDING') {
       throw new BadRequestException(
-        `Pickup cannot be assigned in status ${status}`,
+        `Special request cannot be assigned in status ${status}`,
       );
     }
     const activeCount = await this.countActiveJobs(driverId);
@@ -336,37 +333,40 @@ export class DriverPickupsService {
         `Driver already has ${MAX_DRIVER_BATCH_ORDERS} active jobs`,
       );
     }
-    const row = await this.prisma.pickupOrder.update({
-      where: { id: pickupId },
+    const row = await this.prisma.specialRequest.update({
+      where: { id: requestId },
       data: { driverId, status: 'DELIVERING' },
-      include: pickupInclude,
+      include: specialRequestInclude,
     });
     void this.notifyCustomer(
-      pickupId,
+      requestId,
       row.userId,
       'DELIVERING',
       'Driver assigned',
-      'A driver was assigned to your pickup.',
+      'A driver was assigned to your special request.',
     );
     return {
       assigned: true as const,
-      pickup: withDriverEarnings(mapPickupOrder(row), await this.sharePercent()),
+      request: withDriverEarnings(
+        mapSpecialRequest(row),
+        await this.sharePercent(),
+      ),
     };
   }
 
-  async assertDriverOwnsPickup(driverId: string, pickupId: string) {
-    const row = await this.prisma.pickupOrder.findUnique({
-      where: { id: pickupId },
+  async assertDriverOwnsRequest(driverId: string, requestId: string) {
+    const row = await this.prisma.specialRequest.findUnique({
+      where: { id: requestId },
       select: { driverId: true, status: true },
     });
     if (!row) {
-      throw new NotFoundException('Pickup not found');
+      throw new NotFoundException('Special request not found');
     }
     if (row.driverId !== driverId) {
-      throw new ForbiddenException('Not your pickup');
+      throw new ForbiddenException('Not your special request');
     }
-    if (isTerminalPickupStatus(row.status)) {
-      throw new BadRequestException('Pickup is already completed');
+    if (isTerminalSpecialRequestStatus(row.status)) {
+      throw new BadRequestException('Special request is already completed');
     }
     return row;
   }

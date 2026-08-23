@@ -36,6 +36,11 @@ import {
       useExisting: NotificationsService,
     },
   ],
-  exports: [PickupService, PickupBlockedZoneService],
+  exports: [
+    PickupService,
+    PickupBlockedZoneService,
+    PickupSettingsService,
+    PickupDeliveryFeeService,
+  ],
 })
 export class PickupModule {}
