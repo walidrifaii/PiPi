@@ -3,6 +3,10 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserAddressDto } from './dto/create-user-address.dto';
 import { UpdateUserAddressDto } from './dto/update-user-address.dto';
+import {
+  assertUniqueAddressLabelForUser,
+  normalizeAddressLabel,
+} from './user-address-label';
 
 function toAddressResponse(row: {
   id: string;
@@ -50,7 +54,9 @@ export class UserAddressService {
 
   async createForUser(userId: string, dto: CreateUserAddressDto) {
     const isDefault = dto.isDefault ?? false;
+    const label = normalizeAddressLabel(dto.label);
     return this.prisma.$transaction(async (tx) => {
+      await assertUniqueAddressLabelForUser(tx, { userId, label });
       if (isDefault) {
         await tx.userAddress.updateMany({
           where: { userId },
@@ -60,7 +66,7 @@ export class UserAddressService {
       const row = await tx.userAddress.create({
         data: {
           userId,
-          label: dto.label ?? null,
+          label,
           addressLine: dto.addressLine,
           latitude: dto.latitude,
           longitude: dto.longitude,
@@ -78,7 +84,16 @@ export class UserAddressService {
   ) {
     await this.getForUser(userId, addressId);
     const isDefault = dto.isDefault;
+    const label =
+      dto.label !== undefined ? normalizeAddressLabel(dto.label) : undefined;
     return this.prisma.$transaction(async (tx) => {
+      if (label !== undefined) {
+        await assertUniqueAddressLabelForUser(tx, {
+          userId,
+          label,
+          excludeId: addressId,
+        });
+      }
       if (isDefault === true) {
         await tx.userAddress.updateMany({
           where: { userId, id: { not: addressId } },
@@ -88,7 +103,7 @@ export class UserAddressService {
       const row = await tx.userAddress.update({
         where: { id: addressId },
         data: {
-          ...(dto.label !== undefined ? { label: dto.label } : {}),
+          ...(label !== undefined ? { label } : {}),
           ...(dto.addressLine !== undefined
             ? { addressLine: dto.addressLine }
             : {}),

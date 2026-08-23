@@ -11,7 +11,11 @@ import {
 } from 'class-validator';
 
 export class CreateUserAddressDto {
-  @ApiPropertyOptional({ example: 'Home' })
+  @ApiPropertyOptional({
+    example: 'Home',
+    description:
+      'Unique per user. Another user can also use Home. Same user cannot save Home twice.',
+  })
   @IsOptional()
   @IsString()
   @MaxLength(100)
@@ -20,21 +24,21 @@ export class CreateUserAddressDto {
   @ApiProperty({ example: 'Tripoli, Main Street 12' })
   @IsString()
   @MaxLength(500)
-  addressLine: string;
+  addressLine!: string;
 
   @ApiProperty({ example: 32.8872 })
   @Type(() => Number)
   @IsNumber()
   @Min(-90)
   @Max(90)
-  latitude: number;
+  latitude!: number;
 
   @ApiProperty({ example: 13.1913 })
   @Type(() => Number)
   @IsNumber()
   @Min(-180)
   @Max(180)
-  longitude: number;
+  longitude!: number;
 
   @ApiPropertyOptional({ default: false })
   @IsOptional()

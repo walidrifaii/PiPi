@@ -65,4 +65,25 @@ describe('UserAddressV3Service', () => {
     expect(result.latitude).toBe(32.8872);
     expect(prisma.userAddress.create).toHaveBeenCalled();
   });
+
+  it('rejects a duplicate address name for the same user', async () => {
+    prisma.userAddress.count.mockResolvedValue(1);
+    prisma.$transaction.mockImplementation(async (fn: (tx: typeof prisma) => unknown) =>
+      fn(prisma),
+    );
+    prisma.userAddress.findFirst.mockResolvedValue({
+      id: '33333333-3333-3333-3333-333333333333',
+    });
+
+    await expect(
+      service.createForUser(userId, {
+        label: 'Home',
+        addressLine: 'Another street',
+        latitude: 32.88,
+        longitude: 13.19,
+      }),
+    ).rejects.toBeInstanceOf(BadRequestException);
+
+    expect(prisma.userAddress.create).not.toHaveBeenCalled();
+  });
 });
