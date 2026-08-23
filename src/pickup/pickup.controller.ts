@@ -65,7 +65,7 @@ export class PickupController {
   @UseGuards(JwtAuthGuard, UserAccountGuard)
   @ApiOperation({
     summary:
-      'Create a NOW or SCHEDULED pickup. Blocked polygons are rejected. Fees must match quote.',
+      'Create a NOW or SCHEDULED pickup. Requires recipientFullName and recipientPhone for the person who receives the package. Blocked polygons are rejected. Fees must match quote.',
   })
   @Post()
   create(

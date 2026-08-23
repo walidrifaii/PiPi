@@ -302,6 +302,8 @@ export class PickupService {
         toLatitude: to.latitude,
         toLongitude: to.longitude,
         toAddressId: to.addressId,
+        recipientFullName: dto.recipientFullName.trim(),
+        recipientPhone: dto.recipientPhone.trim(),
         scheduledAt,
         etaMinMinutes,
         etaMaxMinutes,
@@ -372,19 +374,25 @@ export class PickupService {
       };
     }
     if (query.userName?.trim() || query.number?.trim()) {
-      where.user = {
-        ...(query.userName?.trim()
-          ? {
-              fullName: {
-                contains: query.userName.trim(),
-                mode: 'insensitive',
-              },
-            }
-          : {}),
-        ...(query.number?.trim()
-          ? { phone: { contains: query.number.trim() } }
-          : {}),
-      };
+      const name = query.userName?.trim();
+      const number = query.number?.trim();
+      const nameMatch: Prisma.PickupOrderWhereInput[] = name
+        ? [
+            { user: { fullName: { contains: name, mode: 'insensitive' } } },
+            { recipientFullName: { contains: name, mode: 'insensitive' } },
+          ]
+        : [];
+      const numberMatch: Prisma.PickupOrderWhereInput[] = number
+        ? [
+            { user: { phone: { contains: number } } },
+            { recipientPhone: { contains: number } },
+          ]
+        : [];
+      if (nameMatch.length && numberMatch.length) {
+        where.AND = [{ OR: nameMatch }, { OR: numberMatch }];
+      } else {
+        where.OR = nameMatch.length ? nameMatch : numberMatch;
+      }
     }
 
     const [rows, total] = await Promise.all([

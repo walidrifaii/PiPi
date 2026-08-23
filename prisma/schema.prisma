@@ -663,6 +663,10 @@ model PickupOrder {
   toLongitude     Decimal   @map("to_longitude") @db.Decimal(10, 7)
   toAddressId     String?   @map("to_address_id") @db.Uuid
 
+  /// Person who receives the package at the destination.
+  recipientFullName String? @map("recipient_full_name") @db.VarChar(191)
+  recipientPhone    String? @map("recipient_phone") @db.VarChar(32)
+
   scheduledAt     DateTime? @map("scheduled_at")
   etaMinMinutes   Int?      @map("eta_min_minutes")
   etaMaxMinutes   Int?      @map("eta_max_minutes")

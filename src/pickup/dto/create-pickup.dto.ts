@@ -6,9 +6,11 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  Matches,
   Max,
   MaxLength,
   Min,
+  MinLength,
   ValidateNested,
 } from 'class-validator';
 import { PICKUP_METHODS } from '../pickup.constants';
@@ -90,6 +92,25 @@ export class CreatePickupDto {
   @IsNumber({ maxDecimalPlaces: 3 })
   @Min(0)
   distanceKm!: number;
+
+  @ApiProperty({
+    example: 'Ahmad Hassan',
+    description: 'Full name of the person who will receive the package',
+  })
+  @IsString()
+  @MinLength(2)
+  @MaxLength(191)
+  recipientFullName!: string;
+
+  @ApiProperty({
+    example: '+218912345678',
+    description: 'Phone of the person who will receive the package (E.164)',
+  })
+  @IsString()
+  @Matches(/^\+[1-9]\d{6,14}$/, {
+    message: 'recipientPhone must be E.164 format (e.g. +218912345678)',
+  })
+  recipientPhone!: string;
 
   @ApiPropertyOptional({
     example: '2026-08-17T10:00:00.000Z',

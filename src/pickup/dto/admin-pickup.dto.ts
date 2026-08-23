@@ -23,12 +23,16 @@ export class ListPickupsAdminQueryDto {
   @IsUUID()
   pickupId?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Matches customer or recipient full name',
+  })
   @IsOptional()
   @IsString()
   userName?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Matches customer or recipient phone',
+  })
   @IsOptional()
   @IsString()
   number?: string;

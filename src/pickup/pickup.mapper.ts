@@ -49,6 +49,10 @@ export type PickupOrderView = {
     fullName: string | null;
     phone: string;
   };
+  recipient: {
+    fullName: string | null;
+    phone: string | null;
+  };
   driverEarnings?: number;
 };
 
@@ -81,6 +85,8 @@ export function mapPickupOrder(row: {
   toLatitude: MoneyLike;
   toLongitude: MoneyLike;
   toAddressId: string | null;
+  recipientFullName: string | null;
+  recipientPhone: string | null;
   scheduledAt: Date | null;
   etaMinMinutes: number | null;
   etaMaxMinutes: number | null;
@@ -143,6 +149,10 @@ export function mapPickupOrder(row: {
           },
         }
       : {}),
+    recipient: {
+      fullName: row.recipientFullName,
+      phone: row.recipientPhone,
+    },
   };
 }
 
