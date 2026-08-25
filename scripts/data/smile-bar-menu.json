@@ -1,0 +1,924 @@
+{
+  "restaurant": {
+    "name": "Smile Bar",
+    "type": "Dessert & Drinks"
+  },
+  "currency": "LBP",
+  "categories": [
+    {
+      "id": "milkshake",
+      "name": "Milkshake",
+      "nameAr": "ميلك شيك"
+    },
+    {
+      "id": "smoothie",
+      "name": "Smoothie",
+      "nameAr": "سموثي"
+    },
+    {
+      "id": "frappee",
+      "name": "Frappee",
+      "nameAr": "فرابيه"
+    },
+    {
+      "id": "cheesecake",
+      "name": "Cheese Cake",
+      "nameAr": "تشيز كيك"
+    },
+    {
+      "id": "mojito",
+      "name": "Mojito",
+      "nameAr": "موهيتو"
+    },
+    {
+      "id": "refresh-juice",
+      "name": "Refresh Juice",
+      "nameAr": "عصائر منعشة"
+    },
+    {
+      "id": "ice-tea",
+      "name": "Ice Tea",
+      "nameAr": "آيس تي"
+    },
+    {
+      "id": "dessert",
+      "name": "Dessert",
+      "nameAr": "حلويات"
+    },
+    {
+      "id": "crepe",
+      "name": "Crepe",
+      "nameAr": "كريب"
+    },
+    {
+      "id": "pancake",
+      "name": "Pan Cake",
+      "nameAr": "بان كيك"
+    },
+    {
+      "id": "mini-ball",
+      "name": "Mini Ball",
+      "nameAr": "ميني بول"
+    },
+    {
+      "id": "special",
+      "name": "Special",
+      "nameAr": "سبيشل"
+    }
+  ],
+  "items": [
+    {
+      "id": "oreo-milkshake",
+      "categoryId": "milkshake",
+      "name": "Oreo Milk Shake",
+      "nameAr": "ميلك شيك أوريو",
+      "description": "",
+      "descriptionAr": "",
+      "variants": [
+        {
+          "size": "S",
+          "price": 250000
+        },
+        {
+          "size": "M",
+          "price": 350000
+        },
+        {
+          "size": "L",
+          "price": 400000
+        }
+      ],
+      "available": true
+    },
+    {
+      "id": "lotus-milkshake",
+      "categoryId": "milkshake",
+      "name": "Lotus Milk Shake",
+      "nameAr": "ميلك شيك لوتس",
+      "description": "",
+      "descriptionAr": "",
+      "variants": [
+        {
+          "size": "S",
+          "price": 250000
+        },
+        {
+          "size": "M",
+          "price": 350000
+        },
+        {
+          "size": "L",
+          "price": 400000
+        }
+      ],
+      "available": true
+    },
+    {
+      "id": "kitkat-milkshake",
+      "categoryId": "milkshake",
+      "name": "Kitkat Milk Shake",
+      "nameAr": "ميلك شيك كيت كات",
+      "description": "",
+      "descriptionAr": "",
+      "variants": [
+        {
+          "size": "S",
+          "price": 250000
+        },
+        {
+          "size": "M",
+          "price": 350000
+        },
+        {
+          "size": "L",
+          "price": 400000
+        }
+      ],
+      "available": true
+    },
+    {
+      "id": "snickers-milkshake",
+      "categoryId": "milkshake",
+      "name": "Snikers Milk Shake",
+      "nameAr": "ميلك شيك سنيكرز",
+      "description": "",
+      "descriptionAr": "",
+      "variants": [
+        {
+          "size": "S",
+          "price": 250000
+        },
+        {
+          "size": "M",
+          "price": 350000
+        },
+        {
+          "size": "L",
+          "price": 400000
+        }
+      ],
+      "available": true
+    },
+    {
+      "id": "mars-milkshake",
+      "categoryId": "milkshake",
+      "name": "Mars Milk Shake",
+      "nameAr": "ميلك شيك مارس",
+      "description": "",
+      "descriptionAr": "",
+      "variants": [
+        {
+          "size": "S",
+          "price": 250000
+        },
+        {
+          "size": "M",
+          "price": 350000
+        },
+        {
+          "size": "L",
+          "price": 400000
+        }
+      ],
+      "available": true
+    },
+    {
+      "id": "strawberry-milkshake",
+      "categoryId": "milkshake",
+      "name": "Strawberry Milk Shake",
+      "nameAr": "ميلك شيك فراولة",
+      "description": "",
+      "descriptionAr": "",
+      "variants": [
+        {
+          "size": "S",
+          "price": 250000
+        },
+        {
+          "size": "M",
+          "price": 350000
+        },
+        {
+          "size": "L",
+          "price": 400000
+        }
+      ],
+      "available": true
+    },
+    {
+      "id": "mango-smoothie",
+      "categoryId": "smoothie",
+      "name": "Mango Smoothie",
+      "nameAr": "سموثي مانجو",
+      "description": "",
+      "descriptionAr": "",
+      "variants": [
+        {
+          "size": "M",
+          "price": 350000
+        },
+        {
+          "size": "L",
+          "price": 400000
+        }
+      ],
+      "available": true
+    },
+    {
+      "id": "passion-smoothie",
+      "categoryId": "smoothie",
+      "name": "Passion Smoothie",
+      "nameAr": "سموثي باشن فروت",
+      "description": "",
+      "descriptionAr": "",
+      "variants": [
+        {
+          "size": "M",
+          "price": 350000
+        },
+        {
+          "size": "L",
+          "price": 400000
+        }
+      ],
+      "available": true
+    },
+    {
+      "id": "strawberry-smoothie",
+      "categoryId": "smoothie",
+      "name": "Strawberry Smoothie",
+      "nameAr": "سموثي فراولة",
+      "description": "",
+      "descriptionAr": "",
+      "variants": [
+        {
+          "size": "M",
+          "price": 350000
+        },
+        {
+          "size": "L",
+          "price": 400000
+        }
+      ],
+      "available": true
+    },
+    {
+      "id": "blueberry-smoothie",
+      "categoryId": "smoothie",
+      "name": "Blueberry Smoothie",
+      "nameAr": "سموثي توت أزرق",
+      "description": "",
+      "descriptionAr": "",
+      "variants": [
+        {
+          "size": "M",
+          "price": 350000
+        },
+        {
+          "size": "L",
+          "price": 400000
+        }
+      ],
+      "available": true
+    },
+    {
+      "id": "smile-bar-smoothie",
+      "categoryId": "smoothie",
+      "name": "Smile Bar Smoothie",
+      "nameAr": "سموثي سمايل بار",
+      "description": "",
+      "descriptionAr": "",
+      "variants": [
+        {
+          "size": "M",
+          "price": 350000
+        },
+        {
+          "size": "L",
+          "price": 400000
+        }
+      ],
+      "available": true
+    },
+    {
+      "id": "moca-frappee",
+      "categoryId": "frappee",
+      "name": "Moca Frappee",
+      "nameAr": "موكا فرابيه",
+      "description": "",
+      "descriptionAr": "",
+      "price": null,
+      "available": true
+    },
+    {
+      "id": "caramel-frappee",
+      "categoryId": "frappee",
+      "name": "Caramel Frappee",
+      "nameAr": "كراميل فرابيه",
+      "description": "",
+      "descriptionAr": "",
+      "price": 400000,
+      "available": true
+    },
+    {
+      "id": "irish-mocca",
+      "categoryId": "frappee",
+      "name": "Irish Mocca",
+      "nameAr": "آيرش موكا",
+      "description": "",
+      "descriptionAr": "",
+      "price": 400000,
+      "available": true
+    },
+    {
+      "id": "lotus-cheesecake",
+      "categoryId": "cheesecake",
+      "name": "Lotus Cheese Cake",
+      "nameAr": "تشيز كيك لوتس",
+      "description": "",
+      "descriptionAr": "",
+      "price": 400000,
+      "available": true
+    },
+    {
+      "id": "oreo-cheesecake",
+      "categoryId": "cheesecake",
+      "name": "Oreo Cheese Cake",
+      "nameAr": "تشيز كيك أوريو",
+      "description": "",
+      "descriptionAr": "",
+      "price": 400000,
+      "available": true
+    },
+    {
+      "id": "chocolate-cheesecake",
+      "categoryId": "cheesecake",
+      "name": "Chocolate Cheese Cake",
+      "nameAr": "تشيز كيك شوكولا",
+      "description": "",
+      "descriptionAr": "",
+      "price": 350000,
+      "available": true
+    },
+    {
+      "id": "blackberry-cheesecake",
+      "categoryId": "cheesecake",
+      "name": "BlackBerry Cheese Cake",
+      "nameAr": "تشيز كيك توت أسود",
+      "description": "",
+      "descriptionAr": "",
+      "price": 350000,
+      "available": true
+    },
+    {
+      "id": "strawberry-cheesecake",
+      "categoryId": "cheesecake",
+      "name": "Strawberry Cheese Cake",
+      "nameAr": "تشيز كيك فراولة",
+      "description": "",
+      "descriptionAr": "",
+      "price": 350000,
+      "available": true
+    },
+    {
+      "id": "pistachio-kunafa-cheesecake",
+      "categoryId": "cheesecake",
+      "name": "Pistachio Kunafa Cheese Cake",
+      "nameAr": "تشيز كيك كنافة بالفستق",
+      "description": "",
+      "descriptionAr": "",
+      "price": 500000,
+      "available": true
+    },
+    {
+      "id": "summer-mojito",
+      "categoryId": "mojito",
+      "name": "Summer",
+      "nameAr": "سمر موهيتو",
+      "description": "",
+      "descriptionAr": "",
+      "price": 300000,
+      "available": true
+    },
+    {
+      "id": "exotic-mojito",
+      "categoryId": "mojito",
+      "name": "Exotic",
+      "nameAr": "إكزوتيك موهيتو",
+      "description": "",
+      "descriptionAr": "",
+      "price": 300000,
+      "available": true
+    },
+    {
+      "id": "berries-mojito",
+      "categoryId": "mojito",
+      "name": "Berries",
+      "nameAr": "موهيتو توت",
+      "description": "",
+      "descriptionAr": "",
+      "price": 300000,
+      "available": true
+    },
+    {
+      "id": "strawberry-mojito",
+      "categoryId": "mojito",
+      "name": "Strawberry",
+      "nameAr": "موهيتو فراولة",
+      "description": "",
+      "descriptionAr": "",
+      "price": 300000,
+      "available": true
+    },
+    {
+      "id": "mango-mojito",
+      "categoryId": "mojito",
+      "name": "Mango",
+      "nameAr": "موهيتو مانجو",
+      "description": "",
+      "descriptionAr": "",
+      "price": 300000,
+      "available": true
+    },
+    {
+      "id": "pina-colada",
+      "categoryId": "refresh-juice",
+      "name": "Pina Colada",
+      "nameAr": "بينا كولادا",
+      "description": "",
+      "descriptionAr": "",
+      "price": 300000,
+      "available": true
+    },
+    {
+      "id": "paradise",
+      "categoryId": "refresh-juice",
+      "name": "Paradise",
+      "nameAr": "بارادايس",
+      "description": "",
+      "descriptionAr": "",
+      "price": 300000,
+      "available": true
+    },
+    {
+      "id": "blue-hawaii",
+      "categoryId": "refresh-juice",
+      "name": "Blue Hawaii",
+      "nameAr": "بلو هاواي",
+      "description": "",
+      "descriptionAr": "",
+      "price": 300000,
+      "available": true
+    },
+    {
+      "id": "ice-tea-peach",
+      "categoryId": "ice-tea",
+      "name": "Ice Tea Peach",
+      "nameAr": "آيس تي خوخ",
+      "description": "",
+      "descriptionAr": "",
+      "price": 250000,
+      "available": true
+    },
+    {
+      "id": "ice-tea-lemonade",
+      "categoryId": "ice-tea",
+      "name": "Ice Tea Lemonade",
+      "nameAr": "آيس تي ليمون",
+      "description": "",
+      "descriptionAr": "",
+      "price": 250000,
+      "available": true
+    },
+    {
+      "id": "dessert-cheesecake",
+      "categoryId": "dessert",
+      "name": "Cheese Cake",
+      "nameAr": "تشيز كيك",
+      "description": "",
+      "descriptionAr": "",
+      "price": null,
+      "available": true
+    },
+    {
+      "id": "pudding",
+      "categoryId": "dessert",
+      "name": "Pudding",
+      "nameAr": "بودينغ",
+      "description": "",
+      "descriptionAr": "",
+      "price": null,
+      "available": true
+    },
+    {
+      "id": "choco-crepe",
+      "categoryId": "crepe",
+      "name": "Choco Crepe",
+      "nameAr": "كريب شوكولا",
+      "description": "",
+      "descriptionAr": "",
+      "price": 250000,
+      "available": true
+    },
+    {
+      "id": "mars-crepe",
+      "categoryId": "crepe",
+      "name": "Mars Crepe",
+      "nameAr": "كريب مارس",
+      "description": "",
+      "descriptionAr": "",
+      "price": 350000,
+      "available": true
+    },
+    {
+      "id": "oreo-crepe",
+      "categoryId": "crepe",
+      "name": "Oreo Crepe",
+      "nameAr": "كريب أوريو",
+      "description": "",
+      "descriptionAr": "",
+      "price": 300000,
+      "available": true
+    },
+    {
+      "id": "kitkat-crepe",
+      "categoryId": "crepe",
+      "name": "Kitkat Crepe",
+      "nameAr": "كريب كيت كات",
+      "description": "",
+      "descriptionAr": "",
+      "price": 350000,
+      "available": true
+    },
+    {
+      "id": "snickers-crepe",
+      "categoryId": "crepe",
+      "name": "Snikers Crepe",
+      "nameAr": "كريب سنيكرز",
+      "description": "",
+      "descriptionAr": "",
+      "price": 350000,
+      "available": true
+    },
+    {
+      "id": "kinder-crepe",
+      "categoryId": "crepe",
+      "name": "Kinder Crepe",
+      "nameAr": "كريب كيندر",
+      "description": "",
+      "descriptionAr": "",
+      "price": 400000,
+      "available": true
+    },
+    {
+      "id": "lotus-crepe",
+      "categoryId": "crepe",
+      "name": "Lotus Crepe",
+      "nameAr": "كريب لوتس",
+      "description": "",
+      "descriptionAr": "",
+      "price": 400000,
+      "available": true
+    },
+    {
+      "id": "brownie-crepe",
+      "categoryId": "crepe",
+      "name": "Brownie Crepe",
+      "nameAr": "كريب براوني",
+      "description": "",
+      "descriptionAr": "",
+      "price": 300000,
+      "available": true
+    },
+    {
+      "id": "banana-crepe",
+      "categoryId": "crepe",
+      "name": "Banana Crepe",
+      "nameAr": "كريب موز",
+      "description": "",
+      "descriptionAr": "",
+      "price": 280000,
+      "available": true
+    },
+    {
+      "id": "strawberry-crepe",
+      "categoryId": "crepe",
+      "name": "Strawberry Crepe",
+      "nameAr": "كريب فراولة",
+      "description": "",
+      "descriptionAr": "",
+      "price": 300000,
+      "available": true
+    },
+    {
+      "id": "banana-strawberry-crepe",
+      "categoryId": "crepe",
+      "name": "Banana Strawberry Crepe",
+      "nameAr": "كريب موز وفراولة",
+      "description": "",
+      "descriptionAr": "",
+      "price": 350000,
+      "available": true
+    },
+    {
+      "id": "extra-fruit-crepe",
+      "categoryId": "crepe",
+      "name": "Extra Fruit Crepe",
+      "nameAr": "كريب فواكه إضافية",
+      "description": "",
+      "descriptionAr": "",
+      "price": 400000,
+      "available": true
+    },
+    {
+      "id": "dubai-crepe",
+      "categoryId": "crepe",
+      "name": "Dubai Crepe",
+      "nameAr": "كريب دبي",
+      "description": "",
+      "descriptionAr": "",
+      "price": 700000,
+      "available": true
+    },
+    {
+      "id": "smily-crepe",
+      "categoryId": "crepe",
+      "name": "Smily Crepe",
+      "nameAr": "كريب سمايلي",
+      "description": "Coming soon",
+      "descriptionAr": "قريباً",
+      "price": null,
+      "available": false
+    },
+    {
+      "id": "choco-pancake",
+      "categoryId": "pancake",
+      "name": "Choco Pan Cake",
+      "nameAr": "بان كيك شوكولا",
+      "description": "",
+      "descriptionAr": "",
+      "price": 300000,
+      "available": true
+    },
+    {
+      "id": "mars-pancake",
+      "categoryId": "pancake",
+      "name": "Mars Pan Cake",
+      "nameAr": "بان كيك مارس",
+      "description": "",
+      "descriptionAr": "",
+      "price": 400000,
+      "available": true
+    },
+    {
+      "id": "oreo-pancake",
+      "categoryId": "pancake",
+      "name": "Oreo Pan Cake",
+      "nameAr": "بان كيك أوريو",
+      "description": "",
+      "descriptionAr": "",
+      "price": 350000,
+      "available": true
+    },
+    {
+      "id": "kitkat-pancake",
+      "categoryId": "pancake",
+      "name": "Kitkat Pan Cake",
+      "nameAr": "بان كيك كيت كات",
+      "description": "",
+      "descriptionAr": "",
+      "price": 400000,
+      "available": true
+    },
+    {
+      "id": "snickers-pancake",
+      "categoryId": "pancake",
+      "name": "Snikers Pan Cake",
+      "nameAr": "بان كيك سنيكرز",
+      "description": "",
+      "descriptionAr": "",
+      "price": 400000,
+      "available": true
+    },
+    {
+      "id": "kinder-pancake",
+      "categoryId": "pancake",
+      "name": "Kinder Pan Cake",
+      "nameAr": "بان كيك كيندر",
+      "description": "",
+      "descriptionAr": "",
+      "price": 450000,
+      "available": true
+    },
+    {
+      "id": "lotus-pancake",
+      "categoryId": "pancake",
+      "name": "Lotus Pan Cake",
+      "nameAr": "بان كيك لوتس",
+      "description": "",
+      "descriptionAr": "",
+      "price": 450000,
+      "available": true
+    },
+    {
+      "id": "brownie-pancake",
+      "categoryId": "pancake",
+      "name": "Brownie Pan Cake",
+      "nameAr": "بان كيك براوني",
+      "description": "",
+      "descriptionAr": "",
+      "price": 350000,
+      "available": true
+    },
+    {
+      "id": "banana-pancake",
+      "categoryId": "pancake",
+      "name": "Banana Pan Cake",
+      "nameAr": "بان كيك موز",
+      "description": "",
+      "descriptionAr": "",
+      "price": 330000,
+      "available": true
+    },
+    {
+      "id": "strawberry-pancake",
+      "categoryId": "pancake",
+      "name": "Strawberry Pan Cake",
+      "nameAr": "بان كيك فراولة",
+      "description": "",
+      "descriptionAr": "",
+      "price": 350000,
+      "available": true
+    },
+    {
+      "id": "banana-strawberry-pancake",
+      "categoryId": "pancake",
+      "name": "Banana Strawberry Pan Cake",
+      "nameAr": "بان كيك موز وفراولة",
+      "description": "",
+      "descriptionAr": "",
+      "price": 400000,
+      "available": true
+    },
+    {
+      "id": "extra-fruit-pancake",
+      "categoryId": "pancake",
+      "name": "Extra Fruit Pan Cake",
+      "nameAr": "بان كيك فواكه إضافية",
+      "description": "",
+      "descriptionAr": "",
+      "price": 450000,
+      "available": true
+    },
+    {
+      "id": "mini-ball-oreo",
+      "categoryId": "mini-ball",
+      "name": "Mini Ball Oreo",
+      "nameAr": "ميني بول أوريو",
+      "description": "",
+      "descriptionAr": "",
+      "price": 350000,
+      "available": true
+    },
+    {
+      "id": "mini-ball-mars",
+      "categoryId": "mini-ball",
+      "name": "Mini Ball Mars",
+      "nameAr": "ميني بول مارس",
+      "description": "",
+      "descriptionAr": "",
+      "price": 400000,
+      "available": true
+    },
+    {
+      "id": "mini-ball-kitkat",
+      "categoryId": "mini-ball",
+      "name": "Mini Ball Kitkat",
+      "nameAr": "ميني بول كيت كات",
+      "description": "",
+      "descriptionAr": "",
+      "price": 400000,
+      "available": true
+    },
+    {
+      "id": "mini-ball-snickers",
+      "categoryId": "mini-ball",
+      "name": "Mini Ball Snikers",
+      "nameAr": "ميني بول سنيكرز",
+      "description": "",
+      "descriptionAr": "",
+      "price": 400000,
+      "available": true
+    },
+    {
+      "id": "mini-ball-kinder",
+      "categoryId": "mini-ball",
+      "name": "Mini Ball Kinder",
+      "nameAr": "ميني بول كيندر",
+      "description": "",
+      "descriptionAr": "",
+      "price": 450000,
+      "available": true
+    },
+    {
+      "id": "mini-ball-lotus",
+      "categoryId": "mini-ball",
+      "name": "Mini Ball Lotus",
+      "nameAr": "ميني بول لوتس",
+      "description": "",
+      "descriptionAr": "",
+      "price": 450000,
+      "available": true
+    },
+    {
+      "id": "mini-ball-brownie",
+      "categoryId": "mini-ball",
+      "name": "Mini Ball Brownie",
+      "nameAr": "ميني بول براوني",
+      "description": "",
+      "descriptionAr": "",
+      "price": 350000,
+      "available": true
+    },
+    {
+      "id": "mini-ball-banana",
+      "categoryId": "mini-ball",
+      "name": "Mini Ball Banana",
+      "nameAr": "ميني بول موز",
+      "description": "",
+      "descriptionAr": "",
+      "price": 330000,
+      "available": true
+    },
+    {
+      "id": "mini-ball-strawberry",
+      "categoryId": "mini-ball",
+      "name": "Mini Ball Strawberry",
+      "nameAr": "ميني بول فراولة",
+      "description": "",
+      "descriptionAr": "",
+      "price": 350000,
+      "available": true
+    },
+    {
+      "id": "mini-ball-banana-strawberry",
+      "categoryId": "mini-ball",
+      "name": "Mini Ball Banana Strawberry",
+      "nameAr": "ميني بول موز وفراولة",
+      "description": "",
+      "descriptionAr": "",
+      "price": 400000,
+      "available": true
+    },
+    {
+      "id": "mini-ball-extra-fruit",
+      "categoryId": "mini-ball",
+      "name": "Mini Ball Extra Fruit",
+      "nameAr": "ميني بول فواكه إضافية",
+      "description": "",
+      "descriptionAr": "",
+      "price": 450000,
+      "available": true
+    },
+    {
+      "id": "mini-ball-choco",
+      "categoryId": "mini-ball",
+      "name": "Mini Ball Choco",
+      "nameAr": "ميني بول شوكولا",
+      "description": "",
+      "descriptionAr": "",
+      "price": 300000,
+      "available": true
+    },
+    {
+      "id": "fettuccine-crepe",
+      "categoryId": "special",
+      "name": "Fettuccine Crepe",
+      "nameAr": "كريب فيتوتشيني",
+      "description": "",
+      "descriptionAr": "",
+      "price": 350000,
+      "available": true
+    },
+    {
+      "id": "double-roll",
+      "categoryId": "special",
+      "name": "Double Roll",
+      "nameAr": "دبل رول",
+      "description": "",
+      "descriptionAr": "",
+      "price": 600000,
+      "available": true
+    },
+    {
+      "id": "giant-pancake",
+      "categoryId": "special",
+      "name": "Giant Pan Cake",
+      "nameAr": "بان كيك عملاق",
+      "description": "",
+      "descriptionAr": "",
+      "price": 600000,
+      "available": true
+    }
+  ]
+}

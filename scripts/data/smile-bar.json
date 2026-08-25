@@ -1,0 +1,788 @@
+{
+  "merchantId": "43590947-5578-4ce5-b42f-630177051456",
+  "merchantName": "Smile Bar",
+  "categories": [
+    {
+      "name": "Milkshake",
+      "nameAr": "ميلك شيك",
+      "sortOrder": 1
+    },
+    {
+      "name": "Smoothie",
+      "nameAr": "سموثي",
+      "sortOrder": 2
+    },
+    {
+      "name": "Frappee",
+      "nameAr": "فرابيه",
+      "sortOrder": 3
+    },
+    {
+      "name": "Cheese Cake",
+      "nameAr": "تشيز كيك",
+      "sortOrder": 4
+    },
+    {
+      "name": "Mojito",
+      "nameAr": "موهيتو",
+      "sortOrder": 5
+    },
+    {
+      "name": "Refresh Juice",
+      "nameAr": "عصائر منعشة",
+      "sortOrder": 6
+    },
+    {
+      "name": "Ice Tea",
+      "nameAr": "آيس تي",
+      "sortOrder": 7
+    },
+    {
+      "name": "Dessert",
+      "nameAr": "حلويات",
+      "sortOrder": 8
+    },
+    {
+      "name": "Crepe",
+      "nameAr": "كريب",
+      "sortOrder": 9
+    },
+    {
+      "name": "Pan Cake",
+      "nameAr": "بان كيك",
+      "sortOrder": 10
+    },
+    {
+      "name": "Mini Ball",
+      "nameAr": "ميني بول",
+      "sortOrder": 11
+    },
+    {
+      "name": "Special",
+      "nameAr": "سبيشل",
+      "sortOrder": 12
+    }
+  ],
+  "products": [
+    {
+      "name": "Oreo Milk Shake (Small)",
+      "nameAr": "ميلك شيك أوريو (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Oreo Milk Shake (Medium)",
+      "nameAr": "ميلك شيك أوريو (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Oreo Milk Shake (Large)",
+      "nameAr": "ميلك شيك أوريو (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Lotus Milk Shake (Small)",
+      "nameAr": "ميلك شيك لوتس (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Lotus Milk Shake (Medium)",
+      "nameAr": "ميلك شيك لوتس (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Lotus Milk Shake (Large)",
+      "nameAr": "ميلك شيك لوتس (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Kitkat Milk Shake (Small)",
+      "nameAr": "ميلك شيك كيت كات (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Kitkat Milk Shake (Medium)",
+      "nameAr": "ميلك شيك كيت كات (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Kitkat Milk Shake (Large)",
+      "nameAr": "ميلك شيك كيت كات (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Snikers Milk Shake (Small)",
+      "nameAr": "ميلك شيك سنيكرز (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Snikers Milk Shake (Medium)",
+      "nameAr": "ميلك شيك سنيكرز (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Snikers Milk Shake (Large)",
+      "nameAr": "ميلك شيك سنيكرز (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Mars Milk Shake (Small)",
+      "nameAr": "ميلك شيك مارس (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Mars Milk Shake (Medium)",
+      "nameAr": "ميلك شيك مارس (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Mars Milk Shake (Large)",
+      "nameAr": "ميلك شيك مارس (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Strawberry Milk Shake (Small)",
+      "nameAr": "ميلك شيك فراولة (صغير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Strawberry Milk Shake (Medium)",
+      "nameAr": "ميلك شيك فراولة (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Strawberry Milk Shake (Large)",
+      "nameAr": "ميلك شيك فراولة (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Milkshake"
+    },
+    {
+      "name": "Mango Smoothie (Medium)",
+      "nameAr": "سموثي مانجو (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Smoothie"
+    },
+    {
+      "name": "Mango Smoothie (Large)",
+      "nameAr": "سموثي مانجو (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Smoothie"
+    },
+    {
+      "name": "Passion Smoothie (Medium)",
+      "nameAr": "سموثي باشن فروت (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Smoothie"
+    },
+    {
+      "name": "Passion Smoothie (Large)",
+      "nameAr": "سموثي باشن فروت (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Smoothie"
+    },
+    {
+      "name": "Strawberry Smoothie (Medium)",
+      "nameAr": "سموثي فراولة (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Smoothie"
+    },
+    {
+      "name": "Strawberry Smoothie (Large)",
+      "nameAr": "سموثي فراولة (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Smoothie"
+    },
+    {
+      "name": "Blueberry Smoothie (Medium)",
+      "nameAr": "سموثي توت أزرق (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Smoothie"
+    },
+    {
+      "name": "Blueberry Smoothie (Large)",
+      "nameAr": "سموثي توت أزرق (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Smoothie"
+    },
+    {
+      "name": "Smile Bar Smoothie (Medium)",
+      "nameAr": "سموثي سمايل بار (وسط)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Smoothie"
+    },
+    {
+      "name": "Smile Bar Smoothie (Large)",
+      "nameAr": "سموثي سمايل بار (كبير)",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Smoothie"
+    },
+    {
+      "name": "Moca Frappee",
+      "nameAr": "موكا فرابيه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0,
+      "categoryName": "Frappee"
+    },
+    {
+      "name": "Caramel Frappee",
+      "nameAr": "كراميل فرابيه",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Frappee"
+    },
+    {
+      "name": "Irish Mocca",
+      "nameAr": "آيرش موكا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Frappee"
+    },
+    {
+      "name": "Lotus Cheese Cake",
+      "nameAr": "تشيز كيك لوتس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Cheese Cake"
+    },
+    {
+      "name": "Oreo Cheese Cake",
+      "nameAr": "تشيز كيك أوريو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Cheese Cake"
+    },
+    {
+      "name": "Chocolate Cheese Cake",
+      "nameAr": "تشيز كيك شوكولا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Cheese Cake"
+    },
+    {
+      "name": "BlackBerry Cheese Cake",
+      "nameAr": "تشيز كيك توت أسود",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Cheese Cake"
+    },
+    {
+      "name": "Strawberry Cheese Cake",
+      "nameAr": "تشيز كيك فراولة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Cheese Cake"
+    },
+    {
+      "name": "Pistachio Kunafa Cheese Cake",
+      "nameAr": "تشيز كيك كنافة بالفستق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5.56,
+      "categoryName": "Cheese Cake"
+    },
+    {
+      "name": "Summer",
+      "nameAr": "سمر موهيتو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Mojito"
+    },
+    {
+      "name": "Exotic",
+      "nameAr": "إكزوتيك موهيتو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Mojito"
+    },
+    {
+      "name": "Berries",
+      "nameAr": "موهيتو توت",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Mojito"
+    },
+    {
+      "name": "Strawberry",
+      "nameAr": "موهيتو فراولة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Mojito"
+    },
+    {
+      "name": "Mango",
+      "nameAr": "موهيتو مانجو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Mojito"
+    },
+    {
+      "name": "Pina Colada",
+      "nameAr": "بينا كولادا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Refresh Juice"
+    },
+    {
+      "name": "Paradise",
+      "nameAr": "بارادايس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Refresh Juice"
+    },
+    {
+      "name": "Blue Hawaii",
+      "nameAr": "بلو هاواي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Refresh Juice"
+    },
+    {
+      "name": "Ice Tea Peach",
+      "nameAr": "آيس تي خوخ",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Ice Tea"
+    },
+    {
+      "name": "Ice Tea Lemonade",
+      "nameAr": "آيس تي ليمون",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Ice Tea"
+    },
+    {
+      "name": "Cheese Cake",
+      "nameAr": "تشيز كيك",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0,
+      "categoryName": "Dessert"
+    },
+    {
+      "name": "Pudding",
+      "nameAr": "بودينغ",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0,
+      "categoryName": "Dessert"
+    },
+    {
+      "name": "Choco Crepe",
+      "nameAr": "كريب شوكولا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.78,
+      "categoryName": "Crepe"
+    },
+    {
+      "name": "Mars Crepe",
+      "nameAr": "كريب مارس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Crepe"
+    },
+    {
+      "name": "Oreo Crepe",
+      "nameAr": "كريب أوريو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Crepe"
+    },
+    {
+      "name": "Kitkat Crepe",
+      "nameAr": "كريب كيت كات",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Crepe"
+    },
+    {
+      "name": "Snikers Crepe",
+      "nameAr": "كريب سنيكرز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Crepe"
+    },
+    {
+      "name": "Kinder Crepe",
+      "nameAr": "كريب كيندر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Crepe"
+    },
+    {
+      "name": "Lotus Crepe",
+      "nameAr": "كريب لوتس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Crepe"
+    },
+    {
+      "name": "Brownie Crepe",
+      "nameAr": "كريب براوني",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Crepe"
+    },
+    {
+      "name": "Banana Crepe",
+      "nameAr": "كريب موز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.11,
+      "categoryName": "Crepe"
+    },
+    {
+      "name": "Strawberry Crepe",
+      "nameAr": "كريب فراولة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Crepe"
+    },
+    {
+      "name": "Banana Strawberry Crepe",
+      "nameAr": "كريب موز وفراولة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Crepe"
+    },
+    {
+      "name": "Extra Fruit Crepe",
+      "nameAr": "كريب فواكه إضافية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Crepe"
+    },
+    {
+      "name": "Dubai Crepe",
+      "nameAr": "كريب دبي",
+      "description": null,
+      "descriptionAr": null,
+      "price": 7.78,
+      "categoryName": "Crepe"
+    },
+    {
+      "name": "Smily Crepe",
+      "nameAr": "كريب سمايلي",
+      "description": "Coming soon",
+      "descriptionAr": "قريباً",
+      "price": 0,
+      "categoryName": "Crepe"
+    },
+    {
+      "name": "Choco Pan Cake",
+      "nameAr": "بان كيك شوكولا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Pan Cake"
+    },
+    {
+      "name": "Mars Pan Cake",
+      "nameAr": "بان كيك مارس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Pan Cake"
+    },
+    {
+      "name": "Oreo Pan Cake",
+      "nameAr": "بان كيك أوريو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Pan Cake"
+    },
+    {
+      "name": "Kitkat Pan Cake",
+      "nameAr": "بان كيك كيت كات",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Pan Cake"
+    },
+    {
+      "name": "Snikers Pan Cake",
+      "nameAr": "بان كيك سنيكرز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Pan Cake"
+    },
+    {
+      "name": "Kinder Pan Cake",
+      "nameAr": "بان كيك كيندر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Pan Cake"
+    },
+    {
+      "name": "Lotus Pan Cake",
+      "nameAr": "بان كيك لوتس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Pan Cake"
+    },
+    {
+      "name": "Brownie Pan Cake",
+      "nameAr": "بان كيك براوني",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Pan Cake"
+    },
+    {
+      "name": "Banana Pan Cake",
+      "nameAr": "بان كيك موز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.67,
+      "categoryName": "Pan Cake"
+    },
+    {
+      "name": "Strawberry Pan Cake",
+      "nameAr": "بان كيك فراولة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Pan Cake"
+    },
+    {
+      "name": "Banana Strawberry Pan Cake",
+      "nameAr": "بان كيك موز وفراولة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Pan Cake"
+    },
+    {
+      "name": "Extra Fruit Pan Cake",
+      "nameAr": "بان كيك فواكه إضافية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Pan Cake"
+    },
+    {
+      "name": "Mini Ball Oreo",
+      "nameAr": "ميني بول أوريو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Mini Ball"
+    },
+    {
+      "name": "Mini Ball Mars",
+      "nameAr": "ميني بول مارس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Mini Ball"
+    },
+    {
+      "name": "Mini Ball Kitkat",
+      "nameAr": "ميني بول كيت كات",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Mini Ball"
+    },
+    {
+      "name": "Mini Ball Snikers",
+      "nameAr": "ميني بول سنيكرز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Mini Ball"
+    },
+    {
+      "name": "Mini Ball Kinder",
+      "nameAr": "ميني بول كيندر",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Mini Ball"
+    },
+    {
+      "name": "Mini Ball Lotus",
+      "nameAr": "ميني بول لوتس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Mini Ball"
+    },
+    {
+      "name": "Mini Ball Brownie",
+      "nameAr": "ميني بول براوني",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Mini Ball"
+    },
+    {
+      "name": "Mini Ball Banana",
+      "nameAr": "ميني بول موز",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.67,
+      "categoryName": "Mini Ball"
+    },
+    {
+      "name": "Mini Ball Strawberry",
+      "nameAr": "ميني بول فراولة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Mini Ball"
+    },
+    {
+      "name": "Mini Ball Banana Strawberry",
+      "nameAr": "ميني بول موز وفراولة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4.44,
+      "categoryName": "Mini Ball"
+    },
+    {
+      "name": "Mini Ball Extra Fruit",
+      "nameAr": "ميني بول فواكه إضافية",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Mini Ball"
+    },
+    {
+      "name": "Mini Ball Choco",
+      "nameAr": "ميني بول شوكولا",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.33,
+      "categoryName": "Mini Ball"
+    },
+    {
+      "name": "Fettuccine Crepe",
+      "nameAr": "كريب فيتوتشيني",
+      "description": null,
+      "descriptionAr": null,
+      "price": 3.89,
+      "categoryName": "Special"
+    },
+    {
+      "name": "Double Roll",
+      "nameAr": "دبل رول",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Special"
+    },
+    {
+      "name": "Giant Pan Cake",
+      "nameAr": "بان كيك عملاق",
+      "description": null,
+      "descriptionAr": null,
+      "price": 6.67,
+      "categoryName": "Special"
+    }
+  ]
+}
