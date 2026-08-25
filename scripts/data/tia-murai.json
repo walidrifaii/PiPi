@@ -1,0 +1,460 @@
+{
+  "merchantId": "abfed4d3-25ea-427f-b625-627d2b2b080d",
+  "merchantName": "TIA MURAI",
+  "categories": [
+    {
+      "name": "Salads",
+      "nameAr": "السلطات",
+      "sortOrder": 1
+    },
+    {
+      "name": "Starters",
+      "nameAr": "المقبلات",
+      "sortOrder": 2
+    },
+    {
+      "name": "California Maki",
+      "nameAr": "كاليفورنيا ماكي",
+      "sortOrder": 3
+    },
+    {
+      "name": "Sushi",
+      "nameAr": "سوشي",
+      "sortOrder": 4
+    },
+    {
+      "name": "Sashimi",
+      "nameAr": "ساشيمي",
+      "sortOrder": 5
+    },
+    {
+      "name": "Special Maki",
+      "nameAr": "سبيشل ماكي",
+      "sortOrder": 6
+    },
+    {
+      "name": "Maki",
+      "nameAr": "ماكي",
+      "sortOrder": 7
+    },
+    {
+      "name": "Hosomaki",
+      "nameAr": "هوسوماكي",
+      "sortOrder": 8
+    },
+    {
+      "name": "Dragon Tail",
+      "nameAr": "دراغون تيل",
+      "sortOrder": 9
+    },
+    {
+      "name": "Temaki",
+      "nameAr": "تيماكي",
+      "sortOrder": 10
+    },
+    {
+      "name": "Gunkan",
+      "nameAr": "غونكان",
+      "sortOrder": 11
+    },
+    {
+      "name": "Special Sets",
+      "nameAr": "الوجبات الخاصة",
+      "sortOrder": 12
+    }
+  ],
+  "products": [
+    {
+      "name": "Shrimp Salad",
+      "nameAr": "سلطة القريدس",
+      "description": "Mixed green lettuce, cherry tomatoes, grilled shrimp, balsamic dressing.",
+      "descriptionAr": "خس مشكل، طماطم كرزية، قريدس مشوي، تتبيلة البلسميك.",
+      "price": 10,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Salmon Salad",
+      "nameAr": "سلطة السلمون",
+      "description": "Marinated salmon, avocado, mixed greens, tartar sauce.",
+      "descriptionAr": "سلمون متبل، أفوكادو، خس ملون مشكل، صلصة التارتار.",
+      "price": 9,
+      "categoryName": "Salads"
+    },
+    {
+      "name": "Edamame",
+      "nameAr": "إدامامي",
+      "description": "Green soybeans with salt.",
+      "descriptionAr": "حبوب الصويا الخضراء بالملح.",
+      "price": 5,
+      "categoryName": "Starters"
+    },
+    {
+      "name": "Spicy Edamame",
+      "nameAr": "إدامامي حار",
+      "description": "Spicy green soybeans.",
+      "descriptionAr": "حبوب الصويا الخضراء بالحر.",
+      "price": 6,
+      "categoryName": "Starters"
+    },
+    {
+      "name": "Spring Rolls",
+      "nameAr": "سبرينغ رولز",
+      "description": "Fried vegetable rolls with sweet chili sauce.",
+      "descriptionAr": "لفائف الخضار المقلية مع صلصة سويت تشيلي.",
+      "price": 5,
+      "categoryName": "Starters"
+    },
+    {
+      "name": "Shrimp Tempura",
+      "nameAr": "تمبورا القريدس",
+      "description": "Crispy shrimp, 4 pieces, with chili mayo sauce.",
+      "descriptionAr": "كريسبي قريدس ٤ قطع مع صلصة المايونيز الحار.",
+      "price": 7,
+      "categoryName": "Starters"
+    },
+    {
+      "name": "Sesame California",
+      "nameAr": "كاليفورنيا بالسمسم",
+      "description": "Crab sticks, cucumber, avocado wrapped in sesame.",
+      "descriptionAr": "أصابع الكراب، خيار، أفوكادو، سمسم.",
+      "price": 2,
+      "categoryName": "California Maki"
+    },
+    {
+      "name": "Ebiko California",
+      "nameAr": "كاليفورنيا إيبيكو",
+      "description": "Crab sticks, cucumber, avocado, wrapped in ebiko.",
+      "descriptionAr": "أصابع الكراب، خيار، أفوكادو، بيض سمك أحمر.",
+      "price": 2,
+      "categoryName": "California Maki"
+    },
+    {
+      "name": "Sesame Crazy California",
+      "nameAr": "كاليفورنيا كريزي بالسمسم",
+      "description": "Sesame California with crazy mix.",
+      "descriptionAr": "كاليفورنيا بالسمسم مع خلطة الكراب.",
+      "price": 3,
+      "categoryName": "California Maki"
+    },
+    {
+      "name": "Crispy Crazy California",
+      "nameAr": "كاليفورنيا كريزي كريسبي",
+      "description": "Crispy California with crazy mix.",
+      "descriptionAr": "كاليفورنيا بالكريسبي مع خلطة الكراب.",
+      "price": 3,
+      "categoryName": "California Maki"
+    },
+    {
+      "name": "Ebico Crazy California",
+      "nameAr": "كاليفورنيا كريزي إيبيكو",
+      "description": "Ebico California with crazy mix.",
+      "descriptionAr": "كاليفورنيا ببيض السمك مع خلطة الكراب.",
+      "price": 3,
+      "categoryName": "California Maki"
+    },
+    {
+      "name": "Salmon Blow",
+      "nameAr": "سلمون بلو",
+      "description": "Spicy salmon mix, cucumber, wrapped in togarashi.",
+      "descriptionAr": "سلمون سبايسي، خيار، مغطى بالفلفل الياباني.",
+      "price": 3,
+      "categoryName": "California Maki"
+    },
+    {
+      "name": "Salmon Sushi",
+      "nameAr": "سوشي سلمون",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4,
+      "categoryName": "Sushi"
+    },
+    {
+      "name": "Tuna Sushi",
+      "nameAr": "سوشي تونة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 5,
+      "categoryName": "Sushi"
+    },
+    {
+      "name": "Shrimp Sushi",
+      "nameAr": "سوشي قريدس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2,
+      "categoryName": "Sushi"
+    },
+    {
+      "name": "Crab Sushi",
+      "nameAr": "سوشي كراب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.5,
+      "categoryName": "Sushi"
+    },
+    {
+      "name": "Salmon Sashimi",
+      "nameAr": "ساشيمي سلمون",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4,
+      "categoryName": "Sashimi"
+    },
+    {
+      "name": "Tuna Sashimi",
+      "nameAr": "ساشيمي تونة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 4,
+      "categoryName": "Sashimi"
+    },
+    {
+      "name": "Crab Sashimi",
+      "nameAr": "ساشيمي كراب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.5,
+      "categoryName": "Sashimi"
+    },
+    {
+      "name": "Shrimp Sashimi",
+      "nameAr": "ساشيمي قريدس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1.5,
+      "categoryName": "Sashimi"
+    },
+    {
+      "name": "Twist",
+      "nameAr": "تويست",
+      "description": "Special mix crab, avocado, wrapped with fresh mango.",
+      "descriptionAr": "خلطة الكراب مع الأفوكادو، مغلفة بالمانجو الطازج.",
+      "price": 3,
+      "categoryName": "Special Maki"
+    },
+    {
+      "name": "Volcano Maki",
+      "nameAr": "فولكانو ماكي",
+      "description": "Special crab mix with salmon wrapped in avocado.",
+      "descriptionAr": "خلطة الكراب مع سلمون، مغلفة بالأفوكادو.",
+      "price": 3.5,
+      "categoryName": "Special Maki"
+    },
+    {
+      "name": "Tia Maki",
+      "nameAr": "تيا ماكي",
+      "description": "Salmon, avocado, topped with fresh salmon.",
+      "descriptionAr": "سلمون، أفوكادو، مغطى بالسلمون الطازج.",
+      "price": 5,
+      "categoryName": "Special Maki"
+    },
+    {
+      "name": "Spicy Shrimp Maki",
+      "nameAr": "سبايسي شريمب ماكي",
+      "description": "Crab stick, avocado, wrapped in spicy shrimp.",
+      "descriptionAr": "أصابع الكراب، أفوكادو، مغلف بالقريدس الحار.",
+      "price": 3,
+      "categoryName": "Special Maki"
+    },
+    {
+      "name": "Mango Spicy Shrimp",
+      "nameAr": "مانجو سبايسي شريمب",
+      "description": "Spicy shrimp mix wrapped in mango.",
+      "descriptionAr": "خلطة القريدس الحار مغلفة بالمانجو.",
+      "price": 3,
+      "categoryName": "Special Maki"
+    },
+    {
+      "name": "Smoky",
+      "nameAr": "سموكي",
+      "description": "Cream cheese, cucumber, avocado wrapped in smoked salmon.",
+      "descriptionAr": "جبنة كريمية، خيار، أفوكادو، مغلف بالسلمون المدخن.",
+      "price": 4.5,
+      "categoryName": "Special Maki"
+    },
+    {
+      "name": "Tuna Touch",
+      "nameAr": "تونا تتش",
+      "description": "Volcano mix wrapped in tuna.",
+      "descriptionAr": "خلطة الفولكانو مغلفة بالتونة.",
+      "price": 6,
+      "categoryName": "Special Maki"
+    },
+    {
+      "name": "Ebico Crazy Maki",
+      "nameAr": "إيبيكو كريزي ماكي",
+      "description": "Special mix crab wrapped in ebico topped with spicy salmon mix.",
+      "descriptionAr": "خلطة الكراب مع بيض سمك السلمون، مغطاة بخلطة السلمون الحار.",
+      "price": 4,
+      "categoryName": "Maki"
+    },
+    {
+      "name": "Crazy Sweet Mango",
+      "nameAr": "كريزي سويت مانجو",
+      "description": "Special mix crab wrapped in mango, mango sauce.",
+      "descriptionAr": "خلطة الكراب مع المانجو وصوص المانجو.",
+      "price": 4.5,
+      "categoryName": "Maki"
+    },
+    {
+      "name": "Crispy Crazy Maki",
+      "nameAr": "كريسبي كريزي ماكي",
+      "description": "Special mix crab wrapped in crispy topped mix crab.",
+      "descriptionAr": "خلطة الكراب مع الكريسبي.",
+      "price": 3,
+      "categoryName": "Maki"
+    },
+    {
+      "name": "Sesame Crazy Maki",
+      "nameAr": "سيسامي كريزي ماكي",
+      "description": "Special mix crab wrapped in sesame.",
+      "descriptionAr": "خلطة الكراب مع السمسم.",
+      "price": 3,
+      "categoryName": "Maki"
+    },
+    {
+      "name": "Hoso Crab",
+      "nameAr": "هوسو كراب",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1,
+      "categoryName": "Hosomaki"
+    },
+    {
+      "name": "Hoso Avocado",
+      "nameAr": "هوسو أفوكادو",
+      "description": null,
+      "descriptionAr": null,
+      "price": 1,
+      "categoryName": "Hosomaki"
+    },
+    {
+      "name": "Hoso Salmon",
+      "nameAr": "هوسو سلمون",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.5,
+      "categoryName": "Hosomaki"
+    },
+    {
+      "name": "Hoso Shrimp",
+      "nameAr": "هوسو قريدس",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2,
+      "categoryName": "Hosomaki"
+    },
+    {
+      "name": "Hoso Cucumber",
+      "nameAr": "هوسو خيار",
+      "description": null,
+      "descriptionAr": null,
+      "price": 0.5,
+      "categoryName": "Hosomaki"
+    },
+    {
+      "name": "Hoso Tuna",
+      "nameAr": "هوسو تونة",
+      "description": null,
+      "descriptionAr": null,
+      "price": 2.5,
+      "categoryName": "Hosomaki"
+    },
+    {
+      "name": "Green Dragon",
+      "nameAr": "غرين دراغون",
+      "description": "Shrimp tempura, avocado, wrapped with avocado, topped with Dragon special sauce and teriyaki sauce.",
+      "descriptionAr": "قريدس تمبورا، أفوكادو، ملفوف بالأفوكادو، مع صوص الدراغون الخاص والترياكي.",
+      "price": 7,
+      "categoryName": "Dragon Tail"
+    },
+    {
+      "name": "Grilled Dragon",
+      "nameAr": "غريلِد دراغون",
+      "description": "Special mix crab wrapped in grilled salmon, topped with mango sauce and teriyaki sauce.",
+      "descriptionAr": "خلطة الكراب ملفوفة بسلمون مشوي، مع صلصة المانجو والترياكي.",
+      "price": 13,
+      "categoryName": "Dragon Tail"
+    },
+    {
+      "name": "Temaki Salmon",
+      "nameAr": "تيماكي سلمون",
+      "description": null,
+      "descriptionAr": "تيماكي سلمون.",
+      "price": 5.5,
+      "categoryName": "Temaki"
+    },
+    {
+      "name": "Temaki Spicy Salmon",
+      "nameAr": "تيماكي سبايسي سلمون",
+      "description": null,
+      "descriptionAr": "تيماكي بخلطة السلمون الحار.",
+      "price": 4.5,
+      "categoryName": "Temaki"
+    },
+    {
+      "name": "Temaki California",
+      "nameAr": "تيماكي كاليفورنيا",
+      "description": null,
+      "descriptionAr": "تيماكي كاليفورنيا.",
+      "price": 2,
+      "categoryName": "Temaki"
+    },
+    {
+      "name": "Temaki Volcano",
+      "nameAr": "تيماكي فولكانو",
+      "description": null,
+      "descriptionAr": "تيماكي بخلطة الكراب والسلمون الحار.",
+      "price": 5.5,
+      "categoryName": "Temaki"
+    },
+    {
+      "name": "Crazy Gunkan",
+      "nameAr": "كريزي غونكان",
+      "description": null,
+      "descriptionAr": "غونكان بخلطة الكراب.",
+      "price": 1.5,
+      "categoryName": "Gunkan"
+    },
+    {
+      "name": "Spicy Salmon Gunkan",
+      "nameAr": "سبايسي سلمون غونكان",
+      "description": null,
+      "descriptionAr": "غونكان بخلطة السلمون الحار.",
+      "price": 3,
+      "categoryName": "Gunkan"
+    },
+    {
+      "name": "Ebiko Gunkan",
+      "nameAr": "إيبيكو غونكان",
+      "description": null,
+      "descriptionAr": "غونكان ببيض سمك السلمون.",
+      "price": 2,
+      "categoryName": "Gunkan"
+    },
+    {
+      "name": "Tomohito",
+      "nameAr": "توموهيتو",
+      "description": "Crispy Crazy, Ebiko California, Twist Maki, Volcano Maki. 4 Maki Rolls x 4 pcs = 16 pcs.",
+      "descriptionAr": "كريسبي كريزي، إيبيكو كاليفورنيا، تويست ماكي، فولكانو ماكي. ٤ رول ماكي × ٤ قطع = ١٦ قطعة.",
+      "price": 12,
+      "categoryName": "Special Sets"
+    },
+    {
+      "name": "Tomodachi",
+      "nameAr": "توموداتشي",
+      "description": "Crispy Crazy, Ebiko Crazy, Sesame California, Ebiko California, Spicy Salmon, Tia Maki, Volcano Maki, Salmon Sushi, Salmon Sashimi.",
+      "descriptionAr": "كريسبي كريزي، إيبيكو كريزي، كاليفورنيا بالسمسم، إيبيكو كاليفورنيا، سبايسي سلمون، تيا ماكي، فولكانو ماكي، سوشي سلمون، ساشيمي سلمون.",
+      "price": 32,
+      "categoryName": "Special Sets"
+    },
+    {
+      "name": "Murai Kazoku",
+      "nameAr": "موراي كازوكو",
+      "description": "Sesame California, Ebico California, Crispy Crazy, Sesame Crazy, Ebico Crazy, Twist Maki, Volcano Maki, Spicy Shrimp Maki, Salmon Blow, 1 Salmon Sushi, 1 Salmon Sashimi, 1 Tuna Sushi, 1 Tuna Sashimi, 1 Hoso Shrimp, 1 Hoso Crab.",
+      "descriptionAr": "كاليفورنيا بالسمسم، إيبيكو كاليفورنيا، كريسبي كريزي، سيسامي كريزي، إيبيكو كريزي، تويست ماكي، فولكانو ماكي، سبايسي شريمب ماكي، سلمون بلو، ١ سوشي سلمون، ١ ساشيمي سلمون، ١ سوشي تونة، ١ ساشيمي تونة، ١ هوسو قريدس، ١ هوسو كراب.",
+      "price": 0,
+      "categoryName": "Special Sets"
+    }
+  ]
+}
