@@ -4,6 +4,7 @@ import { NotificationsService } from '../notifications/notifications.service';
 import { OrderNotificationsPort } from '../notifications/notifications.port';
 import { PlatformSettingsModule } from '../platform-settings/platform-settings.module';
 import { PrismaModule } from '../prisma/prisma.module';
+import { TrackingModule } from '../tracking/tracking.module';
 import { DriverPickupsService } from './driver-pickups.service';
 import { PickupBlockedZoneService } from './pickup-blocked-zone.service';
 import { PickupDeliveryFeeService } from './pickup-delivery-fee.service';
@@ -18,7 +19,12 @@ import {
 
 /** Pickup courier APIs are v3-only — not mounted on v1 or v2. */
 @Module({
-  imports: [PrismaModule, NotificationsModule, PlatformSettingsModule],
+  imports: [
+    PrismaModule,
+    NotificationsModule,
+    PlatformSettingsModule,
+    TrackingModule,
+  ],
   controllers: [
     UserPickupsV3Controller,
     PickupV3Controller,

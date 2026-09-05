@@ -13,6 +13,8 @@ export type SendOrderStatusParams = {
   /** Optional override (e.g. driver accepted delivery). */
   title?: string;
   body?: string;
+  /** `pickup` when the job is a Butler/package pickup, not a food order. */
+  jobKind?: string;
 };
 
 export type SendNewOrderAlertParams = {

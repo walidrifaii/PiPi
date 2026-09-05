@@ -3,6 +3,7 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
@@ -10,6 +11,7 @@ import { MAX_DRIVER_BATCH_ORDERS } from '../orders/order-status.constants';
 import { OrderNotificationsPort } from '../notifications/notifications.port';
 import { PlatformSettingsService } from '../platform-settings/platform-settings.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { TrackingService } from '../tracking/tracking.service';
 import {
   DRIVER_PICKUP_ACTIVE_STATUSES,
   DRIVER_PICKUP_OFFER_STATUSES,
@@ -36,11 +38,14 @@ const pickupInclude = {
 
 @Injectable()
 export class DriverPickupsService {
+  private readonly log = new Logger(DriverPickupsService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly pickups: PickupService,
     private readonly platformSettings: PlatformSettingsService,
     private readonly notifications: OrderNotificationsPort,
+    private readonly tracking: TrackingService,
   ) {}
 
   private async sharePercent(): Promise<number> {
@@ -114,7 +119,22 @@ export class DriverPickupsService {
       merchantName: 'Pickup',
       title,
       body,
+      jobKind: 'pickup',
     });
+  }
+
+  private async syncTrackingMeta(
+    pickupId: string,
+    userId: string,
+    driverId: string,
+  ) {
+    try {
+      await this.tracking.syncOrderMeta(pickupId, userId, driverId);
+    } catch (err) {
+      this.log.warn(
+        `syncOrderMeta failed for pickup ${pickupId}: ${String(err)}`,
+      );
+    }
   }
 
   async listAvailable(driverId: string, page = 1, limit = 20) {
@@ -232,10 +252,14 @@ export class DriverPickupsService {
         throw new NotFoundException('Pickup not found');
       }
       if (existing.driverId === driverId) {
-        return this.getOne(driverId, pickupId).then((pickup) => ({
+        const pickup = await this.getOne(driverId, pickupId);
+        if (pickup.customer?.id) {
+          await this.syncTrackingMeta(pickupId, pickup.customer.id, driverId);
+        }
+        return {
           accepted: true as const,
           pickup,
-        }));
+        };
       }
       if (existing.driverId) {
         throw new ConflictException('Pickup already assigned to another driver');
@@ -249,6 +273,7 @@ export class DriverPickupsService {
       where: { id: pickupId, driverId },
       include: pickupInclude,
     });
+    await this.syncTrackingMeta(pickupId, row!.userId, driverId);
     void this.notifyCustomer(
       pickupId,
       row!.userId,
@@ -341,6 +366,7 @@ export class DriverPickupsService {
       data: { driverId, status: 'DELIVERING' },
       include: pickupInclude,
     });
+    await this.syncTrackingMeta(pickupId, row.userId, driverId);
     void this.notifyCustomer(
       pickupId,
       row.userId,

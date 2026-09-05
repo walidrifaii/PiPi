@@ -66,17 +66,32 @@ export class TrackingService {
     return { token, databaseUrl, uid };
   }
 
-  /** Assign driver to order and publish RTDB meta for security rules. */
-  async startDriverTracking(driverId: string, orderId: string) {
+  /**
+   * Food orders and pickup jobs share the same RTDB paths (`orders/{id}`).
+   * Pickup IDs are UUIDs too, so the driver app can start tracking with either.
+   */
+  private async findTrackableJob(jobId: string): Promise<{
+    id: string;
+    userId: string;
+    driverId: string | null;
+    status: string | null;
+  } | null> {
     const order = await this.prisma.order.findUnique({
-      where: { id: orderId },
-      select: {
-        id: true,
-        userId: true,
-        driverId: true,
-        status: true,
-      },
+      where: { id: jobId },
+      select: { id: true, userId: true, driverId: true, status: true },
     });
+    if (order) {
+      return order;
+    }
+    return this.prisma.pickupOrder.findUnique({
+      where: { id: jobId },
+      select: { id: true, userId: true, driverId: true, status: true },
+    });
+  }
+
+  /** Assign driver to order/pickup and publish RTDB meta for security rules. */
+  async startDriverTracking(driverId: string, orderId: string) {
+    const order = await this.findTrackableJob(orderId);
     if (!order) {
       throw new NotFoundException('Order not found');
     }
@@ -101,10 +116,7 @@ export class TrackingService {
   }
 
   async stopDriverTracking(driverId: string, orderId: string) {
-    const order = await this.prisma.order.findUnique({
-      where: { id: orderId },
-      select: { driverId: true },
-    });
+    const order = await this.findTrackableJob(orderId);
     if (!order) {
       throw new NotFoundException('Order not found');
     }
@@ -139,10 +151,7 @@ export class TrackingService {
     orderId: string,
     payload: TrackingLocationPayload,
   ) {
-    const order = await this.prisma.order.findUnique({
-      where: { id: orderId },
-      select: { driverId: true, userId: true },
-    });
+    const order = await this.findTrackableJob(orderId);
     if (!order) {
       throw new NotFoundException('Order not found');
     }
@@ -160,11 +169,8 @@ export class TrackingService {
 
   /** Customer polling fallback — reads last driver GPS from RTDB via Admin SDK. */
   async getCustomerTrackingLocation(userId: string, orderId: string) {
-    const order = await this.prisma.order.findFirst({
-      where: { id: orderId, userId },
-      select: { driverId: true, status: true },
-    });
-    if (!order) {
+    const order = await this.findTrackableJob(orderId);
+    if (!order || order.userId !== userId) {
       throw new NotFoundException('Order not found');
     }
     if (!order.driverId || !isCustomerTrackableStatus(order.status)) {

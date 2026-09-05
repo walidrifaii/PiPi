@@ -9,11 +9,13 @@ export type OrderStatusFcmData = {
 export function buildOrderStatusFcmData(
   orderId: string,
   status: string,
+  jobKind?: string,
 ): Record<string, string> {
   return {
     type: ORDER_STATUS_FCM_TYPE,
     orderId,
     status: status.trim().toUpperCase(),
+    ...(jobKind ? { jobKind } : {}),
   };
 }
 

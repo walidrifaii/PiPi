@@ -196,7 +196,11 @@ export class NotificationsService extends OrderNotificationsPort {
       );
       push = pickOrderStatusPushCopy(bilingual, 'en');
     }
-    const data = buildOrderStatusFcmData(params.orderId, params.status);
+    const data = buildOrderStatusFcmData(
+      params.orderId,
+      params.status,
+      params.jobKind,
+    );
 
     try {
       const messageId = await messaging.send({
